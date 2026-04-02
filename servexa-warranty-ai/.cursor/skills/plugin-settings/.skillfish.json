@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "plugin-settings",
+  "owner": "anthropics",
+  "repo": "claude-code",
+  "path": "plugins/plugin-dev/skills/plugin-settings",
+  "branch": "main",
+  "sha": "b92c10c82b18cb18733c151d927c3e41aa8c4c1f",
+  "source": "manual"
+}

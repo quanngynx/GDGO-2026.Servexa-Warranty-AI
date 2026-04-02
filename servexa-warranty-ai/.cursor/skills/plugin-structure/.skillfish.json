@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "plugin-structure",
+  "owner": "anthropics",
+  "repo": "claude-code",
+  "path": "plugins/plugin-dev/skills/plugin-structure",
+  "branch": "main",
+  "sha": "34659f25e4e519dc5c3a6d5361cc69f6688d8eac",
+  "source": "manual"
+}
