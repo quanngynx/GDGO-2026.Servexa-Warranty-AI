@@ -1,0 +1,3 @@
+{
+  "extends": "@servexa-warranty-ai/config/tsconfig.base.json"
+}
