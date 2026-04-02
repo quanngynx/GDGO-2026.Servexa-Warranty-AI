@@ -24,6 +24,9 @@ catalogs:
     alchemy:
       specifier: ^0.90.0
       version: 0.90.1
+    axios:
+      specifier: ^1.13.2
+      version: 1.13.2
     dotenv:
       specifier: ^17.2.2
       version: 17.3.1
@@ -57,7 +60,7 @@ importers:
         specifier: workspace:*
         version: link:packages/env
       axios:
-        specifier: 1.13.2
+        specifier: 'catalog:'
         version: 1.13.2
       dotenv:
         specifier: 'catalog:'
