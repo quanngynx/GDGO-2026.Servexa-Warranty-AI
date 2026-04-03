@@ -19,6 +19,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-router": "^1.141.1",
     "ai": "catalog:",
+    "axios": "catalog:",
     "dotenv": "catalog:",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",

@@ -215,6 +215,9 @@ importers:
       ai:
         specifier: 'catalog:'
         version: 6.0.141(zod@4.3.6)
+      axios:
+        specifier: 'catalog:'
+        version: 1.13.2
       dotenv:
         specifier: 'catalog:'
         version: 17.3.1
