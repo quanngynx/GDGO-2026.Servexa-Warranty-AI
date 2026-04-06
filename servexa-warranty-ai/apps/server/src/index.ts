@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       env.CORS_ORIGIN,
-      "http://localhost:3001",
+      env.CORS_ORIGIN_WEB,
     ],
     methods: ["GET", "POST", "OPTIONS"],
   }),
