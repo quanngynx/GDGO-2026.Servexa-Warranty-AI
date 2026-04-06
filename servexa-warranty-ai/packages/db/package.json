@@ -25,6 +25,7 @@
     "@prisma/client": "catalog:",
     "@servexa-warranty-ai/env": "workspace:*",
     "dotenv": "catalog:",
+    "ioredis": "^5.10.1",
     "pg": "^8.17.1",
     "zod": "catalog:"
   },
