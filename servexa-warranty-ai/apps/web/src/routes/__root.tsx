@@ -1,16 +1,23 @@
 import { Toaster } from "@servexa-warranty-ai/ui/components/sonner";
-import { HeadContent, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import Header from "@/components/header";
-import { ThemeProvider } from "@/components/theme-provider";
-
-import "../index.css";
+import { NotFoundError } from "@/features/errors/not-found-error";
+import { GeneralError } from "@/features/errors/general-error";
+import { env } from "@servexa-warranty-ai/env/web";
+import { NavigationProgress } from "@/components/navigation-progress";
 
 export interface RouterAppContext {}
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   component: RootComponent,
+  notFoundComponent: NotFoundError,
+  errorComponent: GeneralError,
   head: () => ({
     meta: [
       {
@@ -33,20 +40,16 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 function RootComponent() {
   return (
     <>
+      <NavigationProgress />
       <HeadContent />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
-        storageKey="vite-ui-theme"
-      >
-        <div className="grid grid-rows-[auto_1fr] h-svh">
-          <Header />
-          <Outlet />
-        </div>
-        <Toaster richColors />
-      </ThemeProvider>
-      <TanStackRouterDevtools position="bottom-left" />
+      <Outlet />
+      <Toaster richColors duration={5000} />
+      {env.VITE_NODE_ENV === "development" && (
+        <>
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+          <TanStackRouterDevtools position="bottom-right" />
+        </>
+      )}
     </>
   );
 }
