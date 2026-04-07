@@ -1,0 +1,182 @@
+model KeyToken {
+  id               String   @id @default(uuid(7))
+  userId           String
+  privateKey       String
+  publicKey        String
+  refreshToken     String
+  refreshTokenUsed String[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  createdBy        String?  @db.VarChar(255)
+  updatedBy        String?  @db.VarChar(255)
+}
+
+model Permission {
+  id          String   @id @default(uuid(7))
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+}
+
+/**
+ * Closure table (transitive closure) for role hierarchy.
+ * Each row means: ancestorId is an ancestor of descendantId with distance `depth`.
+ * - depth = 0 => ancestor == descendant (self-link)
+ * - depth = 1 => direct parent -> child
+ * - depth > 1 => ancestor several levels above
+ */
+model RoleClosure {
+  id           String   @id @default(uuid(7))
+  ancestorId   String
+  descendantId String
+  depth        Int // 0 = same node, 1 = direct parent->child, ...
+  createdAt    DateTime @default(now())
+
+  ancestor   Role @relation("ancestor", fields: [ancestorId], references: [id], onDelete: Cascade)
+  descendant Role @relation("descendant", fields: [descendantId], references: [id], onDelete: Cascade)
+
+  @@unique([ancestorId, descendantId])
+  @@index([descendantId])
+  @@index([ancestorId])
+}
+
+model RolePermission {
+  id           String   @id @default(uuid(7))
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model Role {
+  id          String   @id @default(uuid(7))
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  // relations
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+  users           User[]
+
+  // closure relations
+  ancestorClosures   RoleClosure[] @relation("ancestor")
+  descendantClosures RoleClosure[] @relation("descendant")
+}
+
+model UserRole {
+  id         String   @id @default(uuid(7))
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([roleId])
+  @@index([userId])
+}
+
+model User {
+  id            String     @id @default(uuid(7))
+  username      String     @unique
+  fullName      String
+  companyEmail  String?    @map("company_email")
+  personalEmail String?    @map("personal_email")
+  avatar        String?
+  phone         String?    @db.VarChar(20)
+  password      String
+  secretOtp     String?
+  status        UserStatus @default(active)
+
+  ascCenterId String? @map("asc_center_id")
+  wardId      String? @map("ward_id")
+  provinceId  String? @map("province_id")
+  roleId      String  @map("role_id")
+
+  accessoryIssuesCreated           AccessoryIssue[]            @relation("AccessoryIssueCreatedBy")
+  accessoryIssuesReceived          AccessoryIssue[]            @relation("AccessoryIssueReceivedBy")
+  accessoryRequestsApproved        AccessoryRequest[]          @relation("AccessoryRequestApprover")
+  accessoryRequestsCreated         AccessoryRequest[]          @relation("AccessoryRequestRequester")
+  stockTransactions                AccessoryStockTransaction[]
+  employeesCreated                 Employee[]                  @relation("EmployeeCreatedBy")
+  employee                         Employee?
+  warrantyRegistrations            ProductWarranty[]
+  purchaseOrdersApproved           PurchaseOrder[]             @relation("PurchaseOrderApprovedBy")
+  purchaseOrdersCreated            PurchaseOrder[]             @relation("PurchaseOrderCreatedBy")
+  quotationsApproved               Quotation[]                 @relation("QuotationApprovedBy")
+  quotationsCreated                Quotation[]                 @relation("QuotationCreatedBy")
+  quotationsRejected               Quotation[]                 @relation("QuotationRejectedBy")
+  appointmentsAssigned             RepairAppointment[]         @relation("AppointmentAssignedTo")
+  appointmentsConfirmed            RepairAppointment[]         @relation("AppointmentConfirmedBy")
+  appointmentsCreated              RepairAppointment[]         @relation("AppointmentCreatedBy")
+  repairCaseAccessoriesAdded       RepairCaseAccessory[]       @relation("RepairCaseAccessoryAddedBy")
+  imagesUploaded                   RepairCaseImage[]
+  statusChanges                    RepairCaseStatusHistory[]
+  fieldChanges                     RepairCaseFieldHistory[]    @relation("RepairCaseFieldHistoryChangedBy")
+  repairCasesApproved              RepairCase[]                @relation("RepairCaseApprovedBy")
+  repairCasesCreated               RepairCase[]                @relation("RepairCaseCreatedBy")
+  repairCaseDistanceFeesCalculated RepairCase[]                @relation("RepairCaseDistanceFeeCalculator")
+  repairCaseSatisfactionsCollected RepairCase[]                @relation("RepairCaseSatisfactionCollector")
+  repairCaseTransfersApproved      RepairCase[]                @relation("RepairCaseTransferApprover")
+  repairCaseTransfersRequested     RepairCase[]                @relation("RepairCaseTransferRequester")
+  repairCaseTransfersRejected      RepairCase[]                @relation("RepairCaseTransferRejecter")
+  repairCaseTransfersReceived      RepairCase[]                @relation("RepairCaseTransferReceiver")
+  repairCasePaymentsProcessed      RepairCase[]                @relation("RepairCasePaymentProcessor")
+  repairCasePaymentsApproved       RepairCase[]                @relation("RepairCasePaymentApprover")
+  solutionsCreated                 Solution[]                  @relation("SolutionCreatedBy")
+  technicianProfile                TechnicianProfile?
+  ascCenter                        AscCenter?                  @relation(fields: [ascCenterId], references: [id])
+  creator                          User?                       @relation("UserCreator", fields: [createdBy], references: [id])
+  createdUsers                     User[]                      @relation("UserCreator")
+  province                         Province?                   @relation("UserProvince", fields: [provinceId], references: [id])
+  role                             Role                        @relation(fields: [roleId], references: [id])
+  ward                             Ward?                       @relation("UserWard", fields: [wardId], references: [id])
+  warrantyClaimCompletions         WarrantyClaim[]             @relation("WarrantyClaimCompleter")
+  warrantyClaims                   WarrantyClaim[]
+  warrantyClaimReviews             WarrantyClaim[]             @relation("WarrantyClaimReviewer")
+  warrantyCoordinationsCreated     WarrantyCoordination[]      @relation("WarrantyCoordinationCreator")
+  warrantyCoordinationsResponded   WarrantyCoordination[]      @relation("WarrantyCoordinationResponder")
+  repairCaseErrorPhenomenaCreated  RepairCaseErrorPhenomenon[] @relation("RepairCaseErrorPhenomenonCreatedBy")
+  repairCaseReasonsCreated         RepairCaseReason[]          @relation("RepairCaseReasonCreatedBy")
+
+  purchaseLocationGroupsCreated PurchaseLocationGroup[]  @relation("PurchaseLocationGroupCreator")
+  purchaseLocationGroupsUpdated PurchaseLocationGroup[]  @relation("PurchaseLocationGroupUpdater")
+  purchaseLocationsCreated      PurchaseLocation[]       @relation("PurchaseLocationCreator")
+  purchaseLocationsUpdated      PurchaseLocation[]       @relation("PurchaseLocationUpdater")
+  notifications                 Notification[]
+  notificationPreferences       NotificationPreference[]
+  broadcastNotifications        BroadcastNotification[]
+
+  // Warehouse stocktake relations
+  createdStocktakes    WarehouseStocktake[]
+  createdAscStocktakes AscStocktake[]       @relation("AscStocktakeCreator")
+
+  // Retail voucher relations
+  createdRetailVouchers AccessoryRetailVoucher[] @relation("RetailVoucherCreator")
+
+  // Product replacement recall relations
+  createdProductReplacementRecalls ProductReplacementRecall[] @relation("ProductReplacementRecallCreator")
+
+  // Document relations
+  createdDocuments   Document[]          @relation("DocumentCreatedBy")
+  updatedDocuments   Document[]          @relation("DocumentUpdatedBy")
+  documentAccessLogs DocumentAccessLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?  @db.VarChar(255)
+  updatedBy String?  @db.VarChar(255)
+  isDelete  Boolean  @default(false)
+
+  // TODO: Update Hierarchical RBAC later: roles, permissions, role closures
+  userRoles UserRole[]
+}

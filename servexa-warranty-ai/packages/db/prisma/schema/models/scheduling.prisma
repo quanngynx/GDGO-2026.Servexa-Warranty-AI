@@ -1,0 +1,53 @@
+model AppointmentNotification {
+  id               String             @id @default(uuid())
+  appointmentId    String             @map("appointment_id")
+  notificationType NotificationType   @map("notification_type")
+  notificationTime DateTime           @map("notification_time")
+  status           NotificationStatus @default(pending)
+  recipient        String
+  message          String?
+  sentAt           DateTime?          @map("sent_at")
+  deliveryStatus   String?            @map("delivery_status")
+  appointment      RepairAppointment  @relation(fields: [appointmentId], references: [id])
+
+  @@map("appointment_notifications")
+}
+
+model RepairAppointment {
+  id                  String                    @id @default(uuid())
+  repairCaseId        String?                   @map("repair_case_id")
+  ascCenterId         String                    @map("asc_center_id")
+  appointmentType     AppointmentType           @map("appointment_type")
+  appointmentDate     DateTime                  @map("appointment_date") @db.Date
+  appointmentTime     DateTime                  @map("appointment_time") @db.Time(6)
+  estimatedDuration   Int?                      @map("estimated_duration")
+  status              AppointmentStatus         @default(scheduled)
+  customerName        String                    @map("customer_name")
+  customerPhone       String                    @map("customer_phone")
+  customerNotes       String?                   @map("customer_notes")
+  assignedStaffId     String?                   @map("assigned_staff_id")
+  ascNotes            String?                   @map("asc_notes")
+  preparationRequired String?                   @map("preparation_required")
+  createdBy           String                    @map("created_by")
+  confirmedBy         String?                   @map("confirmed_by")
+  confirmedAt         DateTime?                 @map("confirmed_at")
+  cancelledReason     String?                   @map("cancelled_reason")
+  rescheduledFromId   String?                   @map("rescheduled_from_id")
+  createdAt           DateTime                  @default(now()) @map("created_at")
+  updatedAt           DateTime                  @updatedAt @map("updated_at")
+  notifications       AppointmentNotification[]
+  ascCenter           AscCenter                 @relation(fields: [ascCenterId], references: [id])
+  assignedStaff       User?                     @relation("AppointmentAssignedTo", fields: [assignedStaffId], references: [id])
+  confirmer           User?                     @relation("AppointmentConfirmedBy", fields: [confirmedBy], references: [id])
+  creator             User                      @relation("AppointmentCreatedBy", fields: [createdBy], references: [id])
+  repairCase          RepairCase?               @relation(fields: [repairCaseId], references: [id])
+  rescheduledFrom     RepairAppointment?        @relation("AppointmentRescheduled", fields: [rescheduledFromId], references: [id])
+  rescheduledTo       RepairAppointment[]       @relation("AppointmentRescheduled")
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([appointmentDate])
+  @@index([repairCaseId])
+  @@index([assignedStaffId])
+  @@map("repair_appointments")
+}

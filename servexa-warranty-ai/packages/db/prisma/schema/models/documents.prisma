@@ -1,0 +1,53 @@
+model Document {
+  id                  String       @id @default(cuid())
+  title               String
+  description         String? // Mô tả ngắn gọn
+  detailedDescription String?      @map("detailed_description") // Mô tả chi tiết
+  documentType        DocumentType
+  filePath            String? // Đường dẫn file trên server
+  originalFileName    String? // Tên file gốc
+  fileSize            Int? // Kích thước bytes
+  mimeType            String? // MIME type
+  checksum            String? // MD5/SHA256 để kiểm tra integrity
+  isActive            Boolean      @default(true)
+
+  // Quan hệ
+  createdBy   User       @relation("DocumentCreatedBy", fields: [createdById], references: [id])
+  createdById String
+  updatedBy   User?      @relation("DocumentUpdatedBy", fields: [updatedById], references: [id])
+  updatedById String?
+  ascCenter   AscCenter? @relation(fields: [ascCenterId], references: [id])
+  ascCenterId String?
+
+  // Audit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Quan hệ n-n
+  accessLogs DocumentAccessLog[]
+
+  @@index([documentType])
+  @@index([ascCenterId])
+  @@index([isActive, createdAt])
+  @@index([title])
+  @@map("documents")
+}
+
+model DocumentAccessLog {
+  id         String         @id @default(cuid())
+  documentId String
+  userId     String
+  action     DocumentAction
+  ipAddress  String?
+  userAgent  String?
+
+  // Quan hệ
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([documentId, action])
+  @@index([userId, createdAt])
+  @@map("document_access_logs")
+}
