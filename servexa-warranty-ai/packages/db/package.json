@@ -7,6 +7,21 @@
     },
     "./*": {
       "default": "./src/*.ts"
+    },
+    "./prisma/models": {
+      "default": "./prisma/generated/models.ts"
+    },
+    "./prisma/enum": {
+      "default": "./prisma/generated/enum.ts"
+    },
+    "./prisma/common-input-types": {
+      "default": "./prisma/generated/commonInputTypes.ts"
+    },
+    "./prisma/client": {
+      "default": "./prisma/generated/client.ts"
+    },
+    "./prisma/browser": {
+      "default": "./prisma/generated/browser.ts"
     }
   },
   "scripts": {
