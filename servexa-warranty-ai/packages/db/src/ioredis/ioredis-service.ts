@@ -29,6 +29,7 @@ export class IoredisService {
       this.client = client;
     } catch (error) {
       console.error(`REDIS: Failed to connect: ${error}`);
+      throw error;
     }
   }
 

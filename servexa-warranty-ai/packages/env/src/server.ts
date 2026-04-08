@@ -19,6 +19,7 @@ export type EnvServer = Readonly<{
 
 export const env = createEnv({
   server: {
+    PORT: z.coerce.number().int().positive(),
     DATABASE_URL: z.string().min(1),
     CORS_ORIGIN: z.url(),
     CORS_ORIGIN_WEB: z.string(),

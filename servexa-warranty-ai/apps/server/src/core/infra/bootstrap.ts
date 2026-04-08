@@ -28,17 +28,19 @@ import {
   requestLoggingMiddleware,
   userContextMiddleware,
 } from "@/middlewares";
+import { helmetConfig } from "@/configs/helmet";
+import { uploadDir } from "@/configs/upload-dir";
 
 export class AppBootStrap {
-  public app: express.Express;
+  public app: express.Express = express();
 
-  constructor() {
-    this.app = express();
+  public async bootstrap() {
     this.configProxy();
     this.initializeMiddlewares();
     void this.initializeServices();
     this.initializeRoutes();
     this.initializeErrorHandling();
+    await this.handleUploadDirectories();
   }
 
   private configProxy() {
@@ -47,7 +49,7 @@ export class AppBootStrap {
 
   private initializeMiddlewares(): void {
     // Security middleware
-    this.app.use(helmet());
+    this.app.use(helmet(helmetConfig));
     this.app.use(cors(corsOptions));
 
     // Compression and body parsing
@@ -66,8 +68,14 @@ export class AppBootStrap {
     logger.info(`[${env.BRANDING_NAME}] Database connected successfully`);
 
     const redisService = new IoredisService();
-    await redisService.connect();
-    logger.info(`[${env.BRANDING_NAME}] Redis connected successfully`);
+    try {
+      await redisService.connect();
+      logger.info(`[${env.BRANDING_NAME}] Redis connected successfully`);
+    } catch (error) {
+      logger.error(`[${env.BRANDING_NAME}] Redis connection failed`, {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   private initializeRoutes(): void {
@@ -104,6 +112,26 @@ export class AppBootStrap {
     // automatically report unhandled errors along with the request data
     // The error handler must be before any other error middleware and after all controllers
     this.app.use(errorHandler);
+  }
+
+  private async handleUploadDirectories() {
+    await import('fs')
+      .then((fs) => {
+        uploadDir.forEach((dir) => {
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+            console.log(
+              `[${env.NODE_ENV}] - AppBootstrap - Created upload directory: ${dir}`,
+            );
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(
+          `[${env.NODE_ENV}] - AppBootstrap - Error creating upload directories`,
+          error,
+        );
+      });
   }
 
   public listen(port: number): void {

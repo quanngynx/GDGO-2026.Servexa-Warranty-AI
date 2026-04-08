@@ -1,6 +1,6 @@
 import util from 'node:util';
 
-import { Request } from 'express';
+import { type Request } from 'express';
 
 export function safeSerialize(value: unknown): string {
   if (typeof value === 'string') return value;
@@ -22,8 +22,8 @@ export function getRequestInfo(req: Request, context: string): {
   return {
     method: req.method,
     url: req.url,
-    ip: req.ip || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
+    ip: req.ip || req.socket.remoteAddress || "",
+    userAgent: req.get("User-Agent") || "unknown",
     context: context || "",
   };
 }
