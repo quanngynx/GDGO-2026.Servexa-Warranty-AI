@@ -1,0 +1,61 @@
+# syntax=docker/dockerfile:1
+# syntax=docker.io/docker/dockerfile:1
+
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Install dependencies for building native modules and development tools
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    curl \
+    git \
+    openssl \
+    openssl-dev \
+    && corepack enable \
+    && corepack prepare yarn@1.22.22 --activate
+
+# Copy package files
+COPY package.json ./
+COPY yarn.lock ./
+COPY tsconfig.json ./
+
+# Install dependencies (Exclude cache node_modules)
+RUN --mount=type=cache,id=yarn-cache,target=/root/.cache/yarn \
+    yarn install --frozen-lockfile
+
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma client
+RUN yarn prisma generate
+
+# Create non-root user for development
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodeuser -u 1001
+
+# Create directories and set permissions
+RUN mkdir -p uploads logs src && \
+    chown -R nodeuser:nodejs /app
+
+# Switch to non-root user
+USER nodeuser
+
+# Environment variables
+ENV NODE_ENV=development
+ENV PORT=3000
+
+# Expose ports (app and debugger)
+EXPOSE 3000 9229
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+# Start the application with nodemon for hot reloading
+COPY startup.sh /app/startup.sh
+RUN chmod +x /app/startup.sh
+
+CMD ["sh", "/app/startup.sh"]

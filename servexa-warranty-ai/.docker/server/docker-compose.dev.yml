@@ -1,0 +1,92 @@
+services:
+  postgres:
+    # Error: in 18+, these Docker images are configured to store database data in a
+    #  format which is compatible with "pg_ctlcluster" (specifically, using
+    #  major-version-specific directory names).  This better reflects how
+    #  PostgreSQL itself works, and how upgrades are to be performed.
+    #  See also https://github.com/docker-library/postgres/pull/1259⁠
+    #  Counter to that, there appears to be PostgreSQL data in:
+    #     /var/lib/postgresql/data (unused mount/volume)
+    #  This is usually the result of upgrading the Docker image without
+    #  upgrading the underlying database using "pg_upgrade" (which requires both
+    #  versions).
+    #  The suggested container configuration for 18+ is to place a single mount
+    #  at /var/lib/postgresql which will then place PostgreSQL data in a
+    #  subdirectory, allowing usage of "pg_upgrade --link" without mount point
+    #  boundary issues.
+    #  See https://github.com/docker-library/postgres/issues/37⁠ for a (long)
+    #  discussion around this process, and suggestions for how to do so.
+    image: postgres:18
+    container_name: servexa-warranty-ai-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: servexa_warranty_ai_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      # WARNING: POSTGRES_HOST_AUTH_METHOD has been set to "trust". This will allow
+      #  anyone with access to the Postgres port to access your database without
+      #  a password, even if POSTGRES_PASSWORD is set. See PostgreSQL
+      #  documentation about "trust":
+      #  https://www.postgresql.org/docs/current/auth-trust.html⁠
+      #  In Docker's default configuration, this is effectively any other
+      #  container on the same system.
+      #  It is not recommended to use POSTGRES_HOST_AUTH_METHOD=trust. Replace
+      #  it with "-e POSTGRES_PASSWORD=password" instead to set a password in
+      #  "docker run".
+      # POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql
+      - ./docker/postgres/init-simple.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d servexa_warranty_ai_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:8.2.2-alpine3.22
+    container_name: servexa_warranty_ai_redis_dev
+    restart: unless-stopped
+    # command: >
+    #   redis-server
+    #   --appendonly yes
+    #   --maxmemory 256mb
+    #   --maxmemory-policy allkeys-lru
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_dev_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: servexa-warranty-ai-pgadmin-dev
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@servexa-warranty-ai.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_dev_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  pgadmin_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
