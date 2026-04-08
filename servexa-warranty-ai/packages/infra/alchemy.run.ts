@@ -8,6 +8,7 @@ config({ path: "../../apps/web/.env" });
 const app = await alchemy("servexa-warranty-ai");
 
 export const web = await Vite("web", {
+  name: `${app.name}-${app.stage}-web`,
   cwd: "../../apps/web",
   assets: "dist",
   bindings: {
