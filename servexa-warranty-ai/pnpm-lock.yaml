@@ -392,6 +392,9 @@ importers:
       '@servexa-warranty-ai/env':
         specifier: workspace:*
         version: link:../env
+      bcrypt:
+        specifier: ^5.1.1
+        version: 5.1.1
       dotenv:
         specifier: 'catalog:'
         version: 17.3.1
@@ -408,12 +411,18 @@ importers:
       '@servexa-warranty-ai/config':
         specifier: workspace:*
         version: link:../config
+      '@types/bcrypt':
+        specifier: ^5.0.2
+        version: 5.0.2
       '@types/pg':
         specifier: ^8.16.0
         version: 8.20.0
       prisma:
         specifier: ^7.2.0
         version: 7.6.0(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+      tsx:
+        specifier: ^4.20.6
+        version: 4.21.0
       typescript:
         specifier: ^5
         version: 5.9.3
