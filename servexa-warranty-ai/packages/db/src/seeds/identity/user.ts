@@ -16,7 +16,7 @@ export type SeedIdentityUserOptions = {
 
 const defaultOptions: SeedIdentityUserOptions = {
   username: 'admin',
-  password: 'admin123',
+  password: 'Admin@123',
   fullName: 'System Administrator',
   email: 'admin@servexa-warranty-ai.com',
   roleName: 'admin',
