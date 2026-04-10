@@ -18,7 +18,7 @@ import {
 	VoiceSelectorPreview,
 	VoiceSelectorTrigger,
 } from "@/components/ai-elements/voice-selector";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 
 const voices: {
 	id: string;

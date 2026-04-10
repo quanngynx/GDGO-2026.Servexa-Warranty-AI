@@ -59,7 +59,7 @@ Never use raw `Input` or `Textarea` inside an `InputGroup`.
 **Correct:**
 
 ```tsx
-import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { InputGroup, InputGroupInput } from "@servexa-warranty-ai/ui/components/input-group";
 
 <InputGroup>
   <InputGroupInput placeholder="Search..." />
@@ -86,7 +86,7 @@ Never place a `Button` directly inside or adjacent to an `Input` with custom pos
 **Correct:**
 
 ```tsx
-import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import { InputGroup, InputGroupInput, InputGroupAddon } from "@servexa-warranty-ai/ui/components/input-group";
 
 <InputGroup>
   <InputGroupInput placeholder="Search..." />

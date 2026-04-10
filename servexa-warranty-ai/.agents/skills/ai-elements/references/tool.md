@@ -23,7 +23,7 @@ Add the following component to your frontend:
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type ToolUIPart } from "ai";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { MessageResponse } from "@/components/ai-elements/message";
 import {
   Tool,

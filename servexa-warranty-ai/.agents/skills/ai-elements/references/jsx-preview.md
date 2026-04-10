@@ -61,8 +61,8 @@ import {
   JSXPreview,
   JSXPreviewContent,
 } from "@/components/ai-elements/jsx-preview";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
+import { Card } from "@servexa-warranty-ai/ui/components/card";
 
 const customComponents = {
   Button,

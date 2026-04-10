@@ -28,7 +28,7 @@ import {
 	StackTraceFrames,
 	StackTraceHeader,
 } from "@/components/ai-elements/stack-trace";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 
 const code = `import math
 

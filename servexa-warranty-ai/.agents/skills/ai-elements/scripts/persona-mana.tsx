@@ -11,13 +11,13 @@ import {
 import { memo, useCallback, useState } from "react";
 import type { PersonaState } from "@/components/ai-elements/persona";
 import { Persona } from "@/components/ai-elements/persona";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
+import { ButtonGroup } from "@servexa-warranty-ai/ui/components/button-group";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@servexa-warranty-ai/ui/components/tooltip";
 
 const states: {
 	state: PersonaState;

@@ -59,7 +59,7 @@ import {
 	usePromptInputAttachments,
 	usePromptInputReferencedSources,
 } from "@/components/ai-elements/prompt-input";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 
 const models = [
 	{

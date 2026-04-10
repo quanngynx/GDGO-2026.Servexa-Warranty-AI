@@ -6,7 +6,7 @@ import {
 	JSXPreviewContent,
 	JSXPreviewError,
 } from "@/components/ai-elements/jsx-preview";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 
 const handleError = (error: Error) => {
 	console.log("JSX Parse Error:", error);

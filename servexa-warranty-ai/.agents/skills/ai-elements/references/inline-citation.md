@@ -38,7 +38,7 @@ import {
   InlineCitationSource,
   InlineCitationQuote,
 } from "@/components/ai-elements/inline-citation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { citationSchema } from "@/app/api/citation/route";
 
 const CitationDemo = () => {

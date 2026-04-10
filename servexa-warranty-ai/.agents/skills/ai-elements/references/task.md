@@ -29,7 +29,7 @@ import {
   TaskTrigger,
   TaskContent,
 } from "@/components/ai-elements/task";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { tasksSchema } from "@/app/api/task/route";
 import {
   SiReact,

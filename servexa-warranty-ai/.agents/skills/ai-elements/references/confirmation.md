@@ -25,7 +25,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type ToolUIPart } from "ai";
 import { useState } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 import {
   Confirmation,
   ConfirmationTitle,

@@ -11,7 +11,7 @@ import {
 	PlanTitle,
 	PlanTrigger,
 } from "@/components/ai-elements/plan";
-import { Button } from "@/components/ui/button";
+import { Button } from "@servexa-warranty-ai/ui/components/button";
 
 const Example = () => (
 	<Plan defaultOpen={false}>
