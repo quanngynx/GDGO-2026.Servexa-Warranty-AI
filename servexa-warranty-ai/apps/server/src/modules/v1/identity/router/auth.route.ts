@@ -1,5 +1,20 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter } from 'express'
 
-const authRoute: IRouter = Router();
+import authController from '../controllers/auth.controller'
+import {
+  authenticateMiddleware,
+  refreshAuthenticateMiddleware,
+} from '@/middlewares'
 
-export default authRoute;
+const authRoute: IRouter = Router()
+
+authRoute.post('/login', authController.login)
+authRoute.post('/logout', refreshAuthenticateMiddleware, authController.logout)
+authRoute.get('/me', authenticateMiddleware, authController.extractInfoFromToken)
+authRoute.post(
+  '/refresh',
+  refreshAuthenticateMiddleware,
+  authController.handleRefreshToken,
+)
+
+export default authRoute
