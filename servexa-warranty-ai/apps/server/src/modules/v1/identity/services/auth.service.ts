@@ -108,8 +108,6 @@ export class AuthService {
       roleScope: RolesScope.SYSTEM,
       permissions: [],
       aud: 'access:common',
-      iat: 0,
-      exp: 0,
     }
 
     const refreshPayload: RefreshTokenPayload = {
@@ -118,8 +116,6 @@ export class AuthService {
       keyStoreId,
       sessionId: '',
       aud: 'refresh:common',
-      iat: 0,
-      exp: 0,
     }
 
     const tokens = await this.keyTokenService.createTokenPair(
@@ -136,6 +132,8 @@ export class AuthService {
       tokens.refreshToken,
     )
 
+    const nowSec = Math.floor(Date.now() / 1000)
+
     return {
       user: {
         id: foundUser.id,
@@ -147,8 +145,8 @@ export class AuthService {
       },
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      expiresInAccessToken: tokens.exp_accessToken,
-      expiresInRefreshToken: tokens.exp_refreshToken,
+      expiresInAccessToken: Math.max(1, tokens.exp_accessToken - nowSec),
+      expiresInRefreshToken: Math.max(1, tokens.exp_refreshToken - nowSec),
     }
   }
 
@@ -264,8 +262,6 @@ export class AuthService {
       roleScope: RolesScope.SYSTEM,
       permissions: [],
       aud: 'access:common',
-      iat: 0,
-      exp: 0,
     }
 
     const refreshPayload: RefreshTokenPayload = {
@@ -274,8 +270,6 @@ export class AuthService {
       keyStoreId: keyStoreData.id,
       sessionId: '',
       aud: 'refresh:common',
-      iat: 0,
-      exp: 0,
     }
 
     const tokens = await this.keyTokenService.createTokenPair(
@@ -292,6 +286,8 @@ export class AuthService {
       refreshTokenUsed: [...keyStoreData.refreshTokenUsed, refreshToken],
     })
 
+    const nowSec = Math.floor(Date.now() / 1000)
+
     return {
       user: {
         id: foundUser.id,
@@ -303,8 +299,8 @@ export class AuthService {
       },
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      expiresInAccessToken: tokens.exp_accessToken,
-      expiresInRefreshToken: tokens.exp_refreshToken,
+      expiresInAccessToken: Math.max(1, tokens.exp_accessToken - nowSec),
+      expiresInRefreshToken: Math.max(1, tokens.exp_refreshToken - nowSec),
     }
   }
 }
