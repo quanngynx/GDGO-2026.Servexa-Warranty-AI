@@ -4,6 +4,6 @@ import routeIdentityV1 from "./v1/identity/router/route";
 
 const routeVersionApi: IRouter = Router();
 
-routeVersionApi.use(`/${VERSION_API.V1}`, routeIdentityV1);
+routeVersionApi.use(`/${VERSION_API.V1}/identity`, routeIdentityV1);
 
 export default routeVersionApi;
