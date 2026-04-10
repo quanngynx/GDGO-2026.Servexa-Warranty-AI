@@ -1,69 +1,62 @@
-import type z from "zod/v4";
+import type z from 'zod/v4'
 import type {
   requestForgotPasswordSchema,
   requestLoginValidation,
   requestChangePasswordSchema,
-} from "../validations";
-import type { BaseApiResponse } from "../../bases/base-response";
-import type { UserStatus } from "@servexa-warranty-ai/ui/enums/business-status";
+} from '../validations'
 
 // ===============================================
 // API Request Data Transfer Object
 // ===============================================
-//
-// ===============================================
-export type RequestLoginDto = z.infer<typeof requestLoginValidation>;
+export type RequestLoginDto = z.infer<typeof requestLoginValidation>
 export type RequestForgotPasswordDto = z.infer<
   typeof requestForgotPasswordSchema
->;
+>
 export type RequestChangePasswordDto = z.infer<
   typeof requestChangePasswordSchema
->;
+>
 
-// ===============================================
-// API Response Data Transfer Object
-// ===============================================
-//
-// ===============================================
-export type ResponseDataVerifyDto = {
-  id: string;
-  username: string;
-  fullName: string;
-  role: string;
-  status: UserStatus;
-  email?: string | null | undefined;
-  permissions?: string[] | undefined;
-};
+// Server wraps payloads as JSON: { message, status, metadata }
+export type ServerSuccessResponse<TMetadata> = {
+  message: string
+  status: number
+  metadata: TMetadata
+}
 
-export type ResponseLoginDto = BaseApiResponse<{
-  id: number;
-  username: string;
-  fullName: string;
-  email: string;
-  token: string;
-}>;
+export type ResponseAuthUserDto = {
+  id: string
+  username: string
+  fullName: string
+  email: string
+  role: string
+  permissions?: string[] | undefined
+}
 
-export type ResponseVerifyDto = BaseApiResponse<ResponseDataVerifyDto>;
+export type ResponseAuthTokensDto = {
+  user: ResponseAuthUserDto
+  accessToken: string
+  refreshToken: string
+  expiresInAccessToken: number
+  expiresInRefreshToken: number
+}
 
-export type ResponseLogoutDto = BaseApiResponse<boolean>;
+export type ResponseLoginDto = ServerSuccessResponse<ResponseAuthTokensDto>
+export type ResponseRefreshTokenDto = ServerSuccessResponse<ResponseAuthTokensDto>
 
-export type ResponseRefreshTokenDto = BaseApiResponse<{
-  user: {
-    id: string;
-    username: string;
-    fullName: string;
-    role: string;
-    status: UserStatus;
-    email?: string | null | undefined;
-    permissions?: string[] | undefined;
-  };
-  accessToken: string;
-  refreshToken: string;
-  expiresInAccessToken: number;
-  expiresInRefreshToken: number;
-  iatAccessToken: number;
-  iatRefreshToken: number;
-}>;
+/** Current user from GET /me (matches server currentUserQuerySchema) */
+export type ResponseMeUserDto = {
+  id: string
+  email: string
+  username: string
+  fullName: string
+  role: string
+  roleScope?: string | undefined
+  permissions?: string[] | undefined
+}
 
-export type ResponseChangePasswordDto = boolean;
-export type ResponseForgotPasswordDto = boolean;
+export type ResponseVerifyDto = ServerSuccessResponse<ResponseMeUserDto>
+
+export type ResponseLogoutDto = ServerSuccessResponse<boolean>
+
+export type ResponseChangePasswordDto = boolean
+export type ResponseForgotPasswordDto = boolean

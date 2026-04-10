@@ -1,21 +1,62 @@
-import { BaseApi } from "@/libs/axios";
-import type { RequestLoginDto, ResponseLoginDto } from "./data-transfer-object";
+import { BaseApi } from '@/libs/axios'
+import type {
+  RequestLoginDto,
+  ResponseLoginDto,
+  ResponseLogoutDto,
+  ResponseRefreshTokenDto,
+  ResponseVerifyDto,
+} from './data-transfer-object'
 
 class AuthAPI extends BaseApi {
-  constructor() {
-    super();
+  login(username: string, password: string) {
+    return this.tryPost<ResponseLoginDto, RequestLoginDto>(
+      '/v1/identity/auth/login',
+      { username, password },
+      {
+        _skipAccessTokenHeader: true,
+        _skipAuthRefreshRetry: true,
+      },
+    )
   }
 
-  async login(
-    username: string,
-    password: string
-  ): Promise<ResponseLoginDto | null> {
-    const response = await this.tryPost<ResponseLoginDto, RequestLoginDto>(
-      "/auth/login",
-      { username, password }
-    );
-    return response;
+  logout(userId: string, accessToken: string, refreshToken: string) {
+    return this.tryPost<ResponseLogoutDto, object>(
+      '/v1/identity/auth/logout',
+      {},
+      {
+        headers: {
+          'x-client-id': userId,
+          'x-refresh-token': refreshToken,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        _skipAuthRefreshRetry: true,
+      },
+    )
+  }
+
+  refresh(userId: string, refreshToken: string) {
+    return this.tryPost<ResponseRefreshTokenDto, object>(
+      '/v1/identity/auth/refresh',
+      {},
+      {
+        headers: {
+          'x-client-id': userId,
+          'x-refresh-token': refreshToken,
+        },
+        _skipAccessTokenHeader: true,
+        _skipAuthRefreshRetry: true,
+      },
+    )
+  }
+
+  me(userId: string, accessToken: string) {
+    return this.tryGet<ResponseVerifyDto>('/v1/identity/auth/me', {
+      headers: {
+        'x-client-id': userId,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
   }
 }
 
-export const authAPI = new AuthAPI();
+export const authAPI = new AuthAPI()

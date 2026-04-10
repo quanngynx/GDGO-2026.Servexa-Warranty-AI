@@ -1,3 +1,5 @@
+import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@servexa-warranty-ai/ui/components/sonner";
 import {
   HeadContent,
@@ -5,16 +7,23 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import Loader from "@/components/loader";
+import { NavigationProgress } from "@/components/navigation-progress";
 import { NotFoundError } from "@/features/errors/not-found-error";
 import { GeneralError } from "@/features/errors/general-error";
 import { env } from "@servexa-warranty-ai/env/web";
-import { NavigationProgress } from "@/components/navigation-progress";
+import { useAuthStore } from "@/stores/auth-store";
 
-export interface RouterAppContext {}
+export interface RouterAppContext {
+  queryClient: QueryClient;
+}
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
+  loader: async () => {
+    await useAuthStore.getState().auth.initializeAuth();
+  },
+  pendingComponent: () => <Loader />,
   component: RootComponent,
   notFoundComponent: NotFoundError,
   errorComponent: GeneralError,
