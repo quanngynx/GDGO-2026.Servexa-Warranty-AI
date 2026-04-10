@@ -13,14 +13,15 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
   const { auth } = useAuthStore();
 
   const handleSignOut = () => {
-    auth.reset();
-    // Preserve current location for redirect after sign-in
-    const currentPath = location.href;
-    navigate({
-      to: "/sign-in",
-      search: { redirect: currentPath },
-      replace: true,
-    });
+    void (async () => {
+      await auth.logout();
+      const currentPath = location.href;
+      navigate({
+        to: "/sign-in",
+        search: { redirect: currentPath },
+        replace: true,
+      });
+    })();
   };
 
   return (
