@@ -1,12 +1,12 @@
 
 import 'express';
 
-import { AccessTokenPayload } from '@repo/shared/bases/access-token-payload';
-import { RefreshTokenPayload } from '@repo/shared/bases/refresh-token-payload';
-
-import { TempTokenPayload } from '@/core/utils/temp-token.util';
-
-import { KeyStoreForJWT } from './common';
+import type {
+  AccessTokenPayload,
+  KeyStoreForJWT,
+  RefreshTokenPayload,
+  TempTokenPayload,
+} from './jwt';
 
 declare global {
   namespace Express {
@@ -30,7 +30,7 @@ declare global {
         };
 
         // For file
-        file?: Express.Multer.File,
+        file?: Express.Multer.File;
 
         // For rate limit
         rateLimitKey?: string

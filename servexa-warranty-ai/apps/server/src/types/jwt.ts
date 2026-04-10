@@ -4,7 +4,6 @@
  */
 import type { JwtPayload } from 'jsonwebtoken';
 import type { RolesScopeType, RolesType } from './role';
-import type { KeyTokenModel } from '@servexa-warranty-ai/db/prisma/models';
 
 export interface RefreshTokenPayload extends Pick<
   JwtPayload,
@@ -29,10 +28,13 @@ export interface AccessTokenPayload extends Pick<
   permissions: string[];
 }
 
-export type KeyStoreForJWT = Pick<
-  KeyTokenModel,
-  'id' | 'privateKey' | 'publicKey' | 'refreshToken' | 'refreshTokenUsed'
->;
+export type KeyStoreForJWT = {
+  id: string;
+  privateKey: string;
+  publicKey: string;
+  refreshToken: string;
+  refreshTokenUsed: string[];
+};
 
 export interface PairToken {
   accessToken: string;
