@@ -72,7 +72,7 @@ export const requestLoggingMiddleware = (req: Request, res: Response, next: Next
   const ip = req.ip
   const headers = req.headers
   const userAgent = headers['user-agent'] || 'unknown'
-  const userId = req.user?.userId ?? 'anonymous'
+  const userId = req.user?.id ?? 'anonymous'
 
   // Log request
   console.log(`[${req.requestId}] ${method} ${url} - ${ip} - ${userAgent} - User: ${userId}`)

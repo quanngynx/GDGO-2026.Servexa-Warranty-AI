@@ -30,7 +30,7 @@ export class OperationalError extends Error implements AppError {
 
   constructor(
     message: string,
-    statusCode = HTTP_RESPONSE_CODE.BAD_REQUEST,
+    statusCode: number = HTTP_RESPONSE_CODE.BAD_REQUEST,
     requestId?: string,
     userId?: string,
     metadata?: Record<string, unknown>
@@ -170,7 +170,7 @@ export const errorHandler = (error: AppError, req: Request, res: Response, next:
 // Factory functions for creating errors
 export const createOperationalError = (
   message: string,
-  statusCode = HTTP_RESPONSE_CODE.BAD_REQUEST,
+  statusCode: number = HTTP_RESPONSE_CODE.BAD_REQUEST,
   requestId?: string,
   userId?: string,
   metadata?: Record<string, unknown>
