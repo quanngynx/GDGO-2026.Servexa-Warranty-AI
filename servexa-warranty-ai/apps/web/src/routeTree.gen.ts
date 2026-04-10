@@ -12,6 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/index'
+import { Route as AuthenticatedGENERALRepairCasesManagementIndexRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/index'
+import { Route as AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport } from './routes/_authenticated/(GENERAL)/payment-pending-repair-cases/index'
 
 const AiRoute = AiRouteImport.update({
   id: '/ai',
@@ -27,32 +42,230 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const authSignUpRoute = authSignUpRouteImport.update({
+  id: '/(auth)/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/(auth)/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/(auth)/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport.update({
+    id: '/(SYSTEM-ADMINISTRATION)/user-management/',
+    path: '/user-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport.update({
+    id: '/(SYSTEM-ADMINISTRATION)/roles-management/',
+    path: '/roles-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/reference-documentation/',
+      path: '/reference-documentation/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/purchase-locations-management/',
+      path: '/purchase-locations-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRouteImport.update({
+    id: '/(SYSTEM-ADMINISTRATION)/products-management/',
+    path: '/products-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/permissions-management/',
+      path: '/permissions-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRouteImport.update({
+    id: '/(SYSTEM-ADMINISTRATION)/customer-management/',
+    path: '/customer-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/central-warehouse-management/',
+      path: '/central-warehouse-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRouteImport.update({
+    id: '/(SYSTEM-ADMINISTRATION)/asc-centers-management/',
+    path: '/asc-centers-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/accessories-management/',
+      path: '/accessories-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
+const AuthenticatedGENERALRepairCasesManagementIndexRoute =
+  AuthenticatedGENERALRepairCasesManagementIndexRouteImport.update({
+    id: '/(GENERAL)/repair-cases-management/',
+    path: '/repair-cases-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute =
+  AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport.update({
+    id: '/(GENERAL)/payment-pending-repair-cases/',
+    path: '/payment-pending-repair-cases/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/ai': typeof AiRoute
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
+  '/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
+  '/asc-centers-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
+  '/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
+  '/customer-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
+  '/permissions-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/products-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
+  '/purchase-locations-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
+  '/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
+  '/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
 }
 export interface FileRoutesByTo {
   '/ai': typeof AiRoute
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
   '/': typeof AuthenticatedIndexRoute
+  '/payment-pending-repair-cases': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
+  '/repair-cases-management': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/accessories-management': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
+  '/asc-centers-management': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
+  '/central-warehouse-management': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
+  '/customer-management': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
+  '/permissions-management': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/products-management': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
+  '/purchase-locations-management': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
+  '/reference-documentation': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/roles-management': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
+  '/user-management': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/ai': typeof AiRoute
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up': typeof authSignUpRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/(GENERAL)/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
+  '/_authenticated/(GENERAL)/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/ai'
+  fullPaths:
+    | '/'
+    | '/ai'
+    | '/forgot-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/payment-pending-repair-cases/'
+    | '/repair-cases-management/'
+    | '/accessories-management/'
+    | '/asc-centers-management/'
+    | '/central-warehouse-management/'
+    | '/customer-management/'
+    | '/permissions-management/'
+    | '/products-management/'
+    | '/purchase-locations-management/'
+    | '/reference-documentation/'
+    | '/roles-management/'
+    | '/user-management/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/ai' | '/'
-  id: '__root__' | '/_authenticated' | '/ai' | '/_authenticated/'
+  to:
+    | '/ai'
+    | '/forgot-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/'
+    | '/payment-pending-repair-cases'
+    | '/repair-cases-management'
+    | '/accessories-management'
+    | '/asc-centers-management'
+    | '/central-warehouse-management'
+    | '/customer-management'
+    | '/permissions-management'
+    | '/products-management'
+    | '/purchase-locations-management'
+    | '/reference-documentation'
+    | '/roles-management'
+    | '/user-management'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/ai'
+    | '/(auth)/forgot-password'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up'
+    | '/_authenticated/'
+    | '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
+    | '/_authenticated/(GENERAL)/repair-cases-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AiRoute: typeof AiRoute
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
+  authSignInRoute: typeof authSignInRoute
+  authSignUpRoute: typeof authSignUpRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,15 +291,156 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
+      path: '/user-management'
+      fullPath: '/user-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/'
+      path: '/roles-management'
+      fullPath: '/roles-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
+      path: '/reference-documentation'
+      fullPath: '/reference-documentation/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/'
+      path: '/purchase-locations-management'
+      fullPath: '/purchase-locations-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/'
+      path: '/products-management'
+      fullPath: '/products-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/'
+      path: '/permissions-management'
+      fullPath: '/permissions-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/'
+      path: '/customer-management'
+      fullPath: '/customer-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/'
+      path: '/central-warehouse-management'
+      fullPath: '/central-warehouse-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/'
+      path: '/asc-centers-management'
+      fullPath: '/asc-centers-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/'
+      path: '/accessories-management'
+      fullPath: '/accessories-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(GENERAL)/repair-cases-management/': {
+      id: '/_authenticated/(GENERAL)/repair-cases-management/'
+      path: '/repair-cases-management'
+      fullPath: '/repair-cases-management/'
+      preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(GENERAL)/payment-pending-repair-cases/': {
+      id: '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
+      path: '/payment-pending-repair-cases'
+      fullPath: '/payment-pending-repair-cases/'
+      preLoaderRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
+  AuthenticatedGENERALRepairCasesManagementIndexRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute:
+    AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute,
+  AuthenticatedGENERALRepairCasesManagementIndexRoute:
+    AuthenticatedGENERALRepairCasesManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -95,6 +449,9 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AiRoute: AiRoute,
+  authForgotPasswordRoute: authForgotPasswordRoute,
+  authSignInRoute: authSignInRoute,
+  authSignUpRoute: authSignUpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
