@@ -6,11 +6,10 @@ import { ProfileDropdown } from "@/components/profile-dropdown";
 import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { MessagesSquare, Package } from "lucide-react";
-import { getRouteApi } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 export function PaymentPendingRepairCases() {
-  const route = getRouteApi("/_authenticated/chats/");
-  const navigate = route.useNavigate();
+  const navigate = useNavigate()
   return (
     <>
       {/* ===== Top Heading ===== */}
