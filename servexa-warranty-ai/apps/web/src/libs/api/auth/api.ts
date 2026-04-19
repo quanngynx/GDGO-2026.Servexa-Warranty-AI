@@ -26,7 +26,7 @@ class AuthAPI extends BaseApi {
       {
         headers: {
           'x-client-id': userId,
-          'x-refresh-token': refreshToken,
+          'refreshtoken': refreshToken,
           Authorization: `Bearer ${accessToken}`,
         },
         _skipAuthRefreshRetry: true,
@@ -41,7 +41,7 @@ class AuthAPI extends BaseApi {
       {
         headers: {
           'x-client-id': userId,
-          'x-refresh-token': refreshToken,
+          'refreshtoken': refreshToken,
         },
         _skipAccessTokenHeader: true,
         _skipAuthRefreshRetry: true,

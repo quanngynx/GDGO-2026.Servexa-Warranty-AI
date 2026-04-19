@@ -20,7 +20,9 @@ export interface RouterAppContext {
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
-  loader: async () => {
+  // Session must hydrate in beforeLoad so child beforeLoad (e.g. /_authenticated) sees updated store.
+  // TanStack Router runs beforeLoad before route.load; a root-only loader runs too late for that guard.
+  beforeLoad: async () => {
     await useAuthStore.getState().auth.initializeAuth();
   },
   pendingComponent: () => <Loader />,

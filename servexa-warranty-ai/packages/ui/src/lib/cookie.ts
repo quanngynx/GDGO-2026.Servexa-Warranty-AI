@@ -16,6 +16,13 @@ export function getCookie(name: string): string | null {
   return cookie.substring(prefix.length);
 }
 
+const shouldSetCookieDomain = (domain: string): boolean => {
+  const d = domain.trim().toLowerCase();
+  if (!d) return false;
+  // Host-only cookies on loopback: `Domain=localhost` is invalid/rejected in many browsers
+  return d !== "localhost" && d !== "127.0.0.1";
+};
+
 export function setCookie(
   name: string,
   value: string,
@@ -27,19 +34,7 @@ export function setCookie(
     return undefined;
   }
 
-  // Get any potential existing instances of this particular cookie
-  const existingCookie = getCookie(name);
-  let cookieValue = value;
-
-  if (existingCookie) {
-    // If exisitng cookie name does not include the value we are trying to set,
-    // then add it, otherwise use the existing cookie value
-    cookieValue = !existingCookie.includes(value)
-      ? `${existingCookie}+${value}`
-      : existingCookie;
-  }
-
-  let cookieString = `${name}=${cookieValue}; path=${path}; domain=${domain};`;
+  let cookieString = `${name}=${value}; path=${path}; domain=${domain};`;
 
   if (expires) {
     const date = new Date();
@@ -59,13 +54,12 @@ export function clearCookie(name: string, domain: string, path = "/"): void {
     return undefined;
   }
 
-  // Get any potential existing instances of this particular cookie
-  const existingCookie = getCookie(name);
-
-  if (existingCookie) {
-    // Set the cookie's expiration date to a past date
-    setCookie(name, "", domain, -1, path);
+  let cookieString = `${name}=; path=${path}`;
+  if (shouldSetCookieDomain(domain)) {
+    cookieString += `; domain=${domain}`;
   }
+  cookieString += "; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = cookieString;
 
   return undefined;
 }
