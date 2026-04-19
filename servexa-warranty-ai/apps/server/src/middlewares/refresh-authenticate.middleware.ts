@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 
-import { CLIENT_ID, REFRESH_TOKEN } from '@/core/constants/headers'
+import { CLIENT_ID, REFRESHTOKEN } from '@/core/constants/headers'
 import { HTTP_RESPONSE_CODE } from '@/core/constants/http.constant'
 import { VALUE_TOKEN } from '@/core/constants/token.constant'
 import { KeyTokenService } from '@/core/services/key-token.service'
@@ -14,7 +14,7 @@ const keyTokenService = new KeyTokenService()
 export const refreshAuthenticateMiddleware: RequestHandler = async (req, _res, next) => {
   try {
     const userId = requireHeader(req, CLIENT_ID, 'Missing x-client-id')
-    const refreshToken = requireHeader(req, REFRESH_TOKEN, 'Missing x-refresh-token')
+    const refreshToken = requireHeader(req, REFRESHTOKEN, 'Missing refreshtoken')
 
     const keyStore = await keyTokenService.requireKeyStore(userId)
     const decoded = keyTokenService.verifyJWT(

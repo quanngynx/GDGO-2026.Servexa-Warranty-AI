@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service'
 import { getRequestInfo } from '@/core/logging/logging.utils'
 import { currentUserQuerySchema, requestAuthLoginSchema } from '../validations'
 import { SuccessResponse } from '@/utils/success-response'
-import { AUTHORIZATION, REFRESH_TOKEN } from '@/core/constants/headers'
+import { AUTHORIZATION, REFRESHTOKEN } from '@/core/constants/headers'
 import { requireHeader } from '@/utils/require-header'
 import { createOperationalError } from '@/middlewares/error-middleware'
 
@@ -94,7 +94,7 @@ class AuthController {
         ...getRequestInfo(req, 'AuthController.handleRefreshToken'),
       })
 
-      const refreshToken = requireHeader(req, REFRESH_TOKEN)
+      const refreshToken = requireHeader(req, REFRESHTOKEN)
       const result = await this.authService.handleRefreshToken({
         keyStoreId: req.refresh.keyStoreId,
         userId: req.refresh.id,
