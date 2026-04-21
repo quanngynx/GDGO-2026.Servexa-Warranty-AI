@@ -1,5 +1,5 @@
 model BroadcastNotification {
-  id        String               @id @default(uuid())
+  id        String               @id @default(uuid(7))
   title     String
   body      String               @db.Text
   actionUrl String?              @map("action_url")
@@ -16,8 +16,8 @@ model BroadcastNotification {
 
   // Scheduling
   sendImmediately Boolean   @default(true) @map("send_immediately")
-  scheduledFor    DateTime? @map("scheduled_for")
-  sentAt          DateTime? @map("sent_at")
+  scheduledFor    DateTime? @map("scheduled_for") @db.Timestamptz(3)
+  sentAt          DateTime? @map("sent_at") @db.Timestamptz(3)
 
   // Tracking
   status         BroadcastStatus @default(draft)
@@ -26,18 +26,21 @@ model BroadcastNotification {
 
   // Meta
   createdBy String   @map("created_by")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   creator       User           @relation(fields: [createdBy], references: [id])
   notifications Notification[] @relation("BroadcastNotifications")
 
   @@index([status, scheduledFor])
+  @@index([targetRoles], type: Gin)
+  @@index([targetUsers], type: Gin)
+  @@index([targetCenters], type: Gin)
   @@map("broadcast_notifications")
 }
 
 model Notification {
-  id     String @id @default(uuid())
+  id     String @id @default(uuid(7))
   userId String @map("user_id")
 
   // Source - either template-based or broadcast
@@ -55,10 +58,10 @@ model Notification {
 
   // Status
   isRead     Boolean   @default(false) @map("is_read")
-  readAt     DateTime? @map("read_at")
+  readAt     DateTime? @map("read_at") @db.Timestamptz(3)
   isArchived Boolean   @default(false) @map("is_archived")
-  archivedAt DateTime? @map("archived_at")
-  createdAt  DateTime  @default(now()) @map("created_at")
+  archivedAt DateTime? @map("archived_at") @db.Timestamptz(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
 
   user      User                   @relation(fields: [userId], references: [id])
   broadcast BroadcastNotification? @relation("BroadcastNotifications", fields: [broadcastId], references: [id])
@@ -70,7 +73,7 @@ model Notification {
 }
 
 model NotificationPreference {
-  id              String               @id @default(uuid())
+  id              String               @id @default(uuid(7))
   userId          String               @map("user_id")
   category        NotificationCategory
   isEnabled       Boolean              @default(true) @map("is_enabled")
@@ -81,11 +84,12 @@ model NotificationPreference {
   user User @relation(fields: [userId], references: [id])
 
   @@unique([userId, category])
+  @@index([userId])
   @@map("notification_preferences")
 }
 
 model NotificationTemplate {
-  id          String               @id @default(uuid())
+  id          String               @id @default(uuid(7))
   code        String               @unique
   name        String
   description String?
@@ -97,8 +101,8 @@ model NotificationTemplate {
   color       String?
   priority    NotificationPriority @default(normal)
   isActive    Boolean              @default(true)
-  createdAt   DateTime             @default(now()) @map("created_at")
-  updatedAt   DateTime             @updatedAt @map("updated_at")
+  createdAt   DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("notification_templates")
 }

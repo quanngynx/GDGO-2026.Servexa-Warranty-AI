@@ -1,5 +1,5 @@
 model PurchaseLocation {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid(7))
   groupId     String   @map("group_id")
   name        String
   code        String   @unique
@@ -8,8 +8,8 @@ model PurchaseLocation {
   address     String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdBy   String?  @map("created_by")
   updatedBy   String?  @map("updated_by")
 
@@ -27,14 +27,14 @@ model PurchaseLocation {
 }
 
 model PurchaseLocationGroup {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid(7))
   name        String
   code        String   @unique
   description String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdBy   String?  @map("created_by")
   updatedBy   String?  @map("updated_by")
 

@@ -1,5 +1,5 @@
 model Customer {
-  id             String                   @id @default(uuid())
+  id             String                   @id @default(uuid(7))
   customerGroup  CustomerGroup            @map("customer_group")
   fullName       String                   @map("full_name")
   phone1         String                   @map("phone_1")
@@ -13,8 +13,8 @@ model Customer {
   accountNumber  String?                  @map("account_number")
   contactPerson  String?                  @map("contact_person")
   ascCenterId    String?                  @map("asc_center_id")
-  createdAt      DateTime                 @default(now()) @map("created_at")
-  updatedAt      DateTime                 @updatedAt @map("updated_at")
+  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdBy      String?                  @map("created_by")
   updatedBy      String?                  @map("updated_by")
   // Relations
@@ -36,7 +36,7 @@ model Customer {
 }
 
 model Employee {
-  id                    String             @id @default(uuid())
+  id                    String             @id @default(uuid(7))
   employeeCode          String             @unique @map("employee_code")
   gender                GenderEnum
   fullName              String             @map("full_name")
@@ -63,8 +63,8 @@ model Employee {
   emergencyContactPhone String?            @map("emergency_contact_phone")
   userId                String?            @unique @map("user_id")
   notes                 String?
-  createdAt             DateTime           @default(now()) @map("created_at")
-  updatedAt             DateTime           @updatedAt @map("updated_at")
+  createdAt             DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdBy             String             @map("created_by")
   ascCenter             AscCenter          @relation(fields: [ascCenterId], references: [id])
   creator               User               @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
@@ -72,9 +72,6 @@ model Employee {
   repairCasesAssigned   RepairCase[]       @relation("RepairCaseAssignedEmployee")
 
   @@index([ascCenterId])
-  @@index([position])
-  @@index([department])
-  @@index([status])
   @@index([employeeCode])
   @@index([nationalId])
   @@index([primaryPhone])
@@ -87,7 +84,7 @@ model Employee {
 }
 
 model TechnicianProfile {
-  id                 String                     @id @default(uuid())
+  id                 String                     @id @default(uuid(7))
   userId             String                     @unique @map("user_id")
   skillLevel         TechnicianSkillLevel       @default(basic) @map("skill_level")
   specializations    TechnicianSpecialization[]
@@ -98,8 +95,8 @@ model TechnicianProfile {
   averageRepairTime  Int?                       @map("average_repair_time")
   customerRating     Decimal?                   @map("customer_rating") @db.Decimal(3, 2)
   completedCases     Int                        @default(0) @map("completed_cases")
-  createdAt          DateTime                   @default(now()) @map("created_at")
-  updatedAt          DateTime                   @updatedAt @map("updated_at")
+  createdAt          DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
   user               User                       @relation(fields: [userId], references: [id])
 
   @@map("technician_profiles")

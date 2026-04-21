@@ -1,5 +1,5 @@
 model Document {
-  id                  String       @id @default(cuid())
+  id                  String       @id @default(uuid(7))
   title               String
   description         String? // Mô tả ngắn gọn
   detailedDescription String?      @map("detailed_description") // Mô tả chi tiết
@@ -9,7 +9,7 @@ model Document {
   fileSize            Int? // Kích thước bytes
   mimeType            String? // MIME type
   checksum            String? // MD5/SHA256 để kiểm tra integrity
-  isActive            Boolean      @default(true)
+  deletedAt           DateTime?    @map("deleted_at") @db.Timestamptz(3)
 
   // Quan hệ
   createdBy   User       @relation("DocumentCreatedBy", fields: [createdById], references: [id])
@@ -20,21 +20,21 @@ model Document {
   ascCenterId String?
 
   // Audit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   // Quan hệ n-n
   accessLogs DocumentAccessLog[]
 
   @@index([documentType])
   @@index([ascCenterId])
-  @@index([isActive, createdAt])
+  @@index([deletedAt, createdAt])
   @@index([title])
   @@map("documents")
 }
 
 model DocumentAccessLog {
-  id         String         @id @default(cuid())
+  id         String         @id @default(uuid(7))
   documentId String
   userId     String
   action     DocumentAction
@@ -45,7 +45,7 @@ model DocumentAccessLog {
   document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   user     User     @relation(fields: [userId], references: [id])
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   @@index([documentId, action])
   @@index([userId, createdAt])

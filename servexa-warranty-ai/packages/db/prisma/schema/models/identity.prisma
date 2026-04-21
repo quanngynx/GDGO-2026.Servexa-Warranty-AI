@@ -1,21 +1,35 @@
 model KeyToken {
-  id               String   @id @default(uuid(7))
+  id               String             @id @default(uuid(7))
   userId           String
   privateKey       String
   publicKey        String
   refreshToken     String
-  refreshTokenUsed String[]
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  createdBy        String?  @db.VarChar(255)
-  updatedBy        String?  @db.VarChar(255)
+  createdAt        DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime           @updatedAt @db.Timestamptz(3)
+  createdBy        String?            @db.VarChar(255)
+  updatedBy        String?            @db.VarChar(255)
+  usedRefreshTokens UsedRefreshToken[]
+
+  @@index([userId])
+}
+
+model UsedRefreshToken {
+  id          String   @id @default(uuid(7))
+  keyTokenId  String   @map("key_token_id")
+  token       String
+  usedAt      DateTime @default(now()) @map("used_at") @db.Timestamptz(3)
+  keyToken    KeyToken @relation(fields: [keyTokenId], references: [id], onDelete: Cascade)
+
+  @@unique([keyTokenId, token])
+  @@index([keyTokenId])
+  @@map("used_refresh_tokens")
 }
 
 model Permission {
   id          String   @id @default(uuid(7))
   name        String   @unique
   description String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
 
   rolePermissions RolePermission[]
 }
@@ -32,7 +46,7 @@ model RoleClosure {
   ancestorId   String
   descendantId String
   depth        Int // 0 = same node, 1 = direct parent->child, ...
-  createdAt    DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
 
   ancestor   Role @relation("ancestor", fields: [ancestorId], references: [id], onDelete: Cascade)
   descendant Role @relation("descendant", fields: [descendantId], references: [id], onDelete: Cascade)
@@ -46,7 +60,7 @@ model RolePermission {
   id           String   @id @default(uuid(7))
   roleId       String
   permissionId String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
 
   role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
@@ -59,7 +73,7 @@ model Role {
   id          String   @id @default(uuid(7))
   name        String   @unique
   description String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
 
   // relations
   rolePermissions RolePermission[]
@@ -75,7 +89,7 @@ model UserRole {
   id         String   @id @default(uuid(7))
   userId     String
   roleId     String
-  assignedAt DateTime @default(now())
+  assignedAt DateTime @default(now()) @db.Timestamptz(3)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
@@ -125,13 +139,13 @@ model User {
   repairCasesApproved              RepairCase[]                @relation("RepairCaseApprovedBy")
   repairCasesCreated               RepairCase[]                @relation("RepairCaseCreatedBy")
   repairCaseDistanceFeesCalculated RepairCase[]                @relation("RepairCaseDistanceFeeCalculator")
-  repairCaseSatisfactionsCollected RepairCase[]                @relation("RepairCaseSatisfactionCollector")
-  repairCaseTransfersApproved      RepairCase[]                @relation("RepairCaseTransferApprover")
-  repairCaseTransfersRequested     RepairCase[]                @relation("RepairCaseTransferRequester")
-  repairCaseTransfersRejected      RepairCase[]                @relation("RepairCaseTransferRejecter")
-  repairCaseTransfersReceived      RepairCase[]                @relation("RepairCaseTransferReceiver")
-  repairCasePaymentsProcessed      RepairCase[]                @relation("RepairCasePaymentProcessor")
-  repairCasePaymentsApproved       RepairCase[]                @relation("RepairCasePaymentApprover")
+  repairCaseSatisfactionsCollected RepairCaseSatisfaction[]    @relation("RepairCaseSatisfactionCollector")
+  repairCaseTransfersApproved      RepairCaseTransfer[]        @relation("RepairCaseTransferApprover")
+  repairCaseTransfersRequested     RepairCaseTransfer[]        @relation("RepairCaseTransferRequester")
+  repairCaseTransfersRejected      RepairCaseTransfer[]        @relation("RepairCaseTransferRejecter")
+  repairCaseTransfersReceived      RepairCaseTransfer[]        @relation("RepairCaseTransferReceiver")
+  repairCasePaymentsProcessed      RepairCasePaymentDetail[]   @relation("RepairCasePaymentProcessor")
+  repairCasePaymentsApproved       RepairCasePaymentDetail[]   @relation("RepairCasePaymentApprover")
   solutionsCreated                 Solution[]                  @relation("SolutionCreatedBy")
   technicianProfile                TechnicianProfile?
   ascCenter                        AscCenter?                  @relation(fields: [ascCenterId], references: [id])
@@ -171,11 +185,11 @@ model User {
   updatedDocuments   Document[]          @relation("DocumentUpdatedBy")
   documentAccessLogs DocumentAccessLog[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  createdBy String?  @db.VarChar(255)
-  updatedBy String?  @db.VarChar(255)
-  isDelete  Boolean  @default(false)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime  @updatedAt @db.Timestamptz(3)
+  createdBy  String?   @db.VarChar(255)
+  updatedBy  String?   @db.VarChar(255)
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz(3)
 
   // TODO: Update Hierarchical RBAC later: roles, permissions, role closures
   userRoles UserRole[]
