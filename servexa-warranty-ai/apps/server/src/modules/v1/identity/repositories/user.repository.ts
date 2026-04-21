@@ -81,14 +81,14 @@ export class UserRepository {
   async softDeleteById(id: string) {
     return prisma.user.update({
       where: { id },
-      data: { isDelete: true },
+      data: { deletedAt: new Date() },
     })
   }
 
   async restoreById(id: string) {
     return prisma.user.update({
       where: { id },
-      data: { isDelete: false },
+      data: { deletedAt: null },
     })
   }
 }

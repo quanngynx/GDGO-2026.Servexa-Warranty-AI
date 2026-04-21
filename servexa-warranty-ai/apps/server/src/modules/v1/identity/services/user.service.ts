@@ -19,7 +19,7 @@ const userSelect = {
   phone: true,
   avatar: true,
   status: true,
-  isDelete: true,
+  deletedAt: true,
   createdBy: true,
   updatedBy: true,
   createdAt: true,
@@ -122,7 +122,7 @@ export class UserService {
 
   async findAll(query: FindAllUsersInput) {
     const where: Prisma.UserWhereInput = {
-      isDelete: false,
+      deletedAt: null,
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
         ? {
@@ -161,7 +161,7 @@ export class UserService {
       select: userSelect,
     })
 
-    if (!foundUser || foundUser.isDelete) {
+    if (!foundUser || foundUser.deletedAt) {
       throw createOperationalError('User not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     }
 
@@ -207,10 +207,10 @@ export class UserService {
 
   async updateUser(userId: string, input: UpdateUserInput) {
     const existingUser = await this.userRepository.findOneById(userId, {
-      select: { id: true, isDelete: true },
+      select: { id: true, deletedAt: true },
     })
 
-    if (!existingUser || existingUser.isDelete) {
+    if (!existingUser || existingUser.deletedAt) {
       throw createOperationalError('User not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     }
 
@@ -249,10 +249,10 @@ export class UserService {
 
   async deleteUser(userId: string) {
     const existingUser = await this.userRepository.findOneById(userId, {
-      select: { id: true, isDelete: true },
+      select: { id: true, deletedAt: true },
     })
 
-    if (!existingUser || existingUser.isDelete) {
+    if (!existingUser || existingUser.deletedAt) {
       throw createOperationalError('User not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     }
 

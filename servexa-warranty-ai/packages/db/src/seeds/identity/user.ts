@@ -78,7 +78,7 @@ export const seedIdentityUser = async (
       companyEmail: options.email,
       password: passwordHash,
       roleId: role.id,
-      isDelete: false,
+      deletedAt: null,
       status: 'active',
     },
     create: {
@@ -88,7 +88,7 @@ export const seedIdentityUser = async (
       password: passwordHash,
       roleId: role.id,
       status: 'active',
-      isDelete: false,
+      deletedAt: null,
     },
     select: {
       id: true,

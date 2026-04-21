@@ -365,10 +365,14 @@ export async function seedRepairCases() {
       paymentDate: new Date("2024-06-20"),
       assignedEmployeeId: technician.id,
       createdBy: finalAscAdmin.id,
-      satisfactionRating: SatisfactionRating.very_satisfied,
-      satisfactionComment: "Dịch vụ tốt, sản phẩm được sửa chữa chất lượng",
-      satisfactionDate: new Date("2024-06-21"),
-      satisfactionCollectedBy: finalAscAdmin.id,
+      satisfaction: {
+        create: {
+          satisfactionRating: SatisfactionRating.very_satisfied,
+          satisfactionComment: "Dịch vụ tốt, sản phẩm được sửa chữa chất lượng",
+          satisfactionDate: new Date("2024-06-21"),
+          satisfactionCollectedBy: finalAscAdmin.id,
+        },
+      },
       householdProductType: HouseholdProductType.food_storage_container,
       foodSafetyCompliance: FoodSafetyCompliance.compliant,
       sealIntegrityStatus: SealIntegrityStatus.excellent,
