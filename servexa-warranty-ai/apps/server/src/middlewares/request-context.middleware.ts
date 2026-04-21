@@ -15,14 +15,14 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   req.startTime = Date.now()
 
   // Set response headers
-  ;res.setHeader('X-Request-ID', req.requestId)
-  ;res.setHeader('X-Response-Time', '0ms')
+  res.setHeader('X-Request-ID', req.requestId)
+  res.setHeader('X-Response-Time', '0ms')
 
   // Override res.end to calculate response time
   const originalEnd = res.end.bind(res) as Response['end']
-  ;res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
+  res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
-    ;res.setHeader('X-Response-Time', `${responseTime}ms`)
+    res.setHeader('X-Response-Time', `${responseTime}ms`)
 
     // Handle different overloads of res.end
     if (typeof encoding === 'function') {
@@ -79,7 +79,7 @@ export const requestLoggingMiddleware = (req: Request, res: Response, next: Next
 
   // Override res.end to log response
   const originalEnd = res.end.bind(res) as Response['end']
-  ;res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
+  res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
     const statusCode = res.statusCode
 
