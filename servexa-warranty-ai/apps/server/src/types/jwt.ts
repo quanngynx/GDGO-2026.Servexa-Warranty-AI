@@ -37,7 +37,6 @@ export type KeyStoreForJWT = {
   privateKey: string;
   publicKey: string;
   refreshToken: string;
-  refreshTokenUsed: string[];
 };
 
 export interface PairToken {

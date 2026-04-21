@@ -58,7 +58,6 @@ export class KeyTokenService {
       publicKey,
       privateKey,
       refreshToken,
-      refreshTokenUsed: [refreshToken],
     })
 
     await this.updateKeyStoreCache(created)
@@ -174,7 +173,6 @@ export class KeyTokenService {
         privateKey: true,
         publicKey: true,
         refreshToken: true,
-        refreshTokenUsed: true,
       },
     })
 
@@ -187,7 +185,6 @@ export class KeyTokenService {
       privateKey: keyStore.privateKey,
       publicKey: keyStore.publicKey,
       refreshToken: keyStore.refreshToken,
-      refreshTokenUsed: keyStore.refreshTokenUsed,
     }
   }
 
@@ -209,7 +206,6 @@ export class KeyTokenService {
     privateKey: string
     publicKey: string
     refreshToken: string
-    refreshTokenUsed: string[]
   }): Promise<void> {
     const cacheKey = `${KEY_CACHE.KEY_STORE}:${keyStore.userId}`
     await this.ensureRedisConnected()

@@ -94,6 +94,22 @@ export class KeyTokenRepository {
     return deleted.count > 0
   }
 
+  async hasUsedRefreshToken(keyTokenId: string, token: string): Promise<boolean> {
+    const row = await prisma.usedRefreshToken.findUnique({
+      where: {
+        keyTokenId_token: { keyTokenId, token },
+      },
+      select: { id: true },
+    })
+    return Boolean(row)
+  }
+
+  async recordUsedRefreshToken(keyTokenId: string, token: string) {
+    return prisma.usedRefreshToken.create({
+      data: { keyTokenId, token },
+    })
+  }
+
   async saveSessionToRedis(userId: string, sessionData: Session): Promise<void> {
     await this.ensureRedisConnected()
     const key = `user_sessions:${userId}`

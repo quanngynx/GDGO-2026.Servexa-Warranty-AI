@@ -13,7 +13,7 @@ export interface Audit {
 }
 
 export interface Paranoid {
-  isDelete: boolean;
+  deletedAt: Date | null
 }
 
 export interface BaseFilter {

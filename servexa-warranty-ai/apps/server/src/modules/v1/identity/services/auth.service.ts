@@ -52,6 +52,7 @@ export class AuthService {
           companyEmail: true,
           personalEmail: true,
           password: true,
+          deletedAt: true,
           role: {
             select: {
               name: true,
@@ -59,9 +60,13 @@ export class AuthService {
           },
         },
       },
-    ) as LoginUser | null
+    ) as (LoginUser & { deletedAt: Date | null }) | null
 
     if (!foundUser) {
+      throw createOperationalError('User not found', HTTP_RESPONSE_CODE.BAD_REQUEST)
+    }
+
+    if (foundUser.deletedAt) {
       throw createOperationalError('User not found', HTTP_RESPONSE_CODE.BAD_REQUEST)
     }
 
@@ -197,7 +202,6 @@ export class AuthService {
       select: {
         id: true,
         refreshToken: true,
-        refreshTokenUsed: true,
         publicKey: true,
         privateKey: true,
       },
@@ -207,7 +211,11 @@ export class AuthService {
       throw createOperationalError('Key store not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     }
 
-    if (keyStoreData.refreshTokenUsed.includes(refreshToken)) {
+    const wasUsed = await this.keyTokenRepository.hasUsedRefreshToken(
+      keyStoreData.id,
+      refreshToken,
+    )
+    if (wasUsed) {
       await this.keyTokenService.deleteKeyByUserId(userId)
       throw createOperationalError(
         'Refresh token was already used',
@@ -281,9 +289,9 @@ export class AuthService {
       ipAddress,
     )
 
+    await this.keyTokenRepository.recordUsedRefreshToken(keyStoreData.id, refreshToken)
     await this.keyTokenRepository.updateOneById(keyStoreData.id, {
       refreshToken: tokens.refreshToken,
-      refreshTokenUsed: [...keyStoreData.refreshTokenUsed, refreshToken],
     })
 
     const nowSec = Math.floor(Date.now() / 1000)
