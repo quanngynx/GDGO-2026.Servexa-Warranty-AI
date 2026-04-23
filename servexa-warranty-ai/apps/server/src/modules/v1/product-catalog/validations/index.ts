@@ -32,3 +32,11 @@ export {
   replaceModelSchema,
   updateModelSchema,
 } from './model'
+
+export {
+  createTotalWarehouseSchema,
+  findAllTotalWarehousesSchema,
+  findTotalWarehouseByIdSchema,
+  replaceTotalWarehouseSchema,
+  updateTotalWarehouseSchema,
+} from './total-warehouse'
