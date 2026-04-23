@@ -1,18 +1,63 @@
-import { RootProvider } from "fumadocs-ui/provider/next";
+import { title } from '@/lib/layout.shared'
+import { baseUrl, createMetadata } from '@/lib/metadata'
+import type { Viewport } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { Body } from './layout.client'
+import { Providers } from './providers'
+import 'katex/dist/katex.css'
+import { NextProvider } from 'fumadocs-core/framework/next'
+import { TreeContextProvider } from 'fumadocs-ui/contexts/tree'
+import { source } from '@/lib/source'
+import { url } from '@/lib/url'
 
 import "./global.css";
-import { Inter } from "next/font/google";
 
-const inter = Inter({
-  subsets: ["latin"],
-});
+const geist = Geist({
+  variable: '--font-sans',
+  subsets: ['latin'],
+})
+
+const mono = Geist_Mono({
+  variable: '--font-mono',
+  subsets: ['latin'],
+})
+
+export const metadata = createMetadata({
+  title: {
+    template: '%s | Starter Kit',
+    default: 'Starter Kit',
+  },
+  description: 'The Next.js framework for building documentation sites',
+  metadataBase: baseUrl,
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          title,
+          url: url('/rss.xml'),
+        },
+      ],
+    },
+  },
+})
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0A' },
+    { media: '(prefers-color-scheme: light)', color: '#fff' },
+  ],
+}
 
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
-      </body>
+    <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
+      <Body tree={source.getPageTree()}>
+        <NextProvider>
+          <TreeContextProvider tree={source.getPageTree()}>
+            <Providers>{children}</Providers>
+          </TreeContextProvider>
+        </NextProvider>
+      </Body>
     </html>
   );
 }
