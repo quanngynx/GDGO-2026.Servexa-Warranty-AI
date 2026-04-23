@@ -19,6 +19,7 @@ export type EnvServer = Readonly<{
   PUBLIC_KEY_TYPE: "spki" | "pkcs1";
 
   BRANDING_NAME: string;
+  LH_TOTAL_WAREHOUSE_NAME: string;
 }>;
 
 export const env = createEnv({
@@ -41,6 +42,7 @@ export const env = createEnv({
     PUBLIC_KEY_TYPE: z.enum(['spki', 'pkcs1']).default('pkcs1'),
 
     BRANDING_NAME: z.string().min(1).default("Servexa Warranty AI"),
+    LH_TOTAL_WAREHOUSE_NAME: z.string().min(1).default('Kho HCM Long Hậu'),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
