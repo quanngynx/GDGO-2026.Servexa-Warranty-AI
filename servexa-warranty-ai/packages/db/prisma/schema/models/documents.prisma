@@ -1,17 +1,16 @@
 model Document {
   id                  String       @id @default(uuid(7))
   title               String
-  description         String? // Mô tả ngắn gọn
-  detailedDescription String?      @map("detailed_description") // Mô tả chi tiết
+  description         String?
+  detailedDescription String?      @map("detailed_description")
   documentType        DocumentType
-  filePath            String? // Đường dẫn file trên server
-  originalFileName    String? // Tên file gốc
-  fileSize            Int? // Kích thước bytes
-  mimeType            String? // MIME type
-  checksum            String? // MD5/SHA256 để kiểm tra integrity
+  filePath            String?      // Đường dẫn file trên server
+  originalFileName    String?      // Tên file gốc
+  fileSize            Int?         // Kích thước bytes
+  mimeType            String?      // MIME type
+  checksum            String?      // MD5/SHA256 để kiểm tra integrity
   deletedAt           DateTime?    @map("deleted_at") @db.Timestamptz(3)
 
-  // Quan hệ
   createdBy   User       @relation("DocumentCreatedBy", fields: [createdById], references: [id])
   createdById String
   updatedBy   User?      @relation("DocumentUpdatedBy", fields: [updatedById], references: [id])
@@ -19,18 +18,37 @@ model Document {
   ascCenter   AscCenter? @relation(fields: [ascCenterId], references: [id])
   ascCenterId String?
 
-  // Audit
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  // Quan hệ n-n
   accessLogs DocumentAccessLog[]
+  versions   DocumentFileVersion[]
 
   @@index([documentType])
   @@index([ascCenterId])
   @@index([deletedAt, createdAt])
   @@index([title])
   @@map("documents")
+}
+
+model DocumentFileVersion {
+  id               String  @id @default(uuid(7))
+  documentId       String
+  filePath         String
+  originalFileName String
+  fileSize         Int?
+  mimeType         String?
+  checksum         String?
+
+  // Quan hệ
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdBy   User     @relation("DocumentFileVersionCreatedBy", fields: [createdById], references: [id])
+  createdById String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([documentId])
+  @@map("document_file_versions")
 }
 
 model DocumentAccessLog {
@@ -41,7 +59,6 @@ model DocumentAccessLog {
   ipAddress  String?
   userAgent  String?
 
-  // Quan hệ
   document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   user     User     @relation(fields: [userId], references: [id])
 

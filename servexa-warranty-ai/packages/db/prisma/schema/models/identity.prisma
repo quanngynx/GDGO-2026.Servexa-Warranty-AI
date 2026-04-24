@@ -181,9 +181,11 @@ model User {
   createdProductReplacementRecalls ProductReplacementRecall[] @relation("ProductReplacementRecallCreator")
 
   // Document relations
-  createdDocuments   Document[]          @relation("DocumentCreatedBy")
-  updatedDocuments   Document[]          @relation("DocumentUpdatedBy")
-  documentAccessLogs DocumentAccessLog[]
+  createdDocuments          Document[]            @relation("DocumentCreatedBy")
+  updatedDocuments          Document[]            @relation("DocumentUpdatedBy")
+  documentAccessLogs        DocumentAccessLog[]
+  documentFileVersions      DocumentFileVersion[] @relation("DocumentFileVersionCreatedBy")
+
 
   createdAt  DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt  DateTime  @updatedAt @db.Timestamptz(3)
