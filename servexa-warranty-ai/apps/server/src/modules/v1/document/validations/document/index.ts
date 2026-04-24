@@ -1,0 +1,5 @@
+export { documentTypeSchema } from './document-type-schema'
+export { findAllDocumentsSchema } from './find-all-documents-schema'
+export { findDocumentByIdSchema } from './find-document-by-id-schema'
+export { createDocumentSchema } from './create-document-schema'
+export { replaceDocumentSchema, updateDocumentSchema } from './replace-document-schema'
