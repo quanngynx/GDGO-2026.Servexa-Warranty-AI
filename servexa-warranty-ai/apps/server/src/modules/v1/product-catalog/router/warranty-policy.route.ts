@@ -24,14 +24,16 @@ const warrantyPolicyController = new WarrantyPolicyController(warrantyPolicyServ
 warrantyPolicyRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
 
 warrantyPolicyRoute.get('/', warrantyPolicyController.findAll)
-warrantyPolicyRoute.post('/', warrantyPolicyController.create)
-
 // /resolve must be registered before /:warrantyPolicyId to prevent it being captured as an ID parameter
 warrantyPolicyRoute.get('/resolve', warrantyPolicyController.resolve)
-
 warrantyPolicyRoute.get('/:warrantyPolicyId', warrantyPolicyController.findOneById)
+
+warrantyPolicyRoute.post('/', warrantyPolicyController.create)
+
 warrantyPolicyRoute.put('/:warrantyPolicyId', warrantyPolicyController.replace)
+
 warrantyPolicyRoute.patch('/:warrantyPolicyId', warrantyPolicyController.update)
+
 warrantyPolicyRoute.delete('/:warrantyPolicyId', warrantyPolicyController.delete)
 
 export default warrantyPolicyRoute
