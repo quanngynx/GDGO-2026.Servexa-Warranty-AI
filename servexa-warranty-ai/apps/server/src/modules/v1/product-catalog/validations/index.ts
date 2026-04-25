@@ -48,3 +48,15 @@ export {
   replaceAscCenterSchema,
   updateAscCenterSchema,
 } from './asc-center'
+
+export {
+  createWarrantyPolicySchema,
+  findAllWarrantyPoliciesSchema,
+  findWarrantyPolicyByIdSchema,
+  replaceWarrantyPolicySchema,
+  resolveWarrantyPolicySchema,
+  updateWarrantyPolicySchema,
+  warrantyPolicyStatusSchema,
+  warrantyTypeSchema,
+} from './warranty-policy'
+
