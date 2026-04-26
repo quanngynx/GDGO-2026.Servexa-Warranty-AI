@@ -42,14 +42,6 @@ export {
 } from './total-warehouse'
 
 export {
-  createAscCenterSchema,
-  findAllAscCentersSchema,
-  findAscCenterByIdSchema,
-  replaceAscCenterSchema,
-  updateAscCenterSchema,
-} from './asc-center'
-
-export {
   createWarrantyPolicySchema,
   findAllWarrantyPoliciesSchema,
   findWarrantyPolicyByIdSchema,
