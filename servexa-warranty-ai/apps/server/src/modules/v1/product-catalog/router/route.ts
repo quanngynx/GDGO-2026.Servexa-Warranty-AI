@@ -4,7 +4,6 @@ import categoryRoute from './category.route'
 import modelRoute from './model.route'
 import accessoryRoute from './accessory.route'
 import totalWarehouseRoute from './total-warehouse.route'
-import ascCenterRoute from './asc-center.route'
 import errorPhenomenonRoute from './error-phenomenon.route'
 import solutionRoute from './solution.route'
 import warrantyPolicyRoute from './warranty-policy.route'
@@ -15,7 +14,6 @@ routeProductCatalogV1.use('/categories', categoryRoute)
 routeProductCatalogV1.use('/models', modelRoute)
 routeProductCatalogV1.use('/accessories', accessoryRoute)
 routeProductCatalogV1.use('/total-warehouses', totalWarehouseRoute)
-routeProductCatalogV1.use('/asc-centers', ascCenterRoute)
 routeProductCatalogV1.use('/error-phenomena', errorPhenomenonRoute)
 routeProductCatalogV1.use('/solutions', solutionRoute)
 routeProductCatalogV1.use('/warranty-policies', warrantyPolicyRoute)
