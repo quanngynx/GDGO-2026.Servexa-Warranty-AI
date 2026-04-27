@@ -19,7 +19,7 @@ Build a simple v0 clone using the [v0 Platform API](https://v0.dev/docs/api/plat
 Install the `v0-sdk` package:
 
 ```package-install
-npm i v0-sdk
+pnpm i v0-sdk
 ```
 
 Add the following component to your frontend:

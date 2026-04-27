@@ -19,7 +19,7 @@ Build a simple app allowing a user to generate an image given a prompt.
 Install the `@ai-sdk/openai` package:
 
 ```package-install
-npm i @ai-sdk/openai
+pnpm i @ai-sdk/openai
 ```
 
 Add the following component to your frontend:

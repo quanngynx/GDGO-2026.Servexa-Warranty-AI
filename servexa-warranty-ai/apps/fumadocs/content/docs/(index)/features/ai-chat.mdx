@@ -1,0 +1,36 @@
+---
+title: AI Chat
+description: Configure and use AI-powered search in your documentation
+icon: MessageCircle
+---
+
+## Introduction
+
+This starter ships with an AI assistant that runs on your content. It streams answers from OpenAI's `gpt-5-mini` model through AI SDK.
+
+## Configuration
+
+Add your OpenAI key to `.env`:
+
+```bash
+OPENAI_API_KEY=sk-your_api_key_here
+NEXT_PUBLIC_BASE_URL=http://localhost:3000 # optional, defaults locally
+```
+
+> The key must start with `sk-` (validated in `src/env.ts`). `NEXT_PUBLIC_BASE_URL` is only needed when you deploy to a non-default host.
+
+## Using the UI
+
+- Click the "Ask AI" button in the bottom-right corner or press `Cmd/Ctrl + /` to open the panel; press `Esc` to close.
+- Press `Enter` to send a prompt; use `Shift + Enter` for a new line.
+- Regenerate the last answer with the refresh button when the assistant has finished responding.
+- Sources and tool activity are displayed above each message so you can verify what the model used.
+
+## Customize the assistant
+
+- **Model or provider:** Edit `src/app/api/chat/route.ts` to change the model or provider options.
+- **Prompts:** Adjust the system directives in `src/app/api/chat/utils/prompts`.
+- **Tools or search scope:** Extend or modify `searchDocs`/`getPageContent` in `src/app/api/chat/utils/tools` and update tags in `src/lib/constants`.
+- **UI:** Tweak the panel, shortcuts, and message rendering under `src/components/fumadocs/ai`.
+
+Because the assistant is backed by your indexed MDX, adding or editing docs is all that's required to give it fresh context.
