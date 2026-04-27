@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 3811bca8-d42f-443a-95b7-c2bff8b0ef28
+
+localResources:
+  specs:
+    - ..\servexa-warranty-ai\apps\fumadocs\content\docs\api-reference\openapi.yml
