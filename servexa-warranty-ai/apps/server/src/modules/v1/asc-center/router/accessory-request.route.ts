@@ -29,19 +29,18 @@ const approverRoles = [
 router.use(requireRoles(standardRoles))
 
 router.get('/', controller.findAll)
-router.post('/', controller.create)
-
 router.get('/:id', controller.findOneById)
-router.patch('/:id', controller.update)
-router.delete('/:id', controller.delete)
 
+router.post('/', controller.create)
 router.post('/:id/items', controller.addItem)
-router.patch('/:id/items/:itemId', controller.updateItem)
-router.delete('/:id/items/:itemId', controller.removeItem)
-
 router.post('/:id/submit', controller.submit)
 router.post('/:id/approve', requireRoles(approverRoles), controller.approve)
 router.post('/:id/reject', requireRoles(approverRoles), controller.reject)
 router.post('/:id/recall', requireRoles(approverRoles), controller.recall)
+
+router.patch('/:id', controller.update)
+router.patch('/:id/items/:itemId', controller.updateItem)
+router.delete('/:id', controller.delete)
+router.delete('/:id/items/:itemId', controller.removeItem)
 
 export default router

@@ -20,8 +20,8 @@ export const repairCaseListSelect = {
   receivedDate: true,
   createdAt: true,
   ascCenter: { select: { centerName: true, centerCode: true } },
-  customer: { select: { fullName: true, phoneNumber: true } },
-  model: { select: { modelName: true, modelCode: true } },
+  customer: { select: { fullName: true, phone1: true } },
+  model: { select: { name: true, modelCode: true } },
 } satisfies Prisma.RepairCaseSelect
 
 export const repairCaseDetailSelect = {

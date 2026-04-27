@@ -55,19 +55,22 @@ router.post('/', requireRoles(writeRoles), controller.create)
 
 // /:id segments
 router.get('/:id', controller.findOneById)
-router.put('/:id', requireRoles(writeRoles), controller.replace)
-router.patch('/:id', requireRoles(writeRoles), controller.update)
 
 router.get('/:id/status-history', controller.findStatusHistory)
 router.get('/:id/field-history', controller.findFieldHistory)
 router.get('/:id/accessory-requests', controller.findAccessoryRequests)
-
-router.post('/:id/accessories', requireRoles(writeRoles), controller.grantAccessories)
-router.delete('/:id/accessories/:accessoryRowId', requireRoles(writeRoles), controller.revokeAccessory)
-
 router.get('/:id/images', controller.findImages)
 router.get('/:id/images/:imageId/download', controller.downloadImage)
+
+router.post('/:id/accessories', requireRoles(writeRoles), controller.grantAccessories)
 router.post('/:id/images', requireRoles(writeRoles), multerUpload.array('files', 10), controller.addImages)
+
+router.put('/:id', requireRoles(writeRoles), controller.replace)
+
+router.patch('/:id', requireRoles(writeRoles), controller.update)
+
+router.delete('/:id/accessories/:accessoryRowId', requireRoles(writeRoles), controller.revokeAccessory)
+
 router.delete('/:id/images/:imageId', requireRoles(writeRoles), controller.deleteImage)
 
 export default router

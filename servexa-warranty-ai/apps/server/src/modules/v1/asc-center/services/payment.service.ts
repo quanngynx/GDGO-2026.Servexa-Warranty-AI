@@ -47,8 +47,8 @@ export class PaymentService implements IPaymentService {
         userId,
       });
       return result;
-    } catch (error: any) {
-      const msg = error.message || "";
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : "";
       if (msg.includes("NOT_FOUND")) {
         throw createOperationalError(msg, HTTP_RESPONSE_CODE.NOT_FOUND);
       }
