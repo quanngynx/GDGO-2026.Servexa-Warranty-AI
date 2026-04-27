@@ -103,16 +103,7 @@ export class AscCenterService implements IAscCenterService {
         licenseNumber: input.licenseNumber,
         status: input.status,
       },
-      { select: ascCenterSelect, 
-        include: {
-          province: {
-            select: { id: true, name: true, code: true }
-          },
-          ward: {
-            select: { id: true, name: true }
-          }
-        }
-      },
+      { select: ascCenterSelect },
     )
   }
 
