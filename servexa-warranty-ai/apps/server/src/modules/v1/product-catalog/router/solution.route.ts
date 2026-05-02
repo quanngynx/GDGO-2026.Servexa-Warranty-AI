@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import multer from "multer";
 
 import { Roles } from "@/enums/roles";
-import { authenticateMiddleware, requireRoles } from "@/middlewares";
+import { authenticateMiddleware} from "@/middlewares";
 
 import { SolutionController } from "../controllers/solution.controller";
 import { SolutionRepository } from "../repositories/solution.repository";
@@ -20,7 +20,7 @@ const solutionController = new SolutionController(
   solutionExcelService,
 );
 
-solutionRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]));
+solutionRoute.use(authenticateMiddleware);
 
 solutionRoute.get("/export", solutionController.export);
 solutionRoute.get("/", solutionController.findAll);

@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import multer from "multer";
 
 import { Roles } from "@/enums/roles";
-import { authenticateMiddleware, requireRoles } from "@/middlewares";
+import { authenticateMiddleware} from "@/middlewares";
 
 import { ErrorPhenomenonController } from "../controllers/error-phenomenon.controller";
 import { ErrorPhenomenonRepository } from "../repositories/error-phenomenon.repository";
@@ -24,7 +24,7 @@ const errorPhenomenonController = new ErrorPhenomenonController(
   errorPhenomenonExcelService,
 );
 
-errorPhenomenonRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]));
+errorPhenomenonRoute.use(authenticateMiddleware);
 
 errorPhenomenonRoute.get("/export", errorPhenomenonController.export);
 errorPhenomenonRoute.get("/", errorPhenomenonController.findAll);
