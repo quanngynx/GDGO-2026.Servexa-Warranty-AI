@@ -1,0 +1,41 @@
+$kind: http-example
+name: Unauthorized.
+request:
+  url: "{{baseUrl}}/api/v1/identity/auth/me"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/problem+json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/problem+json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "object",
+        "title": "Validation failed"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "title": {
+            "type": "string",
+            "example": "Validation failed"
+          }
+        }
+      }
+order: 3390119691157997

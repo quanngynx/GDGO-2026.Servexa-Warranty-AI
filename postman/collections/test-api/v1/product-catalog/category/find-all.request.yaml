@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-all
+url: "{{CORS_ORIGIN}}/"
+method: GET
+order: 1777659659681

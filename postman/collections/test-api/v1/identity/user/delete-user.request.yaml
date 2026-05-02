@@ -1,0 +1,5 @@
+$kind: http-request
+name: delete-user
+url: ""
+method: DELETE
+order: 4478242801770757

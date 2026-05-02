@@ -1,0 +1,105 @@
+$kind: http-example
+name: Current user information.
+request:
+  url: "{{baseUrl}}/api/v1/identity/auth/me"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "message": "string",
+        "metadata": {
+          "id": "aadf65c8-4df9-40a0-b2cb-16aa26af8ad9",
+          "username": "string",
+          "fullName": "string",
+          "email": "DoYH0sU6aH9RQV4@jHLF.env",
+          "role": "ADMIN",
+          "permissions": [
+            "string",
+            "string"
+          ],
+          "status": "active"
+        }
+      }
+    $type: |-
+      {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "fullName": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "ADMIN"
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "inactive",
+                      "suspended"
+                    ],
+                    "example": "active"
+                  }
+                },
+                "required": [
+                  "id",
+                  "username",
+                  "fullName"
+                ]
+              }
+            },
+            "required": [
+              "metadata"
+            ]
+          }
+        ]
+      }
+order: 3848028156260772

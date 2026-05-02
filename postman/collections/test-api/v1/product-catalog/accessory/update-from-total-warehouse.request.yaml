@@ -1,0 +1,5 @@
+$kind: http-request
+name: update-from-total-warehouse
+url: ""
+method: PATCH
+order: 4503350894101825

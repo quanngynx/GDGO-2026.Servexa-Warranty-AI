@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-all-from-asc-center
+url: ""
+method: GET
+order: 4185748974297750

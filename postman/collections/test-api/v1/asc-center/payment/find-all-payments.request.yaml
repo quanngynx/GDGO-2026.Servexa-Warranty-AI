@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-all-payments
+url: ""
+method: GET
+order: 1197128430431877

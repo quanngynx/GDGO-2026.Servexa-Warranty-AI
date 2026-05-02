@@ -1,0 +1,5 @@
+$kind: http-request
+name: export-waiting-parts
+url: ""
+method: GET
+order: 2000
