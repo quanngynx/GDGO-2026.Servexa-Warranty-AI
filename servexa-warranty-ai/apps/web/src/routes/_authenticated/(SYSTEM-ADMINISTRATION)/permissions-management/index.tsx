@@ -1,15 +1,8 @@
+import { PermissionsManagement } from "@/features/(SYSTEM-ADMINISTRATION)/premissions-management";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
   "/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/"
 )({
-  component: RouteComponent,
+  component: PermissionsManagement,
 });
-
-function RouteComponent() {
-  return (
-    <div>
-      Hello "/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/"!
-    </div>
-  );
-}
