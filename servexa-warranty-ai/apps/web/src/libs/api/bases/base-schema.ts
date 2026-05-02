@@ -9,10 +9,10 @@ export const baseListQuerySchema = z.object({
 });
 
 export const basePaginationSchema = z.object({
-  totalCount: z.number(),
-  pageNumber: z.number(),
+  page: z.number(),
+  limit: z.number(),
+  total: z.number(),
   totalPages: z.number(),
-  // totalItems: z.number(),
-  hasPreviousPage: z.boolean(),
-  hasNextPage: z.boolean(),
+  hasNext: z.boolean(),
+  hasPrev: z.boolean(),
 });

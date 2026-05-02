@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { userAPI } from '@/libs/api/user/api'
-import type { RequestCreateUserDto } from '@/libs/api/user/data-transfer-object'
+import { userAPI } from '@/libs/api/identity/user/api'
+import type { RequestCreateUserDto } from '@/libs/api/identity/user/data-transfer-object'
 import { userQueryKeys } from './query-keys'
 
 export const useCreateUserMutation = () => {
