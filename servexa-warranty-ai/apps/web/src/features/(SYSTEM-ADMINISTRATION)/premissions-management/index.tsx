@@ -12,10 +12,10 @@ import { UsersTable } from "./components/permissions-table";
 import { users } from "./data/permissions";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/"
 );
 
-export function UserManagement() {
+export function PermissionsManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 

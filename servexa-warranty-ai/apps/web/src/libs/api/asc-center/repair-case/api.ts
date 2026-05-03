@@ -24,13 +24,13 @@ class RepairCaseAPI extends BaseApi {
   }
   createRepairCase(data: RequestCreateRepairCaseDto) {
     return this.tryPost<
-      BaseApiResponse<ResponseRepairCaseDto>,
+      ResponseRepairCaseDetailDto,
       RequestCreateRepairCaseDto
     >("/v1/asc-center/repair-cases", data);
   }
   updateRepairCase(repairCaseId: string, data: RequestUpdateRepairCaseDto) {
     return this.tryPatch<
-      BaseApiResponse<ResponseRepairCaseDto>,
+      ResponseRepairCaseDetailDto,
       RequestUpdateRepairCaseDto
     >(`/v1/asc-center/repair-cases/${repairCaseId}`, data);
   }

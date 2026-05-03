@@ -12,10 +12,10 @@ import { UsersTable } from "./components/asc-centers-table";
 import { users } from "./data/asc-centers";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/"
 );
 
-export function UserManagement() {
+export function AscCentersManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 

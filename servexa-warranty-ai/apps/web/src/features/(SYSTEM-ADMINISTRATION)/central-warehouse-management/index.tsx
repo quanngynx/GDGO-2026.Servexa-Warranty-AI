@@ -12,10 +12,10 @@ import { UsersTable } from "./components/central-warehouse-table";
 import { users } from "./data/central-warehouse";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/"
 );
 
-export function UserManagement() {
+export function CentralWarehouseManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
