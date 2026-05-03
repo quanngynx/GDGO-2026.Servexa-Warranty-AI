@@ -1,7 +1,6 @@
 import { Router, type IRouter } from 'express'
 import { AccessoryRequestController } from '../controllers/accessory-request.controller'
 import { authenticateMiddleware } from '@/middlewares/authenticate.middleware'
-import { Roles } from '@/enums/roles'
 
 const router: IRouter = Router()
 const controller = new AccessoryRequestController()

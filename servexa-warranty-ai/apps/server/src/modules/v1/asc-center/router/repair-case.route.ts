@@ -2,7 +2,6 @@ import { Router, type IRouter } from 'express'
 import multer from 'multer'
 import fs from 'fs'
 
-import { Roles } from '@/enums/roles'
 import { authenticateMiddleware } from '@/middlewares/authenticate.middleware'
 
 import { RepairCaseController } from '../controllers/repair-case.controller'

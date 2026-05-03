@@ -1,13 +1,13 @@
 import { Router, type IRouter } from 'express'
 
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware } from '@/middlewares'
 import { Roles } from '@/enums/roles'
 
 import userController from '../controllers/user.controller'
 
 const userRoute: IRouter = Router()
 
-userRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+userRoute.use(authenticateMiddleware)
 
 userRoute.get('/', userController.findAll)
 userRoute.get('/:userId', userController.findOneById)
