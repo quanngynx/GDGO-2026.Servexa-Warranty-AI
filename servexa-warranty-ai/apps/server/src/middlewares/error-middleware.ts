@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express"
+import { ZodError } from "zod"
 import { logger } from "@/core/logging/logging.config"
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant"
 import { ErrorType } from "@/core/constants/common.constant"
@@ -124,7 +125,36 @@ const logError = (error: AppError, req: Request) => {
 }
 
 // Main error handler
-export const errorHandler = (error: AppError, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+  let isZodError = false
+  let details: Array<{ field: string; message: string }> | undefined
+
+  if (error instanceof ZodError || error.name === 'ZodError') {
+    isZodError = true
+    error.statusCode = HTTP_RESPONSE_CODE.BAD_REQUEST
+    error.errorType = ErrorType.OPERATIONAL
+    error.isOperational = true
+    
+    details = (error as ZodError).issues.map(issue => ({
+      field: issue.path.join('.'),
+      message: issue.message
+    }))
+    
+    error.message = "Validation Error"
+  }
+
+  if (error.name?.startsWith('PrismaClient') || (error.message && error.message.includes('Invalid `prisma.'))) {
+    error.statusCode = error.statusCode || HTTP_RESPONSE_CODE.BAD_REQUEST
+    error.errorType = ErrorType.SYSTEM
+    error.isOperational = false
+    
+    if (process.env.NODE_ENV !== 'development') {
+      error.message = 'Database Error'
+    } else {
+      error.message = error.message.replace(/\n/g, ' ').replace(/\s{2,}/g, ' ').trim()
+    }
+  }
+
   // Ensure error has required properties
   if (!error.statusCode) {
     error.statusCode = HTTP_RESPONSE_CODE.INTERNAL_SERVER_ERROR
@@ -137,7 +167,7 @@ export const errorHandler = (error: AppError, req: Request, res: Response, next:
   }
 
   // Log the error
-  logError(error, req)
+  logError(error as AppError, req)
 
   // Prepare response
   const status = "error"
@@ -150,6 +180,10 @@ export const errorHandler = (error: AppError, req: Request, res: Response, next:
     message,
     timestamp: error.timestamp,
     requestId: error.requestId || req.headers['x-request-id'] || 'unknown'
+  }
+
+  if (isZodError && details) {
+    response.details = details
   }
 
   // Add stack trace in development

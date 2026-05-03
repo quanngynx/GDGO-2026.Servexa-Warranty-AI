@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware} from '@/middlewares'
 
 import { WarrantyPolicyController } from '../controllers/warranty-policy.controller'
 import { CategoryRepository } from '../repositories/category.repository'
@@ -21,7 +21,7 @@ const warrantyPolicyService = new WarrantyPolicyService(
 )
 const warrantyPolicyController = new WarrantyPolicyController(warrantyPolicyService)
 
-warrantyPolicyRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+warrantyPolicyRoute.use(authenticateMiddleware)
 
 warrantyPolicyRoute.get('/', warrantyPolicyController.findAll)
 // /resolve must be registered before /:warrantyPolicyId to prevent it being captured as an ID parameter

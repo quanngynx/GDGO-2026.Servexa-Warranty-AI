@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-accessories-for-stocktake
+url: findAccessoriesForStocktake
+method: GET
+order: 1777739112536

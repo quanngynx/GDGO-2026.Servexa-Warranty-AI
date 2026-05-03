@@ -11,6 +11,14 @@ import {
   WarrantyServiceType,
 } from "../../../prisma/generated/enums";
 
+export type SeedRepairCasesOptions = {
+  ascCenterId: string
+  areaId: string
+  modelId: string
+  technicianId: string
+  customerId: string
+}
+
 export async function seedRepairCases() {
   console.log("🔧 Starting repair cases seeding with warranty workflow...");
 
@@ -86,10 +94,26 @@ export async function seedRepairCases() {
 
   if (!area) {
     console.log("⚠️ No specific area found, creating a fallback area...");
+
+    // Area requires non-nullable provinceId & wardId — resolve them from ascCenter or any existing record
+    const fallbackProvinceId =
+      ascCenter.provinceId ??
+      (await prisma.province.findFirst().then((p) => p?.id))
+
+    const fallbackWardId =
+      ascCenter.wardId ??
+      (await prisma.ward.findFirst().then((w) => w?.id))
+
+    if (!fallbackProvinceId || !fallbackWardId) {
+      throw new Error(
+        'Cannot create fallback area: no province or ward found in the database. Please seed location data first.',
+      )
+    }
+
     await prisma.area.create({
       data: {
-        provinceId: ascCenter.provinceId!,
-        wardId: ascCenter.wardId!,
+        provinceId: fallbackProvinceId,
+        wardId: fallbackWardId,
         name: "Khu vực mặc định",
         cayso: "CS-DEFAULT-001",
         tiencong1: 100000.0,

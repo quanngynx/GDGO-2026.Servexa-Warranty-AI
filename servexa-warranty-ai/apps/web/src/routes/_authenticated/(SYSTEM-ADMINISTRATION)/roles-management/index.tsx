@@ -1,15 +1,8 @@
+import { RolesManagement } from "@/features/(SYSTEM-ADMINISTRATION)/roles-management";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
   "/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/"
 )({
-  component: RouteComponent,
+  component: RolesManagement,
 });
-
-function RouteComponent() {
-  return (
-    <div>
-      Hello "/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/"!
-    </div>
-  );
-}

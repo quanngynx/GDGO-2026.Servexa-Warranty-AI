@@ -12,10 +12,10 @@ import { UsersTable } from "./components/accessories-table";
 import { users } from "./data/accessories";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/"
 );
 
-export function UserManagement() {
+export function AccessoriesManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 

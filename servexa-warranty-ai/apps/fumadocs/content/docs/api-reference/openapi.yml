@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: Redocly Museum API
-  description: Imaginary, but delightful Museum API for interacting with museum services and information. Built with love by Redocly.
+  title: Servexa Warranty API
+  description: A minimal MVP version for public docs
   version: 1.2.1
   termsOfService: 'https://redocly.com/subscription-agreement/'
   contact:

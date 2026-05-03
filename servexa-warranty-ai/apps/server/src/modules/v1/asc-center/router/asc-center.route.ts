@@ -1,7 +1,6 @@
 import { Router, type IRouter } from 'express'
 
-import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware} from '@/middlewares'
 
 import { AscCenterController } from '../controllers/asc-center.controller'
 import { AscCenterRepository } from '../repositories/asc-center.repository'
@@ -13,7 +12,7 @@ const ascCenterRepository = new AscCenterRepository()
 const ascCenterService = new AscCenterService(ascCenterRepository)
 const ascCenterController = new AscCenterController(ascCenterService)
 
-ascCenterRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+ascCenterRoute.use(authenticateMiddleware)
 
 ascCenterRoute.get('/', ascCenterController.findAll)
 ascCenterRoute.get('/:ascCenterId', ascCenterController.findOneById)

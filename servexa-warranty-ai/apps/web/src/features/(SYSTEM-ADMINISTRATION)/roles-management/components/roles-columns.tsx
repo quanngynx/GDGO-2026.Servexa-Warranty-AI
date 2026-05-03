@@ -1,4 +1,4 @@
-import { type ColumnDef } from "@servexa-warranty-ai/ui/components/data-table/type";
+import type { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 import { Badge } from "@servexa-warranty-ai/ui/components/badge";
 import { Checkbox } from "@servexa-warranty-ai/ui/components/checkbox";

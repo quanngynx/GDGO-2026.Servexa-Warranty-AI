@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-waiting-accessories
+url: ""
+method: GET
+order: 5000

@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware } from '@/middlewares'
 
 import { TechnicianController } from '../controllers/technician.controller'
 import { TechnicianRepository } from '../repositories/technician.repository'
@@ -13,7 +13,7 @@ const technicianRepository = new TechnicianRepository()
 const technicianService = new TechnicianService(technicianRepository)
 const technicianController = new TechnicianController(technicianService)
 
-technicianRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+technicianRoute.use(authenticateMiddleware)
 
 technicianRoute.get('/', technicianController.findAll)
 technicianRoute.get('/:technicianProfileId', technicianController.findOneById)

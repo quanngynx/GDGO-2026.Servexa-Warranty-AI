@@ -1,0 +1,5 @@
+$kind: http-request
+name: remove-item
+url: ""
+method: DELETE
+order: 4488832530273067

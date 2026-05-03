@@ -1,7 +1,7 @@
 import type {
   ResponseAuthUserDto,
   ResponseMeUserDto,
-} from "./api/auth/data-transfer-object";
+} from "./api/identity/auth/data-transfer-object";
 
 export type AuthSessionUser = {
   id: string;

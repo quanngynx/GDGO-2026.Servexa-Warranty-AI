@@ -1,0 +1,28 @@
+name: server
+values:
+  - key: NODE_ENV
+    value: ''
+  - key: PORT
+    value: ''
+  - key: CORS_ORIGIN
+    value: ''
+  - key: CORS_ORIGIN_WEB
+    value: ''
+  - key: DATABASE_URL
+    value: ''
+  - key: REDIS_URL
+    value: ''
+  - key: REDIS_HOST
+    value: ''
+  - key: REDIS_PORT
+    value: ''
+  - key: REDIS_DB
+    value: ''
+  - key: TEMP_REFRESH_TOKEN_SECRET
+    value: ''
+  - key: PUBLIC_KEY_TYPE
+    value: ''
+  - key: BRANDING_NAME
+    value: ''
+  - key: LH_TOTAL_WAREHOUSE_NAME
+    value: ''

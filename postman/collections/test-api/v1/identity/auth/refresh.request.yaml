@@ -1,0 +1,5 @@
+$kind: http-request
+url: "{{"
+method: POST
+examples: .resources/refresh.resources/examples
+order: 4403507471477305

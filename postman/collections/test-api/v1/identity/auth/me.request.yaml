@@ -1,0 +1,5 @@
+$kind: http-request
+url: "{{"
+method: GET
+examples: .resources/me.resources/examples
+order: 4314848867880327

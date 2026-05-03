@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { type Table } from "@servexa-warranty-ai/ui/components/data-table/type";
 import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { sleep } from "@servexa-warranty-ai/ui/lib/utils";
@@ -7,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/com
 import { Input } from "@servexa-warranty-ai/ui/components/input";
 import { Label } from "@servexa-warranty-ai/ui/components/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import type { Table } from "@tanstack/react-table";
 
 type UserMultiDeleteDialogProps<TData> = {
   open: boolean;

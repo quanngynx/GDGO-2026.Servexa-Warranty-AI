@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-all-payment-periods
+url: findAllPaymentPeriods
+method: GET
+order: 1777739043475

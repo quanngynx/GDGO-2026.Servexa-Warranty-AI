@@ -7,7 +7,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@servexa-warranty-ai/ui/components/dropdown-menu";
-import { type Row } from "@servexa-warranty-ai/ui/components/data-table/type";
+import type { Row } from "@tanstack/react-table";
 import { MoreHorizontal, Trash2, UserPen } from "lucide-react";
 import { type User } from "../data/schema";
 import { useUsers } from "./roles-provider";

@@ -2,7 +2,7 @@ import { Router, type IRouter } from 'express'
 
 import { multerUpload } from '@/core/file-storage/multer'
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware} from '@/middlewares'
 
 import { DocumentController } from '../controllers/document.controller'
 import { DocumentRepository } from '../repositories/document.repository'
@@ -14,7 +14,7 @@ const documentRepository = new DocumentRepository()
 const documentService = new DocumentService(documentRepository)
 const documentController = new DocumentController(documentService)
 
-documentRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+documentRoute.use(authenticateMiddleware)
 
 documentRoute.get('/', documentController.findAll)
 documentRoute.get('/:documentId/versions', documentController.findVersions)

@@ -1,7 +1,42 @@
-import prisma from "../..";
+import basePrisma from "../..";
+
+// Ward.code is required + unique. The seed data predates that constraint,
+// so we use a local extended client that auto-generates a code when one is
+// not provided, keeping the 20k-line ward data unchanged.
+let _wardCounter = 0
+const prisma = basePrisma.$extends({
+  query: {
+    ward: {
+      async create({ args, query }) {
+        if (!args.data.code) {
+          _wardCounter++
+          // slugify name + counter to guarantee uniqueness
+          const slug = String(args.data.name ?? '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '')
+            .slice(0, 30)
+          args.data.code = `${slug}-${_wardCounter}`
+        }
+        return query(args)
+      },
+    },
+  },
+})
 
 export async function seedWards() {
   console.log("🗺️ Creating Vietnam geographic data...");
+
+  // Idempotency guard: if wards already exist, skip to avoid unique constraint
+  // violations (ward.create has no upsert key since name+provinceId isn't unique).
+  const existingCount = await basePrisma.ward.count()
+  if (existingCount > 0) {
+    console.log(`✅ Wards already seeded (${existingCount} records), skipping.`)
+    return
+  }
+
   const provinces = await Promise.all([
     // Northern Vietnam
     prisma.province.upsert({
