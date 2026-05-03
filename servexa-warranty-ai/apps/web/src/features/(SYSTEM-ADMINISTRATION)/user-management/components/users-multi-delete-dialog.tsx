@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from '@servexa-warranty-ai/ui/com
 import { Input } from '@servexa-warranty-ai/ui/components/input'
 import { Label } from '@servexa-warranty-ai/ui/components/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { userAPI } from '@/libs/api/user/api'
+import { userAPI } from '@/libs/api/identity/user/api'
 import { userQueryKeys } from '../hooks/query-keys'
 import { type User } from '../data/schema'
 
