@@ -1,5 +1,5 @@
 $kind: http-request
 name: logout
-url: "{{"
+url: "{{CORS_ORIGIN}}/api/v1/identity/auth/logout"
 method: POST
 order: 2732139768314174

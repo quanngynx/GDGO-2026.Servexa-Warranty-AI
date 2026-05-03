@@ -1,5 +1,6 @@
 $kind: http-request
-url: "{{"
+name: me
+url: "{{CORS_ORIGIN}}/api/v1/identity/auth/me"
 method: GET
 examples: .resources/me.resources/examples
 order: 4314848867880327
