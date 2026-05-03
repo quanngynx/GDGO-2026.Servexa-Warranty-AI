@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware} from '@/middlewares'
 
 import { TotalWarehouseController } from '../controllers/total-warehouse.controller'
 import { TotalWarehouseRepository } from '../repositories/total-warehouse.repository'
@@ -13,7 +13,7 @@ const totalWarehouseRepository = new TotalWarehouseRepository()
 const totalWarehouseService = new TotalWarehouseService(totalWarehouseRepository)
 const totalWarehouseController = new TotalWarehouseController(totalWarehouseService)
 
-totalWarehouseRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+totalWarehouseRoute.use(authenticateMiddleware)
 
 totalWarehouseRoute.get('/', totalWarehouseController.findAll)
 totalWarehouseRoute.get('/:totalWarehouseId', totalWarehouseController.findOneById)

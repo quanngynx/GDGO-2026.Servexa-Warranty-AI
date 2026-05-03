@@ -1,2 +1,2 @@
 export const owner = 'quanngynx'
-export const repo = 'warranty-ai-demo'
+export const repo = 'servexa-warranty-ai'

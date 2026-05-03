@@ -2,7 +2,7 @@ import { Router, type IRouter } from 'express'
 import multer from 'multer'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware } from '@/middlewares'
 
 import { ModelController } from '../controllers/model.controller'
 import { CategoryRepository } from '../repositories/category.repository'
@@ -19,12 +19,12 @@ const modelService = new ModelService(modelRepository, categoryRepository)
 const modelExcelService = new ModelExcelService(modelRepository, categoryRepository)
 const modelController = new ModelController(modelService, modelExcelService)
 
-modelRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+modelRoute.use(authenticateMiddleware)
 
 modelRoute.get('/', modelController.findAll)
 modelRoute.get('/export', modelController.exportExcel)
-modelRoute.post('/import', upload.single('file'), modelController.importExcel)
 modelRoute.get('/:modelId', modelController.findOneById)
+modelRoute.post('/import', upload.single('file'), modelController.importExcel)
 modelRoute.post('/', modelController.create)
 modelRoute.put('/:modelId', modelController.replace)
 modelRoute.patch('/:modelId', modelController.update)

@@ -1,0 +1,5 @@
+$kind: http-request
+name: resolve
+url: ""
+method: GET
+order: 4503599627370317

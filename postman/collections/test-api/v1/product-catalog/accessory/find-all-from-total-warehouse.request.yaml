@@ -1,0 +1,5 @@
+$kind: http-request
+name: find-all-from-total-warehouse
+url: ""
+method: GET
+order: 4035196908887204

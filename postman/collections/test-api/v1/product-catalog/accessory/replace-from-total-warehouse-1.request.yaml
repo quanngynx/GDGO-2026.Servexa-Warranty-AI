@@ -1,0 +1,5 @@
+$kind: http-request
+name: replace-from-total-warehouse
+url: ""
+method: PUT
+order: 4497216464146352

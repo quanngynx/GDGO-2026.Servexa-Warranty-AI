@@ -12,10 +12,10 @@ import { UsersTable } from "./components/purchase-locations-table";
 import { users } from "./data/purchase-locations";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/"
 );
 
-export function UserManagement() {
+export function PurchaseLocationsManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 

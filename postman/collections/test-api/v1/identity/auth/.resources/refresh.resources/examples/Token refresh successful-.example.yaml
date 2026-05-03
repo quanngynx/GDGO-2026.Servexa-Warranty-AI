@@ -1,0 +1,138 @@
+$kind: http-example
+name: Token refresh successful.
+request:
+  url: "{{baseUrl}}/api/v1/identity/auth/refresh"
+  method: POST
+  headers:
+    - key: refreshtoken
+      value: string
+      description: Refresh token value.
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "message": "string",
+        "metadata": {
+          "user": {
+            "id": "e61dca0b-3c39-c170-c9ec-5ae1723e571a",
+            "username": "string",
+            "fullName": "string",
+            "email": "Rhtc@cHmGVmOG.rao",
+            "role": "ADMIN",
+            "permissions": [
+              "string",
+              "string"
+            ],
+            "status": "active"
+          },
+          "accessToken": "string",
+          "refreshToken": "string",
+          "expiresInAccessToken": 5075.341922000826,
+          "expiresInRefreshToken": 6203.474958977092
+        }
+      }
+    $type: |-
+      {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "fullName": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "role": {
+                        "type": "string",
+                        "example": "ADMIN"
+                      },
+                      "permissions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "inactive",
+                          "suspended"
+                        ],
+                        "example": "active"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "username",
+                      "fullName"
+                    ]
+                  },
+                  "accessToken": {
+                    "type": "string"
+                  },
+                  "refreshToken": {
+                    "type": "string"
+                  },
+                  "expiresInAccessToken": {
+                    "type": "number"
+                  },
+                  "expiresInRefreshToken": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "user",
+                  "accessToken",
+                  "refreshToken",
+                  "expiresInAccessToken",
+                  "expiresInRefreshToken"
+                ]
+              }
+            },
+            "required": [
+              "metadata"
+            ]
+          }
+        ]
+      }
+order: 2308874921050599

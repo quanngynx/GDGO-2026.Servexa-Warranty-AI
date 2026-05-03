@@ -1,7 +1,7 @@
 import { clearCookie, getCookie, setCookie } from '@servexa-warranty-ai/ui/lib/cookie'
 
 import { KEY_COOKIE } from '@/constants'
-import { authAPI } from '@/libs/api/auth/api'
+import { authAPI } from '@/libs/api/identity/auth/api'
 import { getAuthCookieDomain, mapLoginError } from '@servexa-warranty-ai/ui/lib/utils'
 import { toAuthSessionUser, type AuthSessionUser } from '@/libs/to-auth-session-user'
 

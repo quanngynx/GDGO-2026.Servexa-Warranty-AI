@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware} from '@/middlewares'
 
 import { PurchaseLocationController } from '../controllers/purchase-location.controller'
 import { PurchaseLocationGroupRepository } from '../repositories/purchase-location-group.repository'
@@ -15,7 +15,7 @@ const purchaseLocationRepository = new PurchaseLocationRepository()
 const purchaseLocationService = new PurchaseLocationService(purchaseLocationRepository, purchaseLocationGroupRepository)
 const purchaseLocationController = new PurchaseLocationController(purchaseLocationService)
 
-purchaseLocationRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+purchaseLocationRoute.use(authenticateMiddleware)
 
 purchaseLocationRoute.get('/', purchaseLocationController.findAll)
 purchaseLocationRoute.get('/:locationId', purchaseLocationController.findOneById)

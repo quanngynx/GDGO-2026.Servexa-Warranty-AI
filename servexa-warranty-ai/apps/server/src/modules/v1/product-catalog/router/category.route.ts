@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { Roles } from '@/enums/roles'
-import { authenticateMiddleware, requireRoles } from '@/middlewares'
+import { authenticateMiddleware } from '@/middlewares'
 
 import { CategoryController } from '../controllers/category.controller'
 import { CategoryRepository } from '../repositories/category.repository'
@@ -13,7 +13,7 @@ const categoryRepository = new CategoryRepository()
 const categoryService = new CategoryService(categoryRepository)
 const categoryController = new CategoryController(categoryService)
 
-categoryRoute.use(authenticateMiddleware, requireRoles([Roles.ADMIN]))
+categoryRoute.use(authenticateMiddleware)
 
 categoryRoute.get('/', categoryController.findAll)
 categoryRoute.get('/:categoryId', categoryController.findOneById)

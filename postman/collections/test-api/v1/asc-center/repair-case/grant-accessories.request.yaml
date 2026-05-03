@@ -1,0 +1,5 @@
+$kind: http-request
+name: grant-accessories
+url: ""
+method: POST
+order: 4444746812083779

@@ -1,0 +1,5 @@
+$kind: http-request
+name: create-from-total-warehouse
+url: ""
+method: POST
+order: 4457718032204102

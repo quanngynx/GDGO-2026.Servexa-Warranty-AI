@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { userAPI } from '@/libs/api/user/api'
-import type { RequestListUsersDto } from '@/libs/api/user/data-transfer-object'
 import { userQueryKeys } from './query-keys'
+import { userAPI } from '@/libs/api/identity/user/api'
+import type { RequestListUsersDto } from '@/libs/api/identity/user/data-transfer-object'
 
 export const useUsersQuery = (params?: RequestListUsersDto) =>
   useQuery({

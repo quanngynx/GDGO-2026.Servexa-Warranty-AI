@@ -1,0 +1,5 @@
+$kind: http-request
+name: update-item
+url: ""
+method: PATCH
+order: 4476191394481945

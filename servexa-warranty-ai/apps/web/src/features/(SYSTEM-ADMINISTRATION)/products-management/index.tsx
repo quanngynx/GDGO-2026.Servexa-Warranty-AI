@@ -12,10 +12,10 @@ import { UsersTable } from "./components/products-table";
 import { users } from "./data/products";
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
+  "/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/"
 );
 
-export function UserManagement() {
+export function ProductsManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
 

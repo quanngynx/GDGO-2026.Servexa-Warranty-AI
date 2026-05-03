@@ -1,15 +1,8 @@
+import { AscCentersManagement } from "@/features/(SYSTEM-ADMINISTRATION)/asc-centers-management";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
   "/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/"
 )({
-  component: RouteComponent,
+  component: AscCentersManagement,
 });
-
-function RouteComponent() {
-  return (
-    <div>
-      Hello "/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/"!
-    </div>
-  );
-}
