@@ -16,6 +16,7 @@
     "@grpc/proto-loader": "^0.8.0",
     "@servexa-warranty-ai/db": "workspace:*",
     "@servexa-warranty-ai/env": "workspace:*",
+    "@servexa-warranty-ai/proto": "workspace:*",
     "ai": "catalog:",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",

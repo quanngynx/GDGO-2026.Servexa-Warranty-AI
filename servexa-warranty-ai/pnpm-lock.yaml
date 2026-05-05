@@ -286,6 +286,9 @@ importers:
       '@servexa-warranty-ai/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@servexa-warranty-ai/proto':
+        specifier: workspace:*
+        version: link:../../packages/proto
       ai:
         specifier: 'catalog:'
         version: 6.0.141(zod@4.3.6)
@@ -626,6 +629,8 @@ importers:
       typescript:
         specifier: ^5
         version: 5.9.3
+
+  packages/proto: {}
 
   packages/ui:
     dependencies:
