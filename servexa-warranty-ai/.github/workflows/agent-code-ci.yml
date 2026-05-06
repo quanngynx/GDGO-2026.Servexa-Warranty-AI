@@ -1,0 +1,30 @@
+name: agent-code-ci
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'apps/agent-code/**'
+      - '.github/workflows/agent-code-ci.yml'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'apps/agent-code/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/agent-code
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+      - name: Run tests
+        run: pytest

@@ -79,4 +79,49 @@ export class IoredisService {
   async setExpire(key: string, expirationSeconds: number): Promise<number> {
     return await this.getClient().expire(key, expirationSeconds);
   }
+
+  /**
+   * Redis Streams append with approximate MAXLEN trim.
+   * Field values must be strings (serialize JSON payloads as strings).
+   */
+  async xaddStream(
+    streamKey: string,
+    fields: Record<string, string>,
+    maxLenApprox: number,
+  ): Promise<string> {
+    const parts: string[] = []
+    for (const [k, v] of Object.entries(fields)) {
+      parts.push(k, v)
+    }
+    const id = await this.getClient().xadd(
+      streamKey,
+      'MAXLEN',
+      '~',
+      String(maxLenApprox),
+      '*',
+      ...parts,
+    )
+    if (id === null) {
+      throw new Error(`REDIS: XADD failed for stream ${streamKey}`)
+    }
+    return id
+  }
+
+  /**
+   * Idempotency helper: SET key value NX EX seconds — returns false if duplicate.
+   */
+  async setIfNotExists(
+    key: string,
+    value: string,
+    expirationSeconds: number,
+  ): Promise<boolean> {
+    const res = await this.getClient().set(
+      key,
+      value,
+      'EX',
+      expirationSeconds,
+      'NX',
+    )
+    return res === 'OK'
+  }
 }

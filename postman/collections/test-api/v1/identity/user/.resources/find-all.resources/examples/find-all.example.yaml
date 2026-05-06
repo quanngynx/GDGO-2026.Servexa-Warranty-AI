@@ -1,0 +1,74 @@
+$kind: http-example
+request:
+  url: "{{CORS_ORIGIN}}/api/v1/identity/users"
+  method: GET
+  headers:
+    x-client-id: "{{X_CLIENT_ID}}"
+    Authorization: Bearer {{authToken}}
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    content-security-policy: "default-src 'self';style-src 'self' 'unsafe-inline';script-src 'self';img-src 'self' data: blob:;base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';upgrade-insecure-requests"
+    cross-origin-opener-policy: same-origin
+    cross-origin-resource-policy: cross-origin
+    origin-agent-cluster: ?1
+    referrer-policy: no-referrer
+    strict-transport-security: max-age=15552000; includeSubDomains
+    x-content-type-options: nosniff
+    x-dns-prefetch-control: off
+    x-download-options: noopen
+    x-frame-options: SAMEORIGIN
+    x-permitted-cross-domain-policies: none
+    x-xss-protection: "0"
+    vary: Origin, Accept-Encoding
+    access-control-allow-credentials: "true"
+    x-request-id: fd9d0d39-686a-4ebd-a0eb-1a426260c443
+    x-response-time: 240ms
+    content-type: application/json; charset=utf-8
+    content-length: "609"
+    etag: W/"261-1YMxii/A4dBt3pvSXxrvdQLNMs0"
+    date: Sun, 03 May 2026 17:59:22 GMT
+    connection: keep-alive
+    keep-alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "message": "Users fetched successfully",
+        "status": 200,
+        "metadata": {
+          "items": [
+            {
+              "id": "019dadf3-a4ac-7222-92ff-f459c6bf9b93",
+              "username": "admin",
+              "fullName": "System Administrator",
+              "companyEmail": "admin@servexa-warranty-ai.com",
+              "personalEmail": null,
+              "phone": null,
+              "avatar": null,
+              "status": "active",
+              "deletedAt": null,
+              "createdBy": null,
+              "updatedBy": null,
+              "createdAt": "2026-04-21T02:51:59.020Z",
+              "updatedAt": "2026-04-29T04:45:53.494Z",
+              "role": {
+                "id": "019dadf3-a44a-70ab-8134-a839f614899f",
+                "name": "admin"
+              },
+              "ascCenter": null,
+              "creator": null
+            }
+          ],
+          "pagination": {
+            "page": 1,
+            "limit": 10,
+            "total": 1,
+            "totalPages": 1,
+            "hasNext": false,
+            "hasPrev": false
+          }
+        }
+      }
+order: 1777831250723
