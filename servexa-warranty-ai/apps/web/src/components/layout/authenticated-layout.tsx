@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SkipToMain } from "@/components/skip-to-main";
 import { AICopilotPanel } from "@/features/ai-copilot";
+import { AISearchDialog } from "@/features/ai-search";
 import { SidebarInset, SidebarProvider } from "@servexa-warranty-ai/ui/components/sidebar";
 import { LayoutProvider } from "@servexa-warranty-ai/ui/contexts/layout-provider";
 import { SearchProvider } from "@servexa-warranty-ai/ui/contexts/search-provider";
@@ -39,6 +40,9 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
           
           {/* AI Copilot Panel - Fixed right sidebar */}
           <AICopilotPanel />
+          
+          {/* Global AI Search Dialog - CMD+K */}
+          <AISearchDialog />
         </SidebarProvider>
       </LayoutProvider>
     </SearchProvider>
