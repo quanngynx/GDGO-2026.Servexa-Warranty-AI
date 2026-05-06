@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from "lucide-react";
+import { ArrowRight, ChevronRight, Laptop, Moon, Sparkles, Sun } from "lucide-react";
 import { useSearch } from "../contexts/search-provider";
 import { useTheme } from "../contexts/theme-provider";
 import {
@@ -70,6 +70,33 @@ export function CommandMenu() {
               })}
             </CommandGroup>
           ))}
+          <CommandSeparator />
+          <CommandGroup heading="AI Quick Actions">
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Open AI Command Center
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/ai" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Open AI Chat
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/repair-cases-management" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Find Similar Repair Cases
+            </CommandItem>
+          </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Theme">
             <CommandItem onSelect={() => runCommand(() => setTheme("light"))}>
