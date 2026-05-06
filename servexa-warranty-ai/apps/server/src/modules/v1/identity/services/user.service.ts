@@ -30,6 +30,18 @@ const userSelect = {
       name: true,
     },
   },
+  ascCenter: {
+    select: {
+      id: true,
+      centerName: true,
+    },
+  },
+  creator: {
+    select: {
+      username: true,
+      fullName: true,
+    }
+  }
 } satisfies Prisma.UserSelect
 
 export type FindAllUsersInput = {

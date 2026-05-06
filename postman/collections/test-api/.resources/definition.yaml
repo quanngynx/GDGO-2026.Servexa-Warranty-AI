@@ -1,2 +1,7 @@
 $kind: collection
 name: test/api
+variables:
+  X_CLIENT_ID: ""
+  authToken: ""
+  USER_NAME: ""
+  PW: ""

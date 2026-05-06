@@ -1,5 +1,6 @@
 $kind: http-request
-url: "{{"
+name: refresh
+url: "{{CORS_ORIGIN}}/api/v1/identity/auth/refresh"
 method: POST
 examples: .resources/refresh.resources/examples
 order: 4403507471477305

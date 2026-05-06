@@ -1,5 +1,8 @@
 $kind: http-request
-name: find-all
-url: ""
+url: "{{CORS_ORIGIN}}/api/v1/identity/users"
 method: GET
+headers:
+  x-client-id: "{{X_CLIENT_ID}}"
+  Authorization: Bearer {{authToken}}
+examples: .resources/find-all.resources/examples
 order: 1777622014577
