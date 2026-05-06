@@ -2,5 +2,9 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/apps/agent-code/.venv/Scripts/python.exe",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/apps/agent-code/src"
-  ]
+  ],
+  "protobuf.buf.path": "c:\\Users\\Admin\\AppData\\Roaming\\Code\\User\\globalStorage\\drblury.protobuf-vsc\\bin\\buf.exe",
+  "protobuf.externalLinter.bufPath": "c:\\Users\\Admin\\AppData\\Roaming\\Code\\User\\globalStorage\\drblury.protobuf-vsc\\bin\\buf.exe",
+  "protobuf.externalLinter.enabled": true,
+  "protobuf.externalLinter.linter": "api-linter"
 }
