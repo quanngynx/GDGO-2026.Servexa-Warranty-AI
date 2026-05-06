@@ -49,7 +49,7 @@ class ErrorBot(BaseBot):
             line_error = error_detail.splitlines()[-1].strip()
 
         message = (
-            f"**❌ THÔNG BÁO LỖI**\n\n"
+            f"**THÔNG BÁO LỖI**\n\n"
             f"**Enviroment**: {self.environment}\n"
             f"**Title**: {name_error}\n"
             f"**File error** <pre language='shell'>{file_error}</pre>\n"
@@ -65,12 +65,12 @@ class ErrorBot(BaseBot):
         await self.send_message(message)
 
     async def send_notify_email_failure(self, error_message: str, recipients: List[str]) -> None:
-        message = f"<b>❌ Email Send Failure Notification</b>\n\n" f"<b>Error Message</b>: {error_message}\n" f"<b>Recipients</b>: {', '.join(recipients)}\n"
+        message = f"<b>Email Send Failure Notification</b>\n\n" f"<b>Error Message</b>: {error_message}\n" f"<b>Recipients</b>: {', '.join(recipients)}\n"
         await self.send_message(message)
 
     async def send_warning(self, warning_message: str, action: str) -> None:
         formatted_message = (
-            "<b>⚠️ Warning</b>\n\n"
+            "<b>Warning</b>\n\n"
             "<i>An issue occurred while processing the request:</i>\n\n"
             f"<b>Detail</b>: {warning_message}\n"
             f"<b>Action</b>:" f"{action}\n\n"
@@ -86,7 +86,7 @@ class OrderBot(BaseBot):
     async def new_order(self, order_id: str, order_no: str, amount: int, product_name: str, quantity: int, user_fullname: str, user_email: str, created_by: str):
         amount = converter.convert_to_vnd_currency(amount)
         message = (
-            f"<b>🛒 New Order</b>\n\n"
+            f"<b>New Order</b>\n\n"
             f"<b>Order ID</b>: {order_id}\n"
             f"<b>Order No</b>: {order_no}\n"
             f"<b>Amount</b>: {amount}\n"
@@ -101,7 +101,7 @@ class OrderBot(BaseBot):
     async def order_accepted(self, order_id: str, order_no: str, amount: int, product_name: str, quantity: int, user_fullname: str, user_email: str, accepted_by: str):
         amount = converter.convert_to_vnd_currency(amount)
         message = (
-            f"<b>✅ Accept Order</b>\n\n"
+            f"<b>Accept Order</b>\n\n"
             f"<b>Order ID</b>: {order_id}\n"
             f"<b>Order No</b>: {order_no}\n"
             f"<b>Amount</b>: {amount}\n"
