@@ -23,6 +23,8 @@ catalog:
   zod: ^4.1.13
 
 ignoredBuiltDependencies:
+  - '@nestjs/core'
+  - '@openapitools/openapi-generator-cli'
   - '@prisma/engines'
   - esbuild
   - msw
@@ -32,3 +34,5 @@ ignoredBuiltDependencies:
 
 onlyBuiltDependencies:
   - bcrypt
+  - grpc-tools
+  - protobufjs
