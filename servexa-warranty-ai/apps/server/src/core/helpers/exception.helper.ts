@@ -99,3 +99,10 @@ export class BusinessException extends BaseException {
     return json;
   }
 }
+
+export class AiJobDuplicateError extends Error {
+  constructor() {
+    super("Duplicate enqueue for idempotency key");
+    this.name = "AiJobDuplicateError";
+  }
+}
