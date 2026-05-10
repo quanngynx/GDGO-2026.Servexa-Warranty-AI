@@ -9,6 +9,7 @@ from core.middlewares.logging import RequestLogMiddleware
 from core.observability import configure_observability
 from routers import api_routers
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     configure_observability()
