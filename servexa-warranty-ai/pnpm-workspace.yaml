@@ -10,6 +10,11 @@ catalog:
   '@types/react': ^19.2.10
   '@types/react-dom': ^19.2.3
   ai: ^6.0.3
+  '@ag-ui/client': ^0.0.53
+  '@copilotkit/react-core': ^1.57.1
+  '@copilotkit/react-ui': ^1.57.1
+  '@copilotkit/runtime': ^1.57.1
+  '@copilotkit/runtime-client-gql': ^1.51.1
   alchemy: ^0.90.0
   axios: ^1.13.2
   dotenv: ^17.2.2
