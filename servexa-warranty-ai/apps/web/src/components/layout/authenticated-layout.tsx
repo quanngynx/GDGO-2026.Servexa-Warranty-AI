@@ -7,6 +7,7 @@ import { SearchProvider } from "@servexa-warranty-ai/ui/contexts/search-provider
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 import { getCookie } from "@servexa-warranty-ai/ui/lib/cookie";
 import { Outlet } from "@tanstack/react-router";
+import { AISearchDialog } from "@/features/ai-search";
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode;
@@ -37,7 +38,10 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
             >
               {children ?? <Outlet />}
             </SidebarInset>
+            {/* AI Copilot Panel - Fixed right sidebar */}
             <CopilotPanel />
+            {/* Global AI Search Dialog - CMD+K */}
+            <AISearchDialog />
           </div>
         </SidebarProvider>
       </LayoutProvider>

@@ -1,2 +1,88 @@
 @import "@servexa-warranty-ai/ui/globals.css";
 @source "../node_modules/streamdown/dist/*.js";
+
+/* AI-specific animations and styling enhancements */
+@layer base {
+  /* Subtle glow effect for AI primary color elements */
+  @keyframes ai-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--color-ai-primary), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 10px 2px rgba(var(--color-ai-primary), 0.1);
+    }
+  }
+
+  /* Pulse animation for loading states */
+  @keyframes ai-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Slide in from right for panel */
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Expand width animation for copilot panel */
+  @keyframes expand-width {
+    from {
+      width: 380px;
+    }
+    to {
+      width: 480px;
+    }
+  }
+}
+
+@layer components {
+  /* AI Copilot Panel optimizations */
+  .ai-copilot-panel {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* AI element glow on hover */
+  .ai-element-glow:hover {
+    animation: ai-glow 2s ease-in-out infinite;
+  }
+
+  /* AI loading skeleton pulse */
+  .ai-skeleton {
+    animation: ai-pulse 2s ease-in-out infinite;
+  }
+
+  /* Responsive improvements for smaller screens */
+  @media (max-width: 768px) {
+    /* Make copilot panel full screen on mobile */
+    .ai-copilot-panel {
+      @apply fixed inset-0 z-50 rounded-none;
+    }
+
+    /* Stack dashboard widgets better */
+    .dashboard-grid {
+      @apply grid-cols-1;
+    }
+  }
+
+  /* Ensure good contrast for AI elements */
+  [class*="ai-primary"] {
+    @apply transition-colors duration-200;
+  }
+
+  [class*="ai-accent"] {
+    @apply transition-colors duration-200;
+  }
+}
