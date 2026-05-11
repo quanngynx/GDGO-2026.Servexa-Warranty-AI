@@ -12,13 +12,13 @@ source .venv/Scripts/activate
 # PowerShell
 .\.venv\Scripts\Activate.ps1
 
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 - Option, update lib into requirment.txt
 
 ```bash
-pip freeze > requirment.txt
+python -m pip freeze > requirment.txt
 ```
 
 ## Run API

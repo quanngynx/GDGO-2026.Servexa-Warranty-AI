@@ -1,23 +1,22 @@
-import { Button } from "@servexa-warranty-ai/ui/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@servexa-warranty-ai/ui/components/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@servexa-warranty-ai/ui/components/tabs";
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { Analytics } from "./components/analytics";
-import { Overview } from "./components/overview";
-import { RecentSales } from "./components/recent-sales";
-import { NavigationIntergratedApps } from "@/components/navigation-intergrated-apps";
-import { NavigationChats } from "@/components/navigation-chats";
+import { AIInsightCard } from '@/components/ai-insight-card'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { NavigationChats } from '@/components/navigation-chats'
+import { NavigationIntergratedApps } from '@/components/navigation-intergrated-apps'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { Badge } from '@servexa-warranty-ai/ui/components/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@servexa-warranty-ai/ui/components/card'
+import { AlertTriangle, Bot, Package, ShieldAlert, Timer } from 'lucide-react'
+
+const commandCenterKpis = [
+  { label: 'Critical Alerts', value: '8', delta: '+2 in the last hour', icon: AlertTriangle },
+  { label: 'SLA Breach Risk', value: '14', delta: '6 are high confidence', icon: Timer },
+  { label: 'Stockout Predictions', value: '5', delta: '2 require action today', icon: Package },
+  { label: 'Active AI Agents', value: '4', delta: 'All systems healthy', icon: Bot },
+]
 
 export function Dashboard() {
   return (
@@ -34,183 +33,108 @@ export function Dashboard() {
         </div>
       </Header>
 
-      {/* ===== Main ===== */}
       <Main>
-        <div className="mb-2 flex items-center justify-between space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <div className="flex items-center space-x-2">
-            <Button>Download</Button>
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">AI Command Center</h1>
+            <p className="text-sm text-muted-foreground">Operational intelligence with evidence-backed recommendations.</p>
           </div>
+          <Badge variant="outline" className="h-7">
+            Live Operations
+          </Badge>
         </div>
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="reports" disabled>
-              Reports
-            </TabsTrigger>
-            <TabsTrigger value="notifications" disabled>
-              Notifications
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {commandCenterKpis.map((item) => {
+            const Icon = item.icon
+            return (
+              <Card key={item.label}>
+                <CardHeader className="pb-2">
+                  <CardDescription>{item.label}</CardDescription>
+                  <CardTitle className="text-2xl">{item.value}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
-                  </p>
+                <CardContent className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground">{item.delta}</p>
+                  <Icon className="h-4 w-4 text-ai-primary" aria-hidden="true" />
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Subscriptions
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
-                  <p className="text-xs text-muted-foreground">
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <path d="M2 10h20" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Active Now
-                  </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
-                  <p className="text-xs text-muted-foreground">
-                    +201 since last hour
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-              <Card className="col-span-1 lg:col-span-4">
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
-                </CardHeader>
-                <CardContent className="ps-2">
-                  <Overview />
-                </CardContent>
-              </Card>
-              <Card className="col-span-1 lg:col-span-3">
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-          <TabsContent value="analytics" className="space-y-4">
-            <Analytics />
-          </TabsContent>
-        </Tabs>
+            )
+          })}
+        </div>
+
+        <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          <AIInsightCard
+            title="SLA Escalation Risk"
+            insight="Case RC-4291 is likely to miss SLA within 4 hours due to parts delivery delay and technician backlog."
+            confidence={0.91}
+            severity="critical"
+            sources={[
+              { id: 'case-4291', type: 'repair_case', title: 'Repair Case RC-4291', snippet: 'Waiting for compressor relay replacement' },
+              { id: 'inv-12', type: 'inventory', title: 'Inventory Forecast', snippet: 'Relay ETA 6 hours; stockout risk 78%' },
+            ]}
+            actions={[
+              { id: 'escalate-case', label: 'Create Escalation', action: 'escalate', variant: 'destructive' },
+              { id: 'reassign-case', label: 'Reassign Technician', action: 'reassign', variant: 'outline' },
+            ]}
+          />
+
+          <AIInsightCard
+            title="Stockout Prediction"
+            insight="Compressor X12 stock is projected to deplete in 5 days based on current failure trends in 3 regions."
+            confidence={0.86}
+            severity="warning"
+            sources={[
+              { id: 'part-x12', type: 'inventory', title: 'Part Forecast Model', snippet: 'Demand up 22% WoW in North region' },
+              { id: 'bulletin-11', type: 'knowledge_base', title: 'Vendor Bulletin SB-11', snippet: 'Potential delay in next shipment window' },
+            ]}
+            actions={[
+              { id: 'order-part', label: 'Order Parts', action: 'order_parts' },
+              { id: 'alt-vendor', label: 'Switch Vendor', action: 'switch_vendor', variant: 'secondary' },
+            ]}
+          />
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ShieldAlert className="h-4 w-4 text-ai-primary" aria-hidden="true" />
+                Active Agent Activity
+              </CardTitle>
+              <CardDescription>Latest autonomous actions taken by AI agents.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div className="rounded-md border border-border/60 p-3">
+                Supply Chain Agent flagged delayed shipments for vendor V-22 and recommended rerouting.
+              </div>
+              <div className="rounded-md border border-border/60 p-3">
+                Warranty Agent detected a spike in repeated claims for model WM-230.
+              </div>
+              <div className="rounded-md border border-border/60 p-3">
+                Diagnostic Agent suggested updated troubleshooting workflow for E21 error patterns.
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Technician Workload Overview</CardTitle>
+              <CardDescription>Current queue pressure by operating zone.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center justify-between rounded-md bg-muted/30 p-2">
+                <span>North Zone</span>
+                <Badge variant="secondary">87% capacity</Badge>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-muted/30 p-2">
+                <span>Central Zone</span>
+                <Badge variant="outline">64% capacity</Badge>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-muted/30 p-2">
+                <span>South Zone</span>
+                <Badge variant="outline">58% capacity</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </Main>
     </>
-  );
+  )
 }
-
-// const topNav = [
-//   {
-//     title: 'Overview',
-//     href: 'dashboard/overview',
-//     isActive: true,
-//     disabled: false,
-//   },
-//   {
-//     title: 'Customers',
-//     href: 'dashboard/customers',
-//     isActive: false,
-//     disabled: true,
-//   },
-//   {
-//     title: 'Products',
-//     href: 'dashboard/products',
-//     isActive: false,
-//     disabled: true,
-//   },
-//   {
-//     title: 'Settings',
-//     href: 'dashboard/settings',
-//     isActive: false,
-//     disabled: true,
-//   },
-// ]
