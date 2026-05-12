@@ -30,6 +30,17 @@ class Settings(BaseSettings):
     redis_group_name: str = Field(default='ai-workers')
     redis_consumer_name: str = Field(default='agent-worker')
 
+    # Must match `packages/env` server defaults / Node `AiJobStreamService`
+    ai_stream_analysis: str = Field(default='ai.analysis.stream')
+    ai_stream_chat: str = Field(default='ai.chat.stream')
+    ai_stream_report: str = Field(default='ai.report.stream')
+    ai_stream_anomaly: str = Field(default='ai.anomaly.stream')
+    ai_stream_retry: str = Field(default='ai.retry.stream')
+    ai_job_consumer_group: str = Field(default='ai-job-workers')
+    ai_job_dlq_stream: str = Field(default='ai.jobs.dlq')
+    ai_job_max_retries: int = Field(default=3)
+    ai_job_visibility_timeout_ms: int = Field(default=60_000)
+
     erp_base_url: str | None = Field(default=None)
     grpc_host: str = Field(default='0.0.0.0')
     grpc_port: int = Field(default=50051)

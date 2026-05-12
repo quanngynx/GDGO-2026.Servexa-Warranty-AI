@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 
+import { aiJobEnvelopeSchema } from "@servexa-warranty-ai/event-contracts";
 import { IoredisService } from "@servexa-warranty-ai/db";
 import { env } from "@servexa-warranty-ai/env/server";
 
-import type { AiJobEnqueueBody, AiJobType } from "@/modules/v1/ai/schemas/ai-request.schema";
+import type {
+  AiJobEnqueueBody,
+  AiJobType,
+} from "@/modules/v1/ai/schemas/ai-request.schema";
 import { logger } from "@/core/logging";
 import { AiJobDuplicateError } from "@/core/helpers/exception.helper";
 
@@ -39,15 +43,18 @@ export class AiJobStreamService {
     await this.connect();
 
     const jobId = randomUUID();
-    const envelope = {
+    const envelope = aiJobEnvelopeSchema.parse({
+      version: "1.0",
       jobId,
       tenantId: payload.tenantId ?? "",
       userId: payload.userId ?? "",
       type: payload.type,
       query: payload.query,
       context: payload.context ?? {},
+      idempotencyKey: payload.idempotencyKey,
       createdAt: new Date().toISOString(),
-    };
+      retryCount: 0,
+    });
 
     const stream = streamForType(payload.type);
 
@@ -63,7 +70,7 @@ export class AiJobStreamService {
       }
     }
 
-    await this.redis.xaddStream(
+    const messageId = await this.redis.xaddStream(
       stream,
       { payload: JSON.stringify(envelope) },
       env.AI_STREAM_MAXLEN_APPROX,
@@ -77,16 +84,64 @@ export class AiJobStreamService {
 
     await this.redis.set(
       `${JOB_META_PREFIX}${jobId}`,
-      JSON.stringify({ ...envelope, status: "queued" }),
+      JSON.stringify({ ...envelope, status: "queued", stream, messageId }),
       86_400,
     );
 
-    return { jobId, stream };
+    return { jobId, stream, messageId };
   }
 
   async getJobMeta(jobId: string): Promise<Record<string, unknown> | null> {
     await this.connect();
     const raw = await this.redis.get(`${JOB_META_PREFIX}${jobId}`);
     return raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
+  }
+
+  async replayJob(
+    jobId: string,
+  ): Promise<{
+    jobId: string;
+    replayedTo: string;
+    replayMessageId: string;
+  } | null> {
+    await this.connect();
+    const meta = await this.getJobMeta(jobId);
+    if (!meta) {
+      return null;
+    }
+
+    const type = String(meta.type ?? "analysis") as AiJobType;
+    const replayEnvelope = aiJobEnvelopeSchema.parse({
+      version: "1.0",
+      jobId,
+      tenantId: String(meta.tenantId ?? ""),
+      userId: String(meta.userId ?? ""),
+      type,
+      query: String(meta.query ?? ""),
+      context: (meta.context ?? {}) as Record<string, unknown>,
+      idempotencyKey: undefined,
+      createdAt: new Date().toISOString(),
+      retryCount: Number(meta.retryCount ?? 0),
+    });
+
+    const replayedTo = streamForType(type);
+    const replayMessageId = await this.redis.xaddStream(
+      replayedTo,
+      { payload: JSON.stringify(replayEnvelope), replayOfJobId: jobId },
+      env.AI_STREAM_MAXLEN_APPROX,
+    );
+
+    await this.redis.set(
+      `${JOB_META_PREFIX}${jobId}`,
+      JSON.stringify({
+        ...meta,
+        status: "replayed",
+        replayedTo,
+        replayMessageId,
+      }),
+      86_400,
+    );
+
+    return { jobId, replayedTo, replayMessageId };
   }
 }

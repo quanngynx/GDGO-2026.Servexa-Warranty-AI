@@ -9,6 +9,7 @@ import {
 import { SuccessResponse } from "@/utils/success-response";
 import {
   aiJobEnqueueBodySchema,
+  aiJobReplayBodySchema,
   aiSyncQueryBodySchema,
 } from "@/modules/v1/ai/schemas/ai-request.schema";
 import { AiSyncService } from "@/modules/v1/ai/services/ai-sync.service";
@@ -109,6 +110,25 @@ class AiController {
         status: HTTP_RESPONSE_CODE.OK,
         message: "Job status",
         metadata: meta ?? { jobId, status: "unknown" },
+      }).send(res);
+    })(req, res, next);
+
+  replayJob = (req: Request, res: Response, next: NextFunction) =>
+    this.errorHandler.asyncHandler(async () => {
+      const { jobId } = aiJobReplayBodySchema.parse(req.body);
+      const jobs = new AiJobStreamService();
+      const replay = await jobs.replayJob(jobId);
+      if (!replay) {
+        throw createOperationalError(
+          "Job not found for replay",
+          HTTP_RESPONSE_CODE.NOT_FOUND,
+        );
+      }
+
+      new SuccessResponse({
+        status: HTTP_RESPONSE_CODE.ACCEPTED,
+        message: "Job replayed",
+        metadata: replay,
       }).send(res);
     })(req, res, next);
 }

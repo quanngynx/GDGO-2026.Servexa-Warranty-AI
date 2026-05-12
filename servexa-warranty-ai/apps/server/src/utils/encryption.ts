@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto, { createHash } from 'crypto'
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || crypto.randomBytes(32).toString('hex')
 const IV_LENGTH = 16
@@ -51,3 +51,6 @@ export function decrypt(text: string): string {
   }
 }
 
+export function sha256Hex(value: string): string {
+  return createHash("sha256").update(value, "utf8").digest("hex");
+}
