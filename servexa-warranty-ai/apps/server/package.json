@@ -19,6 +19,7 @@
     "@grpc/proto-loader": "^0.8.0",
     "@servexa-warranty-ai/db": "workspace:*",
     "@servexa-warranty-ai/env": "workspace:*",
+    "@servexa-warranty-ai/event-contracts": "workspace:*",
     "@servexa-warranty-ai/proto": "workspace:*",
     "ai": "catalog:",
     "bcrypt": "^5.1.1",
@@ -32,9 +33,11 @@
     "helmet": "^7.1.0",
     "ioredis": "^5.8.0",
     "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.12.0",
     "multer": "^2.1.1",
     "node-cron": "^4.2.1",
     "node-fetch": "^3.3.2",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",
     "sharp": "^0.33.1",
@@ -67,4 +70,3 @@
     "vitest": "^2.0.0"
   }
 }
-
