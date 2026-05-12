@@ -24,13 +24,21 @@ python -m pip freeze > requirment.txt
 ## Run API
 
 ```bash
-fastapi dev --host 0.0.0.0 --port 8081
+fastapi dev --port 8081
 ```
 
 ## Run worker
 
 ```bash
 python -m src.worker
+```
+
+## Run AI job stream consumer (Redis → coordinator)
+
+Processes jobs published by the Node `AiJobStreamService` (`ai.*.stream` keys). Set `REDIS_URL` to match the ERP server (for example `redis://localhost:6381/0` when using monorepo Docker).
+
+```bash
+python -m src.worker_ai_jobs
 ```
 
 ## Run tests
