@@ -15,7 +15,8 @@ import type {
   Response as ExpressResponse,
 } from "express";
 
-import { processAiGrpcRequest, isAiGrpcConfigured } from "@/core/infra/grpc/ai-grpc.client";
+import { isAiGrpcConfigured } from "@/core/infra/grpc/ai-grpc.client";
+import { completeUnaryPrompt } from "@/modules/v1/ai/runtime/ai-completion-runtime";
 
 import { createGrpcAnswerUIMessageStream } from "./grpc-ui-message-stream";
 import { pipeAiWebResponseToExpress } from "./pipe-web-ai-response";
@@ -47,8 +48,8 @@ export const handleBootstrapAiChat: RequestHandler = async (
 
     if (isAiGrpcConfigured()) {
       const prompt = extractLastUserText(messages);
-      const grpcOut = await processAiGrpcRequest({
-        message: prompt,
+      const out = await completeUnaryPrompt({
+        prompt,
         traceId: req.requestId ?? "trace-unknown",
         userId: req.user?.id ?? "anonymous",
         tenantId: "",
@@ -58,7 +59,7 @@ export const handleBootstrapAiChat: RequestHandler = async (
 
       const stream = createGrpcAnswerUIMessageStream({
         originalMessages: messages,
-        assistantText: grpcOut.output,
+        assistantText: out.text,
       });
       const web = createUIMessageStreamResponse({ stream });
       pipeAiWebResponseToExpress(web, res);
