@@ -29,7 +29,12 @@ export const aiJobEnqueueBodySchema = z.object({
   context: z.record(z.string(), z.unknown()).optional(),
 });
 
+export const aiJobReplayBodySchema = z.object({
+  jobId: z.string().trim().min(1),
+});
+
 export type AiJobType = z.infer<typeof aiJobTypeSchema>;
 export type AiQueryBody = z.infer<typeof aiQueryBodySchema>;
 export type AiSyncQueryBody = z.infer<typeof aiSyncQueryBodySchema>;
 export type AiJobEnqueueBody = z.infer<typeof aiJobEnqueueBodySchema>;
+export type AiJobReplayBody = z.infer<typeof aiJobReplayBodySchema>;

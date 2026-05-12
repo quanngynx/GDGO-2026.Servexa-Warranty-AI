@@ -22,6 +22,7 @@ import {
 } from "@/middlewares";
 import { handleBootstrapAiChat } from "@/modules/v1/ai/helpers/bootstrap-ai-chat.helper";
 import { helmetConfig } from "@/configs/helmet";
+import { describeLangfuseConfig, initServerTelemetry } from "@/core/observability/telemetry";
 import { uploadDir } from "@/configs/upload-dir";
 
 export class AppBootStrap {
@@ -57,6 +58,8 @@ export class AppBootStrap {
   }
 
   private async initializeServices(): Promise<void> {
+    await initServerTelemetry();
+    describeLangfuseConfig();
     await prisma.$connect();
     logger.info(`[${env.BRANDING_NAME}] Database connected successfully`);
 

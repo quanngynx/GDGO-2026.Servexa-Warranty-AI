@@ -8,7 +8,7 @@ class TelegramTool(BaseTool):
     def __init__(self):
         self.producer = AIEventProducer()
 
-    async def execute(self, payload: dict[str, str | int | float | bool]):
+    async def execute(self, payload: dict[str, str | int | float | bool]) -> dict[str, str | int | float | bool]:
         message = str(payload.get('message', ''))
         await self.producer.publish(
             event_type="TELEGRAM_MESSAGE",
