@@ -7,6 +7,7 @@ export const aiJobTypeSchema = z.enum([
   "summarization",
   "chat_followup",
   "analysis",
+  "knowledge_ingest",
 ]);
 
 export const aiQueryBodySchema = z.object({
@@ -27,6 +28,7 @@ export const aiJobEnqueueBodySchema = z.object({
   type: aiJobTypeSchema,
   query: z.string().trim().min(1),
   context: z.record(z.string(), z.unknown()).optional(),
+  traceId: z.string().trim().optional(),
 });
 
 export const aiJobReplayBodySchema = z.object({
