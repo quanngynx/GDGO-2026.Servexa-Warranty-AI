@@ -14,6 +14,14 @@ message ProcessRequestInput {
   string tenant_id = 4;
   string role = 5;
   string context_json = 6;
+  // Contract version for backward-compatible evolution (e.g. "1").
+  string request_version = 7;
+  // When set, correlates with Redis job envelope `jobId`.
+  string job_id = 8;
+  // When set, matches stream job `type` (e.g. analysis, report_generation).
+  string job_type = 9;
+  // JSON blob: merged job `context`, routing hints, coordinator flags.
+  string execution_context_json = 10;
 }
 
 message ProcessRequestOutput {
