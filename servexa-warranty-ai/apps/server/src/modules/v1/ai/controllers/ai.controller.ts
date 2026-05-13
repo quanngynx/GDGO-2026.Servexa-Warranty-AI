@@ -50,6 +50,7 @@ class AiController {
             userId: req.user?.id ?? "",
             type: "analysis",
             query: payload.query,
+            traceId: typeof req.requestId === "string" ? req.requestId : undefined,
             context: {
               ...(payload.context ?? {}),
               fallbackReason: "grpc_unreachable",
@@ -80,6 +81,7 @@ class AiController {
           tenantId: parsed.tenantId ?? "",
           userId: parsed.userId ?? req.user?.id ?? "",
           idempotencyKey,
+          traceId: parsed.traceId ?? (typeof req.requestId === "string" ? req.requestId : undefined),
         });
 
         new SuccessResponse({
