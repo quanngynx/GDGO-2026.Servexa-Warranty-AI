@@ -2,6 +2,8 @@ import { google } from "@ai-sdk/google";
 import { embed } from "ai";
 import prisma from "@servexa-warranty-ai/db";
 
+import { logger } from "@/core/logging";
+
 const CACHE_TTL_MS = 60_000;
 const retrievalCache = new Map<string, { at: number; rows: RetrievedChunk[] }>();
 
@@ -50,6 +52,11 @@ export class KnowledgeRetrievalService {
     const cacheKey = `${params.tenantId}::${params.documentScope ?? "*"}::${params.query}::${topK}`;
     const hit = retrievalCache.get(cacheKey);
     if (hit && Date.now() - hit.at < CACHE_TTL_MS) {
+      logger.info("[rag-retrieval] cache_hit", {
+        tenantId: params.tenantId,
+        documentScope: params.documentScope,
+        topK,
+      });
       return hit.rows;
     }
 
@@ -118,11 +125,19 @@ export class KnowledgeRetrievalService {
       .sort((a, b) => b.score - a.score)
       .slice(0, topK);
     retrievalCache.set(cacheKey, { at: Date.now(), rows: mapped });
+    logger.info("[rag-retrieval] hybrid_complete", {
+      tenantId: params.tenantId,
+      documentScope: params.documentScope,
+      topK,
+      rowCount: mapped.length,
+    });
     return mapped;
   }
 
   formatAsPromptBlock(chunks: RetrievedChunk[]): string {
     if (chunks.length === 0) return "";
-    return chunks.map((s, i) => `[#${i + 1}] ${s.text}`).join("\n\n");
+    return chunks
+      .map((s, i) => `[#${i + 1}] chunkId=${s.chunkId} ${s.text}`)
+      .join("\n\n");
   }
 }

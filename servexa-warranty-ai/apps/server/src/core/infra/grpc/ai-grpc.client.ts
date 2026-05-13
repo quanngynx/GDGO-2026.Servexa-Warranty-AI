@@ -17,6 +17,12 @@ export type AiProcessRequestInput = {
   tenantId: string;
   role: string;
   contextJson: string;
+  /** Proto contract version; default "1". */
+  requestVersion?: string;
+  jobId?: string;
+  jobType?: string;
+  /** JSON string merged from Redis job envelope `context` + routing hints. */
+  executionContextJson?: string;
 };
 
 export type AiProcessRequestOutput = {
@@ -38,6 +44,10 @@ type AiProcessGrpcPayload = {
   tenant_id: string;
   role: string;
   context_json: string;
+  request_version: string;
+  job_id: string;
+  job_type: string;
+  execution_context_json: string;
 };
 
 type AiProcessGrpcResponse = {
@@ -116,6 +126,10 @@ export function processAiGrpcRequest(input: AiProcessRequestInput): Promise<AiPr
     tenant_id: input.tenantId,
     role: input.role,
     context_json: input.contextJson,
+    request_version: input.requestVersion ?? "1",
+    job_id: input.jobId ?? "",
+    job_type: input.jobType ?? "",
+    execution_context_json: input.executionContextJson ?? "{}",
   };
 
   const deadline = new Date(Date.now() + env.AI_GRPC_DEADLINE_MS);

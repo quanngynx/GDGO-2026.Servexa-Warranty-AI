@@ -4,6 +4,7 @@ import { google } from "@ai-sdk/google";
 import { embed } from "ai";
 import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
 import { sha256Hex } from "src/utils/encryption";
+// import { type Buffer } from "exceljs"
 
 const EMBEDDING_VERSION = "v1";
 const MAX_CHUNK_CHARS = 1200;
@@ -103,7 +104,8 @@ export class KnowledgeIngestionService {
     buffer: Buffer,
   ): Promise<string> {
     if (mimeType === "text/plain") {
-      return buffer.toString("utf8");
+      // return buffer.toString("utf8");
+      return buffer.toString();
     }
     if (mimeType === "application/pdf") {
       const { PDFParse } = await import("pdf-parse");
@@ -117,6 +119,33 @@ export class KnowledgeIngestionService {
       const mammoth = await import("mammoth");
       const out = await mammoth.extractRawText({ buffer });
       return out.value ?? "";
+    }
+    if (
+      mimeType ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      const ExcelJS = await import("exceljs");
+      const workbook = new ExcelJS.Workbook();
+      // TODO: Fix conflict Buffer/Buffer<ArrayBufferLike>
+      await workbook.xlsx.load(buffer as any);
+      const parts: string[] = [];
+      workbook.eachSheet((sheet) => {
+        sheet.eachRow((row) => {
+          const cells: string[] = [];
+          row.eachCell({ includeEmpty: true }, (cell) => {
+            cells.push(cell.value == null ? "" : String(cell.value));
+          });
+          if (cells.length) parts.push(cells.join("\t"));
+        });
+      });
+      return parts.join("\n").trim();
+    }
+    if (mimeType === "text/html") {
+      const raw = buffer.toString("utf8");
+      const noScripts = raw
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ");
+      return noScripts.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
     }
     throw new Error(`Unsupported mimeType: ${mimeType}`);
   }

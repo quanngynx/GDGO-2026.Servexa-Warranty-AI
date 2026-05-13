@@ -6,6 +6,8 @@ export const aiJobTypeSchema = z.enum([
   "summarization",
   "chat_followup",
   "analysis",
+  /** Async corpus ingestion (Redis → worker → server internal ingest). */
+  "knowledge_ingest",
 ]);
 
 export const aiJobEnvelopeSchema = z.object({
@@ -17,6 +19,8 @@ export const aiJobEnvelopeSchema = z.object({
   query: z.string().min(1),
   context: z.record(z.string(), z.unknown()).default({}),
   idempotencyKey: z.string().optional(),
+  /** Optional trace id propagated to Python coordinator / tools */
+  traceId: z.string().optional(),
   createdAt: z.string().min(1),
   retryCount: z.number().int().nonnegative().default(0),
 });
@@ -36,7 +40,7 @@ export const aiJobDlqEnvelopeSchema = z.object({
   error: z.string().optional(),
   payload: z.string().optional(),
   jobId: z.string().optional(),
-  retryCount: z.number().int().nonnegative().default(0),
+  retryCount: z.coerce.number().int().nonnegative().default(0),
   createdAt: z.string().min(1),
 });
 
