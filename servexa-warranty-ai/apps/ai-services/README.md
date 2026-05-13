@@ -23,6 +23,8 @@ python -m pip freeze > requirment.txt
 
 ## Run API
 
+Starts FastAPI on port **8081** and the **gRPC `ai.v1.AiService`** server on **`grpc_port`** (default **50051**, same port Node uses when `AI_GRPC_HOST` points at this service).
+
 ```bash
 fastapi dev --port 8081
 ```
@@ -36,6 +38,8 @@ python -m src.worker
 ## Run AI job stream consumer (Redis → coordinator)
 
 Processes jobs published by the Node `AiJobStreamService` (`ai.*.stream` keys). Set `REDIS_URL` to match the ERP server (for example `redis://localhost:6381/0` when using monorepo Docker).
+
+For **`knowledge_ingest`** jobs, also set **`ERP_INTERNAL_BASE_URL`** (Node server base URL, e.g. `http://localhost:3000`) and **`AI_INTERNAL_INGEST_SECRET`** (must match the Node `AI_INTERNAL_INGEST_SECRET`).
 
 ```bash
 python -m src.worker_ai_jobs

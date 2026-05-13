@@ -28,6 +28,7 @@ class OpsController {
             chat: env.AI_STREAM_CHAT,
             report: env.AI_STREAM_REPORT,
             anomaly: env.AI_STREAM_ANOMALY,
+            ingest: env.AI_STREAM_INGEST,
             retry: env.AI_STREAM_RETRY,
             dlq: env.AI_STREAM_DLQ,
           },

@@ -8,12 +8,13 @@ import {
   toolInvokeBodySchema,
   workflowStepBodySchema,
 } from "@/modules/v1/ai/schemas/workflow.schema";
-import { MultiAgentCoordinator } from "@/modules/v1/ai/agents/multi-agent-coordinator";
 import { logAiAuditEvent } from "@/modules/v1/ai/governance/ai-audit";
 import type { WorkflowDefinition } from "@/modules/v1/workflows/workflow-engine";
 import { warrantyClaimIntakeWorkflow } from "@/modules/v1/workflows/warranty-claim-intake";
 import { WorkflowEngine } from "@/modules/v1/workflows/workflow-engine";
 import { invokeTool, listRegisteredTools, registerTool } from "@/modules/v1/workflows/tool-registry";
+import { createOperationalError } from "@/middlewares/error-middleware";
+import { isAiGrpcConfigured, processAiGrpcRequest } from "@/core/infra/grpc/ai-grpc.client";
 
 registerTool({
   name: "echo",
@@ -28,12 +29,10 @@ const workflows: Record<string, WorkflowDefinition> = {
 class WorkflowController {
   readonly errorHandler: ErrorHandler;
   private engine: WorkflowEngine;
-  private coordinator: MultiAgentCoordinator;
 
   constructor() {
     this.errorHandler = ErrorHandler.getInstance();
     this.engine = new WorkflowEngine();
-    this.coordinator = new MultiAgentCoordinator();
   }
 
   step = (req: Request, res: Response, next: NextFunction) =>
@@ -72,18 +71,39 @@ class WorkflowController {
   coordinate = (req: Request, res: Response, next: NextFunction) =>
     this.errorHandler.asyncHandler(async () => {
       const body = multiAgentCoordinateBodySchema.parse(req.body);
-      const out = await this.coordinator.planAndExecute({
-        goal: body.goal,
-        traceId: req.requestId ?? "trace-unknown",
+      if (!isAiGrpcConfigured()) {
+        throw createOperationalError(
+          "AI gRPC is not configured (set AI_GRPC_HOST)",
+          HTTP_RESPONSE_CODE.SERVICE_UNAVAILABLE,
+        );
+      }
+      const traceId = typeof req.requestId === "string" ? req.requestId : "trace-unknown";
+      const out = await processAiGrpcRequest({
+        message: body.goal,
+        traceId,
         userId: req.user?.id ?? "anonymous",
         tenantId: body.tenantId ?? "",
         role: req.user?.role ? String(req.user.role) : "",
+        contextJson: JSON.stringify({ source: "workflow:coordinate" }),
+        executionContextJson: JSON.stringify({
+          requestKind: "multi_agent_coordinate",
+          goal: body.goal,
+        }),
       });
+      let grpcMetadata: Record<string, unknown> = {};
+      try {
+        grpcMetadata = JSON.parse(out.metadataJson) as Record<string, unknown>;
+      } catch {
+        grpcMetadata = {};
+      }
       logAiAuditEvent("multi_agent_run", { goal: body.goal, userId: req.user?.id });
       new SuccessResponse({
         status: HTTP_RESPONSE_CODE.OK,
         message: "Multi-agent result",
-        metadata: out,
+        metadata: {
+          result: out.output,
+          grpcMetadata,
+        },
       }).send(res);
     })(req, res, next);
 }

@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     ai_stream_chat: str = Field(default='ai.chat.stream')
     ai_stream_report: str = Field(default='ai.report.stream')
     ai_stream_anomaly: str = Field(default='ai.anomaly.stream')
+    ai_stream_ingest: str = Field(default='ai.ingest.stream')
     ai_stream_retry: str = Field(default='ai.retry.stream')
     ai_job_consumer_group: str = Field(default='ai-job-workers')
     ai_job_dlq_stream: str = Field(default='ai.jobs.dlq')
@@ -42,6 +43,13 @@ class Settings(BaseSettings):
     ai_job_visibility_timeout_ms: int = Field(default=60_000)
 
     erp_base_url: str | None = Field(default=None)
+    erp_internal_base_url: str | None = Field(
+        default=None,
+        validation_alias='ERP_INTERNAL_BASE_URL',
+        description='Node ERP base URL for internal worker webhooks (e.g. http://host.docker.internal:3000)',
+    )
+    ai_internal_ingest_secret: str | None = Field(default=None, validation_alias='AI_INTERNAL_INGEST_SECRET')
+
     grpc_host: str = Field(default='0.0.0.0')
     grpc_port: int = Field(default=50051)
 

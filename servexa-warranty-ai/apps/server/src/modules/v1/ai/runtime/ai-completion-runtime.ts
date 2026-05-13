@@ -40,6 +40,10 @@ export type AiUnaryCompletionInput = {
   tenantId: string;
   role: string;
   contextJson: string;
+  requestVersion?: string;
+  jobId?: string;
+  jobType?: string;
+  executionContextJson?: string;
 };
 
 export type AiUnaryCompletionOptions = {
@@ -82,6 +86,10 @@ export async function completeUnaryPrompt(
     tenantId: input.tenantId,
     role: input.role,
     contextJson: input.contextJson,
+    requestVersion: input.requestVersion,
+    jobId: input.jobId,
+    jobType: input.jobType,
+    executionContextJson: input.executionContextJson,
   };
 
   if (isAiGrpcConfigured()) {

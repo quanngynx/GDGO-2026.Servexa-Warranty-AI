@@ -23,6 +23,8 @@ function streamForType(type: AiJobType): string {
       return env.AI_STREAM_REPORT;
     case "anomaly_detection":
       return env.AI_STREAM_ANOMALY;
+    case "knowledge_ingest":
+      return env.AI_STREAM_INGEST;
     default:
       return env.AI_STREAM_ANALYSIS;
   }
@@ -52,6 +54,7 @@ export class AiJobStreamService {
       query: payload.query,
       context: payload.context ?? {},
       idempotencyKey: payload.idempotencyKey,
+      traceId: payload.traceId,
       createdAt: new Date().toISOString(),
       retryCount: 0,
     });
@@ -84,7 +87,13 @@ export class AiJobStreamService {
 
     await this.redis.set(
       `${JOB_META_PREFIX}${jobId}`,
-      JSON.stringify({ ...envelope, status: "queued", stream, messageId }),
+      JSON.stringify({
+        ...envelope,
+        status: "queued",
+        stream,
+        messageId,
+        lastHeartbeatAt: new Date().toISOString(),
+      }),
       86_400,
     );
 
@@ -120,6 +129,7 @@ export class AiJobStreamService {
       query: String(meta.query ?? ""),
       context: (meta.context ?? {}) as Record<string, unknown>,
       idempotencyKey: undefined,
+      traceId: typeof meta.traceId === "string" ? meta.traceId : undefined,
       createdAt: new Date().toISOString(),
       retryCount: Number(meta.retryCount ?? 0),
     });

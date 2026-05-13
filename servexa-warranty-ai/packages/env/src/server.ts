@@ -28,7 +28,12 @@ export type EnvServer = Readonly<{
   AI_STREAM_ANOMALY: string;
   AI_STREAM_RETRY: string;
   AI_STREAM_DLQ: string;
+  /** Dedicated stream for async knowledge ingestion jobs. */
+  AI_STREAM_INGEST: string;
   AI_STREAM_MAXLEN_APPROX: number;
+
+  /** Shared secret for worker → server internal knowledge ingest webhook. */
+  AI_INTERNAL_INGEST_SECRET?: string | undefined;
 
   AI_RAG_CONTEXT_ENABLED: boolean;
   AI_RAG_CONTEXT_TOP_K: number;
@@ -77,7 +82,10 @@ export const env = createEnv({
     AI_STREAM_ANOMALY: z.string().default("ai.anomaly.stream"),
     AI_STREAM_RETRY: z.string().default("ai.retry.stream"),
     AI_STREAM_DLQ: z.string().default("ai.jobs.dlq"),
+    AI_STREAM_INGEST: z.string().default("ai.ingest.stream"),
     AI_STREAM_MAXLEN_APPROX: z.coerce.number().int().positive().default(5000),
+
+    AI_INTERNAL_INGEST_SECRET: z.string().min(8).optional(),
 
     /** When true, `completeUnaryPrompt` prepends top-k RAG snippets to the prompt (same DB as Prisma `ai_knowledge_*`). */
     AI_RAG_CONTEXT_ENABLED: z.coerce.boolean().default(false),

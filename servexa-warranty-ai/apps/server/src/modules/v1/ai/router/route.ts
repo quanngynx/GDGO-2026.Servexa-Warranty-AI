@@ -9,6 +9,8 @@ import opsController from "@/modules/v1/ai/controllers/ops.controller";
 
 const routeAiV1: IRouter = Router();
 
+routeAiV1.post("/knowledge/internal-ingest", knowledgeController.internalIngest);
+
 routeAiV1.post("/query", authenticateMiddleware, aiController.unaryQuery);
 routeAiV1.post("/jobs", authenticateMiddleware, aiController.enqueueJob);
 routeAiV1.get("/jobs/:jobId", authenticateMiddleware, aiController.getJob);
