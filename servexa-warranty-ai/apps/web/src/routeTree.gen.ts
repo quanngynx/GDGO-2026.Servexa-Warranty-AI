@@ -15,6 +15,8 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as AuthenticatedAiGeminiIndexRouteImport } from './routes/_authenticated/ai/gemini/index'
+import { Route as AuthenticatedAiExampleIndexRouteImport } from './routes/_authenticated/ai/example/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/index'
@@ -57,6 +59,18 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAiGeminiIndexRoute =
+  AuthenticatedAiGeminiIndexRouteImport.update({
+    id: '/ai/gemini/',
+    path: '/ai/gemini/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAiExampleIndexRoute =
+  AuthenticatedAiExampleIndexRouteImport.update({
+    id: '/ai/example/',
+    path: '/ai/example/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute =
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport.update({
     id: '/(SYSTEM-ADMINISTRATION)/user-management/',
@@ -158,6 +172,8 @@ export interface FileRoutesByFullPath {
   '/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/ai/example/': typeof AuthenticatedAiExampleIndexRoute
+  '/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRoutesByTo {
   '/ai': typeof AiRoute
@@ -177,6 +193,8 @@ export interface FileRoutesByTo {
   '/reference-documentation': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/roles-management': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/ai/example': typeof AuthenticatedAiExampleIndexRoute
+  '/ai/gemini': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -198,6 +216,8 @@ export interface FileRoutesById {
   '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/_authenticated/ai/example/': typeof AuthenticatedAiExampleIndexRoute
+  '/_authenticated/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -219,6 +239,8 @@ export interface FileRouteTypes {
     | '/reference-documentation/'
     | '/roles-management/'
     | '/user-management/'
+    | '/ai/example/'
+    | '/ai/gemini/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/ai'
@@ -238,6 +260,8 @@ export interface FileRouteTypes {
     | '/reference-documentation'
     | '/roles-management'
     | '/user-management'
+    | '/ai/example'
+    | '/ai/gemini'
   id:
     | '__root__'
     | '/_authenticated'
@@ -258,6 +282,8 @@ export interface FileRouteTypes {
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
+    | '/_authenticated/ai/example/'
+    | '/_authenticated/ai/gemini/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -311,6 +337,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/ai/gemini/': {
+      id: '/_authenticated/ai/gemini/'
+      path: '/ai/gemini'
+      fullPath: '/ai/gemini/'
+      preLoaderRoute: typeof AuthenticatedAiGeminiIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ai/example/': {
+      id: '/_authenticated/ai/example/'
+      path: '/ai/example'
+      fullPath: '/ai/example/'
+      preLoaderRoute: typeof AuthenticatedAiExampleIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': {
       id: '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
@@ -413,6 +453,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  AuthenticatedAiExampleIndexRoute: typeof AuthenticatedAiExampleIndexRoute
+  AuthenticatedAiGeminiIndexRoute: typeof AuthenticatedAiGeminiIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -441,6 +483,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute,
+  AuthenticatedAiExampleIndexRoute: AuthenticatedAiExampleIndexRoute,
+  AuthenticatedAiGeminiIndexRoute: AuthenticatedAiGeminiIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

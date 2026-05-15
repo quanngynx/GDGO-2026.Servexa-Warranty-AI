@@ -125,7 +125,7 @@ const logError = (error: AppError, req: Request) => {
 }
 
 // Main error handler
-export const errorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (error: any, req: Request, res: Response, _next: NextFunction) => {
   let isZodError = false
   let details: Array<{ field: string; message: string }> | undefined
 

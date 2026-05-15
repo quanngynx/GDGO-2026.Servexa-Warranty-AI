@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 import multer from 'multer'
 
-import { Roles } from '@/enums/roles'
+// import { Roles } from '@/enums/roles'
 import { authenticateMiddleware } from '@/middlewares'
 
 import { ModelController } from '../controllers/model.controller'

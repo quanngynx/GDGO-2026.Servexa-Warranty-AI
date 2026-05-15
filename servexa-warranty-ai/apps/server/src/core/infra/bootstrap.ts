@@ -21,6 +21,7 @@ import {
   userContextMiddleware,
 } from "@/middlewares";
 import { handleBootstrapAiChat } from "@/modules/v1/ai/helpers/bootstrap-ai-chat.helper";
+import { createCopilotKitRouter } from "@/modules/copilotkit/copilot-runtime.router";
 import { helmetConfig } from "@/configs/helmet";
 import { describeLangfuseConfig, initServerTelemetry } from "@/core/observability/telemetry";
 import { uploadDir } from "@/configs/upload-dir";
@@ -81,6 +82,8 @@ export class AppBootStrap {
 
     // Public routes (specific routes first)
     this.app.use("", mainRouter);
+
+    this.app.use(createCopilotKitRouter());
     // Generic API route (catch-all for /api)
     // this.app.use("/api", apikeyAuthMiddleware, (req: Request, res: Response, next: NextFunction) => {
     //   res.json({ status: "Success!", message: "API is running", timestamp: new Date().toISOString() })
