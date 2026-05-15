@@ -5,13 +5,15 @@ import redis.asyncio as redis
 from configs.base import settings
 from core.db.redis.schemas import EventEnvelope
 
+
 class RedisEventClient:
     def __init__(self) -> None:
+        # socket_timeout must exceed XREADGROUP block (default 1000ms); see AiJobStreamConsumer
         self.client = redis.from_url(
             settings.redis_url,
             decode_responses=True,
-            socket_connect_timeout=0.5,
-            socket_timeout=0.5,
+            socket_connect_timeout=2.0,
+            socket_timeout=120.0,
         )
         self.stream_name = settings.redis_stream_name
         self.dlq_stream_name = settings.redis_dlq_stream_name

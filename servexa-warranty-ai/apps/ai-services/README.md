@@ -31,6 +31,8 @@ fastapi dev --port 8081
 
 ## Run worker
 
+Requires Redis (monorepo: `pnpm db:start` exposes Redis on **6381**). Set `REDIS_URL=redis://localhost:6381/0` if not using the default.
+
 ```bash
 python -m src.worker
 ```

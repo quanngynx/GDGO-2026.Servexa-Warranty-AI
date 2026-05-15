@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     gemini_model_pro: str = Field(default='gemini-1.5-pro')
     embedding_model: str = Field(default='models/text-embedding-004')
 
-    redis_url: str = Field(default='redis://localhost:6379/0')
+    redis_url: str = Field(default='redis://localhost:6381/0')
     redis_stream_name: str = Field(default='ai-events')
     redis_dlq_stream_name: str = Field(default='ai-events-dlq')
     redis_group_name: str = Field(default='ai-workers')
