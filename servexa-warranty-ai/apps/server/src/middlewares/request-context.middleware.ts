@@ -42,7 +42,7 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
 /**
  * User context middleware that extracts user information from JWT
  */
-export const userContextMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const userContextMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
 
   // This would typically extract user info from JWT token
   // For now, we'll check if user info is already available from auth middleware

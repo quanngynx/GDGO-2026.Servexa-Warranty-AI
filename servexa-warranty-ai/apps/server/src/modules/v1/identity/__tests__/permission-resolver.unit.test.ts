@@ -7,7 +7,7 @@
  * All external dependencies (UserRoleRepository, RoleClosureRepository,
  * RolePermissionRepository, PermissionCacheService) are mocked with vi.fn().
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 
 import { PermissionResolverService } from '../services/permission-resolver.service'
 import type { UserRoleRepository } from '../repositories/user-role.repository'
@@ -168,7 +168,7 @@ describe('PermissionResolverService.resolveForUser()', () => {
     it('reverse: ADMIN permissions do NOT flow to MANAGER (downward direction only)', async () => {
       // MANAGER user should have invoice.approve (own) + users.read, users.write (from ADMIN ancestor)
       // But ADMIN should NOT get invoice.approve (MANAGER is a descendant, not an ancestor of ADMIN)
-      const { service, userRoleRepo, roleClosureRepo, rolePermissionRepo, cacheService } = createMocks()
+      const { service, userRoleRepo, roleClosureRepo, cacheService } = createMocks()
       ;(cacheService.get as ReturnType<typeof vi.fn>).mockResolvedValue(null)
       ;(userRoleRepo.findManyByUserId as ReturnType<typeof vi.fn>).mockResolvedValue([
         { roleId: ROLES.ADMIN.id, role: { name: 'admin' } }, // ADMIN user — gets wildcard bypass
