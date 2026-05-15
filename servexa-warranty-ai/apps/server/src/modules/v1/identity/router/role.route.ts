@@ -1,7 +1,6 @@
 import { Router, type IRouter } from 'express'
 
 import { authenticateMiddleware} from '@/middlewares'
-import { Roles } from '@/enums/roles'
 
 import roleController from '../controllers/role.controller'
 

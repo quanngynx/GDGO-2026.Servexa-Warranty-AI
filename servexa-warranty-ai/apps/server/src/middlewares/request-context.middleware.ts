@@ -22,7 +22,11 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   const originalEnd = res.end.bind(res) as Response['end']
   res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
-    res.setHeader('X-Response-Time', `${responseTime}ms`)
+    // CopilotKit fetch-bridge (and other handlers) may flush headers before res.end();
+    // only update timing header while headers are still mutable.
+    if (!res.headersSent) {
+      res.setHeader('X-Response-Time', `${responseTime}ms`)
+    }
 
     // Handle different overloads of res.end
     if (typeof encoding === 'function') {
@@ -42,7 +46,7 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
 /**
  * User context middleware that extracts user information from JWT
  */
-export const userContextMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const userContextMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
 
   // This would typically extract user info from JWT token
   // For now, we'll check if user info is already available from auth middleware

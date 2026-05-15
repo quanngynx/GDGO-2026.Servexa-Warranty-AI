@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { Roles as RolesEnum } from '@/enums/roles';
+// import { Roles as RolesEnum } from '@/enums/roles';
 
-import { RoleService, type RoleTreeNode } from '../services/role.service';
+import { RoleService } from '../services/role.service';
 
 import {
   addParentToRoleSchema,
@@ -14,22 +14,22 @@ import {
   roleCreationSchema,
 } from '../validations/role';
 
-import type {
-  AddParentToRoleDto,
-  DeleteParentFromRoleDto,
-  FindAllRolesDto,
-  FindByIdDto,
-  FindChildrenRolesDto,
-  FindParentsRolesDto,
-  RoleCreationDto,
-} from '../dtos/role.dto';
+// import type {
+//   AddParentToRoleDto,
+//   DeleteParentFromRoleDto,
+//   FindAllRolesDto,
+//   FindByIdDto,
+//   FindChildrenRolesDto,
+//   FindParentsRolesDto,
+//   RoleCreationDto,
+// } from '../dtos/role.dto';
 import { SuccessResponse } from '@/utils/success-response';
 import { ErrorHandler } from '@/core/helpers/error-handling.helper';
 import logger from '@/core/logging/logging.config';
 import { getRequestInfo } from '@/core/logging/logging.utils';
-import { ExtractPagination } from '@/utils/extract-pagination';
-import { RoleRepository } from '../repositories/role.repository';
-import { RoleClosureRepository } from '../repositories/role-closure.repository';
+// import { ExtractPagination } from '@/utils/extract-pagination';
+// import { RoleRepository } from '../repositories/role.repository';
+// import { RoleClosureRepository } from '../repositories/role-closure.repository';
 
 class RoleController {
   errorHandler: ErrorHandler

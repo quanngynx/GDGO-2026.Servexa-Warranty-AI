@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import multer from "multer";
 
-import { Roles } from "@/enums/roles";
 import { authenticateMiddleware} from "@/middlewares";
 
 import { SolutionController } from "../controllers/solution.controller";

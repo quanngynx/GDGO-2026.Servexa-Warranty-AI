@@ -1,7 +1,7 @@
 import { Router, type IRouter } from 'express'
 
 import { multerUpload } from '@/core/file-storage/multer'
-import { Roles } from '@/enums/roles'
+// import { Roles } from '@/enums/roles'
 import { authenticateMiddleware} from '@/middlewares'
 
 import { DocumentController } from '../controllers/document.controller'
