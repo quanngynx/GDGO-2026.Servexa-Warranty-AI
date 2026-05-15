@@ -22,7 +22,11 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   const originalEnd = res.end.bind(res) as Response['end']
   res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
-    res.setHeader('X-Response-Time', `${responseTime}ms`)
+    // CopilotKit fetch-bridge (and other handlers) may flush headers before res.end();
+    // only update timing header while headers are still mutable.
+    if (!res.headersSent) {
+      res.setHeader('X-Response-Time', `${responseTime}ms`)
+    }
 
     // Handle different overloads of res.end
     if (typeof encoding === 'function') {
