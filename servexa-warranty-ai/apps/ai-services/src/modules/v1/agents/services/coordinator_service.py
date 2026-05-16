@@ -127,6 +127,13 @@ class CoordinatorService:
             route=state.get('route', ''),
         )
         tool_json = json.dumps(state.get('tool_results', {}))
-        text = f"route={state['route']} tool_results={tool_json}"
+        route = state.get('route', '') or 'general'
+        summary = (
+            'Supply chain workflow completed.'
+            if route == 'supply_chain'
+            else 'Operations workflow completed.'
+        )
+        details = f'Tool signals: {tool_json}' if tool_json != '{}' else ''
+        output_text = f'{summary}\n\n{details}'.strip() if details else summary
         logger.info('coordinator_finalize %s', json.dumps(meta.model_dump(), default=str))
-        return {**state, 'output': text}
+        return {**state, 'output': output_text}

@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { Observable } from "rxjs";
 
 import { completeUnaryPrompt } from "@/modules/v1/ai/runtime/ai-completion-runtime";
+import { normalizeCopilotUnaryCompletion } from "@/modules/copilotkit/normalize-copilot-unary-completion";
 import { chunkTextForDeltas } from "src/utils/chunk-text-for-deltas";
 import { lastUserPrompt } from "src/utils/last-user-prompt";
 import { executionContextJson } from "src/utils/execution-context-json";
@@ -47,13 +48,15 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
             executionContextJson: execJson,
           });
 
+          const { response, rail } = normalizeCopilotUnaryCompletion(out);
+
           subscriber.next({
             type: "TEXT_MESSAGE_START",
             messageId,
             role: "assistant",
           } as BaseEvent);
 
-          for (const delta of chunkTextForDeltas(out.text)) {
+          for (const delta of chunkTextForDeltas(response.answer)) {
             const piece = delta.length ? delta : " ";
             subscriber.next({
               type: "TEXT_MESSAGE_CONTENT",
@@ -65,6 +68,13 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
           subscriber.next({
             type: "TEXT_MESSAGE_END",
             messageId,
+          } as BaseEvent);
+
+          subscriber.next({
+            type: "STATE_SNAPSHOT",
+            snapshot: {
+              servexaCopilot: rail,
+            },
           } as BaseEvent);
 
           subscriber.next({
