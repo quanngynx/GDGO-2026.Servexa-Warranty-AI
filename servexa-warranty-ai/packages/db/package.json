@@ -33,6 +33,7 @@
     "db:seed": "tsx src/seeds/run.ts",
     "postinstall": "prisma generate",
     "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset",
     "db:start": "docker compose up -d",
     "db:watch": "docker compose up",
     "db:stop": "docker compose stop",
