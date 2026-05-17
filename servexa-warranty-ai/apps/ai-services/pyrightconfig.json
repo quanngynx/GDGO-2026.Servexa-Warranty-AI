@@ -4,7 +4,8 @@
     "tests"
   ],
   "extraPaths": [
-    "src"
+    "src",
+    "src/generated"
   ],
   "venvPath": ".",
   "venv": ".venv"
