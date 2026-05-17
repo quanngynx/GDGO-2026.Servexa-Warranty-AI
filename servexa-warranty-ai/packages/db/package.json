@@ -30,6 +30,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed:identity-user": "tsx src/seeds/run-identity-user.ts",
+    "db:seed:hitl-permissions": "tsx src/seeds/run-hitl-permissions.ts",
     "db:seed": "tsx src/seeds/run.ts",
     "postinstall": "prisma generate",
     "db:studio": "prisma studio",

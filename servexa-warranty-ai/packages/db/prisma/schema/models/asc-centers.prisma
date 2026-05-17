@@ -596,6 +596,7 @@ model RepairCase {
   images                           RepairCaseImage[]
   statusHistory                    RepairCaseStatusHistory[]
   fieldHistory                     RepairCaseFieldHistory[]
+  aiHumanApprovalRequests          AiHumanApprovalRequest[]
   transfer                         RepairCaseTransfer?
   paymentDetail                    RepairCasePaymentDetail?
   satisfaction                     RepairCaseSatisfaction?

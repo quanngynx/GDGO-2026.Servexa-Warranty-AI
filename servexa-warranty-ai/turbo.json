@@ -33,6 +33,12 @@
     "db:seed:identity-user": {
       "cache": false
     },
+    "db:seed:hitl-permissions": {
+      "cache": false
+    },
+    "test": {
+      "cache": false
+    },
     "db:studio": {
       "cache": false,
       "persistent": true

@@ -37,27 +37,34 @@ enum AiCustomerResponseDraftStatus {
 }
 
 model AiHumanApprovalRequest {
-  id              String              @id @default(uuid(7))
-  kind            AiHitlActionKind
-  status          AiHitlRequestStatus @default(pending)
-  title           String
-  description     String
-  payloadJson     Json                @map("payload_json")
-  decisionJson    Json?               @map("decision_json")
-  riskLevel       AiHitlRiskLevel?    @map("risk_level")
-  confidence      Float?
-  repairCaseId    String?             @map("repair_case_id")
-  createdByUserId String              @map("created_by_user_id")
-  decidedByUserId String?             @map("decided_by_user_id")
-  createdAt       DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
-  decidedAt       DateTime?           @map("decided_at") @db.Timestamptz(3)
-  executedAt      DateTime?           @map("executed_at") @db.Timestamptz(3)
-  errorMessage    String?             @map("error_message")
+  id                    String              @id @default(uuid(7))
+  kind                  AiHitlActionKind
+  status                AiHitlRequestStatus @default(pending)
+  title                 String
+  description           String
+  payloadJson           Json                @map("payload_json")
+  decisionJson          Json?               @map("decision_json")
+  riskLevel             AiHitlRiskLevel?    @map("risk_level")
+  confidence            Float?
+  repairCaseId          String?             @map("repair_case_id")
+  langGraphThreadId     String?             @map("lang_graph_thread_id")
+  langGraphRunId        String?             @map("lang_graph_run_id")
+  langGraphCheckpointId String?             @map("lang_graph_checkpoint_id")
+  createdByUserId       String              @map("created_by_user_id")
+  decidedByUserId       String?             @map("decided_by_user_id")
+  createdAt             DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  decidedAt             DateTime?           @map("decided_at") @db.Timestamptz(3)
+  executedAt            DateTime?           @map("executed_at") @db.Timestamptz(3)
+  errorMessage          String?             @map("error_message")
 
+  repairCase            RepairCase?           @relation(fields: [repairCaseId], references: [id], onDelete: SetNull)
   customerResponseDraft AiCustomerResponseDraft?
 
   @@index([createdByUserId, status])
   @@index([repairCaseId])
+  @@index([status])
+  @@index([kind])
+  @@index([createdAt])
   @@map("ai_human_approval_request")
 }
 

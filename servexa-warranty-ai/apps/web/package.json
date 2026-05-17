@@ -8,7 +8,8 @@
     "serve": "vite preview",
     "start": "vite",
     "check-types": "vite build && tsc --noEmit",
-    "dev:bare": "vite dev"
+    "dev:bare": "vite dev",
+    "test": "vitest run"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.3",
@@ -53,7 +54,10 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@testing-library/react": "^16.3.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.1.0",
+    "vitest": "^2.0.0",
     "alchemy": "catalog:",
     "postcss": "^8.5.3",
     "tailwindcss": "catalog:",
