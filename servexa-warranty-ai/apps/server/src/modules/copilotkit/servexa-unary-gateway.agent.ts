@@ -2,7 +2,12 @@ import { AbstractAgent, type BaseEvent, type RunAgentInput } from "@ag-ui/client
 import { randomUUID } from "node:crypto";
 import { Observable } from "rxjs";
 
+import { getCopilotRequestUser } from "@/modules/copilotkit/copilot-request-context";
 import { completeUnaryPrompt } from "@/modules/v1/ai/runtime/ai-completion-runtime";
+import {
+  ensureHitlFromInterruptMetadata,
+  loadPendingApprovalsForGateway,
+} from "@/modules/copilotkit/hitl-gateway.helpers";
 import { normalizeCopilotUnaryCompletion } from "@/modules/copilotkit/normalize-copilot-unary-completion";
 import { chunkTextForDeltas } from "src/utils/chunk-text-for-deltas";
 import { lastUserPrompt } from "src/utils/last-user-prompt";
@@ -37,18 +42,26 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
         try {
           const prompt = lastUserPrompt(input.messages);
           const execJson = executionContextJson(input);
+          const copilotUser = getCopilotRequestUser();
 
           const out = await completeUnaryPrompt({
             prompt,
             traceId: runId,
-            userId: "copilot-user",
+            userId: copilotUser?.id ?? "copilot-user",
             tenantId: "",
-            role: "",
-            contextJson: JSON.stringify({ source: "post:/api/copilotkit", agentId: SERVEXA_COPILOT_AGENT_ID }),
+            role: copilotUser?.role ?? "",
+            contextJson: JSON.stringify({
+              source: "post:/api/copilotkit",
+              agentId: SERVEXA_COPILOT_AGENT_ID,
+            }),
             executionContextJson: execJson,
           });
 
-          const { response, rail } = normalizeCopilotUnaryCompletion(out);
+          await ensureHitlFromInterruptMetadata(out.metadataJson);
+          const pendingApprovals = await loadPendingApprovalsForGateway();
+          const { response, rail } = normalizeCopilotUnaryCompletion(out, {
+            pendingApprovals,
+          });
 
           subscriber.next({
             type: "TEXT_MESSAGE_START",
