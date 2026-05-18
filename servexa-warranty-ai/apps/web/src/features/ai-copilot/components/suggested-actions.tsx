@@ -4,6 +4,9 @@ import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 import { SERVEXA_COPILOT_QUICK_PROMPT_EVENT } from "../constants";
+import type { OperationalPageContext } from "../hooks/use-operational-context";
+import { buildHitlCreateInput } from "../lib/build-hitl-request";
+import type { CreateHitlRequestInput } from "@/libs/api/ai/hitl/api";
 
 export function dispatchCopilotActionPrompt(action: string): void {
   const body = action.startsWith("prompt:") ? action.slice("prompt:".length).trim() : action.trim();
@@ -13,10 +16,17 @@ export function dispatchCopilotActionPrompt(action: string): void {
 
 type SuggestedActionsPanelProps = {
   actions: CopilotSuggestedAction[] | undefined;
+  operational: OperationalPageContext;
+  onCreateWorkflowRequest: (input: CreateHitlRequestInput) => void;
   className?: string;
 };
 
-export function SuggestedActionsPanel({ actions, className }: SuggestedActionsPanelProps) {
+export function SuggestedActionsPanel({
+  actions,
+  operational,
+  onCreateWorkflowRequest,
+  className,
+}: SuggestedActionsPanelProps) {
   if (!actions?.length) {
     return (
       <div className={cn("border-t border-border px-3 py-2 text-xs text-muted-foreground", className)}>
@@ -24,6 +34,23 @@ export function SuggestedActionsPanel({ actions, className }: SuggestedActionsPa
       </div>
     );
   }
+
+  const handleClick = (action: CopilotSuggestedAction) => {
+    const isWorkflow =
+      action.kind === "workflow" || action.requiresApproval === true;
+
+    if (isWorkflow) {
+      if (!operational.repairCaseId) {
+        dispatchCopilotActionPrompt(
+          "prompt:I need to run a workflow action but no repair case is selected. What should I do?",
+        );
+        return;
+      }
+      onCreateWorkflowRequest(buildHitlCreateInput(action, operational));
+      return;
+    }
+    dispatchCopilotActionPrompt(action.action);
+  };
 
   return (
     <div className={cn("border-t border-border px-2 py-2", className)}>
@@ -33,12 +60,15 @@ export function SuggestedActionsPanel({ actions, className }: SuggestedActionsPa
           <Button
             key={a.id}
             type="button"
-            variant="secondary"
+            variant={a.kind === "workflow" || a.requiresApproval ? "default" : "secondary"}
             size="sm"
             className="h-auto max-w-full whitespace-normal text-left text-xs"
-            onClick={() => dispatchCopilotActionPrompt(a.action)}
+            onClick={() => handleClick(a)}
           >
             {a.label}
+            {a.kind === "workflow" || a.requiresApproval ? (
+              <span className="ms-1 text-[10px] opacity-80">· approval</span>
+            ) : null}
           </Button>
         ))}
       </div>
