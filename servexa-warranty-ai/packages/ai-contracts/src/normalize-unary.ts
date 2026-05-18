@@ -1,8 +1,14 @@
 import { z } from "zod";
 
 import {
+  hitlGraphInterruptMetadataSchema,
+  type HitlRequest,
+} from "./hitl";
+
+import {
   copilotRailMetadataSchema,
   copilotResponseSchema,
+  copilotSuggestedActionSchema,
   type CopilotRailMetadata,
   type CopilotResponse,
   type CopilotSuggestedAction,
@@ -34,6 +40,8 @@ function heuristicSuggestedActions(meta: Record<string, unknown>): CopilotSugges
       id: "sc-risk",
       label: "Detect supply chain risk",
       action: "prompt:Detect supply chain risk for parts on this case.",
+      kind: "prompt",
+      requiresApproval: false,
     });
   }
   if (route === "operations") {
@@ -41,6 +49,35 @@ function heuristicSuggestedActions(meta: Record<string, unknown>): CopilotSugges
       id: "ops-next",
       label: "Suggest next operational action",
       action: "prompt:Suggest the next operational action for this case.",
+      kind: "prompt",
+      requiresApproval: false,
+    });
+    actions.push({
+      id: "ops-escalate",
+      label: "Escalate repair case",
+      action: "workflow:repair_escalation",
+      kind: "workflow",
+      workflowKind: "repair_escalation",
+      requiresApproval: true,
+      payload: {} as Record<string, unknown>,
+    });
+    actions.push({
+      id: "ops-assign-tech",
+      label: "Assign technician",
+      action: "workflow:technician_assignment",
+      kind: "workflow",
+      workflowKind: "technician_assignment",
+      requiresApproval: true,
+      payload: {},
+    });
+    actions.push({
+      id: "ops-customer-draft",
+      label: "Draft customer response",
+      action: "workflow:customer_response_draft",
+      kind: "workflow",
+      workflowKind: "customer_response_draft",
+      requiresApproval: true,
+      payload: {},
     });
   }
 
@@ -57,11 +94,29 @@ function heuristicSuggestedActions(meta: Record<string, unknown>): CopilotSugges
         id: "workflow-signals",
         label: "Explain workflow signals",
         action: `prompt:Explain these workflow results in plain language: ${safeString}`,
+        kind: "prompt",
+        requiresApproval: false,
       });
     }
   }
 
   return actions;
+}
+
+function normalizeSuggestedAction(raw: unknown): CopilotSuggestedAction | null {
+  const parsed = copilotSuggestedActionSchema.safeParse(raw);
+  if (parsed.success) return parsed.data;
+  if (raw && typeof raw === "object" && "id" in raw && "label" in raw && "action" in raw) {
+    const o = raw as Record<string, unknown>;
+    return {
+      id: String(o.id),
+      label: String(o.label),
+      action: String(o.action),
+      kind: "prompt",
+      requiresApproval: false,
+    };
+  }
+  return null;
 }
 
 function mergeSuggested(
@@ -87,10 +142,15 @@ export function normalizeUnaryToCopilotResponse(input: UnaryCompletionLike): Cop
   if (embedded && typeof embedded === "object") {
     const parsed = copilotResponseSchema.safeParse(embedded);
     if (parsed.success) {
+      const envelopeActions = Array.isArray(parsed.data.suggestedActions)
+        ? parsed.data.suggestedActions
+            .map((a) => normalizeSuggestedAction(a))
+            .filter((a): a is CopilotSuggestedAction => a !== null)
+        : undefined;
       return {
         ...parsed.data,
         suggestedActions: mergeSuggested(
-          parsed.data.suggestedActions,
+          envelopeActions,
           heuristicSuggestedActions(meta),
         ),
       };
@@ -109,15 +169,34 @@ export function normalizeUnaryToCopilotResponse(input: UnaryCompletionLike): Cop
   };
 }
 
+/** Extract LangGraph HITL interrupt fields from gRPC metadata_json. */
+export function normalizeLangGraphHitlMetadata(meta: Record<string, unknown>) {
+  return hitlGraphInterruptMetadataSchema.safeParse({
+    humanApprovalRequired: meta.humanApprovalRequired ?? meta.human_approval_required,
+    threadId: meta.threadId ?? meta.thread_id,
+    runId: meta.runId ?? meta.run_id,
+    checkpointId: meta.checkpointId ?? meta.checkpoint_id,
+    approvalRequestId: meta.approvalRequestId ?? meta.approval_request_id,
+  });
+}
+
 export function toRailMetadata(
   response: CopilotResponse,
   backend: "grpc" | "gemini_node",
+  extras?: {
+    pendingApprovals?: HitlRequest[];
+    workflowExecutionStatus?: CopilotRailMetadata["workflowExecutionStatus"];
+    lastDecision?: CopilotRailMetadata["lastDecision"];
+  },
 ): CopilotRailMetadata {
   const raw = {
     confidence: response.confidence,
     sources: response.sources,
     suggestedActions: response.suggestedActions,
     relatedEntities: response.relatedEntities,
+    pendingApprovals: extras?.pendingApprovals,
+    workflowExecutionStatus: extras?.workflowExecutionStatus,
+    lastDecision: extras?.lastDecision,
     backend,
   };
   const parsed = copilotRailMetadataSchema.safeParse(raw);

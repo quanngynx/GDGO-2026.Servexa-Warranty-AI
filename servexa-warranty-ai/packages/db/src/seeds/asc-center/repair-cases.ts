@@ -196,9 +196,17 @@ export async function seedRepairCases() {
   });
 
   // Case 2: xuly (Processing/Under repair)
+  const slaRiskPromisedDate = new Date();
+  slaRiskPromisedDate.setDate(slaRiskPromisedDate.getDate() - 2);
+
   const case2 = await prisma.repairCase.upsert({
     where: { caseNumber: "RC-2024-000002" },
-    update: {},
+    update: {
+      priority: RepairCasePriority.high,
+      promisedDeliveryDate: slaRiskPromisedDate,
+      diagnosis:
+        "Repeated seal failure on same model — SLA at risk; escalate if parts delayed",
+    },
     create: {
       caseNumber: "RC-2024-000002",
       ascCenterId: ascCenter.id,
@@ -215,7 +223,7 @@ export async function seedRepairCases() {
       damageDescription: "Thân hộp bị nứt, không thể sử dụng",
       diagnosis: "Vết nứt do va đập, cần thay thế thân hộp",
       receivedDate: new Date("2024-06-28"),
-      promisedDeliveryDate: new Date("2024-07-05"),
+      promisedDeliveryDate: slaRiskPromisedDate,
       assignedEmployeeId: technician.id,
       createdBy: finalAscAdmin.id,
       householdProductType: HouseholdProductType.glass_container,

@@ -1,4 +1,29 @@
 export {
+  customerResponseDraftPayloadSchema,
+  DEFAULT_HITL_APPROVAL_OPTIONS,
+  hitlActionKindSchema,
+  hitlApprovalOptionSchema,
+  hitlDecisionSchema,
+  hitlDecisionTypeSchema,
+  hitlGraphInterruptMetadataSchema,
+  hitlRequestSchema,
+  hitlResumeResponseSchema,
+  hitlRequestStatusSchema,
+  hitlRiskLevelSchema,
+  isValidHitlStatusTransition,
+  repairEscalationPayloadSchema,
+  technicianAssignmentPayloadSchema,
+  type HitlActionKind,
+  type HitlApprovalOption,
+  type HitlDecision,
+  type HitlDecisionType,
+  type HitlGraphInterruptMetadata,
+  type HitlRequest,
+  type HitlResumeResponse,
+  type HitlRequestStatus,
+  type HitlRiskLevel,
+} from "./hitl";
+export {
   copilotEvidenceSourceSchema,
   copilotEvidenceSourceTypeSchema,
   copilotRailMetadataSchema,
@@ -18,6 +43,7 @@ export {
   type CopilotMetadataTrailerParse,
 } from "./metadata-trailer";
 export {
+  normalizeLangGraphHitlMetadata,
   normalizeUnaryToCopilotResponse,
   parseMetadataJson,
   type UnaryCompletionLike,
