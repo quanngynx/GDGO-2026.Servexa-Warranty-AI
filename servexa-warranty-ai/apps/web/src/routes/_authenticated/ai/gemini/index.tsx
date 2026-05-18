@@ -1,9 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_authenticated/ai/gemini/')({
-  component: RouteComponent,
-})
+import { AICopilotFullPage } from "@/features/ai-copilot/ai-copilot-full-page";
 
-function RouteComponent() {
-  return <div>Hello "/_authenticated/ai/gemini/"!</div>
-}
+export const Route = createFileRoute("/_authenticated/ai/gemini/")({
+  beforeLoad: () => ({ title: "Operations Intelligence" }),
+  component: AICopilotFullPage,
+});
