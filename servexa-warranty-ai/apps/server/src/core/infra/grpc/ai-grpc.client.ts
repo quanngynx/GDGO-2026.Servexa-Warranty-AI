@@ -30,6 +30,15 @@ export type AiProcessRequestOutput = {
   metadataJson: string;
 };
 
+export type AiResumeGraphInput = {
+  threadId: string;
+  checkpointId: string;
+  approvalRequestId: string;
+  decisionJson: string;
+  traceId: string;
+  userId: string;
+};
+
 export type AiGrpcUnaryCall = (
   request: AiProcessGrpcPayload,
   metadata: grpc.Metadata,
@@ -55,7 +64,12 @@ type AiProcessGrpcResponse = {
   metadata_json: string;
 };
 
-export type AiGrpcClient = grpc.Client & { processRequest?: AiGrpcUnaryCall; ProcessRequest?: AiGrpcUnaryCall };
+export type AiGrpcClient = grpc.Client & {
+  processRequest?: AiGrpcUnaryCall;
+  ProcessRequest?: AiGrpcUnaryCall;
+  resumeGraph?: AiGrpcUnaryCall;
+  ResumeGraph?: AiGrpcUnaryCall;
+};
 
 let sharedClient: AiGrpcClient | null = null;
 
@@ -75,12 +89,29 @@ export function resetAiGrpcClientForTests(): void {
   sharedClient = null;
 }
 
-function getProcessRequest(client: AiGrpcClient): AiGrpcUnaryCall {
-  const call = client.processRequest ?? client.ProcessRequest;
+type AiGrpcUnaryRpcName =
+  | "processRequest"
+  | "ProcessRequest"
+  | "resumeGraph"
+  | "ResumeGraph";
+
+function getUnaryRpc(
+  client: AiGrpcClient,
+  names: readonly [AiGrpcUnaryRpcName, AiGrpcUnaryRpcName],
+): AiGrpcUnaryCall {
+  const call = client[names[0]] ?? client[names[1]];
   if (typeof call !== "function") {
-    throw new Error("ai.v1.AiService has no unary ProcessRequest RPC on stub");
+    throw new Error(`ai.v1.AiService has no unary ${names[1]} RPC on stub`);
   }
   return call.bind(client) as AiGrpcUnaryCall;
+}
+
+function getProcessRequest(client: AiGrpcClient): AiGrpcUnaryCall {
+  return getUnaryRpc(client, ["processRequest", "ProcessRequest"]);
+}
+
+function getResumeGraph(client: AiGrpcClient): AiGrpcUnaryCall {
+  return getUnaryRpc(client, ["resumeGraph", "ResumeGraph"]);
 }
 
 function getAiClient(): AiGrpcClient {
@@ -91,6 +122,7 @@ function getAiClient(): AiGrpcClient {
       grpcChannelCredentials(),
     ) as unknown as AiGrpcClient;
     void getProcessRequest(sharedClient);
+    void getResumeGraph(sharedClient);
     logger.info("[ai-grpc] client initialized", {
       target: resolveTarget(),
       tls: env.AI_GRPC_USE_TLS,
@@ -154,5 +186,24 @@ export function processAiGrpcRequest(input: AiProcessRequestInput): Promise<AiPr
         });
       },
     );
+  });
+}
+
+/** Resume LangGraph via ProcessRequest tunnel (job_type=hitl_resume) until ResumeGraph stub is regenerated. */
+export function resumeAiGrpcGraph(input: AiResumeGraphInput): Promise<AiProcessRequestOutput> {
+  return processAiGrpcRequest({
+    message: "__HITL_RESUME__",
+    traceId: input.traceId,
+    userId: input.userId,
+    tenantId: "",
+    role: "",
+    contextJson: JSON.stringify({ source: "hitl_resume" }),
+    jobType: "hitl_resume",
+    executionContextJson: JSON.stringify({
+      threadId: input.threadId,
+      checkpointId: input.checkpointId,
+      approvalRequestId: input.approvalRequestId,
+      decisionJson: input.decisionJson,
+    }),
   });
 }
