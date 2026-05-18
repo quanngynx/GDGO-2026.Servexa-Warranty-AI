@@ -10,6 +10,8 @@ import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 type EvidencePanelProps = {
   sources: CopilotEvidenceSource[] | undefined;
+  /** Source IDs referenced by pending HITL cards (highlighted in the list). */
+  highlightedSourceIds?: string[];
   className?: string;
 };
 
@@ -20,8 +22,13 @@ const typeLabel: Record<CopilotEvidenceSource["type"], string> = {
   inventory: "Inventory",
 };
 
-export function EvidencePanel({ sources, className }: EvidencePanelProps) {
+export function EvidencePanel({
+  sources,
+  highlightedSourceIds,
+  className,
+}: EvidencePanelProps) {
   const hasSources = sources && sources.length > 0;
+  const highlightSet = new Set(highlightedSourceIds ?? []);
 
   return (
     <Collapsible defaultOpen className={cn("border-t border-border px-2 py-2", className)}>
@@ -38,7 +45,13 @@ export function EvidencePanel({ sources, className }: EvidencePanelProps) {
         ) : (
           <ul className="space-y-2">
             {sources!.map((s) => (
-              <li key={s.id} className="rounded-md border border-border/60 bg-muted/30 p-2">
+              <li
+                key={s.id}
+                className={cn(
+                  "rounded-md border border-border/60 bg-muted/30 p-2",
+                  highlightSet.has(s.id) && "border-amber-500/50 bg-amber-500/10",
+                )}
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium text-foreground">{s.title}</span>
                   <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase tracking-wide">
