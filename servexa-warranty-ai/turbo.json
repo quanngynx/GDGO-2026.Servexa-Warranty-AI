@@ -36,6 +36,9 @@
     "db:seed:hitl-permissions": {
       "cache": false
     },
+    "demo:print-cases": {
+      "cache": false
+    },
     "test": {
       "cache": false
     },

@@ -9,11 +9,12 @@
     "start": "vite",
     "check-types": "vite build && tsc --noEmit",
     "dev:bare": "vite dev",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:browser-smoke": "node scripts/browser-smoke-phase1.mjs"
   },
   "dependencies": {
-    "@ai-sdk/react": "^3.0.3",
     "@ag-ui/client": "catalog:",
+    "@ai-sdk/react": "^3.0.3",
     "@copilotkit/react-core": "catalog:",
     "@copilotkit/runtime": "catalog:",
     "@copilotkit/runtime-client-gql": "catalog:",
@@ -51,17 +52,18 @@
     "@servexa-warranty-ai/config": "workspace:*",
     "@tanstack/react-router-devtools": "^1.141.1",
     "@tanstack/router-plugin": "^1.141.1",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@testing-library/react": "^16.3.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "jsdom": "^26.1.0",
-    "vitest": "^2.0.0",
     "alchemy": "catalog:",
+    "jsdom": "^26.1.0",
+    "playwright": "1.51.0",
     "postcss": "^8.5.3",
     "tailwindcss": "catalog:",
     "typescript": "^5",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "vitest": "^2.0.0"
   }
 }
