@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     )
     ai_internal_ingest_secret: str | None = Field(default=None, validation_alias='AI_INTERNAL_INGEST_SECRET')
 
-    grpc_host: str = Field(default='0.0.0.0')
+    grpc_host: str = Field(default='127.0.0.1')
     grpc_port: int = Field(default=50051)
 
     postgres_host: str = Field(default='localhost')
