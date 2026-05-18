@@ -11,6 +11,9 @@ type CopilotRailHeaderProps = {
   isRunning?: boolean;
   railMeta?: CopilotRailMetadata;
   runError?: string | null;
+  pendingApprovalCount?: number;
+  /** Hide duplicate page title when the shell already shows it (full-page layout). */
+  showTitle?: boolean;
   className?: string;
 };
 
@@ -19,9 +22,18 @@ export function CopilotRailHeader({
   isRunning,
   railMeta,
   runError,
+  pendingApprovalCount = 0,
+  showTitle = true,
   className,
 }: CopilotRailHeaderProps) {
   const scopeParts = [operational.currentRoute];
+  if (operational.caseNumber || operational.repairCaseId) {
+    scopeParts.push(
+      operational.caseNumber
+        ? `case ${operational.caseNumber}`
+        : `case #${operational.repairCaseId}`,
+    );
+  }
   if (operational.currentUserRole) {
     scopeParts.push(`role: ${operational.currentUserRole}`);
   }
@@ -31,10 +43,19 @@ export function CopilotRailHeader({
     <div className={cn("space-y-1 border-b border-border px-3 py-2", className)}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold tracking-tight">Operations Intelligence</p>
+          {showTitle ? (
+            <p className="truncate text-sm font-semibold tracking-tight">Operations Intelligence</p>
+          ) : (
+            <p className="truncate text-sm font-semibold tracking-tight">Context panel</p>
+          )}
           <p className="truncate text-xs text-muted-foreground">{scopeParts.join(" · ")}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
+          {pendingApprovalCount > 0 ? (
+            <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:text-amber-200">
+              {pendingApprovalCount} pending
+            </span>
+          ) : null}
           {backend ? (
             <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase text-muted-foreground">
               {backend === "grpc" ? "Python" : "Gemini"}
