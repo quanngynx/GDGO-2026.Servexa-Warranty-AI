@@ -1,7 +1,13 @@
 import { CopilotRuntime, createCopilotExpressHandler } from "@copilotkit/runtime/v2";
 import type { AbstractAgent } from "@ag-ui/client";
-import type { IRouter } from "express";
+import { Router, type IRouter, type NextFunction, type Request, type Response } from "express";
 
+import { authenticateMiddleware } from "@/middlewares/authenticate.middleware";
+
+import {
+  getCopilotRequestUser,
+  runWithCopilotUser,
+} from "./copilot-request-context";
 import { SERVEXA_COPILOT_AGENT_ID, ServexaUnaryGatewayAgent } from "./servexa-unary-gateway.agent";
 
 function createRuntime(): CopilotRuntime {
@@ -23,13 +29,41 @@ function getRuntime(): CopilotRuntime {
   return cachedRuntime;
 }
 
+function wrapCopilotHandler(
+  handler: IRouter,
+): (req: Request, res: Response, next: NextFunction) => void {
+  return (req, res, next) => {
+    if (!req.user) {
+      next();
+      return;
+    }
+    runWithCopilotUser(
+      {
+        id: req.user.id,
+        email: req.user.email,
+        role: req.user.role,
+        roleScope: req.user.roleScope,
+        permissions: req.user.permissions ?? [],
+      },
+      () => handler(req, res, next),
+    );
+  };
+}
+
 /**
- * Express router: single-route CopilotKit endpoint (POST /api/copilotkit when mounted at app root).
+ * Express router: authenticated single-route CopilotKit endpoint (POST /api/copilotkit).
  */
 export function createCopilotKitRouter(): IRouter {
-  return createCopilotExpressHandler({
+  const copilotHandler = createCopilotExpressHandler({
     mode: "single-route",
     runtime: getRuntime(),
     basePath: "/api/copilotkit",
   });
+
+  const router = Router();
+  router.use(authenticateMiddleware);
+  router.use(wrapCopilotHandler(copilotHandler));
+  return router;
 }
+
+export { getCopilotRequestUser };

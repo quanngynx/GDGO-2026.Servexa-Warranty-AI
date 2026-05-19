@@ -19,6 +19,7 @@
     "@copilotkit/runtime": "catalog:",
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
+    "@servexa-warranty-ai/ai-contracts": "workspace:*",
     "@servexa-warranty-ai/db": "workspace:*",
     "@servexa-warranty-ai/env": "workspace:*",
     "@servexa-warranty-ai/event-contracts": "workspace:*",
