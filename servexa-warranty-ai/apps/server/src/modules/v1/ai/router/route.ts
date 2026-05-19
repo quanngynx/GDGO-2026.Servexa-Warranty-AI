@@ -6,6 +6,7 @@ import aiController from "@/modules/v1/ai/controllers/ai.controller";
 import knowledgeController from "@/modules/v1/ai/controllers/knowledge.controller";
 import workflowController from "@/modules/v1/ai/controllers/workflow.controller";
 import opsController from "@/modules/v1/ai/controllers/ops.controller";
+import hitlRoute from "@/modules/v1/ai/router/hitl.route";
 
 const routeAiV1: IRouter = Router();
 
@@ -39,5 +40,7 @@ routeAiV1.post("/tools/invoke", authenticateMiddleware, workflowController.invok
 routeAiV1.post("/agents/coordinate", authenticateMiddleware, workflowController.coordinate);
 
 routeAiV1.get("/ops/summary", authenticateMiddleware, opsController.summary);
+
+routeAiV1.use("/hitl", hitlRoute);
 
 export default routeAiV1;

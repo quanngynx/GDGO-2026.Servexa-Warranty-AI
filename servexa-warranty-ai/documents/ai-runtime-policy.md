@@ -21,7 +21,8 @@ Encoding: see `apps/server/src/modules/v1/ai/runtime/ai-runtime-routing.ts` and 
 
 - **Default:** stateless HTTP/gRPC handling; no durable conversational memory in Phase 1–2.
 - **Ephemeral Redis only:** job metadata, dedupe keys, optional cancel flags — always with explicit TTL (e.g. 86_400 seconds) documented in code.
-- **Deferred:** persistent memory / workflow state until Phase 3+.
+- **Deferred:** general conversational memory until Phase 3+.
+- **Allowlisted (Phase 2 HITL):** LangGraph checkpoint + thread IDs on `ai_human_approval_request` for interrupt/resume only — not full chat history retention.
 
 ## Contracts
 

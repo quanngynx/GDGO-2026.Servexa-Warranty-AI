@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import sys
 from concurrent import futures
 from pathlib import Path
 
 import grpc
 
-from modules.v1.grpc.services.grpc_bridge_service import GrpcBridgeService, ProcessContext
+from core.net.port_utils import listening_pid_on_port
+
+from modules.v1.grpc.services.grpc_bridge_service import GrpcBridgeService, ProcessContext, ResumeContext
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +23,8 @@ for _ancestor in _gen_root.parents:
             sys.path.insert(0, str(_cand))
         break
 
-from ai.v1 import ai_service_pb2  # noqa: E402
-from ai.v1 import ai_service_pb2_grpc  # noqa: E402
+from generated.ai.v1 import ai_service_pb2
+from generated.ai.v1 import ai_service_pb2_grpc
 
 
 class AiServiceServicer(ai_service_pb2_grpc.AiServiceServicer):
@@ -49,12 +52,25 @@ class AiServiceServicer(ai_service_pb2_grpc.AiServiceServicer):
 
         return ai_service_pb2.ProcessRequestOutput(output=output, metadata_json=metadata_json)
 
-
 def create_grpc_server(host: str, port: int) -> grpc.Server:
+    existing_pid = listening_pid_on_port(port)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=8))
     ai_service_pb2_grpc.add_AiServiceServicer_to_server(AiServiceServicer(), server)
     listen = f'{host}:{port}'
-    server.add_insecure_port(listen)
+    try:
+        server.add_insecure_port(listen)
+    except RuntimeError as exc:
+        if existing_pid is not None and existing_pid != os.getpid():
+            raise RuntimeError(
+                f'gRPC port {port} is already in use by PID {existing_pid}. '
+                f'Stop that process (e.g. an old ai-services instance) or set GRPC_PORT in .env.'
+            ) from exc
+        if existing_pid is not None and existing_pid == os.getpid():
+            raise RuntimeError(
+                f'gRPC port {port} bind failed in this process (PID {os.getpid()}). '
+                f'Another listener may still be shutting down; wait a few seconds and restart.'
+            ) from exc
+        raise
     logger.info('gRPC AiService will bind %s', listen)
     return server
 

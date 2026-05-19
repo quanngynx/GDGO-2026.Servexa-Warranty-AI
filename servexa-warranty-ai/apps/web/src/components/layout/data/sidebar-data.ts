@@ -1,6 +1,7 @@
 import {
   Bell,
   Book,
+  Bot,
   Box,
   Bug,
   CalendarArrowUp,
@@ -47,6 +48,11 @@ export const sidebarData: SidebarData = {
           title: "Repair Cases Management",
           url: "/repair-cases-management",
           icon: ListTodo,
+        },
+        {
+          title: "Operations Intelligence",
+          url: "/ai/gemini",
+          icon: Bot,
         },
         {
           title: "Payment Pending Repair Cases",

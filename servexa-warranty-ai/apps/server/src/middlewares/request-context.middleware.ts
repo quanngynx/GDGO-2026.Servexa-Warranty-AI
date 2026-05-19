@@ -18,13 +18,15 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   res.setHeader('X-Request-ID', req.requestId)
   res.setHeader('X-Response-Time', '0ms')
 
+  const skipTimingHeader =
+    req.path.startsWith("/api/copilotkit") || req.url.startsWith("/api/copilotkit")
+
   // Override res.end to calculate response time
   const originalEnd = res.end.bind(res) as Response['end']
   res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
-    // CopilotKit fetch-bridge (and other handlers) may flush headers before res.end();
-    // only update timing header while headers are still mutable.
-    if (!res.headersSent) {
+    // CopilotKit fetch-bridge may flush headers before res.end(); skip timing header updates.
+    if (!skipTimingHeader && !res.headersSent) {
       res.setHeader('X-Response-Time', `${responseTime}ms`)
     }
 

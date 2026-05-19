@@ -5,6 +5,7 @@ package ai.v1;
 // AiService provides AI processing capabilities.
 service AiService {
   rpc ProcessRequest(ProcessRequestInput) returns (ProcessRequestOutput);
+  rpc ResumeGraph(ResumeGraphInput) returns (ProcessRequestOutput);
 }
 
 message ProcessRequestInput {
@@ -27,4 +28,13 @@ message ProcessRequestInput {
 message ProcessRequestOutput {
   string output = 1;
   string metadata_json = 2;
+}
+
+message ResumeGraphInput {
+  string thread_id = 1;
+  string checkpoint_id = 2;
+  string approval_request_id = 3;
+  string decision_json = 4;
+  string trace_id = 5;
+  string user_id = 6;
 }

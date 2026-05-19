@@ -46,3 +46,11 @@ export const aiJobDlqEnvelopeSchema = z.object({
 
 export type AiJobDlqEnvelope = z.infer<typeof aiJobDlqEnvelopeSchema>;
 
+export {
+  hitlEventActionKindSchema,
+  hitlEventEnvelopeSchema,
+  hitlEventTypeSchema,
+  type HitlEventEnvelope,
+  type HitlEventType,
+} from "./hitl-events";
+
