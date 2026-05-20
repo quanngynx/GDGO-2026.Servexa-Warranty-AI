@@ -1,8 +1,8 @@
-export { userAPI } from '@/libs/api/user/api'
+export { userAPI } from '@/libs/api/identity/user/api'
 export type {
   RequestCreateUserDto,
   RequestUpdateUserDto,
   RequestListUsersDto,
   ResponseUserDto,
   ResponseUserListDto,
-} from '@/libs/api/user/data-transfer-object'
+} from '@/libs/api/identity/user/data-transfer-object'

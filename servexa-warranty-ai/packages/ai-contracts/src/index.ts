@@ -30,13 +30,30 @@ export {
   copilotRelatedEntitySchema,
   copilotResponseSchema,
   copilotSuggestedActionSchema,
+  diagnosisDraftSchema,
+  selectedCaseSummarySchema,
+  warrantyEligibilitySchema,
+  workflowProgressSchema,
+  workflowProgressStepSchema,
   type CopilotEvidenceSource,
   type CopilotEvidenceSourceType,
   type CopilotRailMetadata,
   type CopilotRelatedEntity,
   type CopilotResponse,
   type CopilotSuggestedAction,
+  type DiagnosisDraft,
+  type SelectedCaseSummary,
+  type WarrantyEligibility,
+  type WorkflowProgress,
+  type WorkflowProgressStep,
 } from "./copilot-response";
+export {
+  buildHeuristicDiagnosisDraft,
+  mergePhase3RailFields,
+  parseDiagnosisDraft,
+  parseSelectedCaseSummaryFromExecutionContext,
+  parseWarrantyEligibility,
+} from "./copilot-shared-state";
 export {
   COPILOT_METADATA_SENTINEL,
   splitCopilotMetadataTrailer,
@@ -46,6 +63,7 @@ export {
   normalizeLangGraphHitlMetadata,
   normalizeUnaryToCopilotResponse,
   parseMetadataJson,
+  parsePhase3FromCopilotEnvelope,
   type UnaryCompletionLike,
   toRailMetadata,
 } from "./normalize-unary";

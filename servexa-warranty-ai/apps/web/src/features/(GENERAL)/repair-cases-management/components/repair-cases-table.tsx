@@ -92,7 +92,8 @@ export function RepairCasesTable({
       repairCaseId: row.id,
       caseNumber: row.caseNumber,
       customerId: row.customerId,
-      technicianId: null,
+      technicianId: row.assignedTechnicianId ?? null,
+      selectedTechnicianId: row.assignedTechnicianId ?? null,
       productModel: row.model?.name ?? null,
       warrantyStatus: row.warrantyServiceType ?? row.warrantyForm ?? null,
       repairCaseSnapshot: {

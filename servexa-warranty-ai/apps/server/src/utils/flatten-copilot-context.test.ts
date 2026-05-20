@@ -24,4 +24,20 @@ describe("flattenCopilotContext", () => {
     expect(flat.repairCaseSnapshot).toEqual({ customerName: "Nguyễn Văn An" });
     expect(flat.hitlRequestId).toBe("");
   });
+
+  it("parses CopilotKit v2 stringified useAgentContext values", () => {
+    const flat = flattenCopilotContext([
+      {
+        description: "Current Servexa UI context for warranty operations copilot",
+        value: JSON.stringify({
+          repairCaseId: "uuid-12",
+          caseNumber: "RC-2024-000012",
+          repairCaseSnapshot: { customerName: "Nguyễn Văn An" },
+        }),
+      },
+    ]);
+
+    expect(flat.repairCaseId).toBe("uuid-12");
+    expect(flat.caseNumber).toBe("RC-2024-000012");
+  });
 });

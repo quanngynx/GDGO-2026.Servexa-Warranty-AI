@@ -3,6 +3,7 @@ import {
   normalizeLangGraphHitlMetadata,
   normalizeUnaryToCopilotResponse,
   parseMetadataJson,
+  parsePhase3FromCopilotEnvelope,
   type CopilotRailMetadata,
   type CopilotResponse,
   toRailMetadata,
@@ -29,11 +30,19 @@ export function normalizeCopilotUnaryCompletion(
     ? ("awaiting_approval" as const)
     : extras?.workflowExecutionStatus;
 
+  const embedded = meta.copilot ?? meta.copilotResponse;
+  const phase3FromEnvelope =
+    embedded && typeof embedded === "object"
+      ? parsePhase3FromCopilotEnvelope(embedded as Record<string, unknown>)
+      : undefined;
+
   return {
     response,
     rail: toRailMetadata(response, out.backend, {
       ...extras,
       workflowExecutionStatus: workflowStatus ?? extras?.workflowExecutionStatus,
+      phase3FromEnvelope,
+      executionContext: extras?.executionContext,
     }),
   };
 }

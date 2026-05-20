@@ -1,4 +1,4 @@
-import type { RequestListUsersDto } from '@/libs/api/user/data-transfer-object'
+import type { RequestListUsersDto } from '@/libs/api/identity/user/data-transfer-object'
 
 export const userQueryKeys = {
   all: ['users'] as const,

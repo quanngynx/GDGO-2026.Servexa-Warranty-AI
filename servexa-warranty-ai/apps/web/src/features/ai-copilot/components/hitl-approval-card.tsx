@@ -35,6 +35,9 @@ function HitlApprovalCardInner({
     (request.payload.caseNumber as string | undefined) ??
     request.repairCaseId ??
     "case";
+  const technicianId = String(request.payload.technicianId ?? "").trim();
+  const needsTechnician =
+    request.kind === "technician_assignment" && technicianId.length === 0;
 
   return (
     <>
@@ -76,14 +79,25 @@ function HitlApprovalCardInner({
             {request.evidenceSourceIds.join(", ")}
           </p>
         ) : null}
+        {needsTechnician ? (
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
+            Select a technician via Edit before approving.
+          </p>
+        ) : null}
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
             type="button"
             size="sm"
             disabled={isSubmitting}
-            onClick={() => onApprove(request.id)}
+            onClick={() => {
+              if (needsTechnician) {
+                setEditOpen(true);
+                return;
+              }
+              onApprove(request.id);
+            }}
           >
-            Approve
+            {needsTechnician ? "Select technician" : "Approve"}
           </Button>
           <Button
             type="button"

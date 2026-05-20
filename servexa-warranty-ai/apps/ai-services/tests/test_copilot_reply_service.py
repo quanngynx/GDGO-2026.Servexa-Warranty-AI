@@ -1,7 +1,10 @@
+import json
+
 import pytest
 
 from modules.v1.agents.services.copilot_reply_service import (
     CopilotReplyService,
+    _flatten_operational_context,
     build_copilot_prompt,
     is_noop_tool_result,
     _user_wants_greeting,
@@ -41,6 +44,20 @@ def test_build_copilot_prompt_includes_message_and_context():
     assert 'Hi' in prompt
     assert 'RC-2024-000012' in prompt
     assert 'repair case is selected' in prompt.lower()
+
+
+def test_flatten_copilotkit_stringified_agent_context_values():
+    ctx = _flatten_operational_context([
+        {
+            'description': 'Current Servexa UI context for warranty operations copilot',
+            'value': json.dumps({
+                'repairCaseId': 'uuid-12',
+                'caseNumber': 'RC-2024-000012',
+            }),
+        },
+    ])
+    assert ctx.get('repairCaseId') == 'uuid-12'
+    assert ctx.get('caseNumber') == 'RC-2024-000012'
 
 
 def test_flatten_copilotkit_agent_context_entries():
@@ -96,3 +113,33 @@ async def test_compose_reply_uses_gemini_when_configured(monkeypatch):
     monkeypatch.setattr(service, '_get_gemini', lambda: _FakeGemini())
     text = await service.compose_reply(message='Hi')
     assert text == 'Hello from Servexa copilot.'
+
+
+@pytest.mark.asyncio
+async def test_compose_reply_quota_uses_heuristic(monkeypatch):
+    monkeypatch.setattr(
+        'modules.v1.agents.services.copilot_reply_service.settings.gemini_api_key',
+        'test-key',
+    )
+
+    class _QuotaGemini:
+        async def invoke_flash(self, _prompt: str):
+            raise RuntimeError(
+                "429 RESOURCE_EXHAUSTED quota exceeded for gemini-2.5-flash",
+            )
+
+    service = CopilotReplyService()
+    monkeypatch.setattr(service, '_get_gemini', lambda: _QuotaGemini())
+    text, meta = await service.compose_reply_with_metadata(
+        message='Suggest the next operational action for this case.',
+        execution_context={
+            'repairCaseId': 'rc-1',
+            'caseNumber': 'RC-2024-000012',
+            'status': 'open',
+            'priority': 'urgent',
+            'errorPhenomena': 'Device will not power on',
+        },
+    )
+    assert 'Next operational steps' in text
+    assert 'temporarily unavailable' not in text
+    assert meta.get('diagnosisDraft')

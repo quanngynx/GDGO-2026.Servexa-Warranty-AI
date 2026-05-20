@@ -1,5 +1,5 @@
 import type { HitlRequest } from "@servexa-warranty-ai/ai-contracts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@servexa-warranty-ai/ui/components/button";
 import {
@@ -11,6 +11,8 @@ import {
 } from "@servexa-warranty-ai/ui/components/dialog";
 import { Label } from "@servexa-warranty-ai/ui/components/label";
 import { Textarea } from "@servexa-warranty-ai/ui/components/textarea";
+
+import { HitlTechnicianSelectField } from "./hitl-technician-select-field";
 
 type HitlEditPayloadDialogProps = {
   request: HitlRequest;
@@ -29,19 +31,36 @@ export function HitlEditPayloadDialog({
 }: HitlEditPayloadDialogProps) {
   const [reason, setReason] = useState("");
   const [body, setBody] = useState(
-    String((request.payload.body as string | undefined) ?? request.description),
+    String((request.payload.body) ?? request.description),
   );
   const [techId, setTechId] = useState(
-    String((request.payload.technicianId as string | undefined) ?? ""),
+    String((request.payload.technicianId) ?? ""),
+  );
+  const [techName, setTechName] = useState(
+    String((request.payload.technicianName) ?? ""),
   );
 
+  useEffect(() => {
+    if (!open) return;
+    setReason("");
+    setBody(String((request.payload.body) ?? request.description));
+    setTechId(String((request.payload.technicianId) ?? ""));
+    setTechName(String((request.payload.technicianName) ?? ""));
+  }, [open, request]);
+
   const handleSubmit = () => {
+    if (request.kind === "technician_assignment" && !techId.trim()) {
+      return;
+    }
     const edited: Record<string, unknown> = { ...request.payload };
     if (request.kind === "customer_response_draft") {
       edited.body = body;
     }
-    if (request.kind === "technician_assignment" && techId.trim()) {
+    if (request.kind === "technician_assignment") {
       edited.technicianId = techId.trim();
+      if (techName.trim()) {
+        edited.technicianName = techName.trim();
+      }
     }
     if (request.kind === "repair_escalation" && reason.trim()) {
       edited.reason = reason.trim();
@@ -55,9 +74,9 @@ export function HitlEditPayloadDialog({
         <DialogHeader>
           <DialogTitle>Edit approval</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3 py-2">
+        <div className="flex flex-col gap-3 py-2">
           {request.kind === "customer_response_draft" ? (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="hitl-draft-body">Draft message</Label>
               <Textarea
                 id="hitl-draft-body"
@@ -68,17 +87,16 @@ export function HitlEditPayloadDialog({
             </div>
           ) : null}
           {request.kind === "technician_assignment" ? (
-            <div className="space-y-2">
-              <Label htmlFor="hitl-tech-id">Technician ID</Label>
-              <Textarea
-                id="hitl-tech-id"
-                value={techId}
-                onChange={(e) => setTechId(e.target.value)}
-                rows={2}
-              />
-            </div>
+            <HitlTechnicianSelectField
+              value={techId}
+              disabled={isSubmitting}
+              onValueChange={(id, name) => {
+                setTechId(id);
+                if (name) setTechName(name);
+              }}
+            />
           ) : null}
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="hitl-reason">Reason / notes</Label>
             <Textarea
               id="hitl-reason"
@@ -93,7 +111,14 @@ export function HitlEditPayloadDialog({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button type="button" onClick={handleSubmit} disabled={isSubmitting}>
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            disabled={
+              isSubmitting ||
+              (request.kind === "technician_assignment" && !techId.trim())
+            }
+          >
             Save edits
           </Button>
         </DialogFooter>
