@@ -7,15 +7,7 @@ import express, {
   urlencoded,
 } from "express";
 import helmet from "helmet";
-import { devToolsMiddleware } from "@ai-sdk/devtools";
-import { google } from "@ai-sdk/google";
 import { env } from "@servexa-warranty-ai/env/server";
-import {
-  streamText,
-  type UIMessage,
-  convertToModelMessages,
-  wrapLanguageModel,
-} from "ai";
 import { ErrorHandler } from "../helpers/error-handling.helper";
 import { errorHandler } from "@/middlewares/error-middleware";
 import mainRouter from "@/routes";
@@ -28,7 +20,10 @@ import {
   requestLoggingMiddleware,
   userContextMiddleware,
 } from "@/middlewares";
+import { handleBootstrapAiChat } from "@/modules/v1/ai/helpers/bootstrap-ai-chat.helper";
+import { createCopilotKitRouter } from "@/modules/copilotkit/copilot-runtime.router";
 import { helmetConfig } from "@/configs/helmet";
+import { describeLangfuseConfig, initServerTelemetry } from "@/core/observability/telemetry";
 import { uploadDir } from "@/configs/upload-dir";
 
 export class AppBootStrap {
@@ -64,6 +59,8 @@ export class AppBootStrap {
   }
 
   private async initializeServices(): Promise<void> {
+    await initServerTelemetry();
+    describeLangfuseConfig();
     await prisma.$connect();
     logger.info(`[${env.BRANDING_NAME}] Database connected successfully`);
 
@@ -85,23 +82,14 @@ export class AppBootStrap {
 
     // Public routes (specific routes first)
     this.app.use("", mainRouter);
+
+    this.app.use(createCopilotKitRouter());
     // Generic API route (catch-all for /api)
     // this.app.use("/api", apikeyAuthMiddleware, (req: Request, res: Response, next: NextFunction) => {
     //   res.json({ status: "Success!", message: "API is running", timestamp: new Date().toISOString() })
     // })
 
-    this.app.post("/ai", async (req, res) => {
-      const { messages = [] } = (req.body || {}) as { messages: UIMessage[] };
-      const model = wrapLanguageModel({
-        model: google("gemini-2.5-flash"),
-        middleware: devToolsMiddleware(),
-      });
-      const result = streamText({
-        model,
-        messages: await convertToModelMessages(messages),
-      });
-      result.pipeUIMessageStreamToResponse(res);
-    });
+    this.app.post("/ai", handleBootstrapAiChat);
 
     this.app.get("/", (_req, res) => {
       res.status(200).send("OK");

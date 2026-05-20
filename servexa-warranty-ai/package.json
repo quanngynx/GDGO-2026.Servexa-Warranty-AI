@@ -18,6 +18,8 @@
     "db:migrate": "turbo -F @servexa-warranty-ai/db db:migrate",
     "db:seed": "turbo -F @servexa-warranty-ai/db db:seed",
     "db:seed:identity-user": "turbo -F @servexa-warranty-ai/db db:seed:identity-user",
+    "db:seed:hitl-permissions": "turbo -F @servexa-warranty-ai/db db:seed:hitl-permissions",
+    "demo:print-cases": "turbo -F @servexa-warranty-ai/db demo:print-cases",
     "db:start": "turbo -F @servexa-warranty-ai/db db:start",
     "db:watch": "turbo -F @servexa-warranty-ai/db db:watch",
     "db:stop": "turbo -F @servexa-warranty-ai/db db:stop",

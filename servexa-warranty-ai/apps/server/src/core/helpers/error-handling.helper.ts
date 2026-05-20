@@ -178,7 +178,7 @@ export class ErrorHandler {
   public static expressErrorHandler(): ErrorRequestHandler {
     return (
       err: unknown,
-      req: Request,
+      _req: Request,
       res: Response & { locals: { isApiNotError?: boolean } },
       next: NextFunction
     ) => {

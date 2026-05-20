@@ -70,7 +70,7 @@ export function loggerMiddleware(req: Request, res: Response, next: NextFunction
 export function errorLoggerMiddleware(
   error: Error,
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
   const { method, url, ip, headers } = req;

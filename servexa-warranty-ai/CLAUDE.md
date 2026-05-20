@@ -8,7 +8,7 @@ This is a **pnpm + Turborepo** monorepo with two apps and five packages:
 
 - `apps/web` — React 19 SPA (Vite, TanStack Router, Tailwind CSS v4, AI SDK)
 - `apps/server` — Express 5 API server (Node.js, AI SDK, Google Gemini)
-- `apps/fumadocs` — Documentation app
+- `apps/ai-services` — FastAPI + LangGraph worker, Redis job consumer, and gRPC `ai.v1.AiService` (Python)
 - `packages/db` — Prisma client with PostgreSQL (via Docker Compose)
 - `packages/env` — Type-safe env validation via `@t3-oss/env-core` (separate `server` and `web` exports)
 - `packages/ui` — Shared React component library (shadcn, Base UI, Tailwind)
@@ -64,6 +64,9 @@ Web (`apps/web/.env`):
 Env validation is in `packages/env/src/server.ts` and `packages/env/src/web.ts`. Both use `@t3-oss/env-core` with Zod schemas and will throw at startup if required vars are missing.
 
 ## Architecture
+
+### AI runtime policy
+See [documents/ai-runtime-policy.md](documents/ai-runtime-policy.md) for runtime ownership (Node vs Python), sync/async job rules, memory stance, and canonical RAG corpus (Prisma `ai_knowledge_*`).
 
 ### Data Flow
 Web (`useChat` via `@ai-sdk/react`) → POST `{SERVER_URL}/ai` → Express server → Google Gemini (`gemini-2.5-flash`) → streaming response back to browser.

@@ -35,6 +35,39 @@ export async function seedHumanResources() {
     throw new Error('Admin user not found. Run seedIdentityUser first.')
   }
 
+  const technicianUser = await prisma.user.upsert({
+    where: { username: 'technician' },
+    update: {
+      ascCenterId: ascCenter.id,
+      deletedAt: null,
+      status: 'active',
+    },
+    create: {
+      username: 'technician',
+      fullName: 'Trần Văn Kỹ Thuật',
+      companyEmail: 'technician@servexa-warranty.com',
+      password: adminUser.password,
+      roleId: adminUser.roleId,
+      ascCenterId: ascCenter.id,
+      status: 'active',
+    },
+    select: { id: true, username: true },
+  })
+
+  const technicianProfile = await prisma.technicianProfile.upsert({
+    where: { userId: technicianUser.id },
+    update: { isAvailable: true },
+    create: {
+      userId: technicianUser.id,
+      skillLevel: 'intermediate',
+      specializations: ['general_repair'],
+      experienceYears: 5,
+      maxConcurrentCases: 5,
+      isAvailable: true,
+    },
+    select: { id: true, userId: true },
+  })
+
   const employee = await prisma.employee.upsert({
     where: { employeeCode: 'EMP-2024-000001' },
     update: {},
@@ -61,5 +94,6 @@ export async function seedHumanResources() {
 
   console.log(`✅ Human Resources seeding completed!
     - 1 Customer: ${customer.fullName} (${customer.phone1})
-    - 1 Employee: ${employee.employeeCode} — ${employee.fullName} (${employee.position})`)
+    - 1 Employee: ${employee.employeeCode} — ${employee.fullName} (${employee.position})
+    - 1 Technician profile: ${technicianProfile.id} (user: ${technicianUser.username})`)
 }

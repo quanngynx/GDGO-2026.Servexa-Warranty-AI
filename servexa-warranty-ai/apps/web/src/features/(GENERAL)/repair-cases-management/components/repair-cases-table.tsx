@@ -10,6 +10,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/data-table";
 import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
+import { useOperationalContextPatch } from '@/features/ai-copilot/context/operational-context-provider'
 
 type RepairCasesTableProps = {
   data: RepairCaseDto[]
@@ -29,6 +30,7 @@ export function RepairCasesTable({
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { setOperationalContext, clearOperationalContext } = useOperationalContextPatch();
 
   const {
     columnFilters,
@@ -78,6 +80,44 @@ export function RepairCasesTable({
   useEffect(() => {
     ensurePageInRange(table.getPageCount());
   }, [table, ensurePageInRange]);
+
+  useEffect(() => {
+    const selected = table.getFilteredSelectedRowModel().rows;
+    if (selected.length === 0) {
+      clearOperationalContext();
+      return;
+    }
+    const row = selected[0]!.original;
+    setOperationalContext({
+      repairCaseId: row.id,
+      caseNumber: row.caseNumber,
+      customerId: row.customerId,
+      technicianId: row.assignedTechnicianId ?? null,
+      selectedTechnicianId: row.assignedTechnicianId ?? null,
+      productModel: row.model?.name ?? null,
+      warrantyStatus: row.warrantyServiceType ?? row.warrantyForm ?? null,
+      repairCaseSnapshot: {
+        caseNumber: row.caseNumber,
+        status: row.status,
+        priority: row.priority,
+        customerName: row.customer.fullName,
+        customerPhone: row.customer.phone1,
+        productModel: row.model?.name ?? null,
+        modelCode: row.model?.modelCode ?? null,
+        serialNumber: row.serialNumber,
+        receivedDate: String(row.receivedDate),
+        promisedDeliveryDate: String(row.promisedDeliveryDate),
+        warrantyForm: row.warrantyForm,
+        warrantyServiceType: row.warrantyServiceType,
+        totalCost: row.totalCost,
+        errorPhenomena:
+          row.errorPhenomena
+            ?.map((item) => item.errorPhenomenon.name)
+            .filter(Boolean)
+            .join(", ") || null,
+      },
+    });
+  }, [rowSelection, data, table, setOperationalContext, clearOperationalContext]);
 
   return (
     <div

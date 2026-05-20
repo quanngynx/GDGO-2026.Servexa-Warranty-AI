@@ -9,7 +9,7 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
-import type { ResponseUserListDto } from '@/libs/api/user/data-transfer-object'
+import type { ResponseUserListDto } from '@/libs/api/identity/user/data-transfer-object'
 import { useUsersQuery } from './hooks/use-users-query'
 
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/')

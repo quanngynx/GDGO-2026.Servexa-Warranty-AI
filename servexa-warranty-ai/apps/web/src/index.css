@@ -1,2 +1,168 @@
 @import "@servexa-warranty-ai/ui/globals.css";
 @source "../node_modules/streamdown/dist/*.js";
+
+/* AI-specific animations and styling enhancements */
+@layer base {
+  /* Subtle glow effect for AI primary color elements */
+  @keyframes ai-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--color-ai-primary), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 10px 2px rgba(var(--color-ai-primary), 0.1);
+    }
+  }
+
+  /* Pulse animation for loading states */
+  @keyframes ai-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Slide in from right for panel */
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Expand width animation for copilot panel */
+  @keyframes expand-width {
+    from {
+      width: 380px;
+    }
+    to {
+      width: 480px;
+    }
+  }
+}
+
+@layer components {
+  /* AI Copilot Panel optimizations */
+  .ai-copilot-panel,
+  .ai-copilot-dock {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* AI element glow on hover */
+  .ai-element-glow:hover {
+    animation: ai-glow 2s ease-in-out infinite;
+  }
+
+  /* AI loading skeleton pulse */
+  .ai-skeleton {
+    animation: ai-pulse 2s ease-in-out infinite;
+  }
+
+  /* Responsive improvements for smaller screens */
+  @media (max-width: 1023px) {
+    .ai-copilot-dock:not(.ai-copilot-dock--collapsed) {
+      @apply fixed inset-x-0 bottom-0 top-14 z-40 w-full max-w-none rounded-none border-t border-border bg-background;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ai-copilot-panel {
+      @apply rounded-none;
+    }
+
+    /* Stack dashboard widgets better */
+    .dashboard-grid {
+      @apply grid-cols-1;
+    }
+  }
+
+  /* Ensure good contrast for AI elements */
+  [class*="ai-primary"] {
+    @apply transition-colors duration-200;
+  }
+
+  [class*="ai-accent"] {
+    @apply transition-colors duration-200;
+  }
+
+  /* CopilotKit chat input — align with Servexa theme tokens */
+  [data-copilotkit] [data-testid="copilot-chat-input"] {
+    background: var(--card) !important;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    box-shadow:
+      0 1px 2px oklch(0 0 0 / 0.05),
+      0 10px 28px oklch(0 0 0 / 0.14);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  [data-copilotkit] [data-testid="copilot-chat-input"]:focus-within {
+    border-color: color-mix(in oklch, var(--ring) 70%, var(--border));
+    box-shadow:
+      0 0 0 3px color-mix(in oklch, var(--ring) 22%, transparent),
+      0 10px 28px oklch(0 0 0 / 0.16);
+  }
+
+  #copilot-chat-main [data-copilotkit] [data-testid="copilot-chat-input"] {
+    border-radius: 1.5rem;
+  }
+
+  #copilot-chat-main [data-copilotkit] .cpk\:max-w-3xl {
+    max-width: 42rem;
+  }
+
+  [data-copilotkit] [data-testid="copilot-chat-textarea"] {
+    color: var(--foreground);
+  }
+
+  [data-copilotkit] [data-testid="copilot-chat-textarea"]::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.85;
+  }
+
+  [data-copilotkit] [data-testid="copilot-send-button"],
+  [data-copilotkit] .servexa-copilot-send-button {
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+
+  [data-copilotkit] [data-testid="copilot-send-button"]:hover:not(:disabled),
+  [data-copilotkit] .servexa-copilot-send-button:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+
+  [data-copilotkit] [data-testid="copilot-send-button"]:disabled,
+  [data-copilotkit] .servexa-copilot-send-button:disabled {
+    opacity: 0.45;
+  }
+
+  [data-copilotkit] .servexa-copilot-toolbar-button {
+    color: var(--muted-foreground);
+  }
+
+  [data-copilotkit] .servexa-copilot-toolbar-button:hover:not(:disabled) {
+    color: var(--foreground);
+    background: var(--muted);
+  }
+
+  .servexa-copilot-input-disclaimer {
+    @apply mx-auto max-w-3xl px-4 py-2 text-center text-xs text-muted-foreground;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-copilotkit] [data-testid="copilot-chat-input"] {
+      transition: none;
+    }
+  }
+}

@@ -41,7 +41,7 @@ export class SuccessResponse<TRes> {
     this.metadata = metadata;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  send(res: Response, headers: object = {}) {
+  send(res: Response, _headers: object = {}) {
     return res.status(this.status).json(this);
   }
 }

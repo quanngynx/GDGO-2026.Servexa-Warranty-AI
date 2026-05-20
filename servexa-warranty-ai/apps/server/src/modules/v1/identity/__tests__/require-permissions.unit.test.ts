@@ -5,7 +5,7 @@
  * and missing permissions behavior — with pure mocks,
  * no DB or Redis involved.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import type { Request, Response, NextFunction } from 'express'
 
 // ─── We import only the pure middleware factory ─────────────────────────────

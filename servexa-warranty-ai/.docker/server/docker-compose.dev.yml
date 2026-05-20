@@ -16,7 +16,7 @@ services:
     #  boundary issues.
     #  See https://github.com/docker-library/postgres/issues/37⁠ for a (long)
     #  discussion around this process, and suggestions for how to do so.
-    image: postgres:18
+    image: pgvector/pgvector:0.8.2-pg18-trixie
     container_name: servexa-warranty-ai-postgres-dev
     restart: unless-stopped
     environment:

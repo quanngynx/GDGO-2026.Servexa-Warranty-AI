@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from "lucide-react";
+import { ArrowRight, ChevronRight, Laptop, Moon, Sparkles, Sun } from "lucide-react";
 import { useSearch } from "../contexts/search-provider";
 import { useTheme } from "../contexts/theme-provider";
 import {
@@ -14,6 +14,18 @@ import {
 } from "@servexa-warranty-ai/ui/components/command";
 import { ScrollArea } from "@servexa-warranty-ai/ui/components/scroll-area";
 import { sidebarData } from "../../../../apps/web/src/components/layout/data/sidebar-data";
+
+/** Keep in sync with apps/web/src/features/ai-copilot/constants.ts */
+const SERVEXA_COPILOT_QUICK_PROMPT_EVENT = "servexa:copilot-quick-prompt";
+
+const AI_SUGGESTED_PROMPTS = [
+  "Summarize this repair case",
+  "Find similar failures",
+  "Explain warranty eligibility",
+  "Search technical manuals",
+  "Detect supply chain risk",
+  "Suggest next operational action",
+] as const;
 
 export function CommandMenu() {
   const navigate = useNavigate();
@@ -70,6 +82,52 @@ export function CommandMenu() {
               })}
             </CommandGroup>
           ))}
+          <CommandSeparator />
+          <CommandGroup heading="AI suggested prompts">
+            {AI_SUGGESTED_PROMPTS.map((query) => (
+              <CommandItem
+                key={query}
+                value={`copilot-${query}`}
+                onSelect={() => {
+                  runCommand(() => {
+                    window.dispatchEvent(
+                      new CustomEvent(SERVEXA_COPILOT_QUICK_PROMPT_EVENT, { detail: query }),
+                    );
+                  });
+                }}
+              >
+                <Sparkles className="size-3.5 text-ai-primary" />
+                {query}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="AI Quick Actions">
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Open AI Command Center
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/ai" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Open AI Chat
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                runCommand(() => navigate({ to: "/repair-cases-management" }));
+              }}
+            >
+              <Sparkles className="size-3.5 text-ai-primary" />
+              Find Similar Repair Cases
+            </CommandItem>
+          </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Theme">
             <CommandItem onSelect={() => runCommand(() => setTheme("light"))}>

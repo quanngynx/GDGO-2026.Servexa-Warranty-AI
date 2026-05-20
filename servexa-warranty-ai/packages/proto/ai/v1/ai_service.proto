@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package ai.v1;
+
+// AiService provides AI processing capabilities.
+service AiService {
+  rpc ProcessRequest(ProcessRequestInput) returns (ProcessRequestOutput);
+  rpc ResumeGraph(ResumeGraphInput) returns (ProcessRequestOutput);
+}
+
+message ProcessRequestInput {
+  string message = 1;
+  string trace_id = 2;
+  string user_id = 3;
+  string tenant_id = 4;
+  string role = 5;
+  string context_json = 6;
+  // Contract version for backward-compatible evolution (e.g. "1").
+  string request_version = 7;
+  // When set, correlates with Redis job envelope `jobId`.
+  string job_id = 8;
+  // When set, matches stream job `type` (e.g. analysis, report_generation).
+  string job_type = 9;
+  // JSON blob: merged job `context`, routing hints, coordinator flags.
+  string execution_context_json = 10;
+}
+
+message ProcessRequestOutput {
+  string output = 1;
+  string metadata_json = 2;
+}
+
+message ResumeGraphInput {
+  string thread_id = 1;
+  string checkpoint_id = 2;
+  string approval_request_id = 3;
+  string decision_json = 4;
+  string trace_id = 5;
+  string user_id = 6;
+}
