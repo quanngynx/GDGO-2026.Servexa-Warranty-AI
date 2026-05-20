@@ -79,7 +79,7 @@ export const repairEscalationPayloadSchema = z.object({
 export const technicianAssignmentPayloadSchema = z.object({
   repairCaseId: z.string(),
   caseNumber: z.string().optional(),
-  technicianId: z.string(),
+  technicianId: z.uuidv7().optional(),
   technicianName: z.string().optional(),
 });
 
