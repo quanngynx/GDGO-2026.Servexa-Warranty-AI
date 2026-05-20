@@ -18,11 +18,17 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   res.setHeader('X-Request-ID', req.requestId)
   res.setHeader('X-Response-Time', '0ms')
 
+  const skipTimingHeader =
+    req.path.startsWith("/api/copilotkit") || req.url.startsWith("/api/copilotkit")
+
   // Override res.end to calculate response time
   const originalEnd = res.end.bind(res) as Response['end']
   res.end = function(chunk?: unknown, encoding?: unknown, cb?: () => void) {
     const responseTime = Date.now() - req.startTime
-    res.setHeader('X-Response-Time', `${responseTime}ms`)
+    // CopilotKit fetch-bridge may flush headers before res.end(); skip timing header updates.
+    if (!skipTimingHeader && !res.headersSent) {
+      res.setHeader('X-Response-Time', `${responseTime}ms`)
+    }
 
     // Handle different overloads of res.end
     if (typeof encoding === 'function') {
@@ -42,7 +48,7 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
 /**
  * User context middleware that extracts user information from JWT
  */
-export const userContextMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const userContextMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
 
   // This would typically extract user info from JWT token
   // For now, we'll check if user info is already available from auth middleware

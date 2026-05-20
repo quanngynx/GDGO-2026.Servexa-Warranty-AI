@@ -1,0 +1,43 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ai-api-service
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '1'
+    spec:
+      containerConcurrency: 10
+      serviceAccountName: ai-api-sa
+      containers:
+        - image: gcr.io/PROJECT_ID/ai-api-service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: APP_PORT
+              value: '8081'
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ai-postgres-host
+                  key: host
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_DB
+              value: ai_service
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ai-postgres-user
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ai-postgres-password
+                  key: password
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ai-redis-url
+                  key: url

@@ -8,10 +8,16 @@
     "serve": "vite preview",
     "start": "vite",
     "check-types": "vite build && tsc --noEmit",
-    "dev:bare": "vite dev"
+    "dev:bare": "vite dev",
+    "test": "vitest run",
+    "test:browser-smoke": "node scripts/browser-smoke-phase1.mjs"
   },
   "dependencies": {
+    "@ag-ui/client": "catalog:",
     "@ai-sdk/react": "^3.0.3",
+    "@copilotkit/react-core": "catalog:",
+    "@copilotkit/runtime": "catalog:",
+    "@copilotkit/runtime-client-gql": "catalog:",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -20,6 +26,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@prisma/client": "catalog:",
     "@radix-ui/react-radio-group": "^1.3.8",
+    "@servexa-warranty-ai/ai-contracts": "workspace:*",
     "@servexa-warranty-ai/env": "workspace:*",
     "@servexa-warranty-ai/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
@@ -45,14 +52,18 @@
     "@servexa-warranty-ai/config": "workspace:*",
     "@tanstack/react-router-devtools": "^1.141.1",
     "@tanstack/router-plugin": "^1.141.1",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^4.3.4",
     "alchemy": "catalog:",
+    "jsdom": "^26.1.0",
+    "playwright": "1.51.0",
     "postcss": "^8.5.3",
     "tailwindcss": "catalog:",
     "typescript": "^5",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "vitest": "^2.0.0"
   }
 }

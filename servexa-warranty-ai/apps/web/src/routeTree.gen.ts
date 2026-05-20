@@ -9,12 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AiRouteImport } from './routes/ai'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as AuthenticatedAiGeminiIndexRouteImport } from './routes/_authenticated/ai/gemini/index'
+import { Route as AuthenticatedAiExampleIndexRouteImport } from './routes/_authenticated/ai/example/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/index'
@@ -28,11 +29,6 @@ import { Route as AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRou
 import { Route as AuthenticatedGENERALRepairCasesManagementIndexRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/index'
 import { Route as AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport } from './routes/_authenticated/(GENERAL)/payment-pending-repair-cases/index'
 
-const AiRoute = AiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -57,6 +53,18 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAiGeminiIndexRoute =
+  AuthenticatedAiGeminiIndexRouteImport.update({
+    id: '/ai/gemini/',
+    path: '/ai/gemini/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAiExampleIndexRoute =
+  AuthenticatedAiExampleIndexRouteImport.update({
+    id: '/ai/example/',
+    path: '/ai/example/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute =
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport.update({
     id: '/(SYSTEM-ADMINISTRATION)/user-management/',
@@ -142,7 +150,6 @@ const AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/ai': typeof AiRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -158,9 +165,10 @@ export interface FileRoutesByFullPath {
   '/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/ai/example/': typeof AuthenticatedAiExampleIndexRoute
+  '/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRoutesByTo {
-  '/ai': typeof AiRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -177,11 +185,12 @@ export interface FileRoutesByTo {
   '/reference-documentation': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/roles-management': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/ai/example': typeof AuthenticatedAiExampleIndexRoute
+  '/ai/gemini': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/ai': typeof AiRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
@@ -198,12 +207,13 @@ export interface FileRoutesById {
   '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  '/_authenticated/ai/example/': typeof AuthenticatedAiExampleIndexRoute
+  '/_authenticated/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/ai'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -219,9 +229,10 @@ export interface FileRouteTypes {
     | '/reference-documentation/'
     | '/roles-management/'
     | '/user-management/'
+    | '/ai/example/'
+    | '/ai/gemini/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/ai'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -238,10 +249,11 @@ export interface FileRouteTypes {
     | '/reference-documentation'
     | '/roles-management'
     | '/user-management'
+    | '/ai/example'
+    | '/ai/gemini'
   id:
     | '__root__'
     | '/_authenticated'
-    | '/ai'
     | '/(auth)/forgot-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
@@ -258,11 +270,12 @@ export interface FileRouteTypes {
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
+    | '/_authenticated/ai/example/'
+    | '/_authenticated/ai/gemini/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AiRoute: typeof AiRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authSignInRoute: typeof authSignInRoute
   authSignUpRoute: typeof authSignUpRoute
@@ -270,13 +283,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ai': {
-      id: '/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -311,6 +317,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/ai/gemini/': {
+      id: '/_authenticated/ai/gemini/'
+      path: '/ai/gemini'
+      fullPath: '/ai/gemini/'
+      preLoaderRoute: typeof AuthenticatedAiGeminiIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ai/example/': {
+      id: '/_authenticated/ai/example/'
+      path: '/ai/example'
+      fullPath: '/ai/example/'
+      preLoaderRoute: typeof AuthenticatedAiExampleIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': {
       id: '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
@@ -413,6 +433,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
+  AuthenticatedAiExampleIndexRoute: typeof AuthenticatedAiExampleIndexRoute
+  AuthenticatedAiGeminiIndexRoute: typeof AuthenticatedAiGeminiIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -441,6 +463,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute,
+  AuthenticatedAiExampleIndexRoute: AuthenticatedAiExampleIndexRoute,
+  AuthenticatedAiGeminiIndexRoute: AuthenticatedAiGeminiIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -448,7 +472,6 @@ const AuthenticatedRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AiRoute: AiRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authSignInRoute: authSignInRoute,
   authSignUpRoute: authSignUpRoute,

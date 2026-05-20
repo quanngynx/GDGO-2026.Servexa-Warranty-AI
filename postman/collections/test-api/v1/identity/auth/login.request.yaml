@@ -1,14 +1,14 @@
 $kind: http-request
 name: login
-url: "{{"
+url: "{{CORS_ORIGIN}}/api/v1/identity/auth/login"
 method: POST
 body:
   type: json
   content: "{\r
 
-    \    \"username\": \"admin\",\r
+    \    \"username\": {{USER_NAME}},\r
 
-    \    \"password\": \"Admin@123\"\r
+    \    \"password\": {{PW}}\r
 
     }"
 order: 1777621572952

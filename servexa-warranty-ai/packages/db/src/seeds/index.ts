@@ -1,4 +1,5 @@
 import { seedIdentityUser, type SeedIdentityUserOptions } from './identity/user'
+import { seedHitlPermissions } from './identity/hitl-permissions'
 import { seedWards } from './location/ward'
 import { seedAreas } from './location/area'
 import { seedProductCatalog } from './product-catalog'
@@ -7,6 +8,7 @@ import { seedASCCenters } from './asc-center/asc-centers'
 import { seedRepairCases } from './asc-center/repair-cases'
 
 export * from './identity/user'
+export * from './identity/hitl-permissions'
 export * from './location'
 export * from './asc-center/repair-cases'
 export * from './asc-center/asc-centers'
@@ -17,6 +19,7 @@ export type RunSeedsOptions = {
 
 export const runSeeds = async (options: RunSeedsOptions = {}) => {
   const result = await seedIdentityUser(options.identityUser)
+  await seedHitlPermissions()
   await seedWards()           // seeds provinces + wards
   await seedAreas()           // seeds areas (depends on provinces + wards)
   await seedProductCatalog()  // seeds categories + models (needed by repair-cases)

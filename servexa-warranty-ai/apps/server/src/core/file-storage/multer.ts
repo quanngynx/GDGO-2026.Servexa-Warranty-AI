@@ -57,7 +57,7 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    const userId = req.user.userId || "anonymous";
+    const userId = req.user.id || "anonymous";
     const sourceImageType = (req.body as Partial<SourceImageType>) || {};
     const qFolder =
       typeof req.query.folder === "string" ? req.query.folder : undefined;
