@@ -2,13 +2,15 @@ import type { CopilotSuggestedAction } from "@servexa-warranty-ai/ai-contracts";
 
 import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
+import { useEffect, useMemo, useState } from "react";
 
 import { SERVEXA_COPILOT_QUICK_PROMPT_EVENT } from "../constants";
 import type { OperationalPageContext } from "../hooks/use-operational-context";
 import { buildHitlCreateInput } from "../lib/build-hitl-request";
+import { isExecutableWorkflowKind } from "../lib/executable-workflow-kinds";
 import type { CreateHitlRequestInput } from "@/libs/api/ai/hitl/api";
 
-export function dispatchCopilotActionPrompt(action: string): void {
+function dispatchCopilotActionPrompt(action: string): void {
   const body = action.startsWith("prompt:") ? action.slice("prompt:".length).trim() : action.trim();
   if (!body) return;
   window.dispatchEvent(new CustomEvent(SERVEXA_COPILOT_QUICK_PROMPT_EVENT, { detail: body }));
@@ -35,11 +37,31 @@ export function SuggestedActionsPanel({
     );
   }
 
+  const visibleActions = useMemo(() => actions, [actions]);
+
   const handleClick = (action: CopilotSuggestedAction) => {
-    const isWorkflow =
+    const wantsWorkflow =
       action.kind === "workflow" || action.requiresApproval === true;
 
-    if (isWorkflow) {
+    if (wantsWorkflow && action.workflowKind === "warranty_exception") {
+      dispatchCopilotActionPrompt(
+        action.action.startsWith("prompt:")
+          ? action.action
+          : `prompt:${action.label} — explain warranty exception options for this case without creating an approval yet.`,
+      );
+      return;
+    }
+
+    if (wantsWorkflow && !isExecutableWorkflowKind(action.workflowKind)) {
+      dispatchCopilotActionPrompt(
+        action.action.startsWith("prompt:")
+          ? action.action
+          : `prompt:${action.label}`,
+      );
+      return;
+    }
+
+    if (wantsWorkflow) {
       if (!operational.repairCaseId) {
         dispatchCopilotActionPrompt(
           "prompt:I need to run a workflow action but no repair case is selected. What should I do?",
@@ -56,7 +78,7 @@ export function SuggestedActionsPanel({
     <div className={cn("border-t border-border px-2 py-2", className)}>
       <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">Suggested actions</p>
       <div className="flex flex-wrap gap-2 px-2 pb-1">
-        {actions.map((a) => (
+        {visibleActions.map((a) => (
           <Button
             key={a.id}
             type="button"

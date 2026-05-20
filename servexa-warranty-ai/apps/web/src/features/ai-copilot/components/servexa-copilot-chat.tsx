@@ -1,5 +1,6 @@
-import { CopilotChat } from "@copilotkit/react-core/v2";
+import { CopilotChat, useConfigureSuggestions } from "@copilotkit/react-core/v2";
 import "@copilotkit/react-core/v2/styles.css";
+import type { CopilotEvidenceSource } from "@servexa-warranty-ai/ai-contracts";
 import { useCallback, useMemo } from "react";
 
 import { useCopilotMessageFeedback } from "../hooks/use-copilot-message-feedback";
@@ -9,6 +10,7 @@ import {
   createServexaCopilotChatInput,
 } from "./servexa-copilot-chat-input";
 import { createServexaCopilotUserMessage } from "./servexa-copilot-user-message";
+import { OperationalQuickPromptSuggestions } from "./operational-quick-prompt-suggestions";
 
 type ServexaCopilotChatLayout = "rail" | "fullPage";
 
@@ -16,6 +18,7 @@ type ServexaCopilotChatProps = {
   agentId: string;
   className?: string;
   layout?: ServexaCopilotChatLayout;
+  sources?: CopilotEvidenceSource[];
   onChatError?: (message: string) => void;
   onRetryLast?: () => void | Promise<void>;
 };
@@ -24,9 +27,12 @@ export function ServexaCopilotChat({
   agentId,
   className,
   layout = "rail",
+  sources,
   onChatError,
   onRetryLast,
 }: ServexaCopilotChatProps) {
+  useConfigureSuggestions(null);
+
   const { getMessageFeedback, setMessageFeedback } = useCopilotMessageFeedback();
   const isFullPage = layout === "fullPage";
 
@@ -51,20 +57,15 @@ export function ServexaCopilotChat({
         onRetryLast,
         getMessageFeedback,
         onMessageFeedback,
+        sources,
       }),
       userMessage: createServexaCopilotUserMessage(onRetryLast),
     }),
-    [getMessageFeedback, onMessageFeedback, onRetryLast],
+    [getMessageFeedback, onMessageFeedback, onRetryLast, sources],
   );
 
   const welcomeScreen = useCallback(
-    ({
-      input,
-      suggestionView,
-    }: {
-      input: React.ReactNode;
-      suggestionView: React.ReactNode;
-    }) => {
+    ({ input }: { input: React.ReactNode; suggestionView: React.ReactNode }) => {
       if (isFullPage) {
         return (
           <div className="flex h-full min-h-0 flex-col items-center justify-center gap-8 px-4 py-10 sm:px-8">
@@ -84,7 +85,7 @@ export function ServexaCopilotChat({
               </p>
             </div>
             <div className="w-full max-w-xl space-y-4">{input}</div>
-            {suggestionView ? <div className="w-full max-w-xl">{suggestionView}</div> : null}
+            <OperationalQuickPromptSuggestions className="w-full max-w-xl" />
           </div>
         );
       }
@@ -95,7 +96,7 @@ export function ServexaCopilotChat({
             Welcome to the Servexa Warranty AI
           </h2>
           {input}
-          {suggestionView}
+          <OperationalQuickPromptSuggestions />
         </div>
       );
     },

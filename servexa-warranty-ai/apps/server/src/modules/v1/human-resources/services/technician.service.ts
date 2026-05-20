@@ -24,6 +24,12 @@ const technicianSelect = {
   completedCases: true,
   createdAt: true,
   updatedAt: true,
+  user: {
+    select: {
+      fullName: true,
+      username: true,
+    },
+  },
 } satisfies Prisma.TechnicianProfileSelect
 
 export type FindAllTechniciansInput = {

@@ -1,3 +1,20 @@
+function parseContextValue(value: unknown): Record<string, unknown> | null {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value === "string" && value.trim().startsWith("{")) {
+    try {
+      const parsed: unknown = JSON.parse(value);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        return parsed as Record<string, unknown>;
+      }
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
 /** CopilotKit `useAgentContext` entries and nested AG-UI context payloads. */
 export function flattenCopilotContext(raw: unknown): Record<string, unknown> {
   const merged: Record<string, unknown> = {};
@@ -11,9 +28,9 @@ export function flattenCopilotContext(raw: unknown): Record<string, unknown> {
     if (typeof entry !== "object") return;
 
     const obj = entry as Record<string, unknown>;
-    const value = obj.value;
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      mergeValue(merged, value as Record<string, unknown>);
+    const parsedValue = parseContextValue(obj.value);
+    if (parsedValue) {
+      mergeValue(merged, parsedValue);
       return;
     }
 

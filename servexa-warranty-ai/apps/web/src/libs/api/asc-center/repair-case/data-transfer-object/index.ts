@@ -167,6 +167,7 @@ export interface RepairCaseDto {
     employeeCode: string;
   };
   technicianName: string | null;
+  assignedTechnicianId?: string | null;
   areaId: string;
 }
 

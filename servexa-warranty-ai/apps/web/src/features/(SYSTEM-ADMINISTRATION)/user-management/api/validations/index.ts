@@ -2,4 +2,4 @@ export {
   requestCreateUserSchema,
   requestUpdateUserSchema,
   requestListUsersSchema,
-} from '@/libs/api/user/validations'
+} from '@/libs/api/identity/user/validations'

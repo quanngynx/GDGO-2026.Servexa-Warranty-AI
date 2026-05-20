@@ -18,6 +18,8 @@ type SelectDropdownProps = {
   disabled?: boolean;
   className?: string;
   isControlled?: boolean;
+  /** When false, omits FormControl (for use outside react-hook-form FormProvider). */
+  withFormControl?: boolean;
 };
 
 export function SelectDropdown({
@@ -29,17 +31,19 @@ export function SelectDropdown({
   disabled,
   className = "",
   isControlled = false,
+  withFormControl = true,
 }: SelectDropdownProps) {
   const defaultState = isControlled
     ? { value: defaultValue, onValueChange }
     : { defaultValue, onValueChange };
+  const trigger = (
+    <SelectTrigger disabled={disabled} className={cn(className)}>
+      <SelectValue placeholder={placeholder ?? "Select"} />
+    </SelectTrigger>
+  );
   return (
     <Select {...defaultState}>
-      <FormControl>
-        <SelectTrigger disabled={disabled} className={cn(className)}>
-          <SelectValue placeholder={placeholder ?? "Select"} />
-        </SelectTrigger>
-      </FormControl>
+      {withFormControl ? <FormControl>{trigger}</FormControl> : trigger}
       <SelectContent>
         {isPending ? (
           <SelectItem disabled value="loading" className="h-14">

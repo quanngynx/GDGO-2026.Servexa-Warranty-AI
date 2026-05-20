@@ -2,16 +2,15 @@ import type { AbstractAgent } from "@ag-ui/client";
 import type { HitlRequest } from "@servexa-warranty-ai/ai-contracts";
 import {
   useAgentContext,
-  useConfigureSuggestions,
   useCopilotKit,
 } from "@copilotkit/react-core/v2";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { CreateHitlRequestInput } from "@/libs/api/ai/hitl/api";
 
-import { OPERATIONAL_QUICK_PROMPTS } from "../components/quick-prompt-grid";
 import { SERVEXA_COPILOT_AGENT_ID, SERVEXA_COPILOT_QUICK_PROMPT_EVENT } from "../constants";
 import { getLastUserMessageText } from "../lib/agent-message-text";
+import { filterRailMetadataForCase } from "../lib/filter-rail-metadata-for-case";
 import { useHitlDecision } from "./use-hitl-decision";
 import { useHitlPendingCount } from "./use-hitl-pending-count";
 import { useHitlRequests } from "./use-hitl-requests";
@@ -23,20 +22,29 @@ export function useServexaCopilotPanel(agentId = SERVEXA_COPILOT_AGENT_ID) {
   const [chatError, setChatError] = useState<string | null>(null);
 
   const operational = useOperationalPageContext();
-  const { agent, railMeta, isRunning, runError, clearRunError } =
+  const { agent, railMeta: rawRailMeta, isRunning, runError, clearRunError } =
     useServexaCopilotRail(agentId);
+
+  const railMeta = useMemo(
+    () => filterRailMetadataForCase(rawRailMeta, operational.repairCaseId),
+    [rawRailMeta, operational.repairCaseId],
+  );
+
+  useEffect(() => {
+    if (!lastDecision) return;
+    const decisionCaseId = lastDecision.repairCaseId;
+    if (
+      operational.repairCaseId &&
+      decisionCaseId &&
+      decisionCaseId !== operational.repairCaseId
+    ) {
+      setLastDecision(null);
+    }
+  }, [operational.repairCaseId, lastDecision]);
 
   useAgentContext({
     description: "Current Servexa UI context for warranty operations copilot",
     value: operational,
-  });
-
-  useConfigureSuggestions({
-    suggestions: OPERATIONAL_QUICK_PROMPTS.map((p) => ({
-      title: p.title,
-      message: p.message,
-    })),
-    available: "always",
   });
 
   const { copilotkit } = useCopilotKit();
@@ -51,16 +59,44 @@ export function useServexaCopilotPanel(agentId = SERVEXA_COPILOT_AGENT_ID) {
     ),
   ];
 
+  const lastDecisionContext = useMemo((): Record<string, string> => {
+    if (!lastDecision) {
+      return {
+        hitlRequestId: "",
+        requestId: "",
+        kind: "",
+        status: "",
+        decision: "",
+        repairCaseId: "",
+        summary: "",
+        payloadSummary: "{}",
+      };
+    }
+    const decision =
+      lastDecision.status === "approved" || lastDecision.status === "executed"
+        ? "approve"
+        : lastDecision.status === "rejected"
+          ? "reject"
+          : "edit";
+    return {
+      hitlRequestId: lastDecision.id,
+      requestId: lastDecision.id,
+      kind: lastDecision.kind,
+      status: lastDecision.status,
+      decision,
+      repairCaseId: lastDecision.repairCaseId ?? operational.repairCaseId ?? "",
+      summary: `${lastDecision.kind} was ${lastDecision.status} for case ${
+        (lastDecision.payload.caseNumber as string | undefined) ??
+        lastDecision.repairCaseId ??
+        "selected"
+      }.`,
+      payloadSummary: JSON.stringify(lastDecision.payload),
+    };
+  }, [lastDecision, operational.repairCaseId]);
+
   useAgentContext({
     description: "Latest HITL decision result for copilot continuation",
-    value: lastDecision
-      ? {
-          hitlRequestId: lastDecision.id,
-          kind: lastDecision.kind,
-          status: lastDecision.status,
-          payloadSummary: JSON.stringify(lastDecision.payload),
-        }
-      : { hitlRequestId: "", kind: "", status: "", payloadSummary: "{}" },
+    value: lastDecisionContext,
   });
 
   const runContinuation = useCallback(
@@ -212,6 +248,8 @@ export function useServexaCopilotPanel(agentId = SERVEXA_COPILOT_AGENT_ID) {
     pendingApprovals,
     hitl,
     hitlDecision,
+    lastDecision,
+    lastDecisionContext,
     handleApprove,
     handleReject,
     handleEdit,

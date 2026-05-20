@@ -2,13 +2,123 @@ import {
   CopilotChatAssistantMessage,
   type CopilotChatAssistantMessageProps,
 } from "@copilotkit/react-core/v2";
+import type { CopilotEvidenceSource } from "@servexa-warranty-ai/ai-contracts";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
-import { Repeat1, ThumbsDown, ThumbsUp } from "lucide-react";
+import { BookOpen, Ellipsis, Volume2, Repeat1, ThumbsDown, ThumbsUp } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import type { ComponentProps } from "react";
 
 import type { CopilotMessageFeedbackRating } from "../hooks/use-copilot-message-feedback";
+import {
+  SERVEXA_COPILOT_READ_MESSAGE_EVENT,
+} from "../constants";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@servexa-warranty-ai/ui/components/dropdown-menu";
+import { EvidenceSourcesList } from "./evidence-sources-list";
+import { RETRY_TOOLTIP } from "@/constants";
 
-const RETRY_TOOLTIP = "retry last message";
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[*_~>#-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function readAloud(text: string): void {
+  if (typeof window === "undefined") return;
+  if (!("speechSynthesis" in window)) return;
+  const cleaned = stripMarkdown(text);
+  if (!cleaned) return;
+  try {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(cleaned);
+    window.speechSynthesis.speak(utter);
+  } catch {
+    // ignore
+  }
+}
+
+function SourceMenuItem({ sources }: { sources: CopilotEvidenceSource[] | undefined }) {
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  return (
+    <DropdownMenuItem
+      onSelect={(event) => event.preventDefault()}
+      onPointerEnter={() => setPreviewOpen(true)}
+      onPointerLeave={() => setPreviewOpen(false)}
+      onFocus={() => setPreviewOpen(true)}
+      onBlur={() => setPreviewOpen(false)}
+      className="relative"
+    >
+      <BookOpen className="size-3.5 shrink-0" />
+      Source
+      {previewOpen ? (
+        <div
+          role="tooltip"
+          aria-label="Evidence and sources"
+          className="pointer-events-auto absolute top-0 right-full z-200 mr-2 w-64 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md"
+          onPointerEnter={() => setPreviewOpen(true)}
+          onPointerLeave={() => setPreviewOpen(false)}
+        >
+          <p className="mb-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            Evidence and sources
+          </p>
+          <EvidenceSourcesList sources={sources} />
+        </div>
+      ) : null}
+    </DropdownMenuItem>
+  );
+}
+
+function ServexaAssistantOtherActions({
+  messageText,
+  sources,
+}: {
+  messageText: string;
+  sources: CopilotEvidenceSource[] | undefined;
+}) {
+  useEffect(() => {
+    const onRead = (event: Event) => {
+      const detail = (event as CustomEvent<{ text?: string }>).detail;
+      const text = detail?.text ?? messageText;
+      readAloud(text);
+    };
+    window.addEventListener(SERVEXA_COPILOT_READ_MESSAGE_EVENT, onRead as EventListener);
+    return () =>
+      window.removeEventListener(SERVEXA_COPILOT_READ_MESSAGE_EVENT, onRead as EventListener);
+  }, [messageText]);
+
+  return (
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <CopilotChatAssistantMessage.ToolbarButton title="Other actions">
+          <Ellipsis className="cpk:size-[18px]" />
+        </CopilotChatAssistantMessage.ToolbarButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="overflow-visible">
+        <SourceMenuItem sources={sources} />
+        <DropdownMenuItem
+          onSelect={() => {
+            window.dispatchEvent(
+              new CustomEvent(SERVEXA_COPILOT_READ_MESSAGE_EVENT, { detail: { text: messageText } }),
+            );
+            readAloud(messageText);
+          }}
+        >
+          <Volume2 />
+          Read
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function ServexaRetryRegenerateButton({
   onClick,
@@ -67,6 +177,7 @@ export type ServexaCopilotAssistantMessageOptions = {
     messageId: string,
     rating: CopilotMessageFeedbackRating,
   ) => void;
+  sources?: CopilotEvidenceSource[];
 };
 
 type ServexaCopilotAssistantMessageProps = CopilotChatAssistantMessageProps &
@@ -78,6 +189,7 @@ function ServexaCopilotAssistantMessageInner({
   onRetryLast,
   getMessageFeedback,
   onMessageFeedback,
+  sources,
   ...props
 }: ServexaCopilotAssistantMessageProps) {
   const isLatestAssistant =
@@ -87,6 +199,7 @@ function ServexaCopilotAssistantMessageInner({
   const showRetry = Boolean(isLatestAssistant && onRetryLast);
   const feedback = getMessageFeedback?.(message.id);
   const showFeedback = Boolean(onMessageFeedback);
+  const messageText = useMemo(() => message.content ?? "", [message.content]);
 
   return (
     <CopilotChatAssistantMessage
@@ -128,6 +241,9 @@ function ServexaCopilotAssistantMessageInner({
               <ServexaThumbsDownButton {...slotProps} active={feedback === "down"} />
             )
           : undefined
+      }
+      additionalToolbarItems={
+        <ServexaAssistantOtherActions messageText={messageText} sources={sources} />
       }
     />
   );

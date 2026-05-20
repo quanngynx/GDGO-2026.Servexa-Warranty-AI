@@ -232,8 +232,9 @@ class CoordinatorService:
         tool_results = state.get('tool_results') or {}
         approval = state.get('approval_decision')
 
+        copilot_phase3: dict[str, Any] = {}
         if is_noop_tool_result(tool_results) and not approval:
-            output_text = await self.copilot_reply_service.compose_reply(
+            output_text, copilot_phase3 = await self.copilot_reply_service.compose_reply_with_metadata(
                 message=state.get('message', ''),
                 execution_context=state.get('execution_context'),
             )
@@ -251,4 +252,4 @@ class CoordinatorService:
             output_text = f'{summary}\n\n{details}'.strip() if details else summary
 
         logger.info('coordinator_finalize %s', json.dumps(meta.model_dump(), default=str))
-        return {**state, 'output': output_text}
+        return {**state, 'output': output_text, 'copilot_phase3': copilot_phase3}

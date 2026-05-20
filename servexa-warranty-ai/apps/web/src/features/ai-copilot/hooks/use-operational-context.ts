@@ -2,7 +2,9 @@ import { useRouterState } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 import { useOperationalContextPatch } from "@/features/ai-copilot/context/operational-context-provider";
+import { toSelectedCaseSummary } from "@/features/ai-copilot/lib/to-selected-case-summary";
 import { useAuthStore } from "@/stores/auth-store";
+import type { SelectedCaseSummary } from "@servexa-warranty-ai/ai-contracts";
 
 /** Table-row snapshot for copilot handoff summaries (no extra API call). */
 export type RepairCaseSnapshot = {
@@ -36,6 +38,7 @@ export type OperationalPageContext = {
   selectedTechnicianId: string | null;
   currentUserRole: string | null;
   currentUserId: string | null;
+  selectedCaseSummary: SelectedCaseSummary | null;
 };
 
 export function useOperationalPageContext(): OperationalPageContext {
@@ -43,8 +46,8 @@ export function useOperationalPageContext(): OperationalPageContext {
   const user = useAuthStore((s) => s.user);
   const { context: patch } = useOperationalContextPatch();
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const base = {
       currentRoute: pathname,
       repairCaseId: patch.repairCaseId ?? null,
       caseNumber: patch.caseNumber ?? null,
@@ -57,7 +60,10 @@ export function useOperationalPageContext(): OperationalPageContext {
       selectedTechnicianId: patch.selectedTechnicianId ?? patch.technicianId ?? null,
       currentUserRole: user?.role ?? null,
       currentUserId: user?.id ?? null,
-    }),
-    [pathname, patch, user?.id, user?.role],
-  );
+    };
+    return {
+      ...base,
+      selectedCaseSummary: toSelectedCaseSummary(base),
+    };
+  }, [pathname, patch, user?.id, user?.role]);
 }

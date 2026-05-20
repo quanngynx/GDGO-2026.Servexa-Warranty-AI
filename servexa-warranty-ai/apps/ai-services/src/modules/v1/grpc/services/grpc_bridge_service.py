@@ -105,6 +105,7 @@ class GrpcBridgeService:
             metadata['checkpointId'] = result.get('checkpoint_id', '')
             metadata['runId'] = ctx.trace_id
             metadata.update(build_copilot_envelope(str(route) if route else None, execution_ctx))
+            # diagnosis/warranty still attached for HITL rail context
             publish_hitl_event_log(
                 'human_approval_required',
                 {
@@ -120,7 +121,15 @@ class GrpcBridgeService:
             )
             return output, json.dumps(metadata)
 
-        metadata.update(build_copilot_envelope(str(route) if route else None, execution_ctx))
+        phase3 = result.get('copilot_phase3') if isinstance(result.get('copilot_phase3'), dict) else {}
+        diagnosis_override = phase3.get('diagnosisDraft') if isinstance(phase3, dict) else None
+        metadata.update(
+            build_copilot_envelope(
+                str(route) if route else None,
+                execution_ctx,
+                diagnosis_draft=diagnosis_override if isinstance(diagnosis_override, dict) else None,
+            ),
+        )
         return result.get('output', ''), json.dumps(metadata)
 
     async def resume_full(self, ctx: ResumeContext) -> tuple[str, str]:

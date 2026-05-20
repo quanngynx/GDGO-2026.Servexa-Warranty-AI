@@ -6,9 +6,17 @@ import {
 } from "./hitl";
 
 import {
+  mergePhase3RailFields,
+  parseDiagnosisDraft,
+  parseSelectedCaseSummaryFromExecutionContext,
+  parseWarrantyEligibility,
+} from "./copilot-shared-state";
+
+import {
   copilotRailMetadataSchema,
   copilotResponseSchema,
   copilotSuggestedActionSchema,
+  selectedCaseSummarySchema,
   type CopilotRailMetadata,
   type CopilotResponse,
   type CopilotSuggestedAction,
@@ -140,6 +148,7 @@ export function normalizeUnaryToCopilotResponse(input: UnaryCompletionLike): Cop
 
   const embedded = meta.copilot ?? meta.copilotResponse;
   if (embedded && typeof embedded === "object") {
+    const embeddedObj = embedded as Record<string, unknown>;
     const parsed = copilotResponseSchema.safeParse(embedded);
     if (parsed.success) {
       const envelopeActions = Array.isArray(parsed.data.suggestedActions)
@@ -153,6 +162,27 @@ export function normalizeUnaryToCopilotResponse(input: UnaryCompletionLike): Cop
           envelopeActions,
           heuristicSuggestedActions(meta),
         ),
+      };
+    }
+
+    const answerFromEnvelope =
+      typeof embeddedObj.answer === "string" ? embeddedObj.answer.trim() : "";
+    if (answerFromEnvelope.length > 0 || embeddedObj.suggestedActions) {
+      const envelopeActions = Array.isArray(embeddedObj.suggestedActions)
+        ? embeddedObj.suggestedActions
+            .map((a) => normalizeSuggestedAction(a))
+            .filter((a): a is CopilotSuggestedAction => a !== null)
+        : undefined;
+      return {
+        answer: answerFromEnvelope.length ? answerFromEnvelope : input.text.trim() || " ",
+        confidence:
+          typeof embeddedObj.confidence === "number" ? embeddedObj.confidence : undefined,
+        sources: Array.isArray(embeddedObj.sources) ? embeddedObj.sources : undefined,
+        suggestedActions: mergeSuggested(
+          envelopeActions,
+          heuristicSuggestedActions(meta),
+        ),
+        relatedEntities: undefined,
       };
     }
   }
@@ -180,6 +210,22 @@ export function normalizeLangGraphHitlMetadata(meta: Record<string, unknown>) {
   });
 }
 
+function parsePhase3FromCopilotEnvelope(
+  embedded: Record<string, unknown>,
+): Pick<
+  CopilotRailMetadata,
+  "selectedCaseSummary" | "warrantyEligibility" | "diagnosisDraft"
+> {
+  const selected = selectedCaseSummarySchema.safeParse(embedded.selectedCaseSummary);
+  const warranty = parseWarrantyEligibility(embedded.warrantyEligibility);
+  const diagnosis = parseDiagnosisDraft(embedded.diagnosisDraft);
+  return {
+    ...(selected.success ? { selectedCaseSummary: selected.data } : {}),
+    ...(warranty ? { warrantyEligibility: warranty } : {}),
+    ...(diagnosis ? { diagnosisDraft: diagnosis } : {}),
+  };
+}
+
 export function toRailMetadata(
   response: CopilotResponse,
   backend: "grpc" | "gemini_node",
@@ -187,9 +233,14 @@ export function toRailMetadata(
     pendingApprovals?: HitlRequest[];
     workflowExecutionStatus?: CopilotRailMetadata["workflowExecutionStatus"];
     lastDecision?: CopilotRailMetadata["lastDecision"];
+    executionContext?: Record<string, unknown>;
+    phase3FromEnvelope?: Pick<
+      CopilotRailMetadata,
+      "selectedCaseSummary" | "warrantyEligibility" | "diagnosisDraft"
+    >;
   },
 ): CopilotRailMetadata {
-  const raw = {
+  const raw: Record<string, unknown> = {
     confidence: response.confidence,
     sources: response.sources,
     suggestedActions: response.suggestedActions,
@@ -198,17 +249,27 @@ export function toRailMetadata(
     workflowExecutionStatus: extras?.workflowExecutionStatus,
     lastDecision: extras?.lastDecision,
     backend,
+    ...extras?.phase3FromEnvelope,
   };
-  const parsed = copilotRailMetadataSchema.safeParse(raw);
+
+  const merged = mergePhase3RailFields(raw, extras?.executionContext);
+  const parsed = copilotRailMetadataSchema.safeParse(merged);
 
   if (!parsed.success) {
-    // Log error to help devs identify schema or LLM issues
     console.warn(
       "[BFF Warning] toRailMetadata schema parsing failed:",
       z.treeifyError(parsed.error),
     );
-    return { backend };
+    const fallbackSummary = extras?.executionContext
+      ? parseSelectedCaseSummaryFromExecutionContext(extras.executionContext)
+      : undefined;
+    return {
+      backend,
+      ...(fallbackSummary ? { selectedCaseSummary: fallbackSummary } : {}),
+    };
   }
 
   return parsed.data;
 }
+
+export { parsePhase3FromCopilotEnvelope };

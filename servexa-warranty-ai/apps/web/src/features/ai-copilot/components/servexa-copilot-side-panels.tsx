@@ -1,10 +1,16 @@
+import { useMemo } from "react";
+
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 import type { ServexaCopilotPanel } from "../hooks/use-servexa-copilot-panel";
+import { deriveWorkflowProgress } from "../lib/derive-workflow-progress";
 import { CopilotRailHeader } from "./copilot-rail-header";
-import { EvidencePanel } from "./evidence-panel";
+import { DiagnosisDraftCard } from "./diagnosis-draft-card";
 import { HitlApprovalList } from "./hitl-approval-list";
+import { LastDecisionSummaryCard } from "./last-decision-summary-card";
 import { SuggestedActionsPanel } from "./suggested-actions";
+import { WarrantyEligibilityCard } from "./warranty-eligibility-card";
+import { WorkflowProgressCard } from "./workflow-progress-card";
 
 type ServexaCopilotContextPanelsProps = {
   panel: ServexaCopilotPanel;
@@ -25,14 +31,31 @@ export function ServexaCopilotContextPanels({
     handleReject,
     handleEdit,
     handleCreateWorkflowRequest,
+    lastDecision,
   } = panel;
 
-  const highlightedSourceIds = pendingApprovals.flatMap(
-    (r) => r.evidenceSourceIds ?? [],
+  const workflowProgress = useMemo(
+    () =>
+      deriveWorkflowProgress({
+        railMeta,
+        operational,
+        pendingApprovalsCount: pendingApprovals.length,
+      }),
+    [railMeta, operational, pendingApprovals.length],
   );
 
   return (
     <div className={cn("flex min-h-0 flex-col gap-1", className)}>
+      {railMeta?.warrantyEligibility ? (
+        <WarrantyEligibilityCard eligibility={railMeta.warrantyEligibility} />
+      ) : null}
+      {railMeta?.diagnosisDraft ? (
+        <DiagnosisDraftCard diagnosis={railMeta.diagnosisDraft} />
+      ) : null}
+      {workflowProgress ? <WorkflowProgressCard progress={workflowProgress} /> : null}
+      {lastDecision || railMeta?.lastDecision ? (
+        <LastDecisionSummaryCard lastDecision={lastDecision ?? railMeta!.lastDecision!} />
+      ) : null}
       <HitlApprovalList
         pending={pendingApprovals}
         decided={hitl.decided}
@@ -46,10 +69,6 @@ export function ServexaCopilotContextPanels({
         actions={railMeta?.suggestedActions}
         operational={operational}
         onCreateWorkflowRequest={handleCreateWorkflowRequest}
-      />
-      <EvidencePanel
-        sources={railMeta?.sources}
-        highlightedSourceIds={highlightedSourceIds}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import type { CopilotSuggestedAction, HitlActionKind } from "@servexa-warranty-ai/ai-contracts";
 
 import type { OperationalPageContext } from "../hooks/use-operational-context";
+import { isExecutableWorkflowKind } from "./executable-workflow-kinds";
 
 const WORKFLOW_COPY: Record<
   HitlActionKind,
@@ -19,12 +20,16 @@ const WORKFLOW_COPY: Record<
   technician_assignment: {
     title: "Assign technician",
     description: "Assign a technician to this repair case.",
-    defaultPayload: (ctx) => ({
-      repairCaseId: ctx.repairCaseId ?? "",
-      caseNumber: ctx.caseNumber ?? undefined,
-      technicianId: ctx.technicianId ?? "",
-      technicianName: undefined,
-    }),
+    defaultPayload: (ctx) => {
+      const technicianId =
+        ctx.selectedTechnicianId ?? ctx.technicianId ?? undefined;
+      return {
+        repairCaseId: ctx.repairCaseId ?? "",
+        caseNumber: ctx.caseNumber ?? undefined,
+        ...(technicianId ? { technicianId } : {}),
+        technicianName: undefined,
+      };
+    },
   },
   customer_response_draft: {
     title: "Draft customer response",
@@ -53,6 +58,9 @@ export function buildHitlCreateInput(
   operational: OperationalPageContext,
 ) {
   const kind = (action.workflowKind ?? "repair_escalation") as HitlActionKind;
+  if (!isExecutableWorkflowKind(kind)) {
+    throw new Error(`Workflow kind "${kind}" is not executable in Phase 3`);
+  }
   const copy = WORKFLOW_COPY[kind];
   const basePayload = copy.defaultPayload(operational);
   const payload = { ...basePayload, ...(action.payload ?? {}) };

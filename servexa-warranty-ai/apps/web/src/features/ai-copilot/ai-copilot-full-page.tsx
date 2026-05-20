@@ -11,7 +11,6 @@ import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Button } from "@servexa-warranty-ai/ui/components/button";
 
-import { QuickPromptGrid } from "./components/quick-prompt-grid";
 import { ServexaCopilotChat } from "./components/servexa-copilot-chat";
 import { ServexaCopilotSidebar } from "./components/servexa-copilot-side-panels";
 import { SERVEXA_COPILOT_AGENT_ID } from "./constants";
@@ -19,7 +18,7 @@ import { useServexaCopilotPanel } from "./hooks/use-servexa-copilot-panel";
 
 export function AICopilotFullPage() {
   const panel = useServexaCopilotPanel(SERVEXA_COPILOT_AGENT_ID);
-  const { handleRetryLast, setChatErrorMessage } = panel;
+  const { handleRetryLast, setChatErrorMessage, railMeta } = panel;
 
   return (
     <div className="flex h-svh min-h-0 flex-col pb-[env(safe-area-inset-bottom)]">
@@ -57,11 +56,11 @@ export function AICopilotFullPage() {
             aria-label="Copilot chat"
             className="relative flex min-h-0 min-w-0 flex-col bg-muted/15 dark:bg-muted/10"
           >
-            <QuickPromptGrid className="shrink-0 bg-background/80" />
             <ServexaCopilotChat
               agentId={SERVEXA_COPILOT_AGENT_ID}
               layout="fullPage"
               className="h-full min-h-0"
+              sources={railMeta?.sources}
               onChatError={setChatErrorMessage}
               onRetryLast={handleRetryLast}
             />
