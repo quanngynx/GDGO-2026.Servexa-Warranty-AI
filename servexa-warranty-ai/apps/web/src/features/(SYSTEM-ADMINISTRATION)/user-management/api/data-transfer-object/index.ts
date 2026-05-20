@@ -5,4 +5,4 @@ export type {
   ResponseUserDto,
   ResponseUserListDto,
   UserApiResponse,
-} from '@/libs/api/user/data-transfer-object'
+} from '@/libs/api/identity/user/data-transfer-object'
