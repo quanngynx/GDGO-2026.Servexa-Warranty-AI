@@ -10,6 +10,12 @@ export async function technicianAssignmentHandler(
   userId: string,
 ): Promise<Record<string, unknown>> {
   const parsed = technicianAssignmentPayloadSchema.parse(payload);
+  if (!parsed.technicianId?.trim()) {
+    throw createOperationalError(
+      "Technician profile ID is required",
+      HTTP_RESPONSE_CODE.BAD_REQUEST,
+    );
+  }
 
   const existing = await prisma.repairCase.findUnique({
     where: { id: parsed.repairCaseId },
