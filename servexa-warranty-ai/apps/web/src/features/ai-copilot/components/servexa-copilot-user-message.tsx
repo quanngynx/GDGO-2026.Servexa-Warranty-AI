@@ -5,8 +5,7 @@ import {
   useCopilotChatConfiguration,
 } from "@copilotkit/react-core/v2";
 import { Repeat1 } from "lucide-react";
-
-const RETRY_TOOLTIP = "retry last message";
+import { RETRY_TOOLTIP } from "@/constants";
 
 function ServexaRetryToolbarButton({
   onClick,
