@@ -12,6 +12,7 @@ import { normalizeCopilotUnaryCompletion } from "@/modules/copilotkit/normalize-
 import { chunkTextForDeltas } from "src/utils/chunk-text-for-deltas";
 import { lastUserPrompt } from "src/utils/last-user-prompt";
 import { executionContextJson } from "src/utils/execution-context-json";
+import { flattenCopilotContext } from "src/utils/flatten-copilot-context";
 
 export const SERVEXA_COPILOT_AGENT_ID = "operations_intelligence";
 
@@ -26,7 +27,7 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
     });
   }
 
-  run(input: RunAgentInput): any {
+  run(input: RunAgentInput): Observable<BaseEvent> {
     return new Observable<BaseEvent>((subscriber) => {
       void (async () => {
         const runId = input.runId ?? randomUUID();
@@ -42,6 +43,9 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
         try {
           const prompt = lastUserPrompt(input.messages);
           const execJson = executionContextJson(input);
+          const executionContext = flattenCopilotContext(
+            input.context ?? input.forwardedProps,
+          );
           const copilotUser = getCopilotRequestUser();
 
           const out = await completeUnaryPrompt({
@@ -61,6 +65,7 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
           const pendingApprovals = await loadPendingApprovalsForGateway();
           const { response, rail } = normalizeCopilotUnaryCompletion(out, {
             pendingApprovals,
+            executionContext,
           });
 
           subscriber.next({
@@ -97,11 +102,12 @@ export class ServexaUnaryGatewayAgent extends AbstractAgent {
           } as BaseEvent);
           subscriber.complete();
         } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
           subscriber.next({
             type: "RUN_ERROR",
             threadId,
             runId,
-            message: err instanceof Error ? err.message : String(err),
+            message,
           } as BaseEvent);
           subscriber.complete();
         }
