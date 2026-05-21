@@ -1,9 +1,7 @@
-"use client";
+'use client'
 
-import { PasswordInput } from "@/components/password-input";
-import { SelectDropdown } from "@/components/select-dropdown";
-import { showSubmittedData } from "@/components/show-submitted-data";
-import { Button } from "@servexa-warranty-ai/ui/components/button";
+import { SelectDropdown } from '@/components/select-dropdown'
+import { Button } from '@servexa-warranty-ai/ui/components/button'
 import {
   Dialog,
   DialogContent,
@@ -11,7 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@servexa-warranty-ai/ui/components/dialog";
+} from '@servexa-warranty-ai/ui/components/dialog'
 import {
   Form,
   FormControl,
@@ -19,308 +17,252 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@servexa-warranty-ai/ui/components/form";
-import { Input } from "@servexa-warranty-ai/ui/components/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { customerGroupOptions } from "../data/data";
-import { type Customer } from "../data/schema";
+} from '@servexa-warranty-ai/ui/components/form'
+import { Input } from '@servexa-warranty-ai/ui/components/input'
+import type { CustomerGroup } from '@/libs/api/human-resources/customer/data-transfer-object'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { customerGroupOptions } from '../data/data'
+import { type Customer } from '../data/schema'
+import { useCreateCustomerMutation } from '../hooks/use-create-customer-mutation'
+import { useUpdateCustomerMutation } from '../hooks/use-update-customer-mutation'
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, "First Name is required."),
-    lastName: z.string().min(1, "Last Name is required."),
-    username: z.string().min(1, "Username is required."),
-    phoneNumber: z.string().min(1, "Phone number is required."),
-    email: z.email({
-      error: (iss) => (iss.input === "" ? "Email is required." : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, "Role is required."),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true;
-      return data.password.length > 0;
-    },
-    {
-      message: "Password is required.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return password.length >= 8;
-    },
-    {
-      message: "Password must be at least 8 characters long.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return /[a-z]/.test(password);
-    },
-    {
-      message: "Password must contain at least one lowercase letter.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return /\d/.test(password);
-    },
-    {
-      message: "Password must contain at least one number.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true;
-      return password === confirmPassword;
-    },
-    {
-      message: "Passwords don't match.",
-      path: ["confirmPassword"],
-    }
-  );
-type CustomerForm = z.infer<typeof formSchema>;
+const customerGroupSchema = z.enum([
+  'individual',
+  'dealer_store',
+  'store_representative',
+  'supplier',
+  'invoice',
+  'company',
+])
+
+const formSchema = z.object({
+  customerGroup: customerGroupSchema,
+  fullName: z.string().min(1, 'Full name is required.'),
+  phone1: z.string().min(1, 'Phone number is required.'),
+  phone2: z.string().optional(),
+  email: z.union([z.literal(''), z.email()]).optional(),
+  address: z.string().optional(),
+  taxCode: z.string().optional(),
+  bankName: z.string().optional(),
+  accountNumber: z.string().optional(),
+  contactPerson: z.string().optional(),
+})
+
+type CustomerForm = z.infer<typeof formSchema>
 
 type CustomerActionDialogProps = {
-  currentRow?: Customer;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-};
+  currentRow?: Customer
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
 
 export function CustomersActionDialog({
   currentRow,
   open,
   onOpenChange,
 }: CustomerActionDialogProps) {
-  const isEdit = !!currentRow;
+  const isEdit = !!currentRow
+  const createMutation = useCreateCustomerMutation()
+  const updateMutation = useUpdateCustomerMutation()
+
   const form = useForm<CustomerForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          password: "",
-          confirmPassword: "",
-          isEdit,
-        }
-      : {
-          firstName: "",
-          lastName: "",
-          username: "",
-          email: "",
-          role: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
-          isEdit,
-        },
-  });
+    defaultValues: {
+      customerGroup: 'individual',
+      fullName: '',
+      phone1: '',
+      phone2: '',
+      email: '',
+      address: '',
+      taxCode: '',
+      bankName: '',
+      accountNumber: '',
+      contactPerson: '',
+    },
+  })
+
+  const resetForm = () => {
+    if (currentRow) {
+      form.reset({
+        customerGroup: currentRow.customerGroup,
+        fullName: currentRow.fullName,
+        phone1: currentRow.phone1,
+        phone2: currentRow.phone2 ?? '',
+        email: currentRow.email ?? '',
+        address: currentRow.address ?? '',
+        taxCode: currentRow.taxCode ?? '',
+        bankName: currentRow.bankName ?? '',
+        accountNumber: currentRow.accountNumber ?? '',
+        contactPerson: currentRow.contactPerson ?? '',
+      })
+    } else {
+      form.reset({
+        customerGroup: 'individual',
+        fullName: '',
+        phone1: '',
+        phone2: '',
+        email: '',
+        address: '',
+        taxCode: '',
+        bankName: '',
+        accountNumber: '',
+        contactPerson: '',
+      })
+    }
+  }
 
   const onSubmit = (values: CustomerForm) => {
-    form.reset();
-    showSubmittedData(values);
-    onOpenChange(false);
-  };
+    const payload = {
+      customerGroup: values.customerGroup as CustomerGroup,
+      fullName: values.fullName,
+      phone1: values.phone1,
+      phone2: values.phone2 || undefined,
+      email: values.email || undefined,
+      address: values.address || undefined,
+      taxCode: values.taxCode || undefined,
+      bankName: values.bankName || undefined,
+      accountNumber: values.accountNumber || undefined,
+      contactPerson: values.contactPerson || undefined,
+    }
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password;
+    if (isEdit && currentRow) {
+      updateMutation.mutate(
+        { id: currentRow.id, data: payload },
+        {
+          onSuccess: () => {
+            form.reset()
+            onOpenChange(false)
+          },
+        },
+      )
+    } else {
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          form.reset()
+          onOpenChange(false)
+        },
+      })
+    }
+  }
+
+  const isPending = createMutation.isPending || updateMutation.isPending
 
   return (
     <Dialog
       open={open}
       onOpenChange={(state) => {
-        form.reset();
-        onOpenChange(state);
+        if (state) resetForm()
+        else form.reset()
+        onOpenChange(state)
       }}
     >
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader className="text-start">
-          <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
+      <DialogContent className='sm:max-w-lg'>
+        <DialogHeader className='text-start'>
+          <DialogTitle>{isEdit ? 'Edit Customer' : 'Add Customer'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update the user here. " : "Create new user here. "}
-            Click save when you&apos;re done.
+            {isEdit ? 'Update customer details.' : 'Create a new customer.'}
           </DialogDescription>
         </DialogHeader>
-        <div className="h-105 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3">
-          <Form {...form}>
-            <form
-              id="user-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 px-0.5"
-            >
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      First Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="John"
-                        className="col-span-4"
-                        autoComplete="off"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Doe"
-                        className="col-span-4"
-                        autoComplete="off"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="john_doe"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="john.doe@gmail.com"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      Phone Number
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="+123456789"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">Role</FormLabel>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder="Select a role"
-                      className="col-span-4"
-                      items={customerGroupOptions.map(({ label, value }) => ({
-                        label,
-                        value,
-                      }))}
-                    />
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder="e.g., S3cur3P@ssw0rd"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder="e.g., S3cur3P@ssw0rd"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </div>
+        <Form {...form}>
+          <form
+            id='customer-form'
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-4'
+          >
+            <FormField
+              control={form.control}
+              name='customerGroup'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Customer group</FormLabel>
+                  <SelectDropdown
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    placeholder='Select group'
+                    items={customerGroupOptions.map(({ label, value }) => ({
+                      label,
+                      value,
+                    }))}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='fullName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full name</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Full name' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='phone1'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone 1</FormLabel>
+                  <FormControl>
+                    <Input placeholder='+84...' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='phone2'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone 2</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Optional' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type='email' placeholder='email@example.com' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='address'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Address' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
         <DialogFooter>
-          <Button type="submit" form="user-form">
-            Save changes
+          <Button type='submit' form='customer-form' disabled={isPending}>
+            {isPending ? 'Saving...' : 'Save'}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
