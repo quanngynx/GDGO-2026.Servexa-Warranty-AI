@@ -28,9 +28,6 @@ function manualChunkForNodeModule(id: string) {
   if (id.includes("@tanstack/react-query")) {
     return "query";
   }
-  if (id.includes("@faker-js/faker")) {
-    return "faker";
-  }
   return undefined;
 }
 
