@@ -22,7 +22,6 @@ import {
   TableRow,
 } from '@servexa-warranty-ai/ui/components/table'
 import { DataTablePagination, DataTableToolbar } from '@servexa-warranty-ai/ui/components/data-table'
-import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { usersColumns as columns } from './users-columns'
@@ -54,7 +53,6 @@ export function UsersTable({ data, isLoading = false, totalPages, search, naviga
     columnFilters: [
       { columnId: 'username', searchKey: 'username', type: 'string' },
       { columnId: 'status', searchKey: 'status', type: 'array' },
-      { columnId: 'role', searchKey: 'role', type: 'array' },
     ],
   })
 
@@ -99,7 +97,7 @@ export function UsersTable({ data, isLoading = false, totalPages, search, naviga
       <DataTableToolbar
         table={table}
         searchPlaceholder='Filter users...'
-        searchKey='username'
+        filterColumnId='username'
         filters={[
           {
             columnId: 'status',
@@ -107,14 +105,8 @@ export function UsersTable({ data, isLoading = false, totalPages, search, naviga
             options: [
               { label: 'Active', value: 'active' },
               { label: 'Inactive', value: 'inactive' },
-              { label: 'Invited', value: 'invited' },
               { label: 'Suspended', value: 'suspended' },
             ],
-          },
-          {
-            columnId: 'role',
-            title: 'Role',
-            options: roles.map((role) => ({ ...role })),
           },
         ]}
       />
