@@ -1,10 +1,10 @@
-import { UsersActionDialog } from "./permissions-action-dialog";
-import { UsersDeleteDialog } from "./permissions-delete-dialog";
-import { UsersInviteDialog } from "./permissions-invite-dialog";
-import { useUsers } from "./permissions-provider";
+import { UsersActionDialog } from './permissions-action-dialog'
+import { PermissionsDeleteDialog } from './permissions-delete-dialog'
+import { UsersInviteDialog } from './permissions-invite-dialog'
+import { usePermissions } from './permissions-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function PermissionsDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = usePermissions()
   return (
     <>
       <UsersActionDialog
@@ -33,7 +33,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
+          <PermissionsDeleteDialog
             key={`user-delete-${currentRow.id}`}
             open={open === "delete"}
             onOpenChange={() => {
