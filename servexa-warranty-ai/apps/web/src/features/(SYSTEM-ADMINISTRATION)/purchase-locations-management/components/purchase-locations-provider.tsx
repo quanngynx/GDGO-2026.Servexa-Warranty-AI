@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type PurchaseLocation } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type PurchaseLocationsDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type PurchaseLocationsContextType = {
+  open: PurchaseLocationsDialogType | null
+  setOpen: (str: PurchaseLocationsDialogType | null) => void
+  currentRow: PurchaseLocation | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<PurchaseLocation | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const PurchaseLocationsContext = React.createContext<PurchaseLocationsContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function PurchaseLocationsProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<PurchaseLocationsDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<PurchaseLocation | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <PurchaseLocationsContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </PurchaseLocationsContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const usePurchaseLocations = () => {
+  const context = React.useContext(PurchaseLocationsContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('usePurchaseLocations must be used within <PurchaseLocationsProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}
