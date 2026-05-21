@@ -1,10 +1,10 @@
-import { UsersActionDialog } from "./reference-documents-action-dialog";
-import { UsersDeleteDialog } from "./reference-documents-delete-dialog";
-import { UsersInviteDialog } from "./reference-documents-invite-dialog";
-import { useUsers } from "./reference-documents-provider";
+import { UsersActionDialog } from './reference-documents-action-dialog'
+import { DocumentsDeleteDialog } from './reference-documents-delete-dialog'
+import { UsersInviteDialog } from './reference-documents-invite-dialog'
+import { useDocuments } from './reference-documents-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function DocumentsDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useDocuments()
   return (
     <>
       <UsersActionDialog
@@ -33,7 +33,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
+          <DocumentsDeleteDialog
             key={`user-delete-${currentRow.id}`}
             open={open === "delete"}
             onOpenChange={() => {

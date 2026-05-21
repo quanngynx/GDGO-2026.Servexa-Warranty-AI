@@ -1,5 +1,3 @@
-"use client";
-
 import { PasswordInput } from "@/components/password-input";
 import { SelectDropdown } from "@/components/select-dropdown";
 import { showSubmittedData } from "@/components/show-submitted-data";
@@ -25,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { roles } from "../data/data";
-import { type User } from "../data/schema";
+import { type Document } from '../data/schema'
 
 const formSchema = z
   .object({
@@ -94,7 +92,7 @@ const formSchema = z
 type UserForm = z.infer<typeof formSchema>;
 
 type UserActionDialogProps = {
-  currentRow?: User;
+  currentRow?: Document
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
@@ -109,9 +107,14 @@ export function UsersActionDialog({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-          ...currentRow,
-          password: "",
-          confirmPassword: "",
+          firstName: '',
+          lastName: '',
+          username: '',
+          email: '',
+          role: '',
+          phoneNumber: '',
+          password: '',
+          confirmPassword: '',
           isEdit,
         }
       : {
