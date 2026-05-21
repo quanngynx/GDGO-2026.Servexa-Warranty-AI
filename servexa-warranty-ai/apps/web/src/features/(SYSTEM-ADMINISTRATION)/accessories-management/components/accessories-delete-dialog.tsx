@@ -1,72 +1,64 @@
-"use client";
+'use client'
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { showSubmittedData } from "@/components/show-submitted-data";
-import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/components/alert";
-import { Input } from "@servexa-warranty-ai/ui/components/input";
-import { Label } from "@servexa-warranty-ai/ui/components/label";
-import { AlertTriangle } from "lucide-react";
-import { useState } from "react";
-import { type User } from "../data/schema";
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { Alert, AlertDescription, AlertTitle } from '@servexa-warranty-ai/ui/components/alert'
+import { Input } from '@servexa-warranty-ai/ui/components/input'
+import { Label } from '@servexa-warranty-ai/ui/components/label'
+import { AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { type Accessory } from '../data/schema'
 
-type UserDeleteDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  currentRow: User;
-};
+type AccessoriesDeleteDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  currentRow: Accessory
+}
 
-export function UsersDeleteDialog({
+export function AccessoriesDeleteDialog({
   open,
   onOpenChange,
   currentRow,
-}: UserDeleteDialogProps) {
-  const [value, setValue] = useState("");
+}: AccessoriesDeleteDialogProps) {
+  const [value, setValue] = useState('')
 
   const handleDelete = () => {
-    if (value.trim() !== currentRow.username) return;
+    if (value.trim() !== currentRow.name) return
 
-    onOpenChange(false);
-    showSubmittedData(currentRow, "The following user has been deleted:");
-  };
+    toast.error('Accessory deletion is not available on the server API yet.')
+    setValue('')
+    onOpenChange(false)
+  }
 
   return (
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value.trim() !== currentRow.username}
+      disabled={value.trim() !== currentRow.name}
       title={
-        <span className="text-destructive">
-          <AlertTriangle
-            className="me-1 inline-block stroke-destructive"
-            size={18}
-          />{" "}
-          Delete User
+        <span className='text-destructive'>
+          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> Delete
+          Accessory
         </span>
       }
       desc={
-        <div className="space-y-4">
-          <p className="mb-2">
-            Are you sure you want to delete{" "}
-            <span className="font-bold">{currentRow.username}</span>?
-            <br />
-            This action will permanently remove the user with the role of{" "}
-            <span className="font-bold">
-              {currentRow.role.toUpperCase()}
-            </span>{" "}
-            from the system. This cannot be undone.
+        <div className='space-y-4'>
+          <p className='mb-2'>
+            Are you sure you want to delete <span className='font-bold'>{currentRow.name}</span>?
+            This cannot be undone.
           </p>
 
-          <Label className="my-2">
-            Username:
+          <Label className='my-2'>
+            Accessory name:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Enter username to confirm deletion."
+              placeholder='Enter accessory name to confirm deletion.'
             />
           </Label>
 
-          <Alert variant="destructive">
+          <Alert variant='destructive'>
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be careful, this operation can not be rolled back.
@@ -74,8 +66,8 @@ export function UsersDeleteDialog({
           </Alert>
         </div>
       }
-      confirmText="Delete"
+      confirmText='Delete'
       destructive
     />
-  );
+  )
 }
