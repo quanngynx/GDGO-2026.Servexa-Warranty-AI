@@ -1,7 +1,7 @@
 import { UserManagement } from '@/features/(SYSTEM-ADMINISTRATION)/user-management'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import { adminListSearchSchema } from '../search-schemas'
+import { adminListSearchSchema } from '../../../../libs/search-schemas'
 
 const userManagementSearchSchema = adminListSearchSchema.extend({
   username: z.string().default(''),
