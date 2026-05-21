@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type Category } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type CategoriesDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type CategoriesContextType = {
+  open: CategoriesDialogType | null
+  setOpen: (str: CategoriesDialogType | null) => void
+  currentRow: Category | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Category | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const CategoriesContext = React.createContext<CategoriesContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function CategoriesProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<CategoriesDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Category | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <CategoriesContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </CategoriesContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useCategories = () => {
+  const context = React.useContext(CategoriesContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useCategories must be used within <CategoriesProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}
