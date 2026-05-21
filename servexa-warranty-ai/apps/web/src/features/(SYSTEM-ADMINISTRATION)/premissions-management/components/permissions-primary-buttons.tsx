@@ -1,9 +1,9 @@
 import { Button } from "@servexa-warranty-ai/ui/components/button";
 import { MailPlus, UserPlus } from "lucide-react";
-import { useUsers } from "./permissions-provider";
+import { usePermissions } from './permissions-provider'
 
-export function UsersPrimaryButtons() {
-  const { setOpen } = useUsers();
+export function PermissionsPrimaryButtons() {
+  const { setOpen } = usePermissions()
   return (
     <div className="flex gap-2">
       <Button

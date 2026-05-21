@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type Accessory } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type AccessoriesDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type AccessoriesContextType = {
+  open: AccessoriesDialogType | null
+  setOpen: (str: AccessoriesDialogType | null) => void
+  currentRow: Accessory | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Accessory | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const AccessoriesContext = React.createContext<AccessoriesContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function AccessoriesProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<AccessoriesDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Accessory | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <AccessoriesContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </AccessoriesContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useAccessories = () => {
+  const context = React.useContext(AccessoriesContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useAccessories must be used within <AccessoriesProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

@@ -1,10 +1,10 @@
-import { UsersActionDialog } from "./roles-action-dialog";
-import { UsersDeleteDialog } from "./roles-delete-dialog";
-import { UsersInviteDialog } from "./roles-invite-dialog";
-import { useUsers } from "./roles-provider";
+import { UsersActionDialog } from './roles-action-dialog'
+import { RolesDeleteDialog } from './roles-delete-dialog'
+import { UsersInviteDialog } from './roles-invite-dialog'
+import { useRoles } from './roles-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function RolesDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useRoles()
   return (
     <>
       <UsersActionDialog
@@ -33,7 +33,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
+          <RolesDeleteDialog
             key={`user-delete-${currentRow.id}`}
             open={open === "delete"}
             onOpenChange={() => {

@@ -29,6 +29,8 @@ Starts FastAPI on port **8081** and the **gRPC `ai.v1.AiService`** server on **`
 fastapi dev --port 8081
 ```
 
+Imports such as `configs` and `core` resolve from the `src/` directory (see `src/__init__.py`). If you run Uvicorn directly, set `PYTHONPATH=src` (or `src` on `sys.path`) the same way pytest does in `pyproject.toml`.
+
 ## Run worker
 
 Requires Redis (monorepo: `pnpm db:start` exposes Redis on **6381**). Set `REDIS_URL=redis://localhost:6381/0` if not using the default.

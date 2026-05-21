@@ -1,4 +1,4 @@
-"use client";
+
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/components/alert";

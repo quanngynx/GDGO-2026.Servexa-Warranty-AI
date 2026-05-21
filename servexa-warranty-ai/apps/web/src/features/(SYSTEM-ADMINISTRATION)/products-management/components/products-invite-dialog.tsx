@@ -42,7 +42,7 @@ type UserInviteDialogProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-export function UsersInviteDialog({
+export function ProductsInviteDialog({
   open,
   onOpenChange,
 }: UserInviteDialogProps) {

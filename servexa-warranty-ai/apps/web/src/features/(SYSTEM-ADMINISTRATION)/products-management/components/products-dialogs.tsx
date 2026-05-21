@@ -1,51 +1,51 @@
-import { UsersActionDialog } from "./products-action-dialog";
-import { UsersDeleteDialog } from "./products-delete-dialog";
-import { UsersInviteDialog } from "./products-invite-dialog";
-import { useUsers } from "./products-provider";
+import { ProductsActionDialog } from './products-action-dialog'
+import { ProductsDeleteDialog } from './products-delete-dialog'
+import { ProductsInviteDialog } from './products-invite-dialog'
+import { useProducts } from './products-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function ProductsDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useProducts()
   return (
     <>
-      <UsersActionDialog
-        key="user-add"
-        open={open === "add"}
-        onOpenChange={() => setOpen("add")}
+      <ProductsActionDialog
+        key='model-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
       />
 
-      <UsersInviteDialog
-        key="user-invite"
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
+      <ProductsInviteDialog
+        key='model-invite'
+        open={open === 'invite'}
+        onOpenChange={() => setOpen('invite')}
       />
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === "edit"}
+          <ProductsActionDialog
+            key={`model-edit-${currentRow.id}`}
+            open={open === 'edit'}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen('edit')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === "delete"}
+          <ProductsDeleteDialog
+            key={`model-delete-${currentRow.id}`}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
         </>
       )}
     </>
-  );
+  )
 }

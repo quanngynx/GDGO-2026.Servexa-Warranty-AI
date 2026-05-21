@@ -1,10 +1,10 @@
-import { UsersActionDialog } from "./accessories-action-dialog";
-import { UsersDeleteDialog } from "./accessories-delete-dialog";
-import { UsersInviteDialog } from "./accessories-invite-dialog";
-import { useUsers } from "./accessories-provider";
+import { UsersActionDialog } from './accessories-action-dialog'
+import { AccessoriesDeleteDialog } from './accessories-delete-dialog'
+import { UsersInviteDialog } from './accessories-invite-dialog'
+import { useAccessories } from './accessories-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function AccessoriesDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useAccessories()
   return (
     <>
       <UsersActionDialog
@@ -33,7 +33,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
+          <AccessoriesDeleteDialog
             key={`user-delete-${currentRow.id}`}
             open={open === "delete"}
             onOpenChange={() => {

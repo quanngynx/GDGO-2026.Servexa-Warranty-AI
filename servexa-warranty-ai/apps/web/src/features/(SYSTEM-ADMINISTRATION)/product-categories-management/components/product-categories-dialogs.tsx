@@ -1,10 +1,10 @@
-import { UsersActionDialog } from "./product-categories-action-dialog";
-import { UsersDeleteDialog } from "./product-categories-delete-dialog";
-import { UsersInviteDialog } from "./product-categories-invite-dialog";
-import { useUsers } from "./product-categories-provider";
+import { UsersActionDialog } from './product-categories-action-dialog'
+import { CategoriesDeleteDialog } from './product-categories-delete-dialog'
+import { UsersInviteDialog } from './product-categories-invite-dialog'
+import { useCategories } from './product-categories-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function CategoriesDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useCategories()
   return (
     <>
       <UsersActionDialog
@@ -33,7 +33,7 @@ export function UsersDialogs() {
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
+          <CategoriesDeleteDialog
             key={`user-delete-${currentRow.id}`}
             open={open === "delete"}
             onOpenChange={() => {

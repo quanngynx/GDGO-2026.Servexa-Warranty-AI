@@ -15,12 +15,54 @@ const employeeController = new EmployeeController(employeeService)
 
 employeeRoute.use(authenticateMiddleware)
 
+/**
+ * Get all employees
+ * @route GET /v1/human-resources/employees
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.get('/', employeeController.findAll)
+/**
+ * Get an employee by ID
+ * @route GET /v1/human-resources/employees/:employeeId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.get('/:employeeId', employeeController.findOneById)
+/**
+ * Create an employee
+ * @route POST /v1/human-resources/employees
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.post('/', employeeController.create)
+/**
+ * Replace an employee
+ * @route PUT /v1/human-resources/employees/:employeeId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.put('/:employeeId', employeeController.replace)
+/**
+ * Update an employee
+ * @route PATCH /v1/human-resources/employees/:employeeId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.patch('/:employeeId', employeeController.update)
+/**
+ * Link an employee user
+ * @route PATCH /v1/human-resources/employees/:employeeId/link-user
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.patch('/:employeeId/link-user', employeeController.linkUser)
+/**
+ * Delete an employee
+ * @route DELETE /v1/human-resources/employees/:employeeId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 employeeRoute.delete('/:employeeId', employeeController.delete)
 
 export default employeeRoute

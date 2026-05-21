@@ -15,31 +15,66 @@ import type {
   UpdateAscAccessoryStockDto,
   UpdateAccessoryDto,
   UpdateTotalWarehouseStockDto,
-} from '../dtos/accessory.dto'
+  ResponseListAccessoriesDto,
+  ResponseAccessoryDto,
+  ResponseUpdateAccessoryDto,
+  ResponseCreateAccessoryDto,
+  ResponseFindAllFromTotalWarehouseDto,
+  ResponseCreateFromTotalWarehouseDto,
+  ResponseReplaceFromTotalWarehouseDto,
+  ResponseUpdateFromTotalWarehouseDto,
+  ResponseCreateFromAscCenterDto,
+  ResponseReplaceFromAscCenterDto,
+  ResponseUpdateFromAscCenterDto,
+  ResponseDeleteFromAscCenterDto,
+  ResponseDeleteAccessoryDto,
+  ResponseDeleteFromTotalWarehouseDto,
+  ResponseFindAllFromAscCenterDto,
+} from "../dtos/accessory.dto";
 
 export interface IAccessoryService {
-  findAll(query: FindAllAccessoriesInput): Promise<unknown>
-  findAllFromTotalWarehouse(input: FindAccessoriesFromTotalWarehouseInput): Promise<unknown>
+  findAll(query: FindAllAccessoriesInput): Promise<ResponseListAccessoriesDto>;
+  findAllFromTotalWarehouse(
+    input: FindAccessoriesFromTotalWarehouseInput,
+  ): Promise<ResponseFindAllFromTotalWarehouseDto>;
   createFromTotalWarehouse(
     params: FindAccessoriesFromTotalWarehouseParams,
     input: CreateTotalWarehouseStockDto,
-  ): Promise<unknown>
+  ): Promise<ResponseCreateFromTotalWarehouseDto>;
   replaceFromTotalWarehouse(
     params: FindAccessoryStockByTotalWarehouseInput,
     input: ReplaceTotalWarehouseStockDto,
-  ): Promise<unknown>
+  ): Promise<ResponseReplaceFromTotalWarehouseDto>;
   updateFromTotalWarehouse(
     params: FindAccessoryStockByTotalWarehouseInput,
     input: UpdateTotalWarehouseStockDto,
-  ): Promise<unknown>
-  deleteFromTotalWarehouse(params: FindAccessoryStockByTotalWarehouseInput): Promise<{ success: true }>
-  findAllFromAscCenter(input: FindAccessoriesFromAscCenterInput): Promise<unknown>
-  createFromAscCenter(params: FindAccessoriesFromAscCenterParams, input: CreateAscAccessoryStockDto): Promise<unknown>
-  replaceFromAscCenter(params: FindAccessoryStockByAscCenterInput, input: ReplaceAscAccessoryStockDto): Promise<unknown>
-  updateFromAscCenter(params: FindAccessoryStockByAscCenterInput, input: UpdateAscAccessoryStockDto): Promise<unknown>
-  deleteFromAscCenter(params: FindAccessoryStockByAscCenterInput): Promise<{ success: true }>
-  findOneById(accessoryId: string): Promise<unknown>
-  create(input: CreateAccessoryDto): Promise<unknown>
-  update(accessoryId: string, input: ReplaceAccessoryDto | UpdateAccessoryDto): Promise<unknown>
-  delete(accessoryId: string): Promise<{ success: true }>
+  ): Promise<ResponseUpdateFromTotalWarehouseDto>;
+  deleteFromTotalWarehouse(
+    params: FindAccessoryStockByTotalWarehouseInput,
+  ): Promise<ResponseDeleteFromTotalWarehouseDto>;
+  findAllFromAscCenter(
+    input: FindAccessoriesFromAscCenterInput,
+  ): Promise<ResponseFindAllFromAscCenterDto>;
+  createFromAscCenter(
+    params: FindAccessoriesFromAscCenterParams,
+    input: CreateAscAccessoryStockDto,
+  ): Promise<ResponseCreateFromAscCenterDto>;
+  replaceFromAscCenter(
+    params: FindAccessoryStockByAscCenterInput,
+    input: ReplaceAscAccessoryStockDto,
+  ): Promise<ResponseReplaceFromAscCenterDto>;
+  updateFromAscCenter(
+    params: FindAccessoryStockByAscCenterInput,
+    input: UpdateAscAccessoryStockDto,
+  ): Promise<ResponseUpdateFromAscCenterDto>;
+  deleteFromAscCenter(
+    params: FindAccessoryStockByAscCenterInput,
+  ): Promise<ResponseDeleteFromAscCenterDto>;
+  findOneById(accessoryId: string): Promise<ResponseAccessoryDto>;
+  create(input: CreateAccessoryDto): Promise<ResponseCreateAccessoryDto>;
+  update(
+    accessoryId: string,
+    input: ReplaceAccessoryDto | UpdateAccessoryDto,
+  ): Promise<ResponseUpdateAccessoryDto>;
+  delete(accessoryId: string): Promise<ResponseDeleteAccessoryDto>;
 }

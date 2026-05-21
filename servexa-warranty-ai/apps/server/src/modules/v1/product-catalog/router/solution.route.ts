@@ -21,18 +21,72 @@ const solutionController = new SolutionController(
 
 solutionRoute.use(authenticateMiddleware);
 
+/**
+ * Export solutions
+ * @route GET /v1/product-catalog/solutions/export
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.get("/export", solutionController.export);
+/**
+ * Get all solutions
+ * @route GET /v1/product-catalog/solutions
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.get("/", solutionController.findAll);
+/**
+ * Get a solution by ID
+ * @route GET /v1/product-catalog/solutions/:id
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.get("/:id", solutionController.findOneById);
 
+/**
+ * Import solutions
+ * @route POST /v1/product-catalog/solutions/import
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.post("/import", upload.single("file"), solutionController.import);
+/**
+ * Import solutions by link
+ * @route POST /v1/product-catalog/solutions/import-link
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.post("/import-link", solutionController.importLink);
+/**
+ * Create a solution
+ * @route POST /v1/product-catalog/solutions
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.post("/", solutionController.create);
 
+/**
+ * Replace a solution
+ * @route PUT /v1/product-catalog/solutions/:id
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.put("/:id", solutionController.replace);
 
+/**
+ * Update a solution
+ * @route PATCH /v1/product-catalog/solutions/:id
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.patch("/:id", solutionController.update);
 
+/**
+ * Delete a solution
+ * @route DELETE /v1/product-catalog/solutions/:id
+ * @access Private
+ * @returns {Promise<void>}
+ */
 solutionRoute.delete("/:id", solutionController.delete);
 
 export default solutionRoute;

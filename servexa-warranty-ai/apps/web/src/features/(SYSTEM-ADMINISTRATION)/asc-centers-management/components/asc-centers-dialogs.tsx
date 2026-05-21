@@ -1,51 +1,51 @@
-import { UsersActionDialog } from "./asc-centers-action-dialog";
-import { UsersDeleteDialog } from "./asc-centers-delete-dialog";
-import { UsersInviteDialog } from "./asc-centers-invite-dialog";
-import { useUsers } from "./asc-centers-provider";
+import { AscCentersActionDialog } from './asc-centers-action-dialog'
+import { AscCentersDeleteDialog } from './asc-centers-delete-dialog'
+import { AscCentersInviteDialog } from './asc-centers-invite-dialog'
+import { useAscCenters } from './asc-centers-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function AscCentersDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useAscCenters()
   return (
     <>
-      <UsersActionDialog
-        key="user-add"
-        open={open === "add"}
-        onOpenChange={() => setOpen("add")}
+      <AscCentersActionDialog
+        key='asc-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
       />
 
-      <UsersInviteDialog
-        key="user-invite"
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
+      <AscCentersInviteDialog
+        key='asc-invite'
+        open={open === 'invite'}
+        onOpenChange={() => setOpen('invite')}
       />
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === "edit"}
+          <AscCentersActionDialog
+            key={`asc-edit-${currentRow.id}`}
+            open={open === 'edit'}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen('edit')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === "delete"}
+          <AscCentersDeleteDialog
+            key={`asc-delete-${currentRow.id}`}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
         </>
       )}
     </>
-  );
+  )
 }

@@ -1,51 +1,51 @@
-import { UsersActionDialog } from "./purchase-locations-action-dialog";
-import { UsersDeleteDialog } from "./purchase-locations-delete-dialog";
-import { UsersInviteDialog } from "./purchase-locations-invite-dialog";
-import { useUsers } from "./purchase-locations-provider";
+import { PurchaseLocationsActionDialog } from './purchase-locations-action-dialog'
+import { PurchaseLocationsDeleteDialog } from './purchase-locations-delete-dialog'
+import { PurchaseLocationsInviteDialog } from './purchase-locations-invite-dialog'
+import { usePurchaseLocations } from './purchase-locations-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function PurchaseLocationsDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = usePurchaseLocations()
   return (
     <>
-      <UsersActionDialog
-        key="user-add"
-        open={open === "add"}
-        onOpenChange={() => setOpen("add")}
+      <PurchaseLocationsActionDialog
+        key='location-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
       />
 
-      <UsersInviteDialog
-        key="user-invite"
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
+      <PurchaseLocationsInviteDialog
+        key='location-invite'
+        open={open === 'invite'}
+        onOpenChange={() => setOpen('invite')}
       />
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === "edit"}
+          <PurchaseLocationsActionDialog
+            key={`location-edit-${currentRow.id}`}
+            open={open === 'edit'}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen('edit')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === "delete"}
+          <PurchaseLocationsDeleteDialog
+            key={`location-delete-${currentRow.id}`}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
         </>
       )}
     </>
-  );
+  )
 }
