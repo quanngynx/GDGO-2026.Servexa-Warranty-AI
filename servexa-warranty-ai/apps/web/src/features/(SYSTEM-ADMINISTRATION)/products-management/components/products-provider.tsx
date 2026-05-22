@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type Model } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type ProductsDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type ProductsContextType = {
+  open: ProductsDialogType | null
+  setOpen: (str: ProductsDialogType | null) => void
+  currentRow: Model | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Model | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const ProductsContext = React.createContext<ProductsContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function ProductsProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<ProductsDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Model | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <ProductsContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </ProductsContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useProducts = () => {
+  const context = React.useContext(ProductsContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useProducts must be used within <ProductsProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

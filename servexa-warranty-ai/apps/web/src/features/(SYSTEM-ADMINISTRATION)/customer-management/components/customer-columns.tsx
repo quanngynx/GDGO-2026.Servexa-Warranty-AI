@@ -48,12 +48,12 @@ export const customersColumns: ColumnDef<Customer>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "fullname",
+    accessorKey: "fullName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Full Name" />
     ),
     cell: ({ row }) => (
-      <LongText className="max-w-36 ps-3">{row.getValue("fullname")}</LongText>
+      <LongText className="max-w-36 ps-3">{row.getValue("fullName")}</LongText>
     ),
     meta: {
       className: cn(
@@ -112,19 +112,19 @@ export const customersColumns: ColumnDef<Customer>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "province",
+    accessorKey: "provinceId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Province" />
     ),
     enableSorting: false,
-    cell: ({ row }) => <div>{row.getValue("province")}</div>,
+    cell: ({ row }) => <div>{row.getValue("provinceId") ?? "—"}</div>,
   },
   {
-    accessorKey: "ward",
+    accessorKey: "wardId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Ward" />
     ),
-    cell: ({ row }) => <div>{row.getValue("ward")}</div>,
+    cell: ({ row }) => <div>{row.getValue("wardId") ?? "—"}</div>,
     enableSorting: false,
   },
   {
@@ -168,12 +168,11 @@ export const customersColumns: ColumnDef<Customer>[] = [
     enableSorting: false,
   },
   {
-    id: "ascCenter.centerName",
-    accessorFn: (row) => row.ascCenter?.centerName,
+    accessorKey: "ascCenterId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ASC Center" />
     ),
-    cell: ({ row }) => <div>{row.getValue("ascCenter.centerName")}</div>,
+    cell: ({ row }) => <div>{row.getValue("ascCenterId") ?? "—"}</div>,
     enableSorting: false,
   },
   {
@@ -213,7 +212,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   },
   {
     id: "createdAt",
-    accessorFn: (row) => row.createdAt.toLocaleDateString(),
+    accessorFn: (row) => new Date(row.createdAt).toLocaleDateString(),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
     ),
@@ -223,31 +222,11 @@ export const customersColumns: ColumnDef<Customer>[] = [
   },
   {
     id: "updatedAt",
-    accessorFn: (row) => row.updatedAt.toLocaleDateString(),
+    accessorFn: (row) => new Date(row.updatedAt).toLocaleDateString(),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Updated At" />
     ),
     cell: ({ row }) => <div>{row.getValue("updatedAt")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "createdBy",
-    accessorFn: (row) => row.createdBy,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created By" />
-    ),
-    cell: ({ row }) => <div>{row.getValue("createdBy")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "updatedBy",
-    accessorFn: (row) => row.updatedBy,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Updated By" />
-    ),
-    cell: ({ row }) => <div>{row.getValue("updatedBy")}</div>,
     enableSorting: false,
     enableHiding: false,
   },

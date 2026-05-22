@@ -50,7 +50,8 @@
 
 @layer components {
   /* AI Copilot Panel optimizations */
-  .ai-copilot-panel {
+  .ai-copilot-panel,
+  .ai-copilot-dock {
     @apply transition-all duration-200 ease-in-out;
   }
 
@@ -65,10 +66,15 @@
   }
 
   /* Responsive improvements for smaller screens */
+  @media (max-width: 1023px) {
+    .ai-copilot-dock:not(.ai-copilot-dock--collapsed) {
+      @apply fixed inset-x-0 bottom-0 top-14 z-40 w-full max-w-none rounded-none border-t border-border bg-background;
+    }
+  }
+
   @media (max-width: 768px) {
-    /* Make copilot panel full screen on mobile */
     .ai-copilot-panel {
-      @apply fixed inset-0 z-50 rounded-none;
+      @apply rounded-none;
     }
 
     /* Stack dashboard widgets better */

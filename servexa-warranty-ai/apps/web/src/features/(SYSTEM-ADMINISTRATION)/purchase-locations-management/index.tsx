@@ -1,51 +1,75 @@
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { getRouteApi } from "@tanstack/react-router";
-import { UsersDialogs } from "./components/purchase-locations-dialogs";
-import { UsersPrimaryButtons } from "./components/purchase-locations-primary-buttons";
-import { UsersProvider } from "./components/purchase-locations-provider";
-import { UsersTable } from "./components/purchase-locations-table";
-import { users } from "./data/purchase-locations";
+import { getRouteApi } from '@tanstack/react-router'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponsePurchaseLocationListDto } from '@/libs/api/purchase-channels/purchase-location/data-transfer-object'
+import { PurchaseLocationsDialogs } from './components/purchase-locations-dialogs'
+import { PurchaseLocationsPrimaryButtons } from './components/purchase-locations-primary-buttons'
+import { PurchaseLocationsProvider } from './components/purchase-locations-provider'
+import { PurchaseLocationsTable } from './components/purchase-locations-table'
+import { usePurchaseLocationsQuery } from './hooks/use-purchase-locations-query'
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/"
-);
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/',
+)
 
 export function PurchaseLocationsManagement() {
-  const search = route.useSearch();
-  const navigate = route.useNavigate();
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+
+  const isActiveFilter =
+    search.isActive?.[0] === 'true'
+      ? true
+      : search.isActive?.[0] === 'false'
+        ? false
+        : undefined
+
+  const { data, isLoading } = usePurchaseLocationsQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+    isActive: isActiveFilter,
+  })
+
+  const list = listPayloadFromApi<ResponsePurchaseLocationListDto>(data)
+  const locations = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
-    <UsersProvider>
+    <PurchaseLocationsProvider>
       <Header fixed>
         <Search />
-        <div className="ms-auto flex items-center space-x-4">
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              User Management
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here. here.
+            <h2 className='text-2xl font-bold tracking-tight'>Purchase Locations Management</h2>
+            <p className='text-muted-foreground'>
+              Manage purchase channel locations and store codes.
             </p>
           </div>
-          <UsersPrimaryButtons />
+          <PurchaseLocationsPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <PurchaseLocationsTable
+          data={locations}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
 
-      <UsersDialogs />
-    </UsersProvider>
-  );
+      <PurchaseLocationsDialogs />
+    </PurchaseLocationsProvider>
+  )
 }

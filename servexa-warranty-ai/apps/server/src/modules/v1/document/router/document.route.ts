@@ -16,12 +16,54 @@ const documentController = new DocumentController(documentService)
 
 documentRoute.use(authenticateMiddleware)
 
+/**
+ * Get all documents
+ * @route GET /v1/document/documents
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.get('/', documentController.findAll)
+/**
+ * Get document versions
+ * @route GET /v1/document/documents/:documentId/versions
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.get('/:documentId/versions', documentController.findVersions)
+/**
+ * Get a document by ID
+ * @route GET /v1/document/documents/:documentId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.get('/:documentId', documentController.findOneById)
+/**
+ * Create a document
+ * @route POST /v1/document/documents
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.post('/', multerUpload.single('file'), documentController.create)
+/**
+ * Replace a document
+ * @route PUT /v1/document/documents/:documentId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.put('/:documentId', multerUpload.single('file'), documentController.replace)
+/**
+ * Update a document
+ * @route PATCH /v1/document/documents/:documentId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.patch('/:documentId', documentController.update)
+/**
+ * Delete a document
+ * @route DELETE /v1/document/documents/:documentId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 documentRoute.delete('/:documentId', documentController.delete)
 
 export default documentRoute

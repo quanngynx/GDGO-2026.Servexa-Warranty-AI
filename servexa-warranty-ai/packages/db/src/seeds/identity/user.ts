@@ -104,6 +104,14 @@ export const seedIdentityUser = async (
     },
   })
 
+  await prisma.userRole.upsert({
+    where: {
+      userId_roleId: { userId: user.id, roleId: role.id },
+    },
+    create: { userId: user.id, roleId: role.id },
+    update: {},
+  })
+
   return {
     user,
     roleMode: options.roleMode,

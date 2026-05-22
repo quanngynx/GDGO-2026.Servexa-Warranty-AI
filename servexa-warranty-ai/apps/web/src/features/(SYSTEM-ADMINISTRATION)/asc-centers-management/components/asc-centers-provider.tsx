@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type AscCenter } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type AscCentersDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type AscCentersContextType = {
+  open: AscCentersDialogType | null
+  setOpen: (str: AscCentersDialogType | null) => void
+  currentRow: AscCenter | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<AscCenter | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const AscCentersContext = React.createContext<AscCentersContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function AscCentersProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<AscCentersDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<AscCenter | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <AscCentersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </AscCentersContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useAscCenters = () => {
+  const context = React.useContext(AscCentersContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useAscCenters must be used within <AscCentersProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

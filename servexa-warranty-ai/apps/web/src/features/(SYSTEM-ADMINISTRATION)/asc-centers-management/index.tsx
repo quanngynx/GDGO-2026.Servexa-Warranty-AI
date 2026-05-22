@@ -1,51 +1,66 @@
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { getRouteApi } from "@tanstack/react-router";
-import { UsersDialogs } from "./components/asc-centers-dialogs";
-import { UsersPrimaryButtons } from "./components/asc-centers-primary-buttons";
-import { UsersProvider } from "./components/asc-centers-provider";
-import { UsersTable } from "./components/asc-centers-table";
-import { users } from "./data/asc-centers";
+import { getRouteApi } from '@tanstack/react-router'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponseAscCenterListDto } from '@/libs/api/asc-center/asc-center/data-transfer-object'
+import { AscCentersDialogs } from './components/asc-centers-dialogs'
+import { AscCentersPrimaryButtons } from './components/asc-centers-primary-buttons'
+import { AscCentersProvider } from './components/asc-centers-provider'
+import { AscCentersTable } from './components/asc-centers-table'
+import { useAscCentersQuery } from './hooks/use-asc-centers-query'
 
-const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/"
-);
+const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/')
 
 export function AscCentersManagement() {
-  const search = route.useSearch();
-  const navigate = route.useNavigate();
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+
+  const { data, isLoading } = useAscCentersQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+    status: search.status?.[0] as 'active' | 'inactive' | 'suspended' | undefined,
+  })
+
+  const list = listPayloadFromApi<ResponseAscCenterListDto>(data)
+  const centers = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
-    <UsersProvider>
+    <AscCentersProvider>
       <Header fixed>
         <Search />
-        <div className="ms-auto flex items-center space-x-4">
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              User Management
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here. here.
+            <h2 className='text-2xl font-bold tracking-tight'>ASC Centers Management</h2>
+            <p className='text-muted-foreground'>
+              Manage authorized service centers and their status.
             </p>
           </div>
-          <UsersPrimaryButtons />
+          <AscCentersPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <AscCentersTable
+          data={centers}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
 
-      <UsersDialogs />
-    </UsersProvider>
-  );
+      <AscCentersDialogs />
+    </AscCentersProvider>
+  )
 }

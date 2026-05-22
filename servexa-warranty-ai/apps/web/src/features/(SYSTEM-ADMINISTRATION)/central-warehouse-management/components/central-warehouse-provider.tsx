@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type TotalWarehouse } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type CentralWarehouseDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type CentralWarehouseContextType = {
+  open: CentralWarehouseDialogType | null
+  setOpen: (str: CentralWarehouseDialogType | null) => void
+  currentRow: TotalWarehouse | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<TotalWarehouse | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const CentralWarehouseContext = React.createContext<CentralWarehouseContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function CentralWarehouseProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<CentralWarehouseDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<TotalWarehouse | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <CentralWarehouseContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </CentralWarehouseContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useCentralWarehouse = () => {
+  const context = React.useContext(CentralWarehouseContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useCentralWarehouse must be used within <CentralWarehouseProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

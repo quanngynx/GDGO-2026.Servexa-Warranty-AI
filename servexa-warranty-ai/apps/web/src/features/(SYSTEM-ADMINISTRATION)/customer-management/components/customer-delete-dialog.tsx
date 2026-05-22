@@ -1,7 +1,7 @@
-"use client";
+
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import { showSubmittedData } from "@/components/show-submitted-data";
+import { useDeleteCustomerMutation } from '../hooks/use-delete-customer-mutation'
 import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/components/alert";
 import { Input } from "@servexa-warranty-ai/ui/components/input";
 import { Label } from "@servexa-warranty-ai/ui/components/label";
@@ -21,12 +21,18 @@ export function CustomersDeleteDialog({
   currentRow,
 }: CustomerDeleteDialogProps) {
   const [value, setValue] = useState("");
+  const deleteMutation = useDeleteCustomerMutation();
+  const confirmValue = currentRow.email ?? currentRow.fullName;
 
   const handleDelete = () => {
-    if (value.trim() !== currentRow.email) return;
+    if (value.trim() !== confirmValue) return;
 
-    onOpenChange(false);
-    showSubmittedData(currentRow, "The following customer has been deleted:");
+    deleteMutation.mutate(currentRow.id, {
+      onSuccess: () => {
+        onOpenChange(false);
+        setValue("");
+      },
+    });
   };
 
   return (
@@ -34,7 +40,7 @@ export function CustomersDeleteDialog({
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value.trim() !== currentRow.email}
+      disabled={value.trim() !== confirmValue || deleteMutation.isPending}
       title={
         <span className="text-destructive">
           <AlertTriangle
@@ -48,19 +54,19 @@ export function CustomersDeleteDialog({
         <div className="space-y-4">
           <p className="mb-2">
             Are you sure you want to delete{" "}
-            <span className="font-bold">{currentRow.email}</span>?
+            <span className="font-bold">{confirmValue}</span>?
             <br />
-            This action will permanently remove the customer with the email of{" "}
-            <span className="font-bold">{currentRow.email}</span>
+            This action will permanently remove the customer{" "}
+            <span className="font-bold">{confirmValue}</span>
             from the system. This cannot be undone.
           </p>
 
           <Label className="my-2">
-            Email:
+            Confirm ({confirmValue}):
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Enter email to confirm deletion."
+              placeholder="Type the value above to confirm deletion."
             />
           </Label>
 

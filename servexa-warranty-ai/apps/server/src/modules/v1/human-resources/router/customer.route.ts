@@ -15,11 +15,47 @@ const customerController = new CustomerController(customerService)
 
 customerRoute.use(authenticateMiddleware)
 
+/**
+ * Get all customers
+ * @route GET /v1/human-resources/customers
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.get('/', customerController.findAll)
+/**
+ * Get a customer by ID
+ * @route GET /v1/human-resources/customers/:customerId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.get('/:customerId', customerController.findOneById)
+/**
+ * Create a customer
+ * @route POST /v1/human-resources/customers
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.post('/', customerController.create)
+/**
+ * Replace a customer
+ * @route PUT /v1/human-resources/customers/:customerId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.put('/:customerId', customerController.replace)
+/**
+ * Update a customer
+ * @route PATCH /v1/human-resources/customers/:customerId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.patch('/:customerId', customerController.update)
+/**
+ * Delete a customer
+ * @route DELETE /v1/human-resources/customers/:customerId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 customerRoute.delete('/:customerId', customerController.delete)
 
 export default customerRoute

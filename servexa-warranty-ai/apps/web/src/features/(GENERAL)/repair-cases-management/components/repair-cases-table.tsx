@@ -3,6 +3,7 @@ import { useTableUrlState, type NavigateFn } from '@servexa-warranty-ai/ui/hooks
 import { useEffect, useState } from 'react'
 import { flexRender, getCoreRowModel, getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type SortingState, type VisibilityState } from '@tanstack/react-table'
 import type { RepairCaseDto } from '@/libs/api/asc-center/repair-case/data-transfer-object'
+import { repairCaseStatusLabels } from '../constants'
 import { repairCasesColumns as columns } from './repair-cases-columns'
 import {
   DataTablePagination,
@@ -12,20 +13,28 @@ import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
 import { useOperationalContextPatch } from '@/features/ai-copilot/context/operational-context-provider'
 
+type FilterOption = { label: string; value: string }
+
 type RepairCasesTableProps = {
   data: RepairCaseDto[]
   isLoading?: boolean
   totalPages?: number
   search: Record<string, unknown>
   navigate: NavigateFn
+  ascCenterFilterOptions?: FilterOption[]
 }
+
+const repairCaseStatusFilterOptions = Object.entries(repairCaseStatusLabels).map(
+  ([value, label]) => ({ label, value }),
+)
 
 export function RepairCasesTable({
   data,
   isLoading = false,
   totalPages,
   search,
-  navigate
+  navigate,
+  ascCenterFilterOptions = [],
 }: RepairCasesTableProps) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -44,10 +53,9 @@ export function RepairCasesTable({
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: false },
     columnFilters: [
-      { columnId: "username", searchKey: "username", type: "string" },
-      { columnId: "status", searchKey: "status", type: "array" },
-      { columnId: "priority", searchKey: "priority", type: "array" },
-      { columnId: "ascCenterId", searchKey: "ascCenterId", type: "array" },
+      { columnId: 'caseNumber', searchKey: 'search', type: 'string' },
+      { columnId: 'status', searchKey: 'status', type: 'array' },
+      { columnId: 'ascCenterId', searchKey: 'ascCenterId', type: 'array' },
     ],
   });
 
@@ -92,7 +100,8 @@ export function RepairCasesTable({
       repairCaseId: row.id,
       caseNumber: row.caseNumber,
       customerId: row.customerId,
-      technicianId: null,
+      technicianId: row.assignedTechnicianId ?? null,
+      selectedTechnicianId: row.assignedTechnicianId ?? null,
       productModel: row.model?.name ?? null,
       warrantyStatus: row.warrantyServiceType ?? row.warrantyForm ?? null,
       repairCaseSnapshot: {
@@ -127,35 +136,23 @@ export function RepairCasesTable({
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder="Filter users..."
-        searchKey="username"
+        searchPlaceholder='Search case number, customer, serial...'
+        filterColumnId='caseNumber'
         filters={[
           {
-            columnId: "status",
-            title: "Status",
-            options: [
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
-              { label: "Invited", value: "invited" },
-              { label: "Suspended", value: "suspended" },
-            ],
+            columnId: 'status',
+            title: 'Status',
+            options: repairCaseStatusFilterOptions,
           },
-          {
-            columnId: "priority",
-            title: "Priority",
-            options: [
-              { label: "High", value: "high" },
-              { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" },
-            ],
-          },
-          {
-            columnId: "ascCenterId",
-            title: "ASC center",
-            options: [
-              { label: "ASC 003", value: "23aa11b9-00b4-49eb-8a33-b147dbf33bb7" },
-            ],
-          },
+          ...(ascCenterFilterOptions.length > 0
+            ? [
+                {
+                  columnId: 'ascCenterId',
+                  title: 'ASC center',
+                  options: ascCenterFilterOptions,
+                },
+              ]
+            : []),
         ]}
       />
       <div className="overflow-hidden rounded-md border">

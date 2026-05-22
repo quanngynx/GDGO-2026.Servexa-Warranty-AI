@@ -92,7 +92,7 @@ export const env = createEnv({
       .describe("Python AiService gRPC host (omit to disable outbound gRPC)"),
     AI_GRPC_PORT: z.coerce.number().int().positive().default(50051),
     AI_GRPC_USE_TLS: envBoolean(false),
-    AI_GRPC_DEADLINE_MS: z.coerce.number().int().positive().default(8000),
+    AI_GRPC_DEADLINE_MS: z.coerce.number().int().positive().default(60_000),
     AI_GRPC_API_KEY: z.string().optional().describe("Bearer token sent via gRPC metadata"),
 
     AI_STREAM_ANALYSIS: z.string().default("ai.analysis.stream"),

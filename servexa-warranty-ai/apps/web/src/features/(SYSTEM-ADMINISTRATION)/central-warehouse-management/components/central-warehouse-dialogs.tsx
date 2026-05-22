@@ -1,51 +1,51 @@
-import { UsersDeleteDialog } from "./central-warehouse-delete-dialog";
-import { UsersInviteDialog } from "./central-warehouse-invite-dialog";
-import { UsersActionDialog } from "./central-warehouse-action-dialog";
-import { useUsers } from "./central-warehouse-provider";
+import { CentralWarehouseActionDialog } from './central-warehouse-action-dialog'
+import { CentralWarehouseDeleteDialog } from './central-warehouse-delete-dialog'
+import { CentralWarehouseInviteDialog } from './central-warehouse-invite-dialog'
+import { useCentralWarehouse } from './central-warehouse-provider'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers();
+export function CentralWarehouseDialogs() {
+  const { open, setOpen, currentRow, setCurrentRow } = useCentralWarehouse()
   return (
     <>
-      <UsersActionDialog
-        key="user-add"
-        open={open === "add"}
-        onOpenChange={() => setOpen("add")}
+      <CentralWarehouseActionDialog
+        key='warehouse-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
       />
 
-      <UsersInviteDialog
-        key="user-invite"
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
+      <CentralWarehouseInviteDialog
+        key='warehouse-invite'
+        open={open === 'invite'}
+        onOpenChange={() => setOpen('invite')}
       />
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === "edit"}
+          <CentralWarehouseActionDialog
+            key={`warehouse-edit-${currentRow.id}`}
+            open={open === 'edit'}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen('edit')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === "delete"}
+          <CentralWarehouseDeleteDialog
+            key={`warehouse-delete-${currentRow.id}`}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
         </>
       )}
     </>
-  );
+  )
 }

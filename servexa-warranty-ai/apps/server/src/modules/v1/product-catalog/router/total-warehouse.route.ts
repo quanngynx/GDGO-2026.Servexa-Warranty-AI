@@ -14,11 +14,47 @@ const totalWarehouseController = new TotalWarehouseController(totalWarehouseServ
 
 totalWarehouseRoute.use(authenticateMiddleware)
 
+/**
+ * Get all total warehouses
+ * @route GET /v1/product-catalog/total-warehouses
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.get('/', totalWarehouseController.findAll)
+/**
+ * Get a total warehouse by ID
+ * @route GET /v1/product-catalog/total-warehouses/:totalWarehouseId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.get('/:totalWarehouseId', totalWarehouseController.findOneById)
+/**
+ * Create a total warehouse
+ * @route POST /v1/product-catalog/total-warehouses
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.post('/', totalWarehouseController.create)
+/**
+ * Replace a total warehouse
+ * @route PUT /v1/product-catalog/total-warehouses/:totalWarehouseId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.put('/:totalWarehouseId', totalWarehouseController.replace)
+/**
+ * Update a total warehouse
+ * @route PATCH /v1/product-catalog/total-warehouses/:totalWarehouseId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.patch('/:totalWarehouseId', totalWarehouseController.update)
+/**
+ * Delete a total warehouse
+ * @route DELETE /v1/product-catalog/total-warehouses/:totalWarehouseId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 totalWarehouseRoute.delete('/:totalWarehouseId', totalWarehouseController.delete)
 
 export default totalWarehouseRoute
