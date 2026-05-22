@@ -1,6 +1,6 @@
 import { RepairCasesManagement } from "@/features/(GENERAL)/repair-cases-management";
 import { RepairCaseRouteSync } from "@/features/ai-copilot/components/repair-case-route-sync";
-import { repairCasesListSearchSchema } from "@/routes/_authenticated/(SYSTEM-ADMINISTRATION)/search-schemas";
+import { repairCasesListSearchSchema } from "@/libs/search-schemas";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
