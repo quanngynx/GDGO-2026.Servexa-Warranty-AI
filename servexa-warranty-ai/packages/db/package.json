@@ -37,9 +37,13 @@
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "db:start": "docker compose up -d",
+    "db:start:production": "docker compose -f docker-compose.production.yml up -d",
     "db:watch": "docker compose up",
+    "db:watch:production": "docker compose -f docker-compose.production.yml up",
     "db:stop": "docker compose stop",
-    "db:down": "docker compose down"
+    "db:stop:production": "docker compose -f docker-compose.production.yml stop",
+    "db:down": "docker compose down",
+    "db:down:production": "docker compose -f docker-compose.production.yml down"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",

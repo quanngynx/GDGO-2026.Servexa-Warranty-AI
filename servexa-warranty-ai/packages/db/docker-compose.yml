@@ -6,8 +6,9 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: servexa_warranty_ai_db
+      POSTGRES_PORT: 5436
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
+      POSTGRES_PASSWORD: $2a$12$T1ziHGyU7O.PfITmv.Nrj.j7r64B00D.y0CcxNFLOaUxzMa48k6de
     ports:
       - "5436:5432"
     volumes:
