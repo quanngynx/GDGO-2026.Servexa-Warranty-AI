@@ -35,4 +35,4 @@ packages/db/docker-compose*.yml
 **/.cursor
 **/.claude
 **/.agents
-.docker-deploy-test
+.docker-deploy-test*

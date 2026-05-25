@@ -6,15 +6,21 @@
 
 ARG NODE_IMAGE=node:24.16.0-bookworm-slim
 ARG NODE_DIGEST=sha256:242549cd46785b480c832479a730f4f2a20865d61ea2e404fdb2a5c3d3b73ecf
+ARG PNPM_VERSION=10.28.1
 
 FROM ${NODE_IMAGE}@${NODE_DIGEST} AS base
+ARG PNPM_VERSION
 ENV PNPM_HOME="/pnpm"
 ENV PATH="${PNPM_HOME}:${PATH}"
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+RUN --mount=type=cache,id=corepack-cache,target=/root/.cache/corepack \
+  corepack enable \
+  && corepack prepare pnpm@${PNPM_VERSION} --activate \
+  && pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
 FROM base AS deps
-RUN apt-get update \
+RUN --mount=type=cache,id=apt-deps-cache,target=/var/cache/apt,sharing=locked \
+  apt-get update \
   && apt-get install -y --no-install-recommends \
     python3 \
     build-essential \
@@ -31,7 +37,7 @@ COPY packages/db/package.json packages/db/
 COPY packages/env/package.json packages/env/
 COPY packages/event-contracts/package.json packages/event-contracts/
 COPY packages/proto/package.json packages/proto/
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
   pnpm install --frozen-lockfile --filter server... --ignore-scripts
 
 FROM deps AS build
@@ -39,13 +45,20 @@ ENV CI=true
 # Prisma generate only needs a syntactically valid URL at build time.
 ENV DATABASE_URL="postgresql://build:build@127.0.0.1:5432/build?schema=public"
 COPY apps/server apps/server
-COPY packages packages
+COPY packages/ai-contracts packages/ai-contracts
+COPY packages/config packages/config
+COPY packages/db packages/db
+COPY packages/env packages/env
+COPY packages/event-contracts packages/event-contracts
+COPY packages/proto packages/proto
 RUN pnpm --filter @servexa-warranty-ai/db db:generate
 RUN pnpm --filter server build
-RUN pnpm prune --prod
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
+  pnpm prune --prod
 
 FROM ${NODE_IMAGE}@${NODE_DIGEST} AS production
-RUN apt-get update \
+RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=locked \
+  apt-get update \
   && apt-get install -y --no-install-recommends \
     dumb-init \
     openssl \
@@ -86,6 +99,3 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "dist/index.mjs"]
-
-# docker build -f apps/server/Dockerfile -t servexa-server:test .
-# exit 0 — image: servexa-server:test (2.69 GB)
