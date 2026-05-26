@@ -1,4 +1,4 @@
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import type { Prisma, TotalWarehouse } from '@servexa-warranty-ai/db/prisma/client'
 
 import type { CreateTotalWarehouseDto, ReplaceTotalWarehouseDto, UpdateTotalWarehouseDto } from '../dtos/total-warehouse.dto'
 import type { FindAllTotalWarehousesInput } from '../services/total-warehouse.service'
@@ -15,25 +15,25 @@ export type TotalWarehouseOptions<
 }
 
 export interface ITotalWarehouseRepository {
-  findAll(query: Prisma.TotalWarehouseFindManyArgs): Promise<unknown[]>
+  findAll(query: Prisma.TotalWarehouseFindManyArgs): Promise<(TotalWarehouse & Prisma.TotalWarehouseInclude)[] | null>
   count(where: Prisma.TotalWarehouseWhereInput): Promise<number>
   findOneById<TSelect extends TotalWarehouseSelect | undefined, TInclude extends TotalWarehouseInclude | undefined>(
     id: string,
     options?: TotalWarehouseOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>
+  ): Promise<(TotalWarehouse & Prisma.TotalWarehouseInclude) | null>
   findOneByName<TSelect extends TotalWarehouseSelect | undefined, TInclude extends TotalWarehouseInclude | undefined>(
     name: string,
     options?: TotalWarehouseOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>
+  ): Promise<(TotalWarehouse & Prisma.TotalWarehouseInclude) | null>
   createOne<TSelect extends TotalWarehouseSelect | undefined, TInclude extends TotalWarehouseInclude | undefined>(
     data: Prisma.TotalWarehouseCreateInput,
     options?: TotalWarehouseOptions<TSelect, TInclude>,
-  ): Promise<unknown>
+  ): Promise<(TotalWarehouse & Prisma.TotalWarehouseInclude) | null>
   updateOneById<TSelect extends TotalWarehouseSelect | undefined, TInclude extends TotalWarehouseInclude | undefined>(
     id: string,
     data: Prisma.TotalWarehouseUpdateInput,
     options?: TotalWarehouseOptions<TSelect, TInclude>,
-  ): Promise<unknown>
+  ): Promise<(TotalWarehouse & Prisma.TotalWarehouseInclude) | null>
   deleteById(id: string): Promise<unknown>
 }
 

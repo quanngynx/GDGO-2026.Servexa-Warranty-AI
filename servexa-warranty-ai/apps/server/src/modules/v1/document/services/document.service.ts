@@ -31,10 +31,7 @@ export class DocumentService implements IDocumentService {
   ) {}
 
   private async ensureExists(documentId: string) {
-    const doc = (await this.documentRepository.findById(documentId)) as Record<
-      string,
-      unknown
-    > | null;
+    const doc = await this.documentRepository.findById(documentId);
     if (!doc)
       throw createOperationalError(
         "Document not found",
@@ -59,6 +56,26 @@ export class DocumentService implements IDocumentService {
         skip: (query.page - 1) * query.limit,
         take: query.limit,
         orderBy: { [query.sortBy]: query.sortOrder },
+        include: {
+          createdBy: {
+            select: {
+              fullName: true,
+              username: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              fullName: true,
+              username: true,
+            },
+          },
+          ascCenter: {
+            select: {
+              centerName: true,
+              centerCode: true,
+            },
+          },
+        },
       }),
       this.documentRepository.count(where),
     ]);

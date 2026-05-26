@@ -282,8 +282,13 @@ export class ErrorPhenomenonExcelService implements IErrorPhenomenonExcelService
   private async createErrorPhenomena(
     rows: Prisma.ErrorPhenomenonCreateManyInput[],
   ): Promise<number> {
-    const createdRows =
-      await this.errorPhenomenonRepository.createManyAndReturn(rows);
+    const createdRows = await this.errorPhenomenonRepository.createManyAndReturn(rows);
+    if (!createdRows) {
+      throw createOperationalError(
+        "Failed to create error phenomena",
+        HTTP_RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+      );
+    }
     return createdRows.length;
   }
 }

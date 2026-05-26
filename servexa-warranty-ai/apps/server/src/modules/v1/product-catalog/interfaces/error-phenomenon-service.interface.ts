@@ -4,14 +4,16 @@ import type {
   UpdateErrorPhenomenonDto,
 } from "../dtos/error-phenomenon.dto";
 import type { FindAllErrorPhenomenaInput } from "../services/error-phenomenon.service";
+import type { ErrorPhenomenon, Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import type { BasePagination } from '@/types/pagination'
 
 export interface IErrorPhenomenonService {
-  findAll(query: FindAllErrorPhenomenaInput): Promise<unknown>;
-  findOneById(errorPhenomenonId: string): Promise<unknown>;
-  create(input: CreateErrorPhenomenonDto): Promise<unknown>;
+  findAll(query: FindAllErrorPhenomenaInput): Promise<{ items: (ErrorPhenomenon & Prisma.ErrorPhenomenonInclude)[] | null, pagination: BasePagination }>;
+  findOneById(errorPhenomenonId: string): Promise<(ErrorPhenomenon & Prisma.ErrorPhenomenonInclude) | null>;
+  create(input: CreateErrorPhenomenonDto): Promise<(ErrorPhenomenon & Prisma.ErrorPhenomenonInclude) | null>;
   update(
     errorPhenomenonId: string,
     input: ReplaceErrorPhenomenonDto | UpdateErrorPhenomenonDto,
-  ): Promise<unknown>;
+  ): Promise<(ErrorPhenomenon & Prisma.ErrorPhenomenonInclude) | null>;
   delete(errorPhenomenonId: string): Promise<{ success: true }>;
 }

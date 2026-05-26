@@ -1,4 +1,5 @@
 import type { AccessoryRequest, Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import type { BasePagination } from "@/types/pagination";
 import type {
   FindAllAccessoryRequestsInput,
   CreateAccessoryRequestInput,
@@ -11,7 +12,7 @@ import type {
 } from "../dtos/accessory-request.dto";
 
 export interface IAccessoryRequestService {
-  findAll(query: FindAllAccessoryRequestsInput): Promise<{ items: (AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null, total: number }>;
+  findAll(query: FindAllAccessoryRequestsInput): Promise<{ items: (AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null, pagination: BasePagination }>;
   findOneById(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
 
   create(input: CreateAccessoryRequestInput, userId: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
