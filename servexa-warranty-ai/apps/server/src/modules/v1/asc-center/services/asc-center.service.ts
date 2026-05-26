@@ -23,6 +23,17 @@ const ascCenterSelect = {
   status: true,
   createdAt: true,
   updatedAt: true,
+  province: {
+    select: { id: true, name: true, code: true }
+  },
+  ward: {
+    select: { id: true, name: true }
+  },
+  _count: {
+    select: {
+      users: true // Count of users assigned to this center
+    }
+  }
 } satisfies Prisma.AscCenterSelect
 
 export type FindAllAscCentersInput = {

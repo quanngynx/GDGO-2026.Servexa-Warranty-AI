@@ -12,6 +12,7 @@ const technicianSpecializationSchema = z.enum([
 
 export const createTechnicianSchema = z.object({
   userId: z.uuidv7(),
+  ascCenterId: z.uuidv7(),
   skillLevel: technicianSkillLevelSchema.optional(),
   specializations: z.array(technicianSpecializationSchema),
   certifications: z.string().optional(),

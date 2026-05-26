@@ -10,4 +10,5 @@ export const findAllTechniciansSchema = z.object({
   skillLevel: technicianSkillLevelSchema.optional(),
   isAvailable: z.coerce.boolean().optional(),
   userId: z.uuidv7().optional(),
+  ascCenterId: z.uuidv7().optional(),
 })

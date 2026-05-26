@@ -3,6 +3,8 @@ import type {
   RepairCaseStatusHistory,
   RepairCaseFieldHistory,
   AccessoryRequest,
+  RepairCase,
+  Prisma,
 } from "@servexa-warranty-ai/db/prisma/client";
 import type {
   FindAllRepairCasesInput,
@@ -22,15 +24,15 @@ import { Workbook } from "exceljs";
 export interface IRepairCaseService {
   findAll(
     input: FindAllRepairCasesInput,
-  ): Promise<{ items: RepairCaseListItem[]; pagination: BasePagination }>;
+  ): Promise<{ items: RepairCaseListItem[], pagination: BasePagination }>;
   findWaitingAccessories(
     input: FindWaitingAccessoriesInput,
-  ): Promise<{ items: RepairCaseListItem[]; pagination: BasePagination }>;
-  findOneById(id: string): Promise<RepairCaseDetail>;
+  ): Promise<{ items: RepairCaseListItem[], pagination: BasePagination }>;
+  findOneById(id: string): Promise<(RepairCase & Prisma.RepairCaseInclude) | null>;
 
   findStatusHistory(id: string): Promise<RepairCaseStatusHistory[]>;
   findFieldHistory(id: string): Promise<RepairCaseFieldHistory[]>;
-  findAccessoryRequests(id: string): Promise<AccessoryRequest[]>;
+  findAccessoryRequests(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null>;
   findImages(id: string): Promise<RepairCaseImageDto[]>;
   findImageById(id: string, imageId: string): Promise<RepairCaseImageDto>;
 

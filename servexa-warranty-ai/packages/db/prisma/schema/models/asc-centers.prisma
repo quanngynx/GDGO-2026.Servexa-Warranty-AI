@@ -276,6 +276,7 @@ model AscCenter {
   warrantyClaims              WarrantyClaim[]
   warrantyCoordinations       WarrantyCoordination[]      @relation("CoordinatorAsc")
   warrantyCoordinationsTarget WarrantyCoordination[]      @relation("TargetAsc")
+  technicianProfiles          TechnicianProfile[]
 
   customers                        Customer[]                         @relation("CustomerAscCenter")
   documents                        Document[]
@@ -622,6 +623,7 @@ model RepairCase {
   payments                         Payment[]
   accessoryIsUsedOutsideOfWarranty AccessoryIsUsedOutsideOfWarranty[]
   productReplacementRecallItems    ProductReplacementRecallItem[]
+  technicianAssignedTo             TechnicianProfile?                 @relation("TechnicianAssignedToRepairCases", fields: [assignedTechnicianId], references: [id])
 
   @@index([ascCenterId])
   @@index([status])
