@@ -39,6 +39,7 @@ export type FindAllTechniciansInput = {
   sortOrder: 'asc' | 'desc'
   skillLevel?: 'basic' | 'intermediate' | 'advanced' | 'expert'
   isAvailable?: boolean
+  ascCenterId?: string
   userId?: string
 }
 
@@ -50,10 +51,16 @@ export class TechnicianService implements ITechnicianService {
     if (!found) throw createOperationalError('User not found', HTTP_RESPONSE_CODE.BAD_REQUEST)
   }
 
+  private async ensureAscCenterExists(ascCenterId: string) {
+    const found = await prisma.ascCenter.findUnique({ where: { id: ascCenterId }, select: { id: true } })
+    if (!found) throw createOperationalError('ASC center not found', HTTP_RESPONSE_CODE.BAD_REQUEST)
+  }
+
   async findAll(query: FindAllTechniciansInput) {
     const where: Prisma.TechnicianProfileWhereInput = {
       ...(query.skillLevel ? { skillLevel: query.skillLevel } : {}),
       ...(query.isAvailable !== undefined ? { isAvailable: query.isAvailable } : {}),
+      ...(query.ascCenterId ? { ascCenterId: query.ascCenterId } : {}),
       ...(query.userId ? { userId: query.userId } : {}),
     }
 
@@ -81,6 +88,7 @@ export class TechnicianService implements ITechnicianService {
 
   async create(input: CreateTechnicianDto) {
     await this.ensureUserExists(input.userId)
+    await this.ensureAscCenterExists(input.ascCenterId)
     const duplicate = (await this.technicianRepository.findOneByUserId(input.userId, {
       select: { id: true },
     })) as { id: string } | null
@@ -119,6 +127,10 @@ export class TechnicianService implements ITechnicianService {
       if (duplicate && duplicate.id !== technicianProfileId) {
         throw createOperationalError('User is already linked to another technician profile', HTTP_RESPONSE_CODE.CONFLICT)
       }
+    }
+
+    if (input.ascCenterId !== undefined) {
+      await this.ensureAscCenterExists(input.ascCenterId)
     }
 
     const data: Prisma.TechnicianProfileUpdateInput = {}
