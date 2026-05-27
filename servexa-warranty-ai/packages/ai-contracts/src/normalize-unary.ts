@@ -6,6 +6,13 @@ import {
 } from "./hitl";
 
 import {
+  reasoningTraceEventSchema,
+  reasoningTraceSchema,
+  type ReasoningTrace,
+  type ReasoningTraceEvent,
+} from "./reasoning-trace";
+
+import {
   mergePhase3RailFields,
   parseDiagnosisDraft,
   parseSelectedCaseSummaryFromExecutionContext,
@@ -37,6 +44,56 @@ export function parseMetadataJson(raw: string): Record<string, unknown> {
   } catch {
     return {};
   }
+}
+
+/**
+ * Extract snapshot reasoning trace (non-realtime fallback) from unary metadataJson.
+ * Expected shapes:
+ * - `metadataJson.reasoningTrace`
+ * - `metadataJson.latestReasoningEvent`
+ */
+export function parseReasoningTraceFromMetadata(meta: Record<string, unknown>): {
+  reasoningTrace?: ReasoningTrace;
+  latestReasoningEvent?: ReasoningTraceEvent;
+} {
+  const traceRaw =
+    meta.reasoningTrace ??
+    meta.reasoning_trace ??
+    (typeof meta.servexaCopilot === "object" && meta.servexaCopilot !== null
+      ? (meta.servexaCopilot as Record<string, unknown>).reasoningTrace
+      : undefined);
+
+  const traceParsed = reasoningTraceSchema.safeParse(traceRaw);
+  const reasoningTrace = traceParsed.success ? traceParsed.data : undefined;
+
+  const latestRaw =
+    meta.latestReasoningEvent ??
+    meta.latest_reasoning_event ??
+    (typeof meta.servexaCopilot === "object" && meta.servexaCopilot !== null
+      ? (meta.servexaCopilot as Record<string, unknown>).latestReasoningEvent
+      : undefined);
+
+  const latestParsed = reasoningTraceEventSchema.safeParse(latestRaw);
+  let latestReasoningEvent = latestParsed.success ? latestParsed.data : undefined;
+
+  if (!latestReasoningEvent && reasoningTrace?.events?.length) {
+    // Find "latest" by comparing timestamps, without relying on reduce initial values.
+    const events = reasoningTrace.events;
+    let best = events[0]!;
+    const getRank = (e: ReasoningTraceEvent) =>
+      String(e.endedAt ?? e.startedAt ?? "");
+
+    for (let i = 1; i < events.length; i++) {
+      const cur = events[i]!;
+      if (getRank(cur).localeCompare(getRank(best)) > 0) {
+        best = cur;
+      }
+    }
+
+    latestReasoningEvent = best;
+  }
+
+  return { reasoningTrace, latestReasoningEvent };
 }
 
 function heuristicSuggestedActions(meta: Record<string, unknown>): CopilotSuggestedAction[] {
@@ -238,6 +295,8 @@ export function toRailMetadata(
       CopilotRailMetadata,
       "selectedCaseSummary" | "warrantyEligibility" | "diagnosisDraft"
     >;
+    reasoningTrace?: CopilotRailMetadata["reasoningTrace"];
+    latestReasoningEvent?: CopilotRailMetadata["latestReasoningEvent"];
   },
 ): CopilotRailMetadata {
   const raw: Record<string, unknown> = {
@@ -249,6 +308,8 @@ export function toRailMetadata(
     workflowExecutionStatus: extras?.workflowExecutionStatus,
     lastDecision: extras?.lastDecision,
     backend,
+    reasoningTrace: extras?.reasoningTrace,
+    latestReasoningEvent: extras?.latestReasoningEvent,
     ...extras?.phase3FromEnvelope,
   };
 

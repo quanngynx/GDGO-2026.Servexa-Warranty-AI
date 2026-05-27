@@ -63,7 +63,22 @@ export {
   normalizeLangGraphHitlMetadata,
   normalizeUnaryToCopilotResponse,
   parseMetadataJson,
+  parseReasoningTraceFromMetadata,
   parsePhase3FromCopilotEnvelope,
   type UnaryCompletionLike,
   toRailMetadata,
 } from "./normalize-unary";
+
+export {
+  applyTraceStreamEvent,
+  reasoningTraceEventSchema,
+  reasoningTraceSchema,
+  reasoningTraceStepTypeSchema,
+  reasoningTraceStatusSchema,
+  sanitizeReasoningEventForUi,
+  sanitizeReasoningSummary,
+  upsertTraceStep,
+  type ReasoningTrace,
+  type ReasoningTraceEvent,
+  type ReasoningTraceStreamEvent,
+} from "./reasoning-trace";
