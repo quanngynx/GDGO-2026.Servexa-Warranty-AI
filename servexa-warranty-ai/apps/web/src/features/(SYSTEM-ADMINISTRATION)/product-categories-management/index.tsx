@@ -1,107 +1,66 @@
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { getRouteApi } from "@tanstack/react-router";
-import { UsersDialogs } from "./components/product-categories-dialogs";
-import { UsersPrimaryButtons } from "./components/product-categories-primary-buttons";
-import { UsersProvider } from "./components/product-categories-provider";
-import { UsersTable } from "./components/product-categories-table";
-import { useUsersQuery } from "../user-management/hooks/use-users-query";
-import type {
-  ResponseUserDto,
-  ResponseUserListDto,
-} from "@/libs/api/identity/user/data-transfer-object";
-import { type User } from "./data/schema";
+import { getRouteApi } from '@tanstack/react-router'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponseCategoryListDto } from '@/libs/api/product-catalog/category/data-transfer-object'
+import { CategoriesDialogs } from './components/product-categories-dialogs'
+import { CategoriesPrimaryButtons } from './components/product-categories-primary-buttons'
+import { CategoriesProvider } from './components/product-categories-provider'
+import { CategoriesTable } from './components/product-categories-table'
+import { useCategoriesQuery } from './hooks/use-categories-query'
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
-);
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/',
+)
 
-export function UserManagement() {
-  const search = route.useSearch();
-  const navigate = route.useNavigate();
-  const { data } = useUsersQuery({
-    page: (search.page as number) ?? 1,
-    limit: (search.pageSize as number) ?? 10,
-    search: (search.username as string) || undefined,
-  });
-  const list = listPayloadFromUsersApi(data);
-  const users = (list?.items ?? []).map(mapToSystemAdminUser);
+export function ProductCategoriesManagement() {
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+
+  const { data, isLoading } = useCategoriesQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+    status: search.status?.[0] as 'active' | 'inactive' | undefined,
+  })
+
+  const list = listPayloadFromApi<ResponseCategoryListDto>(data)
+  const categories = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
-    <UsersProvider>
+    <CategoriesProvider>
       <Header fixed>
         <Search />
-        <div className="ms-auto flex items-center space-x-4">
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              User Management
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here. here.
-            </p>
+            <h2 className='text-2xl font-bold tracking-tight'>Product Categories</h2>
+            <p className='text-muted-foreground'>Manage product categories and their status.</p>
           </div>
-          <UsersPrimaryButtons />
+          <CategoriesPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <CategoriesTable
+          data={categories}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
 
-      <UsersDialogs />
-    </UsersProvider>
-  );
-}
-
-function listPayloadFromUsersApi(
-  body: unknown
-): ResponseUserListDto | undefined {
-  if (!body || typeof body !== "object") {
-    return undefined;
-  }
-  const o = body as {
-    metadata?: ResponseUserListDto;
-    data?: ResponseUserListDto;
-  };
-  return o.metadata ?? o.data;
-}
-
-function mapToSystemAdminUser(user: ResponseUserDto): User {
-  return {
-    id: user.id,
-    fullname: `${user.firstName} ${user.lastName}`.trim(),
-    username: user.username,
-    companyEmail: user.email,
-    personalEmail: user.email,
-    phoneNumber: user.phoneNumber,
-    avatar: user.avatar ?? "",
-    status:
-      user.status === "active" ||
-      user.status === "inactive" ||
-      user.status === "invited" ||
-      user.status === "suspended"
-        ? user.status
-        : "inactive",
-    role: user.role as User["role"],
-    ascCenter: user.ascCenter
-      ? {
-          id: user.ascCenter.id,
-          centerName: user.ascCenter.centerName,
-          centerCode: user.ascCenter.centerCode,
-        }
-      : null,
-    createdAt: new Date(user.createdAt),
-    updatedAt: new Date(user.updatedAt),
-    createdBy: user.createdBy ?? null,
-    updatedBy: user.updatedBy ?? null,
-  };
+      <CategoriesDialogs />
+    </CategoriesProvider>
+  )
 }

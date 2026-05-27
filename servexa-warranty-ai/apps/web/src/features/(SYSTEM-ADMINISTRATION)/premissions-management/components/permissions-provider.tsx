@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type Permission } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type PermissionsDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type PermissionsContextType = {
+  open: PermissionsDialogType | null
+  setOpen: (str: PermissionsDialogType | null) => void
+  currentRow: Permission | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Permission | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const PermissionsContext = React.createContext<PermissionsContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function PermissionsProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<PermissionsDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Permission | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <PermissionsContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </PermissionsContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const usePermissions = () => {
+  const context = React.useContext(PermissionsContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('usePermissions must be used within <PermissionsProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

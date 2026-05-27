@@ -18,9 +18,11 @@ import { Route as AuthenticatedAiGeminiIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedAiExampleIndexRouteImport } from './routes/_authenticated/ai/example/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/index'
+import { Route as AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/index'
@@ -77,6 +79,14 @@ const AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute =
     path: '/roles-management/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/reference-documents-management/',
+      path: '/reference-documents-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
 const AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute =
   AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRouteImport.update(
     {
@@ -99,6 +109,14 @@ const AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute =
     path: '/products-management/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute =
+  AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRouteImport.update(
+    {
+      id: '/(SYSTEM-ADMINISTRATION)/product-categories-management/',
+      path: '/product-categories-management/',
+      getParentRoute: () => AuthenticatedRouteRoute,
+    } as any,
+  )
 const AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute =
   AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRouteImport.update(
     {
@@ -160,9 +178,11 @@ export interface FileRoutesByFullPath {
   '/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
   '/customer-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
   '/permissions-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/product-categories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute
   '/products-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
   '/purchase-locations-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
   '/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/reference-documents-management/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute
   '/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/ai/example/': typeof AuthenticatedAiExampleIndexRoute
@@ -180,9 +200,11 @@ export interface FileRoutesByTo {
   '/central-warehouse-management': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
   '/customer-management': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
   '/permissions-management': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/product-categories-management': typeof AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute
   '/products-management': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
   '/purchase-locations-management': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
   '/reference-documentation': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/reference-documents-management': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute
   '/roles-management': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/user-management': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/ai/example': typeof AuthenticatedAiExampleIndexRoute
@@ -202,9 +224,11 @@ export interface FileRoutesById {
   '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/': typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/': typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/': typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/': typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/_authenticated/ai/example/': typeof AuthenticatedAiExampleIndexRoute
@@ -224,9 +248,11 @@ export interface FileRouteTypes {
     | '/central-warehouse-management/'
     | '/customer-management/'
     | '/permissions-management/'
+    | '/product-categories-management/'
     | '/products-management/'
     | '/purchase-locations-management/'
     | '/reference-documentation/'
+    | '/reference-documents-management/'
     | '/roles-management/'
     | '/user-management/'
     | '/ai/example/'
@@ -244,9 +270,11 @@ export interface FileRouteTypes {
     | '/central-warehouse-management'
     | '/customer-management'
     | '/permissions-management'
+    | '/product-categories-management'
     | '/products-management'
     | '/purchase-locations-management'
     | '/reference-documentation'
+    | '/reference-documents-management'
     | '/roles-management'
     | '/user-management'
     | '/ai/example'
@@ -265,9 +293,11 @@ export interface FileRouteTypes {
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
+    | '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/roles-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
     | '/_authenticated/ai/example/'
@@ -346,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/'
+      path: '/reference-documents-management'
+      fullPath: '/reference-documents-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/': {
       id: '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/'
       path: '/reference-documentation'
@@ -365,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/products-management'
       fullPath: '/products-management/'
       preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/': {
+      id: '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/'
+      path: '/product-categories-management'
+      fullPath: '/product-categories-management/'
+      preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/': {
@@ -428,9 +472,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   AuthenticatedAiExampleIndexRoute: typeof AuthenticatedAiExampleIndexRoute
@@ -453,12 +499,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONPermissionsManagementIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONProductCategoriesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONProductsManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONPurchaseLocationsManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentationIndexRoute,
+  AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute:
+    AuthenticatedSYSTEMADMINISTRATIONReferenceDocumentsManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONRolesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute:

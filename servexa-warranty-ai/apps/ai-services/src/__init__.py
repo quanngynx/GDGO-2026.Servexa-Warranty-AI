@@ -1,17 +1,11 @@
-"""
-Ensure local `src` absolute imports work in dev runners.
-
-`fastapi dev` imports `src.main`, but modules in this service use imports like
-`from configs.base import settings` (expecting `src` on `sys.path`).
-"""
+"""Package bootstrap: legacy imports (configs, core, modules) expect `src` on PYTHONPATH."""
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-_SRC_DIR = Path(__file__).resolve().parent
-_SRC_STR = str(_SRC_DIR)
-
-if _SRC_STR not in sys.path:
-    sys.path.insert(0, _SRC_STR)
+_SRC_ROOT = Path(__file__).resolve().parent
+_src_root = str(_SRC_ROOT)
+if _src_root not in sys.path:
+    sys.path.insert(0, _src_root)

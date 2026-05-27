@@ -1,72 +1,68 @@
-"use client";
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { Alert, AlertDescription, AlertTitle } from '@servexa-warranty-ai/ui/components/alert'
+import { Input } from '@servexa-warranty-ai/ui/components/input'
+import { Label } from '@servexa-warranty-ai/ui/components/label'
+import { AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
+import { type AscCenter } from '../data/schema'
+import { useDeleteAscCenterMutation } from '../hooks/use-delete-asc-center-mutation'
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { showSubmittedData } from "@/components/show-submitted-data";
-import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/components/alert";
-import { Input } from "@servexa-warranty-ai/ui/components/input";
-import { Label } from "@servexa-warranty-ai/ui/components/label";
-import { AlertTriangle } from "lucide-react";
-import { useState } from "react";
-import { type User } from "../data/schema";
+type AscCentersDeleteDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  currentRow: AscCenter
+}
 
-type UserDeleteDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  currentRow: User;
-};
-
-export function UsersDeleteDialog({
+export function AscCentersDeleteDialog({
   open,
   onOpenChange,
   currentRow,
-}: UserDeleteDialogProps) {
-  const [value, setValue] = useState("");
+}: AscCentersDeleteDialogProps) {
+  const [value, setValue] = useState('')
+  const { mutate, isPending } = useDeleteAscCenterMutation()
 
   const handleDelete = () => {
-    if (value.trim() !== currentRow.username) return;
+    if (value.trim() !== currentRow.centerCode) return
 
-    onOpenChange(false);
-    showSubmittedData(currentRow, "The following user has been deleted:");
-  };
+    mutate(currentRow.id, {
+      onSuccess: () => {
+        setValue('')
+        onOpenChange(false)
+      },
+    })
+  }
 
   return (
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value.trim() !== currentRow.username}
+      disabled={value.trim() !== currentRow.centerCode || isPending}
+      isLoading={isPending}
       title={
-        <span className="text-destructive">
-          <AlertTriangle
-            className="me-1 inline-block stroke-destructive"
-            size={18}
-          />{" "}
-          Delete User
+        <span className='text-destructive'>
+          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} />{' '}
+          Delete ASC Center
         </span>
       }
       desc={
-        <div className="space-y-4">
-          <p className="mb-2">
-            Are you sure you want to delete{" "}
-            <span className="font-bold">{currentRow.username}</span>?
-            <br />
-            This action will permanently remove the user with the role of{" "}
-            <span className="font-bold">
-              {currentRow.role.toUpperCase()}
-            </span>{" "}
-            from the system. This cannot be undone.
+        <div className='space-y-4'>
+          <p className='mb-2'>
+            Are you sure you want to delete{' '}
+            <span className='font-bold'>{currentRow.centerName}</span> (
+            <span className='font-mono'>{currentRow.centerCode}</span>)? This cannot be undone.
           </p>
 
-          <Label className="my-2">
-            Username:
+          <Label className='my-2'>
+            Center code:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Enter username to confirm deletion."
+              placeholder='Enter center code to confirm deletion.'
             />
           </Label>
 
-          <Alert variant="destructive">
+          <Alert variant='destructive'>
             <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
               Please be careful, this operation can not be rolled back.
@@ -74,8 +70,8 @@ export function UsersDeleteDialog({
           </Alert>
         </div>
       }
-      confirmText="Delete"
+      confirmText='Delete'
       destructive
     />
-  );
+  )
 }

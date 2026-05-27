@@ -1,21 +1,14 @@
-import { Button } from "@servexa-warranty-ai/ui/components/button";
-import { MailPlus, UserPlus } from "lucide-react";
-import { useUsers } from "./asc-centers-provider";
+import { Button } from '@servexa-warranty-ai/ui/components/button'
+import { Building2 } from 'lucide-react'
+import { useAscCenters } from './asc-centers-provider'
 
-export function UsersPrimaryButtons() {
-  const { setOpen } = useUsers();
+export function AscCentersPrimaryButtons() {
+  const { setOpen } = useAscCenters()
   return (
-    <div className="flex gap-2">
-      <Button
-        variant="outline"
-        className="space-x-1"
-        onClick={() => setOpen("invite")}
-      >
-        <span>Invite User</span> <MailPlus size={18} />
-      </Button>
-      <Button className="space-x-1" onClick={() => setOpen("add")}>
-        <span>Add User</span> <UserPlus size={18} />
+    <div className='flex gap-2'>
+      <Button className='space-x-1' onClick={() => setOpen('add')}>
+        <span>Add ASC Center</span> <Building2 size={18} />
       </Button>
     </div>
-  );
+  )
 }

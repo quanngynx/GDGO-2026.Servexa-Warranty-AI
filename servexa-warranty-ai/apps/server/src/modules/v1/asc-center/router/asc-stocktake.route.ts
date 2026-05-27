@@ -26,11 +26,40 @@ router.use(authenticateMiddleware);
 // ];
 
 // Order matters: register specific routes before `/:id`
+/**
+ * Get accessories for a stocktake
+ * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/accessories
+ * @access Private
+ * @returns {Promise<void>}
+ */
 router.get('/asc-centers/:ascCenterId/accessories', controller.findAccessoriesForStocktake);
+/**
+ * Get stock levels for a stocktake
+ * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/stock-levels
+ * @access Private
+ * @returns {Promise<void>}
+ */
 router.get('/asc-centers/:ascCenterId/stock-levels', controller.findStockLevels);
+/**
+ * Get history by center for a stocktake
+ * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 router.get('/asc-centers/:ascCenterId', controller.findHistoryByCenter);
+/**
+ * Get a stocktake by ID
+ * @route GET /v1/asc-center/asc-stocktakes/:id
+ * @access Private
+ * @returns {Promise<void>}
+ */
 router.get('/:id', controller.findOneById);
-
+/**
+ * Create a stocktake
+ * @route POST /v1/asc-center/asc-stocktakes
+ * @access Private
+ * @returns {Promise<void>}
+ */
 router.post('/', controller.create);
 
 export default router;

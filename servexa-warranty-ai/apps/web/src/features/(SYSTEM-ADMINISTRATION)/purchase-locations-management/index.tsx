@@ -1,107 +1,75 @@
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { getRouteApi } from "@tanstack/react-router";
-import { UsersDialogs } from "./components/purchase-locations-dialogs";
-import { UsersPrimaryButtons } from "./components/purchase-locations-primary-buttons";
-import { UsersProvider } from "./components/purchase-locations-provider";
-import { UsersTable } from "./components/purchase-locations-table";
-import { useUsersQuery } from "../user-management/hooks/use-users-query";
-import type {
-  ResponseUserDto,
-  ResponseUserListDto,
-} from "@/libs/api/identity/user/data-transfer-object";
-import { type User } from "./data/schema";
+import { getRouteApi } from '@tanstack/react-router'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponsePurchaseLocationListDto } from '@/libs/api/purchase-channels/purchase-location/data-transfer-object'
+import { PurchaseLocationsDialogs } from './components/purchase-locations-dialogs'
+import { PurchaseLocationsPrimaryButtons } from './components/purchase-locations-primary-buttons'
+import { PurchaseLocationsProvider } from './components/purchase-locations-provider'
+import { PurchaseLocationsTable } from './components/purchase-locations-table'
+import { usePurchaseLocationsQuery } from './hooks/use-purchase-locations-query'
 
 const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/"
-);
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/',
+)
 
 export function PurchaseLocationsManagement() {
-  const search = route.useSearch();
-  const navigate = route.useNavigate();
-  const { data } = useUsersQuery({
-    page: (search.page as number) ?? 1,
-    limit: (search.pageSize as number) ?? 10,
-    search: (search.username as string) || undefined,
-  });
-  const list = listPayloadFromUsersApi(data);
-  const users = (list?.items ?? []).map(mapToSystemAdminUser);
+  const search = route.useSearch()
+  const navigate = route.useNavigate()
+
+  const isActiveFilter =
+    search.isActive?.[0] === 'true'
+      ? true
+      : search.isActive?.[0] === 'false'
+        ? false
+        : undefined
+
+  const { data, isLoading } = usePurchaseLocationsQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+    isActive: isActiveFilter,
+  })
+
+  const list = listPayloadFromApi<ResponsePurchaseLocationListDto>(data)
+  const locations = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
-    <UsersProvider>
+    <PurchaseLocationsProvider>
       <Header fixed>
         <Search />
-        <div className="ms-auto flex items-center space-x-4">
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              User Management
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here. here.
+            <h2 className='text-2xl font-bold tracking-tight'>Purchase Locations Management</h2>
+            <p className='text-muted-foreground'>
+              Manage purchase channel locations and store codes.
             </p>
           </div>
-          <UsersPrimaryButtons />
+          <PurchaseLocationsPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <PurchaseLocationsTable
+          data={locations}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
 
-      <UsersDialogs />
-    </UsersProvider>
-  );
-}
-
-function listPayloadFromUsersApi(
-  body: unknown
-): ResponseUserListDto | undefined {
-  if (!body || typeof body !== "object") {
-    return undefined;
-  }
-  const o = body as {
-    metadata?: ResponseUserListDto;
-    data?: ResponseUserListDto;
-  };
-  return o.metadata ?? o.data;
-}
-
-function mapToSystemAdminUser(user: ResponseUserDto): User {
-  return {
-    id: user.id,
-    fullname: `${user.firstName} ${user.lastName}`.trim(),
-    username: user.username,
-    companyEmail: user.email,
-    personalEmail: user.email,
-    phoneNumber: user.phoneNumber,
-    avatar: user.avatar ?? "",
-    status:
-      user.status === "active" ||
-      user.status === "inactive" ||
-      user.status === "invited" ||
-      user.status === "suspended"
-        ? user.status
-        : "inactive",
-    role: user.role as User["role"],
-    ascCenter: user.ascCenter
-      ? {
-          id: user.ascCenter.id,
-          centerName: user.ascCenter.centerName,
-          centerCode: user.ascCenter.centerCode,
-        }
-      : null,
-    createdAt: new Date(user.createdAt),
-    updatedAt: new Date(user.updatedAt),
-    createdBy: user.createdBy ?? null,
-    updatedBy: user.updatedBy ?? null,
-  };
+      <PurchaseLocationsDialogs />
+    </PurchaseLocationsProvider>
+  )
 }

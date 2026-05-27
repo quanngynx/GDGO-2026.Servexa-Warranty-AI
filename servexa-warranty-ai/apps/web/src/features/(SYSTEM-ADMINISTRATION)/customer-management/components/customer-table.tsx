@@ -50,16 +50,19 @@ import { DataTableBulkActions } from "./data-table-bulk-actions";
 
 type DataTableProps = {
   data: Customer[];
+  isLoading?: boolean;
+  totalPages?: number;
   search: Record<string, unknown>;
   navigate: NavigateFn;
 };
 
 export function CustomersTable({
   data: initialData,
+  isLoading = false,
+  totalPages,
   search,
   navigate,
 }: DataTableProps) {
-  // Local UI-only states
   const [data, setData] = useState(() => initialData);
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -85,7 +88,7 @@ export function CustomersTable({
     columnFilters: [
       // username per-column text filter
       { columnId: "customerGroup", searchKey: "customerGroup", type: "string" },
-      { columnId: "fullname", searchKey: "fullname", type: "string" },
+      { columnId: "fullName", searchKey: "search", type: "string" },
       { columnId: "email", searchKey: "email", type: "string" },
       { columnId: "phone1", searchKey: "phone1", type: "string" },
     ],
@@ -103,9 +106,15 @@ export function CustomersTable({
     [data]
   );
 
+  useEffect(() => {
+    setData(initialData)
+  }, [initialData])
+
   const table = useReactTable({
     data,
     columns,
+    pageCount: totalPages,
+    manualPagination: totalPages !== undefined,
     state: {
       sorting,
       pagination,
@@ -199,7 +208,7 @@ export function CustomersTable({
       <DataTableToolbar
         table={table}
         searchPlaceholder="Filter customers..."
-        searchKey="fullname"
+        filterColumnId="fullName"
         filters={[
           {
             columnId: "customerGroup",
@@ -266,7 +275,13 @@ export function CustomersTable({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
                 <SortableContext
                   items={dataIds}
                   strategy={verticalListSortingStrategy}

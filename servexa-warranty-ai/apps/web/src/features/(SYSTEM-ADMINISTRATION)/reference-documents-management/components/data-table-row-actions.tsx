@@ -9,15 +9,15 @@ import {
 } from "@servexa-warranty-ai/ui/components/dropdown-menu";
 import { type Row } from "@tanstack/react-table";
 import { MoreHorizontal, Trash2, UserPen } from "lucide-react";
-import { type User } from "../data/schema";
-import { useUsers } from "./reference-documents-provider";
+import { type Document } from '../data/schema'
+import { useDocuments } from './reference-documents-provider'
 
 type DataTableRowActionsProps = {
-  row: Row<User>;
-};
+  row: Row<Document>
+}
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useUsers();
+  const { setOpen, setCurrentRow } = useDocuments()
   return (
     <>
       <DropdownMenu modal={false}>

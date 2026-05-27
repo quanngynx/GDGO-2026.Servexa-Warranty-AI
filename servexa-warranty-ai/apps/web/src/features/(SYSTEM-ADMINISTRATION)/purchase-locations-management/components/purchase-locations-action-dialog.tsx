@@ -1,4 +1,4 @@
-"use client";
+
 
 import { PasswordInput } from "@/components/password-input";
 import { SelectDropdown } from "@/components/select-dropdown";
@@ -25,7 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { roles } from "../data/data";
-import { type User } from "../data/schema";
+import { type PurchaseLocation } from '../data/schema'
 
 const formSchema = z
   .object({
@@ -94,12 +94,12 @@ const formSchema = z
 type UserForm = z.infer<typeof formSchema>;
 
 type UserActionDialogProps = {
-  currentRow?: User;
+  currentRow?: PurchaseLocation
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-export function UsersActionDialog({
+export function PurchaseLocationsActionDialog({
   currentRow,
   open,
   onOpenChange,
@@ -107,24 +107,17 @@ export function UsersActionDialog({
   const isEdit = !!currentRow;
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? {
-          ...currentRow,
-          password: "",
-          confirmPassword: "",
-          isEdit,
-        }
-      : {
-          firstName: "",
-          lastName: "",
-          username: "",
-          email: "",
-          role: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
-          isEdit,
-        },
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      role: '',
+      phoneNumber: '',
+      password: '',
+      confirmPassword: '',
+      isEdit,
+    },
   });
 
   const onSubmit = (values: UserForm) => {

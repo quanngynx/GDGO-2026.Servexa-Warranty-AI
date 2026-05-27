@@ -10,7 +10,8 @@
     "check-types": "vite build && tsc --noEmit",
     "dev:bare": "vite dev",
     "test": "vitest run",
-    "test:browser-smoke": "node scripts/browser-smoke-phase1.mjs"
+    "test:browser-smoke": "node scripts/browser-smoke-phase1.mjs",
+    "test:browser-smoke-admin": "node scripts/browser-smoke-admin.mjs"
   },
   "dependencies": {
     "@ag-ui/client": "catalog:",

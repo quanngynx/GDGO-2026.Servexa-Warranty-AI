@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import useDialogState from "@servexa-warranty-ai/ui/hooks/use-dialog-state";
-import { type User } from "../data/schema";
+import React, { useState } from 'react'
+import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
+import { type Role } from '../data/schema'
 
-type UsersDialogType = "invite" | "add" | "edit" | "delete";
+type RolesDialogType = 'invite' | 'add' | 'edit' | 'delete'
 
-type UsersContextType = {
-  open: UsersDialogType | null;
-  setOpen: (str: UsersDialogType | null) => void;
-  currentRow: User | null;
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>;
-};
+type RolesContextType = {
+  open: RolesDialogType | null
+  setOpen: (str: RolesDialogType | null) => void
+  currentRow: Role | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<Role | null>>
+}
 
-const UsersContext = React.createContext<UsersContextType | null>(null);
+const RolesContext = React.createContext<RolesContextType | null>(null)
 
-export function UsersProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useDialogState<UsersDialogType>(null);
-  const [currentRow, setCurrentRow] = useState<User | null>(null);
+export function RolesProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useDialogState<RolesDialogType>(null)
+  const [currentRow, setCurrentRow] = useState<Role | null>(null)
 
   return (
-    <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>
+    <RolesContext value={{ open, setOpen, currentRow, setCurrentRow }}>
       {children}
-    </UsersContext>
-  );
+    </RolesContext>
+  )
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const useUsers = () => {
-  const usersContext = React.useContext(UsersContext);
+export const useRoles = () => {
+  const context = React.useContext(RolesContext)
 
-  if (!usersContext) {
-    throw new Error("useUsers has to be used within <UsersContext>");
+  if (!context) {
+    throw new Error('useRoles must be used within <RolesProvider>')
   }
 
-  return usersContext;
-};
+  return context
+}

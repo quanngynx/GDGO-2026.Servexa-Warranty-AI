@@ -1,107 +1,85 @@
-import { ConfigDrawer } from "@/components/config-drawer";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { getRouteApi } from "@tanstack/react-router";
-import { UsersDialogs } from "./components/reference-documents-dialogs";
-import { UsersPrimaryButtons } from "./components/reference-documents-primary-buttons";
-import { UsersProvider } from "./components/reference-documents-provider";
-import { UsersTable } from "./components/reference-documents-table";
-import { useUsersQuery } from "../user-management/hooks/use-users-query";
-import type {
-  ResponseUserDto,
-  ResponseUserListDto,
-} from "@/libs/api/identity/user/data-transfer-object";
-import { type User } from "./data/schema";
+import { getRouteApi } from '@tanstack/react-router'
+import { type NavigateFn } from '@servexa-warranty-ai/ui/hooks/use-table-url-state'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponseDocumentListDto } from '@/libs/api/document/data-transfer-object'
+import { DocumentsDialogs } from './components/reference-documents-dialogs'
+import { DocumentsPrimaryButtons } from './components/reference-documents-primary-buttons'
+import { DocumentsProvider } from './components/reference-documents-provider'
+import { DocumentsTable } from './components/reference-documents-table'
+import { useDocumentsQuery } from './hooks/use-documents-query'
 
-const route = getRouteApi(
-  "/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/"
-);
+const documentsManagementRoute = getRouteApi(
+  '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/',
+)
 
-export function UserManagement() {
-  const search = route.useSearch();
-  const navigate = route.useNavigate();
-  const { data } = useUsersQuery({
-    page: (search.page as number) ?? 1,
-    limit: (search.pageSize as number) ?? 10,
-    search: (search.username as string) || undefined,
-  });
-  const list = listPayloadFromUsersApi(data);
-  const users = (list?.items ?? []).map(mapToSystemAdminUser);
+export type ReferenceDocumentsListSearch = {
+  page: number
+  pageSize: number
+  search: string
+}
+
+type ReferenceDocumentsManagementViewProps = {
+  search: ReferenceDocumentsListSearch
+  navigate: NavigateFn
+}
+
+export function ReferenceDocumentsManagementView({
+  search,
+  navigate,
+}: ReferenceDocumentsManagementViewProps) {
+  const { data, isLoading } = useDocumentsQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+  })
+
+  const list = listPayloadFromApi<ResponseDocumentListDto>(data)
+  const documents = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
-    <UsersProvider>
+    <DocumentsProvider>
       <Header fixed>
         <Search />
-        <div className="ms-auto flex items-center space-x-4">
+        <div className='ms-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      <Main className="flex flex-1 flex-col gap-4 sm:gap-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+        <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              User Management
-            </h2>
-            <p className="text-muted-foreground">
-              Manage your users and their roles here. here.
+            <h2 className='text-2xl font-bold tracking-tight'>Reference Documents</h2>
+            <p className='text-muted-foreground'>
+              Manage reference documentation and document versions.
             </p>
           </div>
-          <UsersPrimaryButtons />
+          <DocumentsPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <DocumentsTable
+          data={documents}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
 
-      <UsersDialogs />
-    </UsersProvider>
-  );
+      <DocumentsDialogs />
+    </DocumentsProvider>
+  )
 }
 
-function listPayloadFromUsersApi(
-  body: unknown
-): ResponseUserListDto | undefined {
-  if (!body || typeof body !== "object") {
-    return undefined;
-  }
-  const o = body as {
-    metadata?: ResponseUserListDto;
-    data?: ResponseUserListDto;
-  };
-  return o.metadata ?? o.data;
-}
-
-function mapToSystemAdminUser(user: ResponseUserDto): User {
-  return {
-    id: user.id,
-    fullname: `${user.firstName} ${user.lastName}`.trim(),
-    username: user.username,
-    companyEmail: user.email,
-    personalEmail: user.email,
-    phoneNumber: user.phoneNumber,
-    avatar: user.avatar ?? "",
-    status:
-      user.status === "active" ||
-      user.status === "inactive" ||
-      user.status === "invited" ||
-      user.status === "suspended"
-        ? user.status
-        : "inactive",
-    role: user.role as User["role"],
-    ascCenter: user.ascCenter
-      ? {
-          id: user.ascCenter.id,
-          centerName: user.ascCenter.centerName,
-          centerCode: user.ascCenter.centerCode,
-        }
-      : null,
-    createdAt: new Date(user.createdAt),
-    updatedAt: new Date(user.updatedAt),
-    createdBy: user.createdBy ?? null,
-    updatedBy: user.updatedBy ?? null,
-  };
+export function ReferenceDocumentsManagement() {
+  const search = documentsManagementRoute.useSearch()
+  const navigate = documentsManagementRoute.useNavigate()
+  return <ReferenceDocumentsManagementView search={search} navigate={navigate} />
 }

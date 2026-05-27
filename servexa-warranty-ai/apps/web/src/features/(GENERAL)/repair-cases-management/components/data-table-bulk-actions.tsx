@@ -1,20 +1,50 @@
+import { useState } from 'react'
+import type { Table } from '@tanstack/react-table'
+import { Trash2 } from 'lucide-react'
 import { Button } from '@servexa-warranty-ai/ui/components/button'
-import type { Table } from '@tanstack/react-table';
-import { useState } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@servexa-warranty-ai/ui/components/tooltip'
+import { DataTableBulkActions as BulkActionsToolbar } from '@servexa-warranty-ai/ui/components/data-table'
+import { RepairCasesMultiDeleteDialog } from './repair-cases-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
-  table: Table<TData>;
-};
+  table: Table<TData>
+}
 
-export function DataTableBulkActions<TData>({
-  table,
-}: DataTableBulkActionsProps<TData>) {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
+export function DataTableBulkActions<TData>({ table }: DataTableBulkActionsProps<TData>) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   return (
-    <Button variant='outline' size='sm' disabled>
-      Bulk Actions
-    </Button>
+    <>
+      <BulkActionsToolbar table={table} entityName='repair case'>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='destructive'
+              size='icon'
+              onClick={() => setShowDeleteConfirm(true)}
+              className='size-8'
+              aria-label='Delete selected repair cases'
+              title='Delete selected repair cases'
+            >
+              <Trash2 />
+              <span className='sr-only'>Delete selected repair cases</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Delete selected repair cases</p>
+          </TooltipContent>
+        </Tooltip>
+      </BulkActionsToolbar>
+
+      <RepairCasesMultiDeleteDialog
+        table={table}
+        open={showDeleteConfirm}
+        onOpenChange={setShowDeleteConfirm}
+      />
+    </>
   )
 }

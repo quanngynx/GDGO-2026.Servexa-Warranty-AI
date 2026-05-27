@@ -10,13 +10,9 @@ import { CustomersDialogs } from "./components/customer-dialogs";
 import { CustomersPrimaryButtons } from "./components/customer-primary-buttons";
 import { CustomersProvider } from "./components/customer-provider";
 import { CustomersTable } from "./components/customer-table";
-import { customerApi } from "@/libs/api/human-resources/customer/api";
-import { type Customer } from "./data/schema";
-import type {
-  CustomerListApiResponse,
-  CustomerListResponse,
-  CustomerResponseDto,
-} from "@/libs/api/human-resources/customer/data-transfer-object";
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponseCustomerListDto } from '@/libs/api/human-resources/customer/data-transfer-object'
+import { useCustomersQuery } from './hooks/use-customers-query'
 
 const route = getRouteApi(
   "/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/"
@@ -25,25 +21,16 @@ const route = getRouteApi(
 export function CustomerManagement() {
   const search = route.useSearch();
   const navigate = route.useNavigate();
-  const { data } = useQuery({
-    queryKey: [
-      "system-admin",
-      "customers",
-      {
-        page: (search.page as number) ?? 1,
-        limit: (search.pageSize as number) ?? 10,
-        search: (search.fullname as string) || undefined,
-      },
-    ],
-    queryFn: () =>
-      customerApi.findAll({
-        page: (search.page as number) ?? 1,
-        limit: (search.pageSize as number) ?? 10,
-        search: (search.fullname as string) || "",
-      }),
-  });
-  const list = listPayloadFromCustomersApi(data);
-  const customers = (list?.items ?? []).map(mapToCustomerRow);
+
+  const { data, isLoading } = useCustomersQuery({
+    page: search.page,
+    limit: search.pageSize,
+    search: search.search || undefined,
+  })
+
+  const list = listPayloadFromApi<ResponseCustomerListDto>(data)
+  const customers = list?.items ?? []
+  const totalPages = list?.pagination?.totalPages ?? 1
 
   return (
     <CustomersProvider>
@@ -66,7 +53,13 @@ export function CustomerManagement() {
           </div>
           <CustomersPrimaryButtons />
         </div>
-        <CustomersTable data={customers} search={search} navigate={navigate} />
+        <CustomersTable
+          data={customers}
+          isLoading={isLoading}
+          totalPages={totalPages}
+          search={search}
+          navigate={navigate}
+        />
       </Main>
       <CustomersDialogs />
     </CustomersProvider>
