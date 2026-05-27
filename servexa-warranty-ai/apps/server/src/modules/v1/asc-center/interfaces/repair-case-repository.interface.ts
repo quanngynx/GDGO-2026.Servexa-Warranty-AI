@@ -3,6 +3,8 @@ import type {
   RepairCaseStatusHistory,
   RepairCaseFieldHistory,
   AccessoryRequest,
+  RepairCase,
+  RepairCaseAccessory,
 } from "@servexa-warranty-ai/db/prisma/client";
 import type {
   FindAllRepairCasesInput,
@@ -19,10 +21,10 @@ import type {
 export interface IRepairCaseRepository {
   findMany(input: FindAllRepairCasesInput): Promise<RepairCaseListItem[]>;
   count(input: FindAllRepairCasesInput): Promise<number>;
-  findOneById(id: string): Promise<RepairCaseDetail | null>;
+  findOneById(id: string): Promise<(RepairCase & Prisma.RepairCaseInclude) | null>;
   findStatusHistory(id: string): Promise<RepairCaseStatusHistory[]>;
   findFieldHistory(id: string): Promise<RepairCaseFieldHistory[]>;
-  findAccessoryRequests(id: string): Promise<AccessoryRequest[]>;
+  findAccessoryRequests(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null>;
   findImages(id: string): Promise<RepairCaseImageDto[]>;
   findImageById(
     id: string,
@@ -31,7 +33,7 @@ export interface IRepairCaseRepository {
   findAccessoryRowById(
     id: string,
     accessoryRowId: string,
-  ): Promise<GrantedAccessoryDto | null>;
+  ): Promise<(RepairCaseAccessory & Prisma.RepairCaseAccessoryInclude) | null>;
   findManyForExport(
     kind:
       | "fixing"

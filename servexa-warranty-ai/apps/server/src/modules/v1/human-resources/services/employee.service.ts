@@ -148,6 +148,32 @@ export class EmployeeService implements IEmployeeService {
         take: query.limit,
         orderBy: { [query.sortBy]: query.sortOrder },
         select: employeeSelect,
+        include: {
+          ascCenter: {
+            select: {
+              centerName: true,
+              centerCode: true,
+              address: true,
+            },
+          },
+          user: {
+            select: {
+              username: true,
+              status: true,
+            },
+          },
+          creator: {
+            select: {
+              fullName: true,
+              username: true,
+            },
+          },
+          _count: {
+            select: {
+              repairCasesAssigned: true,
+            },
+          },
+        },
       }),
       this.employeeRepository.count(where),
     ])
@@ -156,9 +182,48 @@ export class EmployeeService implements IEmployeeService {
   }
 
   async findOneById(employeeId: string) {
-    const found = (await this.employeeRepository.findOneById(employeeId, {
+    const found = await this.employeeRepository.findOneById(employeeId, {
       select: employeeSelect,
-    })) as Record<string, unknown> | null
+      include: {
+        ascCenter: true,
+          user: {
+            select: {
+              username: true,
+              status: true,
+              role: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          creator: {
+            select: {
+              fullName: true,
+              username: true,
+            },
+          },
+          repairCasesAssigned: {
+            select: {
+              caseNumber: true,
+              status: true,
+              customer: {
+                select: {
+                  fullName: true,
+                },
+              },
+              receivedDate: true,
+            },
+            orderBy: { receivedDate: "desc" },
+            take: 10,
+          },
+          _count: {
+            select: {
+              repairCasesAssigned: true,
+            },
+          },
+      }
+    })
 
     if (!found) throw createOperationalError('Employee not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     return found

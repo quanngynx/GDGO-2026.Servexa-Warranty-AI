@@ -27,7 +27,7 @@ accessoryRoute.get('/', accessoryController.findAll)
  * @access Private
  * @returns {Promise<void>}
  */
-accessoryRoute.get('/', accessoryController.findAll)
+accessoryRoute.get('/', accessoryController.findAllFromTotalWarehouse)
 /**
  * Get all accessories from ASC center
  * @route GET /v1/product-catalog/accessories/asc-center/:ascCenterId/accessories

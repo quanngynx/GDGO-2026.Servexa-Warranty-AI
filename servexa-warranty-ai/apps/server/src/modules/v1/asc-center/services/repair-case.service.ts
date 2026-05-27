@@ -23,8 +23,10 @@ export class RepairCaseService implements IRepairCaseService {
   ) {}
 
   async findAll(input: FindAllRepairCasesInput) {
-    const items = await this.repairCaseRepository.findMany(input);
-    const total = await this.repairCaseRepository.count(input);
+    const [items, total] = await Promise.all([
+      this.repairCaseRepository.findMany(input),
+      this.repairCaseRepository.count(input),
+    ]);
     return {
       items,
       pagination: buildPagination(input.page || 1, input.limit || 10, total),
@@ -32,8 +34,10 @@ export class RepairCaseService implements IRepairCaseService {
   }
 
   async findWaitingAccessories(input: FindWaitingAccessoriesInput) {
-    const items = await this.repairCaseRepository.findMany(input);
-    const total = await this.repairCaseRepository.count(input);
+    const [items, total] = await Promise.all([
+      this.repairCaseRepository.findMany(input),
+      this.repairCaseRepository.count(input),
+    ]);
     return {
       items,
       pagination: buildPagination(input.page || 1, input.limit || 10, total),
@@ -63,7 +67,13 @@ export class RepairCaseService implements IRepairCaseService {
   }
 
   async findImages(id: string) {
-    return this.repairCaseRepository.findImages(id);
+    const images = await this.repairCaseRepository.findImages(id);
+    if (!images)
+      throw createOperationalError(
+        "Images not found",
+        HTTP_RESPONSE_CODE.NOT_FOUND,
+      );
+    return images;
   }
 
   async findImageById(id: string, imageId: string) {

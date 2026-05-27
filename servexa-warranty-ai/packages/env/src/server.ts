@@ -84,6 +84,7 @@ export const env = createEnv({
     REDIS_USERNAME: z.string().optional(),
     REDIS_PASSWORD: z.string().optional(),
     REDIS_DB: z.coerce.number().int().positive().default(0),
+    REDIS_TLS: z.boolean().default(false),
 
     AI_GRPC_HOST: z
       .string()
