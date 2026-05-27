@@ -11,6 +11,7 @@ import { LastDecisionSummaryCard } from "./last-decision-summary-card";
 import { SuggestedActionsPanel } from "./suggested-actions";
 import { WarrantyEligibilityCard } from "./warranty-eligibility-card";
 import { WorkflowProgressCard } from "./workflow-progress-card";
+import { ReasoningTracePanel } from "./reasoning-trace-panel";
 
 type ServexaCopilotContextPanelsProps = {
   panel: ServexaCopilotPanel;
@@ -53,6 +54,12 @@ export function ServexaCopilotContextPanels({
         <DiagnosisDraftCard diagnosis={railMeta.diagnosisDraft} />
       ) : null}
       {workflowProgress ? <WorkflowProgressCard progress={workflowProgress} /> : null}
+      {railMeta?.reasoningTrace || railMeta?.latestReasoningEvent ? (
+        <ReasoningTracePanel
+          reasoningTrace={railMeta?.reasoningTrace}
+          latestReasoningEvent={railMeta?.latestReasoningEvent}
+        />
+      ) : null}
       {lastDecision || railMeta?.lastDecision ? (
         <LastDecisionSummaryCard lastDecision={lastDecision ?? railMeta!.lastDecision!} />
       ) : null}
