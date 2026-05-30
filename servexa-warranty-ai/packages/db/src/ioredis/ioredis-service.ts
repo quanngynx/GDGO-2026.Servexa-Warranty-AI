@@ -12,10 +12,11 @@ export class IoredisService {
     const nodeEnv = env.NODE_ENV;
     const host = env.REDIS_HOST || '127.0.0.1';
     const port = env.REDIS_PORT || 6379;
-    // const password = env.REDIS_PASSWORD || '';
-    // const username = env.REDIS_USERNAME || '';
+    const tls = env.REDIS_TLS || false;
+    const password = env.REDIS_PASSWORD;
+    const username = env.REDIS_USERNAME;
 
-    const options = redisOptionsLocal({ host, port, node_env: nodeEnv});
+    const options = redisOptionsLocal({ host, port, tls, password, username, node_env: nodeEnv});
 
     const client = new Redis(options);
 

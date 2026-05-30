@@ -9,32 +9,32 @@ export interface IAccessoryRequestRepository {
   findMany(
     query: FindAllAccessoryRequestsInput,
     skip: number,
-  ): Promise<AccessoryRequest[]>;
+  ): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null>;
   count(query: FindAllAccessoryRequestsInput): Promise<number>;
   findById(
     id: string,
-  ): Promise<(AccessoryRequest & { items: AccessoryRequestItem[] }) | null>;
-  findByIdHeaderOnly(id: string): Promise<AccessoryRequest | null>;
+  ): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
+  findByIdHeaderOnly(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
   findItemById(
     id: string,
     itemId: string,
-  ): Promise<AccessoryRequestItem | null>;
+  ): Promise<(AccessoryRequestItem & Prisma.AccessoryRequestItemInclude) | null>;
 
   createWithItems(
     data: Prisma.AccessoryRequestUncheckedCreateInput,
     items: Prisma.AccessoryRequestItemCreateWithoutRequestInput[],
     tx?: Prisma.TransactionClient,
-  ): Promise<AccessoryRequest & { items: AccessoryRequestItem[] }>;
+  ): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
 
   updateHeader(
     id: string,
     data: Prisma.AccessoryRequestUncheckedUpdateInput,
     tx?: Prisma.TransactionClient,
-  ): Promise<AccessoryRequest>;
+  ): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
   deleteWithItems(
     id: string,
     tx?: Prisma.TransactionClient,
-  ): Promise<AccessoryRequest>;
+  ): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
 
   addItem(
     data: Prisma.AccessoryRequestItemUncheckedCreateInput,

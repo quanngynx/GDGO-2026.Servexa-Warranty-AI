@@ -1,10 +1,19 @@
-import type { CreateTechnicianDto, ReplaceTechnicianDto, UpdateTechnicianDto } from '../dtos/technician.dto'
-import type { FindAllTechniciansInput } from '../services/technician.service'
+import type { BasePagination } from "src/types/pagination";
+import type {
+  CreateTechnicianDto,
+  ReplaceTechnicianDto,
+  UpdateTechnicianDto,
+} from "../dtos/technician.dto";
+import type { FindAllTechniciansInput } from "../services/technician.service";
+import type { Prisma, TechnicianProfile } from "@servexa-warranty-ai/db/prisma/client";
 
 export interface ITechnicianService {
-  findAll(query: FindAllTechniciansInput): Promise<unknown>
-  findOneById(technicianProfileId: string): Promise<unknown>
-  create(input: CreateTechnicianDto): Promise<unknown>
-  update(technicianProfileId: string, input: ReplaceTechnicianDto | UpdateTechnicianDto): Promise<unknown>
-  delete(technicianProfileId: string): Promise<{ success: true }>
+  findAll(query: FindAllTechniciansInput): Promise<{ items: (TechnicianProfile & Prisma.TechnicianProfileInclude)[] | null | undefined, pagination: BasePagination }>;
+  findOneById(technicianProfileId: string): Promise<TechnicianProfile & Prisma.TechnicianProfileInclude | null | undefined>;
+  create(input: CreateTechnicianDto): Promise<unknown>;
+  update(
+    technicianProfileId: string,
+    input: ReplaceTechnicianDto | UpdateTechnicianDto,
+  ): Promise<unknown>;
+  delete(technicianProfileId: string): Promise<{ success: true }>;
 }

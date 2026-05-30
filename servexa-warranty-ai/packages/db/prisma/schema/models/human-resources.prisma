@@ -86,6 +86,7 @@ model Employee {
 model TechnicianProfile {
   id                 String                     @id @default(uuid(7))
   userId             String                     @unique @map("user_id")
+  ascCenterId        String                     @map("asc_center_id")
   skillLevel         TechnicianSkillLevel       @default(basic) @map("skill_level")
   specializations    TechnicianSpecialization[]
   certifications     String?
@@ -98,6 +99,10 @@ model TechnicianProfile {
   createdAt          DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt          DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
   user               User                       @relation(fields: [userId], references: [id])
+  ascCenter          AscCenter                  @relation(fields: [ascCenterId], references: [id])
+  repairCases        RepairCase[]               @relation("TechnicianAssignedToRepairCases")
 
+  @@index([userId])
+  @@index([ascCenterId])
   @@map("technician_profiles")
 }

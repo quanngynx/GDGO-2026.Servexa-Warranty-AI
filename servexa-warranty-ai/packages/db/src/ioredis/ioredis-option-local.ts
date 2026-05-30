@@ -6,16 +6,25 @@ import { redisRetryStrategy } from './strategies/ioredis-strategy';
 export const redisOptionsLocal = ({
     host,
     port,
+    password,
+    username,
     node_env,
+    tls,
   }: Pick<
     RedisOptions,
     | 'host'
     | 'port'
+    | 'password'
+    | 'username'
     | 'showFriendlyErrorStack'
     | 'lazyConnect'
     | 'commandTimeout'
     | 'retryStrategy'
+    | 'tls'
   > & {
+    password?: string;
+    username?: string;
+    tls?: boolean;
     node_env: EnvServer['NODE_ENV'];
   }): RedisOptions => {
     let totalRetryDuration = 0;
@@ -23,6 +32,9 @@ export const redisOptionsLocal = ({
     const options: RedisOptions = {
       host,
       port,
+      tls,
+      password,
+      username,
       showFriendlyErrorStack: node_env === 'production' ? false : true,
       lazyConnect: true,
       commandTimeout: 1000,

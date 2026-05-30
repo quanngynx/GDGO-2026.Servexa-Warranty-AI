@@ -1,4 +1,4 @@
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import type { Model, Prisma } from '@servexa-warranty-ai/db/prisma/client'
 
 type ModelSelect = Prisma.ModelSelect
 type ModelInclude = Prisma.ModelInclude
@@ -28,25 +28,25 @@ export type ModelExportRow = Prisma.ModelGetPayload<{
 }>
 
 export interface IModelRepository {
-  findAll(query: Prisma.ModelFindManyArgs): Promise<unknown[]>
+  findAll(query: Prisma.ModelFindManyArgs): Promise<(Model & Prisma.ModelInclude)[] | null>
   count(where: Prisma.ModelWhereInput): Promise<number>
   findOneById<TSelect extends ModelSelect | undefined, TInclude extends ModelInclude | undefined>(
     id: string,
     options?: ModelOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>
+  ): Promise<(Model & Prisma.ModelInclude) | null>
   findOneByModelCode<TSelect extends ModelSelect | undefined, TInclude extends ModelInclude | undefined>(
     modelCode: string,
     options?: ModelOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>
+  ): Promise<(Model & Prisma.ModelInclude) | null>
   createOne<TSelect extends ModelSelect | undefined, TInclude extends ModelInclude | undefined>(
     data: Prisma.ModelCreateInput,
     options?: ModelOptions<TSelect, TInclude>,
-  ): Promise<unknown>
+  ): Promise<(Model & Prisma.ModelInclude) | null>
   updateOneById<TSelect extends ModelSelect | undefined, TInclude extends ModelInclude | undefined>(
     id: string,
     data: Prisma.ModelUpdateInput,
     options?: ModelOptions<TSelect, TInclude>,
-  ): Promise<unknown>
+  ): Promise<(Model & Prisma.ModelInclude) | null>
   softDeleteById(id: string): Promise<unknown>
   restoreById(id: string): Promise<unknown>
   findManyForExport(): Promise<ModelExportRow[]>
