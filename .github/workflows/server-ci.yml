@@ -13,8 +13,13 @@ jobs:
     name: Server CI
     runs-on: ubuntu-latest
     env:
+      NODE_ENV: test
+      PORT: "3000"
       # prisma generate (packages/db postinstall) only needs a valid URL shape, not a live DB.
       DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      CORS_ORIGIN: http://localhost:3001
+      CORS_ORIGIN_WEB: http://localhost:3001
+      TEMP_REFRESH_TOKEN_SECRET: ci-test-refresh-token-secret
 
     steps:
       - name: Checkout source
