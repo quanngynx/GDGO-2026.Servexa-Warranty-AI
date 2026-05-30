@@ -2,39 +2,10 @@ import prisma from "@servexa-warranty-ai/db";
 import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
 import type { IAccessoryRequestRepository } from "../interfaces/accessory-request-repository.interface";
 import type { FindAllAccessoryRequestsInput } from "../dtos/accessory-request.dto";
-
-export const accessoryRequestSelect = {
-  id: true,
-  requestNumber: true,
-  ascCenterId: true,
-  repairCaseId: true,
-  requestedBy: true,
-  requestDate: true,
-  urgency: true,
-  justification: true,
-  status: true,
-  statusRecall: true,
-  approvedBy: true,
-  approvedDate: true,
-  rejectionReason: true,
-  totalEstimatedCost: true,
-  createdAt: true,
-  updatedAt: true,
-  ascCenter: { select: { id: true, centerName: true, centerCode: true } },
-  requester: { select: { id: true, fullName: true, email: true } },
-  approver: { select: { id: true, fullName: true, email: true } },
-};
-
-export const accessoryRequestDetailInclude = {
-  items: {
-    include: {
-      accessory: { select: { id: true, name: true, sku: true, unit: true } },
-    },
-  },
-  ascCenter: { select: { id: true, centerName: true, centerCode: true } },
-  requester: { select: { id: true, fullName: true, email: true } },
-  approver: { select: { id: true, fullName: true, email: true } },
-};
+import {
+  accessoryRequestDetailInclude,
+  accessoryRequestSelect,
+} from "../accessory-request.types";
 
 export class AccessoryRequestRepository implements IAccessoryRequestRepository {
   private _buildWhere(

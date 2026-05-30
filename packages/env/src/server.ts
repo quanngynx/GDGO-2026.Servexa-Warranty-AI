@@ -28,6 +28,7 @@ export type EnvServer = Readonly<{
   REDIS_USERNAME?: string | undefined;
   REDIS_PASSWORD?: string | undefined;
   REDIS_DB: number;
+  REDIS_TLS: boolean;
 
   /** When set (non-empty), ERP uses unary gRPC to Python AI runtime */
   AI_GRPC_HOST?: string | undefined;
@@ -84,7 +85,7 @@ export const env = createEnv({
     REDIS_USERNAME: z.string().optional(),
     REDIS_PASSWORD: z.string().optional(),
     REDIS_DB: z.coerce.number().int().positive().default(0),
-    REDIS_TLS: z.boolean().default(false),
+    REDIS_TLS: envBoolean(false),
 
     AI_GRPC_HOST: z
       .string()

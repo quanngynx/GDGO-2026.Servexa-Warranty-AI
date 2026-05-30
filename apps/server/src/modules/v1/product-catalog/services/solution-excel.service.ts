@@ -303,6 +303,12 @@ export class SolutionExcelService implements ISolutionExcelService {
     rows: Prisma.SolutionCreateManyInput[],
   ): Promise<number> {
     const createdRows = await this.solutionRepository.createManyAndReturn(rows);
+    if (!createdRows) {
+      throw createOperationalError(
+        "Failed to create solutions",
+        HTTP_RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+      );
+    }
     return createdRows.length;
   }
 }

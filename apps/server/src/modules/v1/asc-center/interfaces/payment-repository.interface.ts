@@ -1,10 +1,14 @@
 import type { FindAllPaymentsInput, FindAllPaymentPeriodsInput } from '../dtos/payment.dto';
-import type { Payment, PaymentPeriod, Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import type { PaymentListItem, PaymentPeriodListItem } from '../payment.types';
 
 export interface IPaymentRepository {
-  findManyPayments(input: FindAllPaymentsInput): Promise<(Payment & Prisma.PaymentInclude)[] | null>;
+  findManyPayments(input: FindAllPaymentsInput): Promise<PaymentListItem[]>;
   countPayments(input: FindAllPaymentsInput): Promise<number>;
-  findManyPeriods(input: FindAllPaymentPeriodsInput): Promise<(PaymentPeriod & Prisma.PaymentPeriodInclude)[] | null>;
+  findManyPeriods(input: FindAllPaymentPeriodsInput): Promise<PaymentPeriodListItem[]>;
   countPeriods(input: FindAllPaymentPeriodsInput): Promise<number>;
-  markPaidWithPeriod(args: { paymentId: string; paymentPeriodId: string; userId: string }): Promise<unknown>;
+  markPaidWithPeriod(args: {
+    paymentId: string;
+    paymentPeriodId: string;
+    userId: string;
+  }): Promise<PaymentListItem>;
 }

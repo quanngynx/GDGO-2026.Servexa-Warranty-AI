@@ -1,49 +1,41 @@
-import prisma from '@servexa-warranty-ai/db';
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client';
+import prisma from "@servexa-warranty-ai/db";
+import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
 
-import type { IAscStocktakeRepository } from '../interfaces/asc-stocktake-repository.interface';
+import type { IAscStocktakeRepository } from "../interfaces/asc-stocktake-repository.interface";
 import type {
   FindAllAscStocktakesInput,
   FindStocktakeAccessoriesInput,
   FindStocktakeStockLevelsInput,
-} from '../dtos/asc-stocktake.dto';
-
-export const ascStocktakeListSelect = {
-  id: true,
-  ascCenterId: true,
-  notes: true,
-  createdBy: true,
-  createdAt: true,
-  ascCenter: { select: { id: true, centerName: true, centerCode: true } },
-  creator: { select: { id: true, fullName: true, companyEmail: true } },
-  _count: { select: { items: true } },
-} satisfies Prisma.AscStocktakeSelect;
-
-export const ascStocktakeDetailInclude = {
-  ascCenter: { select: { id: true, centerName: true, centerCode: true } },
-  creator: { select: { id: true, fullName: true, companyEmail: true } },
-  items: {
-    include: {
-      accessory: { select: { id: true, name: true, partNumber: true, unitPrice: true } },
-    },
-    orderBy: { id: 'asc' },
-  },
-} satisfies Prisma.AscStocktakeInclude;
+} from "../dtos/asc-stocktake.dto";
+import {
+  ascStocktakeAccessorySelect,
+  ascStocktakeDetailInclude,
+  ascStocktakeListSelect,
+  ascStocktakeStockLevelInclude,
+} from "../asc-stocktake.types";
 
 export class AscStocktakeRepository implements IAscStocktakeRepository {
-  private buildHistoryWhere(input: FindAllAscStocktakesInput): Prisma.AscStocktakeWhereInput {
+  private buildHistoryWhere(
+    input: FindAllAscStocktakesInput,
+  ): Prisma.AscStocktakeWhereInput {
     return {
       ascCenterId: input.ascCenterId,
       ...(input.createdBy ? { createdBy: input.createdBy } : {}),
       ...(input.createdAtFrom || input.createdAtTo
         ? {
             createdAt: {
-              ...(input.createdAtFrom ? { gte: new Date(input.createdAtFrom) } : {}),
-              ...(input.createdAtTo ? { lte: new Date(input.createdAtTo) } : {}),
+              ...(input.createdAtFrom
+                ? { gte: new Date(input.createdAtFrom) }
+                : {}),
+              ...(input.createdAtTo
+                ? { lte: new Date(input.createdAtTo) }
+                : {}),
             },
           }
         : {}),
-      ...(input.search ? { notes: { contains: input.search, mode: 'insensitive' } } : {}),
+      ...(input.search
+        ? { notes: { contains: input.search, mode: "insensitive" } }
+        : {}),
     };
   }
 
@@ -71,15 +63,17 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
     });
   }
 
-  private buildAccessoriesWhere(input: FindStocktakeAccessoriesInput): Prisma.AccessoryWhereInput {
+  private buildAccessoriesWhere(
+    input: FindStocktakeAccessoriesInput,
+  ): Prisma.AccessoryWhereInput {
     return {
       status: input.status,
       ...(input.categoryId ? { categoryId: input.categoryId } : {}),
       ...(input.search
         ? {
             OR: [
-              { name: { contains: input.search, mode: 'insensitive' } },
-              { partNumber: { contains: input.search, mode: 'insensitive' } },
+              { name: { contains: input.search, mode: "insensitive" } },
+              { partNumber: { contains: input.search, mode: "insensitive" } },
             ],
           }
         : {}),
@@ -91,20 +85,10 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
     return prisma.accessory.findMany({
       where: this.buildAccessoriesWhere(input),
       select: {
-        id: true,
-        name: true,
-        partNumber: true,
-        partGroupName: true,
-        unitPrice: true,
-        category: { select: { id: true, name: true } },
+        ...ascStocktakeAccessorySelect,
         stockLevels: {
           where: { ascCenterId: input.ascCenterId },
-          select: {
-            currentStock: true,
-            reservedStock: true,
-            minStockLevel: true,
-            lastUpdated: true,
-          },
+          select: ascStocktakeAccessorySelect.stockLevels.select,
         },
       },
       orderBy: { [input.sortBy]: input.sortOrder },
@@ -119,7 +103,9 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
     });
   }
 
-  private buildStockLevelsWhere(input: FindStocktakeStockLevelsInput): Prisma.AscAccessoryStockWhereInput {
+  private buildStockLevelsWhere(
+    input: FindStocktakeStockLevelsInput,
+  ): Prisma.AscAccessoryStockWhereInput {
     // If Prisma field reference is supported, we can use prisma.ascAccessoryStock.fields.minStockLevel
     // Fallback: If belowMin is true and field ref is not supported, we must filter in memory later.
     return {
@@ -129,15 +115,17 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
         ...(input.search
           ? {
               OR: [
-                { name: { contains: input.search, mode: 'insensitive' } },
-                { partNumber: { contains: input.search, mode: 'insensitive' } },
+                { name: { contains: input.search, mode: "insensitive" } },
+                { partNumber: { contains: input.search, mode: "insensitive" } },
               ],
             }
           : {}),
       },
       // Note: If this fails in older Prisma versions, we remove this and filter in memory.
       ...(input.belowMin
-        ? { currentStock: { lt: prisma.ascAccessoryStock.fields.minStockLevel } }
+        ? {
+            currentStock: { lt: prisma.ascAccessoryStock.fields.minStockLevel },
+          }
         : {}),
     };
   }
@@ -146,20 +134,9 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
     const skip = (input.page - 1) * input.limit;
     return prisma.ascAccessoryStock.findMany({
       where: this.buildStockLevelsWhere(input),
-      include: {
-        accessory: {
-          select: {
-            id: true,
-            name: true,
-            partNumber: true,
-            partGroupName: true,
-            unitPrice: true,
-            category: { select: { id: true, name: true } },
-          },
-        },
-      },
+      include: ascStocktakeStockLevelInclude,
       orderBy:
-        input.sortBy === 'name'
+        input.sortBy === "name"
           ? { accessory: { name: input.sortOrder } }
           : { [input.sortBy]: input.sortOrder },
       skip,
@@ -188,8 +165,9 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
         where: { id: ascCenterId },
         select: { id: true, status: true },
       });
-      if (!center) throw new Error('NOT_FOUND: ASC Center not found');
-      if (center.status !== 'active') throw new Error('BAD_REQUEST: ASC Center is not active');
+      if (!center) throw new Error("NOT_FOUND: ASC Center not found");
+      if (center.status !== "active")
+        throw new Error("BAD_REQUEST: ASC Center is not active");
 
       // 2. Validate all accessoryIds exist
       const foundAccessories = await tx.accessory.findMany({
@@ -197,14 +175,16 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
         select: { id: true },
       });
       if (foundAccessories.length !== accessoryIds.length) {
-        throw new Error('BAD_REQUEST: One or more accessoryIds are invalid');
+        throw new Error("BAD_REQUEST: One or more accessoryIds are invalid");
       }
 
       // 3. Get current stock for all items
       const currentStocks = await tx.ascAccessoryStock.findMany({
         where: { ascCenterId, accessoryId: { in: accessoryIds } },
       });
-      const stockMap = new Map(currentStocks.map((s) => [s.accessoryId, s.currentStock]));
+      const stockMap = new Map(
+        currentStocks.map((s) => [s.accessoryId, s.currentStock]),
+      );
 
       // 4. Create stocktake header
       const stocktake = await tx.ascStocktake.create({
@@ -217,8 +197,17 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
         const deltaQty = item.newQty - previousQty;
 
         await tx.ascAccessoryStock.upsert({
-          where: { ascCenterId_accessoryId: { ascCenterId, accessoryId: item.accessoryId } },
-          create: { ascCenterId, accessoryId: item.accessoryId, currentStock: item.newQty },
+          where: {
+            ascCenterId_accessoryId: {
+              ascCenterId,
+              accessoryId: item.accessoryId,
+            },
+          },
+          create: {
+            ascCenterId,
+            accessoryId: item.accessoryId,
+            currentStock: item.newQty,
+          },
           update: { currentStock: item.newQty, lastUpdated: new Date() },
         });
 
@@ -227,12 +216,12 @@ export class AscStocktakeRepository implements IAscStocktakeRepository {
             data: {
               accessoryId: item.accessoryId,
               ascCenterId,
-              transactionType: 'adjustment',
-              operation: deltaQty > 0 ? 'in' : 'out',
+              transactionType: "adjustment",
+              operation: deltaQty > 0 ? "in" : "out",
               quantity: Math.abs(deltaQty),
               balanceAfter: item.newQty,
               referenceId: stocktake.id,
-              referenceType: 'asc_stocktake',
+              referenceType: "asc_stocktake",
               createdBy,
               notes: item.notes ?? notes ?? null,
             },

@@ -12,13 +12,13 @@ import type {
 
 export class PaymentService implements IPaymentService {
   constructor(
-    private readonly repository: IPaymentRepository = new PaymentRepository(),
+    private readonly paymentRepository: IPaymentRepository = new PaymentRepository(),
   ) {}
 
   async findAllPayments(input: FindAllPaymentsInput) {
     const [items, total] = await Promise.all([
-      this.repository.findManyPayments(input),
-      this.repository.countPayments(input),
+      this.paymentRepository.findManyPayments(input),
+      this.paymentRepository.countPayments(input),
     ]);
 
     return {
@@ -29,8 +29,8 @@ export class PaymentService implements IPaymentService {
 
   async findAllPaymentPeriods(input: FindAllPaymentPeriodsInput) {
     const [items, total] = await Promise.all([
-      this.repository.findManyPeriods(input),
-      this.repository.countPeriods(input),
+      this.paymentRepository.findManyPeriods(input),
+      this.paymentRepository.countPeriods(input),
     ]);
 
     return {
@@ -41,7 +41,7 @@ export class PaymentService implements IPaymentService {
 
   async markPaid(paymentId: string, paymentPeriodId: string, userId: string) {
     try {
-      const result = await this.repository.markPaidWithPeriod({
+      const result = await this.paymentRepository.markPaidWithPeriod({
         paymentId,
         paymentPeriodId,
         userId,
