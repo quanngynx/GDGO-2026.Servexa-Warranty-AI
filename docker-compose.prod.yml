@@ -1,0 +1,70 @@
+# Cloud VM Postgres (pgvector) for production / staging hosts.
+# Start: pnpm --filter @servexa-warranty-ai/db db:start:production
+#
+# Security (OWASP Docker):
+# - Digest-pinned image (bookworm stable, not trixie testing) — see docker/postgres/image.lock
+# - File-based secrets (RULE #12), localhost-only publish, no-new-privileges
+# - Dropped Linux capabilities, init reaper, PID/memory limits, internal network (no egress)
+# Populate packages/db/secrets/*.txt before first run (see secrets/README.md).
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg18-trixie@sha256:42e7f6b4e1eceb02ff14e3e6bc6108bbe259abbe83879dc1845d0da1ddeb555d
+    container_name: servexa-warranty-ai-db-postgres
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    shm_size: 256mb
+    pids_limit: 200
+    mem_limit: 2g
+    cpus: 2
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/postgres/init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - db_internal
+
+  server:
+    image: ghcr.io/${GHCR_OWNER}/${GHCR_IMAGE_NAME}:latest
+    container_name: servexa-server
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - server_internal
+    ports:
+      - "${SERVER_PORT}:3000"
+
+networks:
+  db_internal:
+    internal: true
+
+volumes:
+  postgres_data:
+    driver: local

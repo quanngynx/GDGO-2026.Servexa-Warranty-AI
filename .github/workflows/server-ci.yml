@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  server-ci:
+    name: Server CI
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      PORT: "3000"
+      # prisma generate (packages/db postinstall) only needs a valid URL shape, not a live DB.
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      CORS_ORIGIN: http://localhost:3001
+      CORS_ORIGIN_WEB: http://localhost:3001
+      TEMP_REFRESH_TOKEN_SECRET: ci-test-refresh-token-secret
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter server check-types
+
+      - name: Test
+        run: pnpm --filter server test
+
+      - name: Build server
+        run: pnpm --filter server build
