@@ -21,19 +21,17 @@ jobs:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
+          passphrase: ${{ secrets.VM_SSH_PASSPHRASE }}
           port: ${{ secrets.VM_PORT }}
           script: |
             set -e
 
-            cd /opt/servexa/GDGO-2026.Servexa-Warranty-AI/servexa-warranty-ai
+            cd /opt/servexa/servexa-warranty-ai
 
             git fetch origin main
             git reset --hard origin/main
 
-            cd /apps/server
-
-            docker compose --env-file .env.production -f docker-compose.prod.yml build server
-            docker compose --env-file .env.production -f docker-compose.prod.yml up -d postgres server
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build postgres server
 
             sleep 15
 
