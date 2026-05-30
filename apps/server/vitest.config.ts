@@ -1,3 +1,4 @@
+import './vitest.env.ts'
 import { defineConfig } from 'vitest/config'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
