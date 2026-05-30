@@ -12,6 +12,9 @@ jobs:
   server-ci:
     name: Server CI
     runs-on: ubuntu-latest
+    env:
+      # prisma generate (packages/db postinstall) only needs a valid URL shape, not a live DB.
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
 
     steps:
       - name: Checkout source
@@ -23,7 +26,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
