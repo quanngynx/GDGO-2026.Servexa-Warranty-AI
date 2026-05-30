@@ -1,6 +1,12 @@
 {
   "plugins": {
+    "redis-development": {
+      "enabled": true
+    },
     "prisma": {
+      "enabled": true
+    },
+    "vercel": {
       "enabled": true
     }
   }
