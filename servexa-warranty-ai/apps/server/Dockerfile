@@ -27,7 +27,7 @@ RUN --mount=type=cache,id=apt-deps-cache,target=/var/cache/apt,sharing=locked \
     openssl \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 # Flat node_modules so `node dist/index.mjs` resolves packages from /app/node_modules.
 RUN echo "node-linker=hoisted" > .npmrc
 COPY apps/server/package.json apps/server/
@@ -38,7 +38,7 @@ COPY packages/env/package.json packages/env/
 COPY packages/event-contracts/package.json packages/event-contracts/
 COPY packages/proto/package.json packages/proto/
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter server... --ignore-scripts
+  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai --ignore-scripts
 
 FROM deps AS build
 ENV CI=true
@@ -52,7 +52,7 @@ COPY packages/env packages/env
 COPY packages/event-contracts packages/event-contracts
 COPY packages/proto packages/proto
 RUN pnpm --filter @servexa-warranty-ai/db db:generate
-RUN pnpm --filter server build
+RUN pnpm turbo run build --filter=server...
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
   pnpm prune --prod
 
@@ -70,6 +70,7 @@ RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=loc
 ENV NODE_ENV=production
 # Workspace packages are TypeScript sources resolved at runtime (see tsdown externals).
 ENV NODE_OPTIONS="--experimental-strip-types"
+STOPSIGNAL SIGTERM
 
 WORKDIR /app
 

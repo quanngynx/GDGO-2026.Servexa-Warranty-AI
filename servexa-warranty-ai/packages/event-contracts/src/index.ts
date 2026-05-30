@@ -54,3 +54,13 @@ export {
   type HitlEventType,
 } from "./hitl-events";
 
+export {
+  reasoningTraceEventSchema,
+  reasoningTraceSchema,
+  reasoningTraceStreamEventSchema,
+  reasoningTraceStreamEventTypeSchema,
+  type ReasoningTrace,
+  type ReasoningTraceEvent,
+  type ReasoningTraceStreamEvent,
+} from "./reasoning-trace-events";
+

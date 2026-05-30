@@ -3,6 +3,7 @@ import {
   normalizeLangGraphHitlMetadata,
   normalizeUnaryToCopilotResponse,
   parseMetadataJson,
+  parseReasoningTraceFromMetadata,
   parsePhase3FromCopilotEnvelope,
   type CopilotRailMetadata,
   type CopilotResponse,
@@ -26,6 +27,7 @@ export function normalizeCopilotUnaryCompletion(
 
   const meta = parseMetadataJson(out.metadataJson);
   const graph = normalizeLangGraphHitlMetadata(meta);
+  const reasoningTrace = parseReasoningTraceFromMetadata(meta);
   const workflowStatus = graph.success && graph.data.humanApprovalRequired
     ? ("awaiting_approval" as const)
     : extras?.workflowExecutionStatus;
@@ -43,6 +45,8 @@ export function normalizeCopilotUnaryCompletion(
       workflowExecutionStatus: workflowStatus ?? extras?.workflowExecutionStatus,
       phase3FromEnvelope,
       executionContext: extras?.executionContext,
+      reasoningTrace: reasoningTrace.reasoningTrace,
+      latestReasoningEvent: reasoningTrace.latestReasoningEvent,
     }),
   };
 }

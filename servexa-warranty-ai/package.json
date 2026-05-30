@@ -12,6 +12,7 @@
     "check-types": "turbo check-types",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
+    "dev:server:docker": "docker compose -f .docker/server/docker-compose.dev.yml up --build server",
     "db:push": "turbo -F @servexa-warranty-ai/db db:push",
     "db:studio": "turbo -F @servexa-warranty-ai/db db:studio",
     "db:generate": "turbo -F @servexa-warranty-ai/db db:generate",

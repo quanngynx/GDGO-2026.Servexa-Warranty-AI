@@ -1,22 +1,22 @@
-name: agent-code-ci
+name: ai-services-ci
 
 on:
   push:
     branches: ["main"]
     paths:
-      - 'apps/agent-code/**'
-      - '.github/workflows/agent-code-ci.yml'
+      - 'apps/ai-services/**'
+      - '.github/workflows/ai-services-ci.yml'
   pull_request:
     branches: ["main"]
     paths:
-      - 'apps/agent-code/**'
+      - 'apps/ai-services/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/agent-code
+        working-directory: apps/ai-services
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

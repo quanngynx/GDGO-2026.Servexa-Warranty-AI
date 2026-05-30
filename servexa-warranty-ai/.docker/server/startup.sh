@@ -1,4 +1,5 @@
 #!/bin/sh
 set -e
-pnpm db:deploy
-exec pnpm dev
+cd /app
+pnpm --filter @servexa-warranty-ai/db db:deploy
+exec pnpm --filter server dev

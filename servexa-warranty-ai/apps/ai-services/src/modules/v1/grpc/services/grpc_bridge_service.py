@@ -99,6 +99,10 @@ class GrpcBridgeService:
             'threadId': thread_id,
         }
 
+        reasoning_trace = result.get('reasoning_trace')
+        if isinstance(reasoning_trace, dict):
+            metadata['reasoningTrace'] = reasoning_trace
+
         if result.get('hitl_status') == 'awaiting_approval':
             interrupt_payload = result.get('interrupt_payload') or {}
             metadata['humanApprovalRequired'] = True
@@ -130,6 +134,8 @@ class GrpcBridgeService:
                 diagnosis_draft=diagnosis_override if isinstance(diagnosis_override, dict) else None,
             ),
         )
+        if isinstance(reasoning_trace, dict) and 'reasoningTrace' not in metadata:
+            metadata['reasoningTrace'] = reasoning_trace
         return result.get('output', ''), json.dumps(metadata)
 
     async def resume_full(self, ctx: ResumeContext) -> tuple[str, str]:

@@ -1,5 +1,5 @@
 import prisma from "@servexa-warranty-ai/db";
-import { Prisma, type TechnicianProfile } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";
@@ -13,7 +13,6 @@ import type {
 import type { ITechnicianRepository } from "../interfaces/technician-repository.interface";
 import type { ITechnicianService } from "../interfaces/technician-service.interface";
 import { TechnicianRepository } from "../repositories/technician.repository";
-import type { BasePagination } from "src/types/pagination";
 
 const technicianSelect = {
   id: true,
@@ -38,8 +37,8 @@ export type FindAllTechniciansInput = {
   sortOrder: "asc" | "desc";
   skillLevel?: "basic" | "intermediate" | "advanced" | "expert";
   isAvailable?: boolean;
-  userId?: string;
   ascCenterId?: string;
+  userId?: string;
 };
 
 export class TechnicianService implements ITechnicianService {

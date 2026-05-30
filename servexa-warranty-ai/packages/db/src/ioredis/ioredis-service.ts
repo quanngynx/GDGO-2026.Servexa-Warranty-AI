@@ -125,4 +125,68 @@ export class IoredisService {
     )
     return res === 'OK'
   }
+
+  /**
+   * Blocking XREAD for per-trace streams (`ai:trace:{traceId}`).
+   * Returns parsed payload strings in stream order.
+   */
+  async xreadTracePayloads(input: {
+    streamKey: string;
+    lastId: string;
+    blockMs: number;
+    count?: number;
+  }): Promise<Array<{ id: string; payload: string }>> {
+    const count = input.count ?? 20;
+    let raw: unknown
+    try {
+      raw = await this.getClient().xread(
+        'COUNT',
+        count,
+        'BLOCK',
+        input.blockMs,
+        'STREAMS',
+        input.streamKey,
+        input.lastId,
+      );
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error)
+      if (msg.includes('Command timed out')) {
+        return []
+      }
+      throw error
+    }
+
+    if (!raw || !Array.isArray(raw) || raw.length === 0) {
+      return [];
+    }
+
+    const entries = raw[0]?.[1];
+    if (!Array.isArray(entries)) {
+      return [];
+    }
+
+    const out: Array<{ id: string; payload: string }> = [];
+    for (const entry of entries) {
+      if (!Array.isArray(entry) || entry.length < 2) continue;
+      const id = String(entry[0]);
+      const fields = entry[1];
+      if (!Array.isArray(fields)) continue;
+
+      let payload = '';
+      for (let i = 0; i < fields.length; i += 2) {
+        const key = fields[i];
+        const value = fields[i + 1];
+        if (key === 'payload' && typeof value === 'string') {
+          payload = value;
+          break;
+        }
+      }
+
+      if (payload) {
+        out.push({ id, payload });
+      }
+    }
+
+    return out;
+  }
 }

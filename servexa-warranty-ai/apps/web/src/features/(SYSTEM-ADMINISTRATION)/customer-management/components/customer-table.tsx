@@ -138,6 +138,10 @@ export function CustomersTable({
   });
 
   useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
     ensurePageInRange(table.getPageCount());
   }, [table, ensurePageInRange]);
 
