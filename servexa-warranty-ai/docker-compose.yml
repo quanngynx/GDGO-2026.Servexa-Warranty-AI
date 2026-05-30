@@ -19,22 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:8.2.2-alpine3.22
-    container_name: servexa-warranty-ai-db-redis
-    restart: unless-stopped
-    ports:
-      - "6381:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "PING"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
 volumes:
   postgres_data:
-    driver: local
-  redis_data:
     driver: local
