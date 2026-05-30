@@ -1,10 +1,12 @@
+import type { Category, Prisma } from '@servexa-warranty-ai/db/prisma/client'
 import type { CreateCategoryDto, ReplaceCategoryDto, UpdateCategoryDto } from '../dtos/category.dto'
 import type { FindAllCategoriesInput } from '../services/category.service'
+import type { BasePagination } from '@/types/pagination'
 
 export interface ICategoryService {
-  findAll(query: FindAllCategoriesInput): Promise<unknown>
-  findOneById(categoryId: string): Promise<unknown>
-  create(input: CreateCategoryDto): Promise<unknown>
-  update(categoryId: string, input: ReplaceCategoryDto | UpdateCategoryDto): Promise<unknown>
+  findAll(query: FindAllCategoriesInput): Promise<{ items: (Category & Prisma.CategoryInclude)[] | null, pagination: BasePagination }>
+  findOneById(categoryId: string): Promise<(Category & Prisma.CategoryInclude) | null>
+  create(input: CreateCategoryDto): Promise<(Category & Prisma.CategoryInclude) | null>
+  update(categoryId: string, input: ReplaceCategoryDto | UpdateCategoryDto): Promise<(Category & Prisma.CategoryInclude) | null>
   delete(categoryId: string): Promise<{ success: true }>
 }

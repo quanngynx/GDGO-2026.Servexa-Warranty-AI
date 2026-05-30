@@ -1,11 +1,13 @@
+import type { Model, Prisma } from '@servexa-warranty-ai/db/prisma/client'
 import type { CreateModelDto, ReplaceModelDto, UpdateModelDto } from '../dtos/model.dto'
 import type { FindAllModelsInput } from '../services/model.service'
+import type { BasePagination } from '@/types/pagination'
 
 export interface IModelService {
-  findAll(query: FindAllModelsInput): Promise<unknown>
-  findOneById(modelId: string): Promise<unknown>
-  create(input: CreateModelDto): Promise<unknown>
-  update(modelId: string, input: ReplaceModelDto | UpdateModelDto): Promise<unknown>
+  findAll(query: FindAllModelsInput): Promise<{ items: (Model & Prisma.ModelInclude)[] | null, pagination: BasePagination }>
+  findOneById(modelId: string): Promise<(Model & Prisma.ModelInclude) | null>
+  create(input: CreateModelDto): Promise<(Model & Prisma.ModelInclude) | null>
+  update(modelId: string, input: ReplaceModelDto | UpdateModelDto): Promise<(Model & Prisma.ModelInclude) | null>
   softDelete(modelId: string): Promise<{ success: true }>
   restore(modelId: string): Promise<unknown>
 }

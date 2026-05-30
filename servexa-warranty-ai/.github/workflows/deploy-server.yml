@@ -1,0 +1,42 @@
+name: Deploy Server to VM
+
+on:
+  workflow_run:
+    workflows:
+      - Build Server Image
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy apps/server
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: ${{ secrets.VM_PORT }}
+          script: |
+            set -e
+
+            cd /opt/servexa/GDGO-2026.Servexa-Warranty-AI/servexa-warranty-ai
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            cd /apps/server
+
+            docker compose --env-file .env.production -f docker-compose.prod.yml build server
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d postgres server
+
+            sleep 15
+
+            curl -f http://127.0.0.1:3000/
+
+            docker image prune -f

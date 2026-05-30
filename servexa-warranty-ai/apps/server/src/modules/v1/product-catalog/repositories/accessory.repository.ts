@@ -76,7 +76,14 @@ export class AccessoryRepository {
   }
 
   async findManyTotalWarehouseStock(query: Prisma.TotalWarehouseStockFindManyArgs) {
-    return prisma.totalWarehouseStock.findMany(query)
+    const { take, skip, where, orderBy, ...rest } = query
+    return prisma.totalWarehouseStock.findMany({
+      take,
+      skip,
+      where,
+      orderBy,
+      ...rest,
+    })
   }
 
   async findTotalWarehouseByName(name: string) {

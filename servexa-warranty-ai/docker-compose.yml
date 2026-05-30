@@ -1,0 +1,25 @@
+# Local Postgres (pgvector) + Redis for `pnpm db:start` from repo root
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg18-trixie
+    container_name: servexa-warranty-ai-db-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: servexa_warranty_ai_db
+      POSTGRES_PORT: 5436
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: $2a$12$T1ziHGyU7O.PfITmv.Nrj.j7r64B00D.y0CcxNFLOaUxzMa48k6de
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/postgres/init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d servexa_warranty_ai_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

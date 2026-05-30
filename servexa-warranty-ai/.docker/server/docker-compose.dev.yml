@@ -38,7 +38,7 @@ services:
       - "5436:5432"
     volumes:
       - postgres_dev_data:/var/lib/postgresql
-      - ./docker/postgres/init-simple.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../packages/db/docker/postgres/init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d servexa_warranty_ai_db"]
       interval: 5s
@@ -53,11 +53,6 @@ services:
     image: redis:8.2.2-alpine3.22
     container_name: servexa_warranty_ai_redis_dev
     restart: unless-stopped
-    # command: >
-    #   redis-server
-    #   --appendonly yes
-    #   --maxmemory 256mb
-    #   --maxmemory-policy allkeys-lru
     ports:
       - "6381:6379"
     volumes:
@@ -75,7 +70,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@servexa-warranty-ai.com
       PGADMIN_DEFAULT_PASSWORD: admin123
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "8081:80"
     volumes:
@@ -83,10 +78,57 @@ services:
     depends_on:
       - postgres
 
+  server:
+    build:
+      context: ../..
+      dockerfile: apps/server/Dockerfile.dev
+      target: development
+    container_name: servexa-warranty-ai-server-dev
+    restart: unless-stopped
+    env_file:
+      - ../../apps/server/.env
+    environment:
+      # Override host-only URLs for in-compose networking (adjust in .env if needed).
+      DATABASE_URL: postgresql://admin:admin123@postgres:5432/servexa_warranty_ai_db?schema=public
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../apps/server/src:/app/apps/server/src
+      - ../../packages:/app/packages
+      - server_node_modules:/app/node_modules
+      - server_uploads:/app/apps/server/uploads
+      - server_logs:/app/apps/server/logs
+    user: "1001:1001"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "const p=Number(process.env.PORT||3000);fetch(`http://127.0.0.1:${p}/`).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+
 volumes:
   postgres_dev_data:
     driver: local
   pgadmin_dev_data:
     driver: local
   redis_dev_data:
+    driver: local
+  server_node_modules:
+    driver: local
+  server_uploads:
+    driver: local
+  server_logs:
     driver: local

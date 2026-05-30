@@ -1,5 +1,6 @@
 import type {
   Prisma,
+  WarrantyPolicy,
   WarrantyType,
 } from "@servexa-warranty-ai/db/prisma/client";
 
@@ -15,7 +16,7 @@ export type WarrantyPolicyOptions<
 };
 
 export interface IWarrantyPolicyRepository {
-  findAll(query: Prisma.WarrantyPolicyFindManyArgs): Promise<unknown[]>;
+  findAll(query: Prisma.WarrantyPolicyFindManyArgs): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude)[] | null>;
   count(where: Prisma.WarrantyPolicyWhereInput): Promise<number>;
   findOneById<
     TSelect extends WarrantyPolicySelect | undefined,
@@ -23,26 +24,26 @@ export interface IWarrantyPolicyRepository {
   >(
     id: string,
     options?: WarrantyPolicyOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>;
+  ): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude) | null>;
   findOverlapping(
     target: { categoryId?: string | null; modelId?: string | null },
     warrantyType: WarrantyType,
     effectiveFrom: Date,
     effectiveTo?: Date | null,
     excludeId?: string,
-  ): Promise<unknown[]>;
+  ): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude)[] | null>;
   findActiveForResolve(
     target: { categoryId?: string; modelId?: string },
     warrantyType: WarrantyType,
     date: Date,
-  ): Promise<unknown | null>;
+  ): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude) | null>;
   createOne<
     TSelect extends WarrantyPolicySelect | undefined,
     TInclude extends WarrantyPolicyInclude | undefined,
   >(
     data: Prisma.WarrantyPolicyCreateInput,
     options?: WarrantyPolicyOptions<TSelect, TInclude>,
-  ): Promise<unknown>;
+  ): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude) | null>;
   updateOneById<
     TSelect extends WarrantyPolicySelect | undefined,
     TInclude extends WarrantyPolicyInclude | undefined,
@@ -50,6 +51,6 @@ export interface IWarrantyPolicyRepository {
     id: string,
     data: Prisma.WarrantyPolicyUpdateInput,
     options?: WarrantyPolicyOptions<TSelect, TInclude>,
-  ): Promise<unknown>;
+  ): Promise<(WarrantyPolicy & Prisma.WarrantyPolicyInclude) | null>;
   deleteById(id: string): Promise<unknown>;
 }

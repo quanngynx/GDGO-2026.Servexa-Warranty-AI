@@ -1,0 +1,4 @@
+# Immutable Node.js base for apps/server/Dockerfile
+# Tag: 24.16.0-bookworm-slim
+# Refresh: docker buildx imagetools inspect node:24.16.0-bookworm-slim --format "{{.Manifest.Digest}}"
+node:24.16.0-bookworm-slim@sha256:242549cd46785b480c832479a730f4f2a20865d61ea2e404fdb2a5c3d3b73ecf

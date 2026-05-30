@@ -1,6 +1,12 @@
 import { z } from "zod";
 
 import { hitlActionKindSchema, hitlRequestSchema } from "./hitl";
+import {
+  reasoningTraceEventSchema,
+  reasoningTraceSchema,
+  type ReasoningTrace,
+  type ReasoningTraceEvent,
+} from "./reasoning-trace";
 
 export const copilotEvidenceSourceTypeSchema = z.enum([
   "manual",
@@ -107,6 +113,8 @@ export const copilotRailMetadataSchema = z.object({
   warrantyEligibility: warrantyEligibilitySchema.optional(),
   diagnosisDraft: diagnosisDraftSchema.optional(),
   workflowProgress: workflowProgressSchema.optional(),
+  reasoningTrace: reasoningTraceSchema.optional(),
+  latestReasoningEvent: reasoningTraceEventSchema.optional(),
   backend: z.enum(["grpc", "gemini_node"]).optional(),
 });
 
@@ -121,3 +129,5 @@ export type WorkflowProgressStep = z.infer<typeof workflowProgressStepSchema>;
 export type WorkflowProgress = z.infer<typeof workflowProgressSchema>;
 export type CopilotResponse = z.infer<typeof copilotResponseSchema>;
 export type CopilotRailMetadata = z.infer<typeof copilotRailMetadataSchema>;
+
+export type { ReasoningTrace, ReasoningTraceEvent };

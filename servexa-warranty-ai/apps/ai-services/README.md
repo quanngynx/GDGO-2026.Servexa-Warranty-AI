@@ -1,4 +1,4 @@
-# Agent code
+# AI Services
 
 ## Local setup
 
@@ -27,6 +27,12 @@ Starts FastAPI on port **8081** and the **gRPC `ai.v1.AiService`** server on **`
 
 ```bash
 fastapi dev --port 8081
+```
+
+- Options, run app with infisical. Before running, setup secret at <https://app.infisical.com/>
+
+```bash
+infisical run --env=dev -- fastapi dev --port 8081
 ```
 
 Imports such as `configs` and `core` resolve from the `src/` directory (see `src/__init__.py`). If you run Uvicorn directly, set `PYTHONPATH=src` (or `src` on `sys.path`) the same way pytest does in `pyproject.toml`.

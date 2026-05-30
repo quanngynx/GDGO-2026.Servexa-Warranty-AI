@@ -1,0 +1,38 @@
+# Docker build context exclusions (repo root: docker build -f apps/server/Dockerfile .)
+
+.git
+.github
+**/.turbo
+**/.next
+**/dist
+**/coverage
+**/node_modules
+**/.env
+**/.env.*
+apps/server/.env
+apps/server/.env.production
+
+# Apps not required for the server image
+apps/web
+apps/fumadocs
+apps/ai-services
+
+# Docs, tests, and local tooling
+documents
+**/*.md
+!packages/**/README.md
+**/__tests__
+**/*.test.ts
+**/*.spec.ts
+**/vitest.config.ts
+
+# Database local secrets and compose (runtime uses env / orchestrator secrets)
+packages/db/secrets
+packages/db/docker-compose*.yml
+
+# Large or non-runtime assets
+**/*.log
+**/.cursor
+**/.claude
+**/.agents
+.docker-deploy-test*

@@ -1,4 +1,4 @@
-import type { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import type { Prisma, Solution } from "@servexa-warranty-ai/db/prisma/client";
 
 type SolutionSelect = Prisma.SolutionSelect;
 type SolutionInclude = Prisma.SolutionInclude;
@@ -12,7 +12,7 @@ export type SolutionOptions<
 };
 
 export interface ISolutionRepository {
-  findAll(query: Prisma.SolutionFindManyArgs): Promise<unknown[]>;
+  findAll(query: Prisma.SolutionFindManyArgs): Promise<(Solution & Prisma.SolutionInclude)[] | null>;
   count(where: Prisma.SolutionWhereInput): Promise<number>;
   findOneById<
     TSelect extends SolutionSelect | undefined,
@@ -20,21 +20,21 @@ export interface ISolutionRepository {
   >(
     id: string,
     options?: SolutionOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>;
+  ): Promise<(Solution & Prisma.SolutionInclude) | null>;
   findOneByName<
     TSelect extends SolutionSelect | undefined,
     TInclude extends SolutionInclude | undefined,
   >(
     name: string,
     options?: SolutionOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>;
+  ): Promise<(Solution & Prisma.SolutionInclude) | null>;
   createOne<
     TSelect extends SolutionSelect | undefined,
     TInclude extends SolutionInclude | undefined,
   >(
     data: Prisma.SolutionCreateInput,
     options?: SolutionOptions<TSelect, TInclude>,
-  ): Promise<unknown>;
+  ): Promise<(Solution & Prisma.SolutionInclude) | null>;
   updateOneById<
     TSelect extends SolutionSelect | undefined,
     TInclude extends SolutionInclude | undefined,
@@ -42,9 +42,9 @@ export interface ISolutionRepository {
     id: string,
     data: Prisma.SolutionUpdateInput,
     options?: SolutionOptions<TSelect, TInclude>,
-  ): Promise<unknown>;
+  ): Promise<(Solution & Prisma.SolutionInclude) | null>;
   deleteById(id: string): Promise<unknown>;
   createManyAndReturn(
     data: Prisma.SolutionCreateManyInput[],
-  ): Promise<unknown[]>;
+  ): Promise<(Solution & Prisma.SolutionInclude)[] | null>;
 }

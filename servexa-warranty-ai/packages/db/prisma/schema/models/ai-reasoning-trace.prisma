@@ -1,0 +1,90 @@
+enum ReasoningTraceStepType {
+  run
+  routing
+  retrieval
+  rerank
+  tool
+  hitl
+  workflow
+  generation
+  finalization
+  error
+
+  @@map("reasoning_trace_step_type")
+}
+
+enum ReasoningTraceStatus {
+  pending
+  running
+  completed
+  failed
+  skipped
+  waiting_for_human
+
+  @@map("reasoning_trace_status")
+}
+
+model AiReasoningTrace {
+  id                String                 @id @default(uuid(7))
+  traceId          String                 @map("trace_id") @unique
+  runId             String?                @map("run_id")
+  threadId         String?                @map("thread_id")
+  status            ReasoningTraceStatus  @default(running)
+  startedAt        DateTime              @default(now()) @map("started_at") @db.Timestamptz(3)
+  endedAt          DateTime?             @map("ended_at") @db.Timestamptz(3)
+  repairCaseId     String?               @map("repair_case_id")
+  createdByUserId  String                @map("created_by_user_id")
+
+  createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Relations
+  events            AiReasoningTraceEvent[]
+
+  @@index([traceId])
+  @@index([runId])
+  @@index([threadId])
+  @@index([createdByUserId, status])
+  @@index([repairCaseId])
+  @@map("ai_reasoning_traces")
+}
+
+model AiReasoningTraceEvent {
+  id               String                @id @default(uuid(7))
+  traceId         String                @map("trace_id")
+  stepId          String                @map("step_id")
+  parentStepId   String?               @map("parent_step_id")
+
+  type            ReasoningTraceStepType @map("type")
+  status          ReasoningTraceStatus    @map("status")
+
+  title           String                @map("title")
+  summary         String                @map("summary")
+  errorMessage    String?              @map("error_message")
+
+  startedAt       DateTime?           @map("started_at") @db.Timestamptz(3)
+  endedAt         DateTime?           @map("ended_at") @db.Timestamptz(3)
+  durationMs      Int?                @map("duration_ms")
+
+  agentName       String?             @map("agent_name")
+  toolName        String?             @map("tool_name")
+  workflowKind    String?             @map("workflow_kind")
+  hitlRequestId   String?             @map("hitl_request_id")
+
+  safeDetails     Json?               @map("safe_details")
+  evidenceSourceIds String[]          @map("evidence_source_ids")
+  relatedEntityIds  String[]          @map("related_entity_ids")
+
+  createdAt       DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Relations
+  trace           AiReasoningTrace   @relation(fields: [traceId], references: [traceId], onDelete: Cascade)
+
+  @@unique([traceId, stepId], name: "traceId_stepId")
+  @@index([traceId, status])
+  @@index([type])
+  @@index([startedAt])
+  @@map("ai_reasoning_trace_events")
+}
+

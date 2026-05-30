@@ -15,11 +15,9 @@ import type {
   UpdateAscAccessoryStockDto,
   UpdateAccessoryDto,
   UpdateTotalWarehouseStockDto,
-  ResponseListAccessoriesDto,
   ResponseAccessoryDto,
   ResponseUpdateAccessoryDto,
   ResponseCreateAccessoryDto,
-  ResponseFindAllFromTotalWarehouseDto,
   ResponseCreateFromTotalWarehouseDto,
   ResponseReplaceFromTotalWarehouseDto,
   ResponseUpdateFromTotalWarehouseDto,
@@ -29,14 +27,15 @@ import type {
   ResponseDeleteFromAscCenterDto,
   ResponseDeleteAccessoryDto,
   ResponseDeleteFromTotalWarehouseDto,
-  ResponseFindAllFromAscCenterDto,
 } from "../dtos/accessory.dto";
+import type { Accessory, TotalWarehouseStock, Prisma, AscAccessoryStock } from "@servexa-warranty-ai/db/prisma/client";
+import type { BasePagination } from "src/types/pagination";
 
 export interface IAccessoryService {
-  findAll(query: FindAllAccessoriesInput): Promise<ResponseListAccessoriesDto>;
+  findAll(query: FindAllAccessoriesInput): Promise<{ items: (Accessory & Prisma.AccessoryInclude)[] | null, pagination: BasePagination }>;
   findAllFromTotalWarehouse(
     input: FindAccessoriesFromTotalWarehouseInput,
-  ): Promise<ResponseFindAllFromTotalWarehouseDto>;
+  ): Promise<{ items: (TotalWarehouseStock & Prisma.TotalWarehouseStockInclude)[] | null, pagination: BasePagination }>;
   createFromTotalWarehouse(
     params: FindAccessoriesFromTotalWarehouseParams,
     input: CreateTotalWarehouseStockDto,
@@ -54,7 +53,7 @@ export interface IAccessoryService {
   ): Promise<ResponseDeleteFromTotalWarehouseDto>;
   findAllFromAscCenter(
     input: FindAccessoriesFromAscCenterInput,
-  ): Promise<ResponseFindAllFromAscCenterDto>;
+  ): Promise<{ items: (AscAccessoryStock & Prisma.AscAccessoryStockInclude)[] | null, pagination: BasePagination }>;
   createFromAscCenter(
     params: FindAccessoriesFromAscCenterParams,
     input: CreateAscAccessoryStockDto,

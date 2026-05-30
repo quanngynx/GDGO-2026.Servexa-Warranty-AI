@@ -29,21 +29,21 @@ import { AccessoryRepository } from "../repositories/accessory.repository";
 const accessorySelect = {
   id: true,
   categoryId: true,
-  partNumber: true,
   name: true,
+  partNumber: true,
+  itemNumber: true,
   description: true,
-  status: true,
   image: true,
+  unitPrice: true,
+  customerPrice: true,
   stockQuantity: true,
   minStockLevel: true,
   supplier: true,
+  status: true,
   createdAt: true,
   updatedAt: true,
   category: {
-    select: {
-      id: true,
-      name: true,
-    },
+    select: { name: true },
   },
 } satisfies Prisma.AccessorySelect;
 
@@ -122,7 +122,19 @@ export class AccessoryService implements IAccessoryService {
 
   async findOneById(accessoryId: string) {
     const found = await this.accessoryRepository.findOneById(accessoryId, {
-      select: accessorySelect,
+      select: {
+        ...accessorySelect,
+        stockLevels: {
+          include: {
+            ascCenter: {
+              select: { 
+                centerName: true, 
+                centerCode: true 
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!found) {
@@ -289,8 +301,32 @@ export class AccessoryService implements IAccessoryService {
         take: input.limit,
         orderBy: warehouseOrderBy(input.sortBy, input.sortOrder),
         include: {
-          accessory: true,
-          totalWarehouse: true,
+          accessory: {
+            select: {
+              name: true,
+              partNumber: true,
+              description: true,
+              unitPrice: true,
+              status: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              partGroupNumber: true,
+              partGroupName: true,
+              partDescription: true,
+              itemNumber: true,
+              englishName: true,
+              customerPrice: true,
+            },
+          },
+          totalWarehouse: {
+            select: {
+              name: true,
+              address: true,
+            },
+          },
         },
       }),
       this.accessoryRepository.countTotalWarehouseStock(where),
@@ -348,9 +384,18 @@ export class AccessoryService implements IAccessoryService {
           input.sortBy === "name"
             ? { accessory: { name: input.sortOrder } }
             : { lastUpdated: input.sortOrder },
-        include: {
-          accessory: true,
-          ascCenter: true,
+        select: {
+          id: true,
+          accessory: {
+            select: {
+              name: true,
+              partNumber: true,
+              itemNumber: true,
+              description: true,
+              unitPrice: true,
+              status: true,
+            },
+          },
         },
       }),
       this.accessoryRepository.countAscAccessoryStock(where),

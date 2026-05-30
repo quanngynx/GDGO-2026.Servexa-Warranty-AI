@@ -80,6 +80,41 @@ export class CustomerService implements ICustomerService {
         take: query.limit,
         orderBy: { [query.sortBy]: query.sortOrder },
         select: customerSelect,
+        include: {
+          province: {
+            select: {
+              name: true,
+              code: true,
+            }
+          },
+          ward: {
+            select: {
+              name: true,
+              code: true,
+            }
+          },
+          ascCenter: {
+            select: {
+              centerName: true,
+              centerCode: true,
+            }
+          },
+          repairCases: {
+            select: {
+              caseNumber: true,
+              status: true,
+              createdAt: true,
+              totalCost: true,
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 5,
+          },
+          _count: {
+            select: {
+              repairCases: true,
+            }
+          }
+        }
       }),
       this.customerRepository.count(where),
     ])
@@ -88,9 +123,9 @@ export class CustomerService implements ICustomerService {
   }
 
   async findOneById(customerId: string) {
-    const found = (await this.customerRepository.findOneById(customerId, {
+    const found = await this.customerRepository.findOneById(customerId, {
       select: customerSelect,
-    })) as Record<string, unknown> | null
+    })
 
     if (!found) throw createOperationalError('Customer not found', HTTP_RESPONSE_CODE.NOT_FOUND)
     return found

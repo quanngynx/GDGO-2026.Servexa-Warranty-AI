@@ -13,6 +13,12 @@ from modules.v1.agents.schemas.coordinator_schemas import CoordinatorRunMetadata
 from modules.v1.agents.services.copilot_reply_service import CopilotReplyService, is_noop_tool_result
 from modules.v1.agents.services.operations_service import OperationsService
 from modules.v1.agents.services.supply_chain_service import SupplyChainService
+from modules.v1.agents.trace_emitter import (
+    TraceEmitter,
+    get_trace_emitter,
+    reset_trace_emitter,
+    set_trace_emitter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -107,32 +113,69 @@ class CoordinatorService:
         thread_id = job_id or trace_id or f'hitl-{uuid.uuid4().hex[:12]}'
         config = {'configurable': {'thread_id': thread_id}}
 
-        result = await self._app().ainvoke(
-            {
-                'message': message,
-                'route': 'operations',
-                'output': '',
-                'tool_results': {},
-                'trace_id': trace_id,
-                'tenant_id': tenant_id,
-                'job_id': job_id,
-                'job_type': job_type,
-                'execution_context': ctx,
-                'thread_id': thread_id,
-            },
-            config=config,
+        repair_case_id = str(ctx.get('repairCaseId') or '') or None
+        emitter = TraceEmitter(
+            trace_id=trace_id or thread_id,
+            run_id=trace_id or thread_id,
+            thread_id=thread_id,
+            repair_case_id=repair_case_id,
         )
+        token = set_trace_emitter(emitter)
+        await emitter.trace_started()
+        run_step_id = await emitter.start_step(
+            step_type='run',
+            title='Copilot run',
+            summary='Processing your request',
+        )
+
+        try:
+            result = await self._app().ainvoke(
+                {
+                    'message': message,
+                    'route': 'operations',
+                    'output': '',
+                    'tool_results': {},
+                    'trace_id': trace_id,
+                    'tenant_id': tenant_id,
+                    'job_id': job_id,
+                    'job_type': job_type,
+                    'execution_context': ctx,
+                    'thread_id': thread_id,
+                },
+                config=config,
+            )
+        except Exception:
+            await emitter.trace_failed(error_message='Coordinator run failed')
+            await emitter.close()
+            reset_trace_emitter(token)
+            raise
 
         interrupts = result.get('__interrupt__')
         if interrupts:
             payload = interrupts[0].value if hasattr(interrupts[0], 'value') else interrupts[0]
-            return {
+            await emitter.complete_step(run_step_id, summary='Awaiting human approval')
+            await emitter.start_step(
+                step_type='hitl',
+                title='Human approval required',
+                summary='Review the proposed action in the copilot rail',
+                status='waiting_for_human',
+            )
+            out = {
                 **result,
                 'hitl_status': 'awaiting_approval',
                 'interrupt_payload': payload,
                 'thread_id': thread_id,
+                'reasoning_trace': emitter.snapshot(),
             }
+            await emitter.close()
+            reset_trace_emitter(token)
+            return out
 
+        await emitter.complete_step(run_step_id, summary='Run completed')
+        await emitter.trace_completed()
+        result['reasoning_trace'] = emitter.snapshot()
+        await emitter.close()
+        reset_trace_emitter(token)
         return result
 
     async def resume(
@@ -156,7 +199,7 @@ class CoordinatorService:
             config=config,
         )
 
-    def _route(self, state: CoordinatorState) -> CoordinatorState:
+    async def _route(self, state: CoordinatorState) -> CoordinatorState:
         raw = (
             'supply_chain'
             if 'stock' in state['message'].lower() or 'restock' in state['message'].lower()
@@ -174,6 +217,18 @@ class CoordinatorService:
                 default=str,
             ),
         )
+        emitter = get_trace_emitter()
+        if emitter:
+            step_id = await emitter.start_step(
+                step_type='routing',
+                title='Route selection',
+                summary='Selecting the best agent path for this request',
+            )
+            await emitter.complete_step(
+                step_id,
+                summary=f"Selected route: {decision.route}",
+                safe_details={'result': decision.rationale},
+            )
         return {**state, 'route': decision.route}
 
     def _approval_gate(self, state: CoordinatorState) -> CoordinatorState:
@@ -206,19 +261,49 @@ class CoordinatorService:
         return state.get('route', 'operations')
 
     async def _supply_chain(self, state: CoordinatorState) -> CoordinatorState:
+        emitter = get_trace_emitter()
+        step_id = None
+        if emitter:
+            step_id = await emitter.start_step(
+                step_type='tool',
+                title='Supply chain workflow',
+                summary='Running supply chain tools',
+                agent_name='supply_chain',
+            )
         result = await self.supply_chain_service.run(
             state['message'],
             trace_id=state.get('trace_id', ''),
             tenant_id=state.get('tenant_id', ''),
         )
+        if emitter and step_id:
+            await emitter.complete_step(
+                step_id,
+                summary='Supply chain workflow completed',
+                safe_details={'candidateCount': len(result) if isinstance(result, dict) else 0},
+            )
         return {**state, 'tool_results': result}
 
     async def _operations(self, state: CoordinatorState) -> CoordinatorState:
+        emitter = get_trace_emitter()
+        step_id = None
+        if emitter:
+            step_id = await emitter.start_step(
+                step_type='tool',
+                title='Operations workflow',
+                summary='Running operations tools',
+                agent_name='operations',
+            )
         result = await self.operations_service.run(
             state['message'],
             trace_id=state.get('trace_id', ''),
             tenant_id=state.get('tenant_id', ''),
         )
+        if emitter and step_id:
+            await emitter.complete_step(
+                step_id,
+                summary='Operations workflow completed',
+                safe_details={'candidateCount': len(result) if isinstance(result, dict) else 0},
+            )
         return {**state, 'tool_results': result}
 
     async def _finalize(self, state: CoordinatorState) -> CoordinatorState:
@@ -231,6 +316,7 @@ class CoordinatorService:
         )
         tool_results = state.get('tool_results') or {}
         approval = state.get('approval_decision')
+        finalization_summary = 'Done'
 
         copilot_phase3: dict[str, Any] = {}
         if is_noop_tool_result(tool_results) and not approval:
@@ -238,6 +324,7 @@ class CoordinatorService:
                 message=state.get('message', ''),
                 execution_context=state.get('execution_context'),
             )
+            finalization_summary = 'Response composed from copilot metadata.'
         else:
             tool_json = json.dumps(tool_results)
             route = state.get('route', '') or 'general'
@@ -250,6 +337,22 @@ class CoordinatorService:
                 summary = f'{summary} Human approval was recorded.'
             details = f'Tool signals: {tool_json}' if tool_json != '{}' else ''
             output_text = f'{summary}\n\n{details}'.strip() if details else summary
+            finalization_summary = summary
+
+        emitter = get_trace_emitter()
+        if emitter:
+            gen_id = await emitter.start_step(
+                step_type='generation',
+                title='Compose response',
+                summary='Generating the assistant reply',
+            )
+            await emitter.complete_step(gen_id, summary='Response ready')
+            fin_id = await emitter.start_step(
+                step_type='finalization',
+                title='Finalize',
+                summary='Finalizing copilot output',
+            )
+            await emitter.complete_step(fin_id, summary=finalization_summary[:200] if finalization_summary else 'Done')
 
         logger.info('coordinator_finalize %s', json.dumps(meta.model_dump(), default=str))
         return {**state, 'output': output_text, 'copilot_phase3': copilot_phase3}

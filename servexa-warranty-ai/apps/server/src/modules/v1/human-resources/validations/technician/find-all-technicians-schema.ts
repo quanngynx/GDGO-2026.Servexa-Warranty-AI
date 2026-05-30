@@ -9,5 +9,7 @@ export const findAllTechniciansSchema = z.object({
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
   skillLevel: technicianSkillLevelSchema.optional(),
   isAvailable: z.coerce.boolean().optional(),
+  ascCenterId: z.uuidv7().optional(),
   userId: z.uuidv7().optional(),
+  ascCenterId: z.uuidv7().optional(),
 })

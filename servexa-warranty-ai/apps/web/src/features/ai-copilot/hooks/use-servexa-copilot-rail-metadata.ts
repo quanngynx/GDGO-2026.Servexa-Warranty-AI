@@ -2,7 +2,15 @@ import type { AbstractAgent } from "@ag-ui/client";
 import { useAgent } from "@copilotkit/react-core/v2";
 import { useCallback, useEffect, useState } from "react";
 
-import type { CopilotRailMetadata } from "@servexa-warranty-ai/ai-contracts";
+import type {
+  CopilotRailMetadata,
+  ReasoningTrace,
+  ReasoningTraceEvent,
+} from "@servexa-warranty-ai/ai-contracts";
+
+import { upsertTraceStep } from "@servexa-warranty-ai/ai-contracts";
+
+import { reasoningTraceApi } from "@/libs/api/ai/reasoning-trace/api";
 
 type SubscribeHandlers = {
   onRunStartedEvent?: (payload?: unknown) => void;
@@ -22,11 +30,50 @@ function readRailMeta(agent: SubscribableAgent): CopilotRailMetadata | undefined
   return agent.state?.servexaCopilot;
 }
 
-function readRunErrorMessage(payload: unknown): string {
-  if (payload && typeof payload === "object" && "message" in payload) {
-    const m = (payload as { message?: unknown }).message;
-    if (typeof m === "string" && m.trim()) return m.trim();
+function initTraceFromLatest(event: ReasoningTraceEvent): ReasoningTrace {
+  return {
+    traceId: event.traceId,
+    runId: event.runId,
+    threadId: event.threadId,
+    status: event.status,
+    events: [event],
+    startedAt: event.startedAt ?? event.endedAt ?? new Date().toISOString(),
+    endedAt: event.endedAt,
+  };
+}
+
+function mergeLatestIntoTrace(
+  current: ReasoningTrace | undefined,
+  latest: ReasoningTraceEvent,
+): ReasoningTrace {
+  if (!current || current.traceId !== latest.traceId) {
+    return initTraceFromLatest(latest);
   }
+
+  return {
+    ...current,
+    status: latest.status,
+    runId: latest.runId ?? current.runId,
+    threadId: latest.threadId ?? current.threadId,
+    // Keep earliest startedAt; prefer latest endedAt if provided.
+    startedAt:
+      current.startedAt ?? latest.startedAt ?? new Date().toISOString(),
+    endedAt: latest.endedAt ?? current.endedAt,
+    events: upsertTraceStep(current.events, latest),
+  };
+}
+
+export function readRunErrorMessage(payload: unknown): string {
+  // FIX: TypeScript 4.9+ automatically understands that payload contains the "message" key after this condition.
+  if (payload && typeof payload === "object" && "message" in payload) {
+    
+    // FIX: Narrow the type again: Ensure message is a string
+    if (typeof payload.message === "string") {
+      const m = payload.message.trim();
+      if (m) return m;
+    }
+  }
+  
   return "The assistant run failed. Try again.";
 }
 
@@ -44,16 +91,44 @@ export function useServexaCopilotRail(agentId: string): {
   const [isRunning, setIsRunning] = useState(() => a0.isRunning ?? false);
   const [runError, setRunError] = useState<string | null>(null);
 
+  const [reasoningTrace, setReasoningTrace] = useState<ReasoningTrace | undefined>(
+    () => readRailMeta(a0)?.reasoningTrace,
+  );
+  const [latestReasoningEvent, setLatestReasoningEvent] = useState<ReasoningTraceEvent | undefined>(
+    () => readRailMeta(a0)?.latestReasoningEvent,
+  );
+
   const clearRunError = useCallback(() => setRunError(null), []);
 
   useEffect(() => {
     const a = agent as SubscribableAgent;
-    const bump = () => {
-      setRailMeta(readRailMeta(a));
+    const syncFromAgent = (opts: { clearOnMissingReasoning: boolean }) => {
+      const meta = readRailMeta(a);
+      setRailMeta(meta);
       setIsRunning(a.isRunning ?? false);
+
+      const snapshotTrace = meta?.reasoningTrace;
+      const latest = meta?.latestReasoningEvent;
+
+      if (snapshotTrace) {
+        setReasoningTrace(snapshotTrace);
+        setLatestReasoningEvent(meta?.latestReasoningEvent);
+        return;
+      }
+
+      if (latest) {
+        setLatestReasoningEvent(latest);
+        setReasoningTrace((curr) => mergeLatestIntoTrace(curr, latest));
+        return;
+      }
+
+      if (opts.clearOnMissingReasoning) {
+        setReasoningTrace(undefined);
+        setLatestReasoningEvent(undefined);
+      }
     };
 
-    bump();
+    syncFromAgent({ clearOnMissingReasoning: false });
 
     if (!a.subscribe) {
       return;
@@ -62,19 +137,65 @@ export function useServexaCopilotRail(agentId: string): {
     const sub = a.subscribe({
       onRunStartedEvent: () => {
         setRunError(null);
-        bump();
+        setReasoningTrace(undefined);
+        setLatestReasoningEvent(undefined);
+        syncFromAgent({ clearOnMissingReasoning: true });
       },
-      onRunFinishedEvent: bump,
+      onRunFinishedEvent: () => {
+        syncFromAgent({ clearOnMissingReasoning: false });
+        const traceId = readRailMeta(a)?.reasoningTrace?.traceId;
+        if (traceId) {
+          void reasoningTraceApi
+            .getTrace(traceId)
+            .then((persisted) => {
+              if (persisted.events.length > 0) {
+                setReasoningTrace(persisted);
+                setLatestReasoningEvent(
+                  persisted.events[persisted.events.length - 1],
+                );
+              }
+            })
+            .catch(() => undefined);
+        }
+      },
       onRunErrorEvent: (payload) => {
         setRunError(readRunErrorMessage(payload));
-        bump();
+        syncFromAgent({ clearOnMissingReasoning: false });
       },
-      onStateSnapshotEvent: bump,
-      onStateDeltaEvent: bump,
+      onStateSnapshotEvent: () => syncFromAgent({ clearOnMissingReasoning: true }),
+      onStateDeltaEvent: () => syncFromAgent({ clearOnMissingReasoning: false }),
     });
 
     return () => sub.unsubscribe();
   }, [agent]);
+
+  useEffect(() => {
+    if (isRunning) return;
+    const traceId = railMeta?.reasoningTrace?.traceId;
+    if (!traceId) return;
+    if (reasoningTrace && reasoningTrace.events.length > 0) return;
+
+    void reasoningTraceApi
+      .getTrace(traceId)
+      .then((persisted) => {
+        if (persisted.events.length > 0) {
+          setReasoningTrace(persisted);
+          setLatestReasoningEvent(persisted.events[persisted.events.length - 1]);
+        }
+      })
+      .catch(() => undefined);
+  }, [isRunning, railMeta?.reasoningTrace?.traceId, reasoningTrace]);
+
+  useEffect(() => {
+    setRailMeta((curr) => {
+      if (!curr) return curr;
+      return {
+        ...curr,
+        reasoningTrace,
+        latestReasoningEvent,
+      };
+    });
+  }, [reasoningTrace, latestReasoningEvent]);
 
   return { agent, railMeta, isRunning, runError, clearRunError };
 }
