@@ -4,11 +4,8 @@ import {
   AccessoryRequestStatus,
   AccessoryRequestItemStatus,
 } from "@servexa-warranty-ai/db/prisma/client";
-import type {
-  AccessoryRequest,
-  AccessoryRequestItem,
-  AccessoryRequestStatus as AccessoryRequestStatusType,
-} from "@servexa-warranty-ai/db/prisma/client";
+import type { AccessoryRequestStatus as AccessoryRequestStatusType } from "@servexa-warranty-ai/db/prisma/client";
+import type { AccessoryRequestDetail } from "../accessory-request.types";
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";
 import { buildPagination } from "@/utils/pagination";
@@ -90,9 +87,7 @@ export class AccessoryRequestService implements IAccessoryRequestService {
       totalEstimatedCost = new Prisma.Decimal(sum);
     }
 
-    let created:
-      | (AccessoryRequest & { items: AccessoryRequestItem[] })
-      | null = null;
+    let created: AccessoryRequestDetail | null = null;
     let attempts = 0;
     while (attempts < 2) {
       try {

@@ -19,7 +19,7 @@ export interface ICustomerRepository {
   >(
     id: string,
     options?: CustomerOptions<TSelect, TInclude>,
-  ): Promise<unknown | null>;
+  ): Promise<(Customer & Prisma.CustomerInclude) | null>;
   findOneByPhone<
     TSelect extends CustomerSelect | undefined,
     TInclude extends CustomerInclude | undefined,

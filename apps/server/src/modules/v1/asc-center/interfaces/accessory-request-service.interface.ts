@@ -1,5 +1,4 @@
-import type { AccessoryRequest, Prisma } from "@servexa-warranty-ai/db/prisma/client";
-import type { BasePagination } from "@/types/pagination";
+import type { BasePagination } from '@/types/pagination';
 import type {
   FindAllAccessoryRequestsInput,
   CreateAccessoryRequestInput,
@@ -9,14 +8,24 @@ import type {
   ApproveAccessoryRequestInput,
   RejectAccessoryRequestInput,
   RecallAccessoryRequestInput,
-} from "../dtos/accessory-request.dto";
+} from '../dtos/accessory-request.dto';
+import type {
+  AccessoryRequestDetail,
+  AccessoryRequestHeader,
+  AccessoryRequestListItem,
+} from '../accessory-request.types';
 
 export interface IAccessoryRequestService {
-  findAll(query: FindAllAccessoryRequestsInput): Promise<{ items: (AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null, pagination: BasePagination }>;
-  findOneById(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
+  findAll(
+    query: FindAllAccessoryRequestsInput,
+  ): Promise<{ items: AccessoryRequestListItem[] | null; pagination: BasePagination }>;
+  findOneById(id: string): Promise<AccessoryRequestDetail>;
 
-  create(input: CreateAccessoryRequestInput, userId: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
-  update(id: string, input: UpdateAccessoryRequestInput): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude) | null>;
+  create(
+    input: CreateAccessoryRequestInput,
+    userId: string,
+  ): Promise<AccessoryRequestDetail | null>;
+  update(id: string, input: UpdateAccessoryRequestInput): Promise<AccessoryRequestHeader>;
   delete(id: string): Promise<{ success: boolean }>;
 
   addItem(id: string, input: CreateAccessoryRequestItemInput): Promise<unknown>;
@@ -27,16 +36,16 @@ export interface IAccessoryRequestService {
   ): Promise<unknown>;
   removeItem(id: string, itemId: string): Promise<{ success: boolean }>;
 
-  submit(id: string): Promise<unknown>;
+  submit(id: string): Promise<AccessoryRequestHeader>;
   approve(
     id: string,
     input: ApproveAccessoryRequestInput,
     userId: string,
-  ): Promise<unknown>;
+  ): Promise<AccessoryRequestHeader>;
   reject(
     id: string,
     input: RejectAccessoryRequestInput,
     userId: string,
-  ): Promise<unknown>;
-  recall(id: string, input: RecallAccessoryRequestInput): Promise<unknown>;
+  ): Promise<AccessoryRequestHeader>;
+  recall(id: string, input: RecallAccessoryRequestInput): Promise<AccessoryRequestHeader>;
 }

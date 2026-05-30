@@ -137,9 +137,9 @@ export class ModelService implements IModelService {
   }
 
   async findOneById(modelId: string) {
-    const found = (await this.modelRepository.findOneById(modelId, {
+    const found = await this.modelRepository.findOneById(modelId, {
       select: modelDetailSelect,
-    })) as ({ deletedAt: Date | null } & Record<string, unknown>) | null
+    })
 
     if (!found || found.deletedAt) {
       throw createOperationalError('Model not found', HTTP_RESPONSE_CODE.NOT_FOUND)
