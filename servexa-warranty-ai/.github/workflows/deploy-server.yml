@@ -37,6 +37,6 @@ jobs:
 
             sleep 15
 
-            curl -f http://127.0.0.1:3000/health
+            curl -f http://127.0.0.1:3000/
 
             docker image prune -f

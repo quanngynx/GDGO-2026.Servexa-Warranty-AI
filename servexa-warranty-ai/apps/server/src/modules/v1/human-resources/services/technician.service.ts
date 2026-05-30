@@ -1,5 +1,5 @@
 import prisma from "@servexa-warranty-ai/db";
-import { Prisma, type TechnicianProfile } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";
@@ -13,7 +13,6 @@ import type {
 import type { ITechnicianRepository } from "../interfaces/technician-repository.interface";
 import type { ITechnicianService } from "../interfaces/technician-service.interface";
 import { TechnicianRepository } from "../repositories/technician.repository";
-import type { BasePagination } from "src/types/pagination";
 
 const technicianSelect = {
   id: true,
@@ -32,23 +31,14 @@ const technicianSelect = {
 } satisfies Prisma.TechnicianProfileSelect;
 
 export type FindAllTechniciansInput = {
-  page: number
-  limit: number
-  sortBy: 'createdAt' | 'updatedAt' | 'experienceYears' | 'completedCases'
-  sortOrder: 'asc' | 'desc'
-  skillLevel?: 'basic' | 'intermediate' | 'advanced' | 'expert'
-  isAvailable?: boolean
-  ascCenterId?: string
-  userId?: string
-}
   page: number;
   limit: number;
   sortBy: "createdAt" | "updatedAt" | "experienceYears" | "completedCases";
   sortOrder: "asc" | "desc";
   skillLevel?: "basic" | "intermediate" | "advanced" | "expert";
   isAvailable?: boolean;
-  userId?: string;
   ascCenterId?: string;
+  userId?: string;
 };
 
 export class TechnicianService implements ITechnicianService {
@@ -80,16 +70,9 @@ export class TechnicianService implements ITechnicianService {
       );
   }
 
-  private async ensureAscCenterExists(ascCenterId: string) {
-    const found = await prisma.ascCenter.findUnique({ where: { id: ascCenterId }, select: { id: true } })
-    if (!found) throw createOperationalError('ASC center not found', HTTP_RESPONSE_CODE.BAD_REQUEST)
-  }
-
   async findAll(query: FindAllTechniciansInput) {
     const where: Prisma.TechnicianProfileWhereInput = {
       ...(query.skillLevel ? { skillLevel: query.skillLevel } : {}),
-      ...(query.isAvailable !== undefined ? { isAvailable: query.isAvailable } : {}),
-      ...(query.ascCenterId ? { ascCenterId: query.ascCenterId } : {}),
       ...(query.isAvailable !== undefined
         ? { isAvailable: query.isAvailable }
         : {}),
@@ -155,11 +138,6 @@ export class TechnicianService implements ITechnicianService {
   }
 
   async create(input: CreateTechnicianDto) {
-    await this.ensureUserExists(input.userId)
-    await this.ensureAscCenterExists(input.ascCenterId)
-    const duplicate = (await this.technicianRepository.findOneByUserId(input.userId, {
-      select: { id: true },
-    })) as { id: string } | null
     await this.ensureUserExists(input.userId);
     await this.ensureAscCenterExists(input.ascCenterId);
     const duplicate = (await this.technicianRepository.findOneByUserId(
@@ -219,10 +197,6 @@ export class TechnicianService implements ITechnicianService {
     }
     if (input.ascCenterId !== undefined) {
       await this.ensureAscCenterExists(input.ascCenterId);
-    }
-
-    if (input.ascCenterId !== undefined) {
-      await this.ensureAscCenterExists(input.ascCenterId)
     }
 
     const data: Prisma.TechnicianProfileUpdateInput = {};
