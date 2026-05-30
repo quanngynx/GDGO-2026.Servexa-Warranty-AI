@@ -37,6 +37,8 @@ jobs:
 
             cd /opt/servexa/servexa-warranty-ai
 
+            git config --global --add safe.directory /opt/servexa/servexa-warranty-ai
+
             git fetch origin main
             git reset --hard origin/main
 
