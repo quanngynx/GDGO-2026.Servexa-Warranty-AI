@@ -23,6 +23,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           passphrase: ${{ secrets.VM_SSH_PASSPHRASE }}
           port: ${{ secrets.VM_PORT }}
+          debug: true
           script: |
             set -e
 
