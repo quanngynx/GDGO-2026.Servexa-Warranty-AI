@@ -81,6 +81,9 @@ export class AppBootStrap {
     });
 
     // Public routes (specific routes first)
+    this.app.get("/", (_req, res) => {
+      res.status(200).send("OK");
+    });
     this.app.use("", mainRouter);
 
     this.app.use(createCopilotKitRouter());
@@ -90,10 +93,6 @@ export class AppBootStrap {
     // })
 
     this.app.post("/ai", handleBootstrapAiChat);
-
-    this.app.get("/", (_req, res) => {
-      res.status(200).send("OK");
-    });
   }
 
   private initializeErrorHandling(): void {

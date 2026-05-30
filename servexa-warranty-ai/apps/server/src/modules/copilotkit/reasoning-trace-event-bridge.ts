@@ -56,9 +56,6 @@ export class ReasoningTraceEventBridge {
           blockMs,
         });
       } catch (err) {
-        // #region agent log
-        fetch('http://127.0.0.1:7595/ingest/4bd003ec-1377-45f5-9e8e-e8c67f18f88c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'596e87'},body:JSON.stringify({sessionId:'596e87',runId:'initial',hypothesisId:'H4',location:'reasoning-trace-event-bridge.ts:51',message:'xread_exception',data:{traceId:options.traceId,lastId,blockMs,error:err instanceof Error?err.message:String(err)},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         throw err;
       }
 
@@ -75,9 +72,6 @@ export class ReasoningTraceEventBridge {
           const parsed = JSON.parse(item.payload) as unknown;
           streamEvent = reasoningTraceStreamEventSchema.parse(parsed);
         } catch (err) {
-          // #region agent log
-          fetch('http://127.0.0.1:7595/ingest/4bd003ec-1377-45f5-9e8e-e8c67f18f88c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'596e87'},body:JSON.stringify({sessionId:'596e87',runId:'initial',hypothesisId:'H3',location:'reasoning-trace-event-bridge.ts:69',message:'invalid_stream_payload',data:{traceId:options.traceId,payloadSnippet:item.payload.slice(0,220),error:err instanceof Error?err.message:String(err)},timestamp:Date.now()})}).catch(()=>{});
-          // #endregion
           logger.warn("[reasoning-trace-bridge] invalid stream payload", {
             traceId: options.traceId,
             error: err instanceof Error ? err.message : String(err),

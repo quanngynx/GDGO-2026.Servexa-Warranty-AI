@@ -18,6 +18,17 @@ import { flattenCopilotContext } from "src/utils/flatten-copilot-context";
 
 export const SERVEXA_COPILOT_AGENT_ID = "operations_intelligence";
 
+function hasUndefinedDeep(value: unknown): boolean {
+  if (value === undefined) return true;
+  if (Array.isArray(value)) return value.some((v) => hasUndefinedDeep(v));
+  if (value && typeof value === "object") {
+    for (const v of Object.values(value as Record<string, unknown>)) {
+      if (hasUndefinedDeep(v)) return true;
+    }
+  }
+  return false;
+}
+
 function reasoningTraceStateDelta(patch: {
   reasoningTrace?: unknown;
   latestReasoningEvent?: unknown;

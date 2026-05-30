@@ -7,7 +7,6 @@ import re
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
 import redis.asyncio as redis
@@ -15,22 +14,6 @@ import redis.asyncio as redis
 from configs.base import settings
 
 logger = logging.getLogger(__name__)
-_DEBUG_LOG_PATH = Path(__file__).resolve().parents[5] / 'debug-596e87.log'
-
-
-def _debug_log(hypothesis_id: str, message: str, data: dict[str, Any]) -> None:
-    payload = {
-        'sessionId': '596e87',
-        'runId': 'initial',
-        'hypothesisId': hypothesis_id,
-        'location': 'trace_emitter.py',
-        'message': message,
-        'data': data,
-        'timestamp': int(__import__('time').time() * 1000),
-    }
-    _DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with _DEBUG_LOG_PATH.open('a', encoding='utf-8') as fp:
-        fp.write(json.dumps(payload, default=str) + '\n')
 
 _TRACE_EMITTER_CTX: contextvars.ContextVar['TraceEmitter | None'] = contextvars.ContextVar(
     'trace_emitter',
@@ -177,20 +160,6 @@ class TraceEmitter:
 
     async def _publish(self, envelope: dict[str, Any]) -> None:
         try:
-            # #region agent log
-            step = envelope.get('step') if isinstance(envelope, dict) else None
-            trace = envelope.get('trace') if isinstance(envelope, dict) else None
-            _debug_log(
-                'H2',
-                'publish_envelope_shape',
-                {
-                    'traceId': self.trace_id,
-                    'event': envelope.get('event') if isinstance(envelope, dict) else 'unknown',
-                    'stepNullFields': sorted([k for k, v in step.items() if v is None]) if isinstance(step, dict) else [],
-                    'traceEndedAtIsNull': isinstance(trace, dict) and trace.get('endedAt') is None,
-                },
-            )
-            # #endregion
             client = await self._client()
             stream = trace_stream_key(self.trace_id)
             await client.xadd(

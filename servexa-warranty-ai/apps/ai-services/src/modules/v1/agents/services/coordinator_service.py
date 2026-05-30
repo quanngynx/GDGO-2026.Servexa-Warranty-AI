@@ -3,7 +3,6 @@ import logging
 import os
 import uuid
 from functools import lru_cache
-from pathlib import Path
 from typing import Any, TypedDict
 
 from langgraph.checkpoint.memory import MemorySaver
@@ -22,22 +21,6 @@ from modules.v1.agents.trace_emitter import (
 )
 
 logger = logging.getLogger(__name__)
-_DEBUG_LOG_PATH = Path(__file__).resolve().parents[6] / 'debug-596e87.log'
-
-
-def _debug_log(hypothesis_id: str, message: str, data: dict[str, Any]) -> None:
-    payload = {
-        'sessionId': '596e87',
-        'runId': 'initial',
-        'hypothesisId': hypothesis_id,
-        'location': 'coordinator_service.py',
-        'message': message,
-        'data': data,
-        'timestamp': int(__import__('time').time() * 1000),
-    }
-    _DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with _DEBUG_LOG_PATH.open('a', encoding='utf-8') as fp:
-        fp.write(json.dumps(payload, default=str) + '\n')
 
 
 class CoordinatorState(TypedDict, total=False):
@@ -334,18 +317,6 @@ class CoordinatorService:
         tool_results = state.get('tool_results') or {}
         approval = state.get('approval_decision')
         finalization_summary = 'Done'
-        # #region agent log
-        _debug_log(
-            'H1',
-            'finalize_entry',
-            {
-                'traceId': state.get('trace_id', ''),
-                'noopPathCandidate': is_noop_tool_result(tool_results) and not bool(approval),
-                'hasApproval': bool(approval),
-                'toolResultsType': type(tool_results).__name__,
-            },
-        )
-        # #endregion
 
         copilot_phase3: dict[str, Any] = {}
         if is_noop_tool_result(tool_results) and not approval:
@@ -381,18 +352,6 @@ class CoordinatorService:
                 title='Finalize',
                 summary='Finalizing copilot output',
             )
-            # #region agent log
-            _debug_log(
-                'H1',
-                'finalize_before_complete_step',
-                {
-                    'traceId': state.get('trace_id', ''),
-                    'summaryInLocals': 'summary' in locals(),
-                    'finalizationSummaryLen': len(finalization_summary),
-                    'outputTextLen': len(output_text) if isinstance(output_text, str) else -1,
-                },
-            )
-            # #endregion
             await emitter.complete_step(fin_id, summary=finalization_summary[:200] if finalization_summary else 'Done')
 
         logger.info('coordinator_finalize %s', json.dumps(meta.model_dump(), default=str))
