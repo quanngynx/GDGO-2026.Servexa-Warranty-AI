@@ -1,4 +1,4 @@
-# On-premise Postgres (pgvector) for production / staging hosts.
+# Cloud VM Postgres (pgvector) for production / staging hosts.
 # Start: pnpm --filter @servexa-warranty-ai/db db:start:production
 #
 # Security (OWASP Docker):
@@ -9,10 +9,11 @@
 
 services:
   postgres:
-    image: pgvector/pgvector:0.8.2-pg18-bookworm@sha256:42e7f6b4e1eceb02ff14e3e6bc6108bbe259abbe83879dc1845d0da1ddeb555d
-    pull_policy: missing
+    image: pgvector/pgvector:0.8.2-pg18-trixie@sha256:42e7f6b4e1eceb02ff14e3e6bc6108bbe259abbe83879dc1845d0da1ddeb555d
     container_name: servexa-warranty-ai-db-postgres
     restart: unless-stopped
+    env_file:
+      - .env.production
     init: true
     security_opt:
       - no-new-privileges:true
@@ -29,27 +30,17 @@ services:
     mem_limit: 2g
     cpus: 2
     environment:
-      POSTGRES_USER_FILE: "${DATABASE_USERNAME}"
-      POSTGRES_PASSWORD_FILE: "${DATABASE_PASSWORD}"
-      POSTGRES_DB_FILE: "${DATABASE_NAME}"
-      POSTGRES_PORT_FILE: "${DATABASE_PORT}"
-      POSTGRES_HOST_FILE: "${DATABASE_HOST}"
-    secrets:
-      - postgres_user
-      - postgres_password
-      - postgres_db
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_PORT: ${DATABASE_PORT}
     ports:
-      # Host port must match secrets/postgres_port.txt (default 5436).
-      - "127.0.0.1:${POSTGRES_HOST_PORT:-5436}:5432"
+      - "${DATABASE_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./docker/postgres/init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql:ro
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U \"$$(cat /run/secrets/postgres_user)\" -d \"$$(cat /run/secrets/postgres_db)\"",
-        ]
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -57,20 +48,18 @@ services:
       - db_internal
 
   server:
-    build:
-      context: ../..
-      dockerfile: apps/server/Dockerfile
-    container_name: servexa-warranty-ai-server
+    image: ghcr.io/${GHCR_OWNER}/${GHCR_IMAGE_NAME}:latest
+    container_name: servexa-server
     restart: unless-stopped
     env_file:
-      - apps/server/.env.production
+      - .env.production
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - server_internal
     ports:
-      - "${PORT}:3000"
+      - "${SERVER_PORT}:3000"
 
 networks:
   db_internal:

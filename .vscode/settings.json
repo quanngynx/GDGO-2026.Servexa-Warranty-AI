@@ -7,5 +7,9 @@
   "protobuf.buf.path": "c:\\Users\\Admin\\AppData\\Roaming\\Code\\User\\globalStorage\\drblury.protobuf-vsc\\bin\\buf.exe",
   "protobuf.externalLinter.bufPath": "c:\\Users\\Admin\\AppData\\Roaming\\Code\\User\\globalStorage\\drblury.protobuf-vsc\\bin\\buf.exe",
   "protobuf.externalLinter.enabled": true,
-  "protobuf.externalLinter.linter": "api-linter"
+  "protobuf.externalLinter.linter": "api-linter",
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}/apps/ai-services/src",
+    "${workspaceFolder}/apps/ai-services/src/generated"
+  ]
 }
