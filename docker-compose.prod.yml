@@ -48,11 +48,11 @@ services:
       - db_internal
 
   server:
+    env_file:
+      - .env.production
     image: ghcr.io/${GHCR_OWNER}/${GHCR_IMAGE_NAME}:latest
     container_name: servexa-server
     restart: unless-stopped
-    env_file:
-      - .env.production
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,6 +64,8 @@ services:
 networks:
   db_internal:
     internal: true
+  server_internal:
+    driver: bridge
 
 volumes:
   postgres_data:
