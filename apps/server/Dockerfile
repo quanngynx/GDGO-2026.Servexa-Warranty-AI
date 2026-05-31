@@ -81,7 +81,7 @@ RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=loc
 
 ENV NODE_ENV=production
 # Workspace packages are TypeScript sources resolved at runtime (see tsdown externals).
-ENV NODE_OPTIONS="--experimental-strip-types"
+ENV NODE_OPTIONS="--experimental-strip-types --experimental-specifier-resolution=node"
 STOPSIGNAL SIGTERM
 
 WORKDIR /app
