@@ -10,9 +10,9 @@ export class IoredisService {
     if (this.client) return;
 
     const nodeEnv = env.NODE_ENV;
-    const host = env.REDIS_HOST || '127.0.0.1';
-    const port = env.REDIS_PORT || 6379;
-    const tls = env.REDIS_TLS || false;
+    const host = env.REDIS_HOST;
+    const port = env.REDIS_PORT;
+    const tls = env.REDIS_TLS;
     const password = env.REDIS_PASSWORD;
     const username = env.REDIS_USERNAME;
 
