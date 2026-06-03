@@ -7,7 +7,7 @@ Query-translatable specifications extend the base specification to also produce 
 ## Interface Extension
 
 ```typescript
-import type { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 // Extend base spec with a Prisma where clause builder
 export interface PrismaSpecification<T, W> extends Specification<T> {
