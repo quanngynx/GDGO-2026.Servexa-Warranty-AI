@@ -54,3 +54,7 @@ lerna-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 .devtools
+
+# prisma
+prisma/generated/
+src/core/infra/prisma/generated/

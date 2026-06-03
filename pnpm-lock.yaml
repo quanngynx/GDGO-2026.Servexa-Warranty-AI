@@ -298,12 +298,15 @@ importers:
       '@grpc/proto-loader':
         specifier: ^0.8.0
         version: 0.8.0
+      '@prisma/adapter-pg':
+        specifier: ^7.8.0
+        version: 7.8.0
+      '@prisma/client':
+        specifier: 'catalog:'
+        version: 7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3))(typescript@5.9.3)
       '@servexa-warranty-ai/ai-contracts':
         specifier: workspace:*
         version: link:../../packages/ai-contracts
-      '@servexa-warranty-ai/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       '@servexa-warranty-ai/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -434,6 +437,9 @@ importers:
       nodemon:
         specifier: ^3.0.2
         version: 3.1.14
+      prisma:
+        specifier: ^7.8.0
+        version: 7.8.0(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(magicast@0.3.5)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)
       tsc-alias:
         specifier: ^1.8.16
         version: 1.8.17
