@@ -1,0 +1,49 @@
+model PurchaseLocation {
+  id          String   @id @default(uuid(7))
+  groupId     String   @map("group_id")
+  name        String
+  code        String   @unique
+  description String?
+  website     String?
+  address     String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdBy   String?  @map("created_by")
+  updatedBy   String?  @map("updated_by")
+
+  group       PurchaseLocationGroup @relation(fields: [groupId], references: [id])
+  repairCases RepairCase[]
+  creator     User?                 @relation("PurchaseLocationCreator", fields: [createdBy], references: [id])
+  updater     User?                 @relation("PurchaseLocationUpdater", fields: [updatedBy], references: [id])
+
+  @@index([groupId])
+  @@index([code])
+  @@index([isActive])
+  @@index([groupId, isActive])
+  @@index([sortOrder])
+  @@map("purchase_locations")
+}
+
+model PurchaseLocationGroup {
+  id          String   @id @default(uuid(7))
+  name        String
+  code        String   @unique
+  description String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdBy   String?  @map("created_by")
+  updatedBy   String?  @map("updated_by")
+
+  locations PurchaseLocation[]
+  creator   User?              @relation("PurchaseLocationGroupCreator", fields: [createdBy], references: [id])
+  updater   User?              @relation("PurchaseLocationGroupUpdater", fields: [updatedBy], references: [id])
+
+  @@index([code])
+  @@index([isActive])
+  @@index([sortOrder])
+  @@map("purchase_location_groups")
+}

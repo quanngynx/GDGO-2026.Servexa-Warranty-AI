@@ -1,0 +1,55 @@
+model Area {
+  id          String       @id @default(uuid(7))
+  provinceId  String       @map("province_id")
+  wardId      String       @map("ward_id")
+  name        String
+  cayso       String?      @map("cay_so")
+  tiencong1   Decimal?     @map("tien_cong_1") @db.Decimal(10, 2)
+  tiencong2   Decimal?     @map("tien_cong_2") @db.Decimal(10, 2)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  province    Province     @relation(fields: [provinceId], references: [id])
+  ward        Ward         @relation(fields: [wardId], references: [id])
+  repairCases RepairCase[]
+
+  @@unique([wardId, name])
+  @@index([wardId])
+  @@index([provinceId, wardId])
+  @@index([name])
+  @@map("areas")
+}
+
+model Province {
+  id                  String       @id @default(uuid(7))
+  name                String
+  code                String       @unique
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  areas               Area[]
+  ascCenters          AscCenter[]
+  wards               Ward[]       @relation("ProvinceWard")
+  users               User[]       @relation("UserProvince")
+  customers           Customer[]   @relation("CustomerProvince")
+  repairCasesShipping RepairCase[] @relation("RepairCaseShippingProvince")
+
+  @@map("provinces")
+}
+
+model Ward {
+  id                  String       @id @default(uuid(7))
+  provinceId          String       @map("province_id")
+  name                String
+  code                String       @unique
+  detail              String?
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  areas               Area[]
+  ascCenters          AscCenter[]
+  users               User[]       @relation("UserWard")
+  customers           Customer[]   @relation("CustomerWard")
+  province            Province     @relation("ProvinceWard", fields: [provinceId], references: [id])
+  repairCasesShipping RepairCase[] @relation("RepairCaseShippingWard")
+
+  @@index([provinceId])
+  @@map("wards")
+}

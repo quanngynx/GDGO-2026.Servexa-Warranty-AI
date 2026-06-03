@@ -1,0 +1,507 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../../src/core/infra/prisma/generated"
+  moduleFormat = "esm"
+  runtime      = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+}
+
+enum TotalWarehouseStatus {
+  active
+  inactive
+}
+
+enum RoleScope {
+  SYSTEM
+  COMPANY
+  ASC_CENTER
+  DSC_CENTER
+}
+
+enum AscCenterStatus {
+  active
+  inactive
+  suspended
+}
+
+enum CategoryStatus {
+  active
+  inactive
+}
+
+enum ModelStatus {
+  active
+  inactive
+}
+
+enum ErrorPhenomenonStatus {
+  active
+  inactive
+}
+
+enum ReasonStatus {
+  active
+  inactive
+}
+
+enum SolutionStatus {
+  active
+  inactive
+}
+
+enum SolutionDifficulty {
+  easy
+  medium
+  hard
+  expert
+}
+
+enum RepairCaseStatus {
+  tiepnhan
+  dangsua
+  chocaplk
+  choykienkhach
+  choykiencongty
+  khachkhongsua
+  khongsuaduoc
+  exchange_completed_asc
+  cs_supported_asc
+  suaxong
+  dagiao
+  hoanthanh
+  huyphieu
+}
+
+enum RepairCasePriority {
+  low
+  normal
+  high
+  urgent
+}
+
+enum RepairCaseResolution {
+  repair_completed
+  no_repair_needed
+}
+
+enum CSStatus {
+  exchange_in_progress
+  exchange_completed_cs
+  defect_product_collected
+  cs_supported
+}
+
+enum RTStatus {
+  prepare_to_send_defect
+  defect_returned_to_lnl
+}
+
+enum WarrantyForm {
+  in_warranty
+  warranty_repair
+  no_information
+  product_not_sell
+}
+
+enum WarrantyServiceType {
+  at_asc
+  at_home
+  pick_up_from_carrier
+  pick_up_from_store
+  repair_at_ware_house
+}
+
+enum HouseholdProductType {
+  food_storage_container
+  kitchen_appliance
+  water_bottle
+  lunch_box
+  vacuum_container
+  glass_container
+  plastic_container
+  electric_appliance
+}
+
+enum FoodSafetyCompliance {
+  compliant
+  non_compliant
+  pending_test
+  not_applicable
+}
+
+enum SealIntegrityStatus {
+  excellent
+  good
+  fair
+  poor
+  failed
+  not_tested
+}
+
+enum PlasticDurabilityLevel {
+  excellent
+  good
+  fair
+  poor
+  brittle
+  cracked
+  not_tested
+}
+
+enum QuotationStatus {
+  draft
+  pending_approval
+  approved
+  rejected
+  sent_to_customer
+  customer_approved
+  customer_rejected
+  expired
+}
+
+enum SatisfactionRating {
+  very_dissatisfied
+  dissatisfied
+  neutral
+  satisfied
+  very_satisfied
+}
+
+enum TechnicianSkillLevel {
+  basic
+  intermediate
+  advanced
+  expert
+}
+
+enum TechnicianSpecialization {
+  electrical_appliances
+  plastic_products
+  glass_products
+  sealing_systems
+  food_safety
+  general_repair
+}
+
+enum GenderEnum {
+  male
+  female
+  other
+}
+
+enum DepartmentEnum {
+  technical
+  coordination
+}
+
+enum PositionEnum {
+  supervisor
+  receptionist
+  home_appliance_technician
+  home_service_technician
+  workshop_technician
+  warehouse_staff
+}
+
+enum EmployeeStatusEnum {
+  active
+  resigned
+  on_leave
+}
+
+enum RepairCaseImageType {
+  model_serial
+  repair_form
+  before_repair
+  after_repair
+  parts_components
+  warranty_invoice
+  shipping_fee_invoice
+  repair_completion_receipt
+}
+
+enum AccessoryStatus {
+  active
+  inactive
+}
+
+enum AccessoryRequestStatus {
+  draft
+  submitted
+  approved
+  rejected
+  partially_approved
+  shipped
+  received
+}
+
+enum StatusRecall {
+  not_recalled
+  in_recalled
+  sent
+  null_value
+}
+
+enum AccessoryRequestUrgency {
+  low
+  normal
+  high
+  urgent
+}
+
+enum AccessoryRequestItemStatus {
+  pending
+  partially_approved
+  fully_approved
+  fulfilled
+  cancelled
+}
+
+enum PurchaseOrderStatus {
+  draft
+  submitted
+  approved
+  ordered
+  partially_received
+  received
+  cancelled
+}
+
+// Payment status enum (used by PurchaseOrder and Payment)
+enum PaymentStatus {
+  pending
+  paid
+  partial
+  cancelled
+}
+
+// Pending payment workflow states for repair cases
+enum PaymentPendingStatus {
+  waiting_for_information // Chờ bổ sung thông tin
+  information_provided // Đã bổ sung thông tin
+  waiting_for_payment // Chờ thanh toán
+  paid // Đã thanh toán
+}
+
+enum DeliveryStatus {
+  pending
+  partial
+  received
+  cancelled
+}
+
+enum SupplyVoucherStatus {
+  issued
+  received
+  partially_received
+  cancelled
+}
+
+enum AccessoryIssueStatus {
+  issued
+  in_use
+  partially_returned
+  returned
+  consumed
+}
+
+enum IssuePurpose {
+  repair_case
+  maintenance
+  testing
+  other
+}
+
+enum AccessoryIssueItemStatus {
+  issued
+  in_use
+  returned
+  consumed
+}
+
+enum StockTransactionType {
+  purchase_order
+  issue
+  return
+  adjustment
+  transfer
+  initial_stock
+  supply
+  warehouse_import
+  warehouse_transfer
+  retail_sale
+}
+
+enum StockOperation {
+  in
+  out
+}
+
+enum WarrantyType {
+  standard
+  extended
+  premium
+}
+
+enum WarrantyPolicyStatus {
+  active
+  inactive
+}
+
+enum ProductWarrantyStatus {
+  active
+  expired
+  voided
+  transferred
+}
+
+enum WarrantyClaimType {
+  repair
+  replacement
+  refund
+}
+
+enum WarrantyClaimStatus {
+  submitted
+  under_review
+  approved
+  rejected
+  completed
+}
+
+enum WarrantyClaimUrgency {
+  low
+  normal
+  high
+  urgent
+}
+
+enum WarrantyCoordinationType {
+  part_request
+  technical_support
+  escalation
+  manufacturer_contact
+}
+
+enum WarrantyCoordinationPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+enum WarrantyCoordinationStatus {
+  pending
+  in_progress
+  resolved
+  closed
+}
+
+enum AppointmentType {
+  drop_off
+  pickup
+  inspection
+  consultation
+}
+
+enum AppointmentStatus {
+  scheduled
+  confirmed
+  in_progress
+  completed
+  cancelled
+  rescheduled
+}
+
+enum NotificationType {
+  sms
+  email
+  phone_call
+}
+
+enum NotificationStatus {
+  pending
+  sent
+  failed
+}
+
+enum CustomerGroup {
+  individual // Khách lẻ
+  dealer_store // Đại lý/Siêu Thị/Cửa Hàng/Trạm  
+  store_representative // Đại diện cửa hàng
+  supplier // Nhà cung cấp
+  invoice // Hóa đơn
+  company // Công ty
+}
+
+enum NotificationCategory {
+  repair_case
+  inventory
+  appointment
+  warranty
+  system
+  announcement
+  task
+  approval
+  alert
+  promotion
+  policy
+  maintenance
+}
+
+enum BroadcastTargetType {
+  all
+  roles
+  users
+  asc_centers
+  mixed
+}
+
+enum BroadcastStatus {
+  draft
+  scheduled
+  sending
+  sent
+  failed
+  cancelled
+}
+
+enum NotificationPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+enum NotificationType_New {
+  info
+  success
+  warning
+  error
+  announcement
+}
+
+enum DocumentType {
+  TECHNICAL // Tài liệu kỹ thuật
+  PROCESS // Tài liệu quy trình  
+  USER_MANUAL // Tài liệu HDSD
+}
+
+enum DocumentAction {
+  VIEW
+  DOWNLOAD
+  EDIT
+  DELETE
+  UPLOAD
+  DEACTIVATE
+  ACTIVATE
+}

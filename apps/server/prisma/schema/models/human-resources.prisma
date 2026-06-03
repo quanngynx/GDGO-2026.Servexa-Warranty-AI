@@ -1,0 +1,108 @@
+model Customer {
+  id             String                   @id @default(uuid(7))
+  customerGroup  CustomerGroup            @map("customer_group")
+  fullName       String                   @map("full_name")
+  phone1         String                   @map("phone_1")
+  phone2         String?                  @map("phone_2")
+  email          String?
+  provinceId     String?                  @map("province_id")
+  wardId         String?                  @map("ward_id")
+  address        String?
+  taxCode        String?                  @map("tax_code")
+  bankName       String?                  @map("bank_name")
+  accountNumber  String?                  @map("account_number")
+  contactPerson  String?                  @map("contact_person")
+  ascCenterId    String?                  @map("asc_center_id")
+  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdBy      String?                  @map("created_by")
+  updatedBy      String?                  @map("updated_by")
+  // Relations
+  province       Province?                @relation("CustomerProvince", fields: [provinceId], references: [id])
+  ward           Ward?                    @relation("CustomerWard", fields: [wardId], references: [id])
+  ascCenter      AscCenter?               @relation("CustomerAscCenter", fields: [ascCenterId], references: [id])
+  repairCases    RepairCase[]             @relation("CustomerRepairCases")
+  retailVouchers AccessoryRetailVoucher[] @relation("RetailVoucherCustomer")
+
+  @@index([phone1])
+  @@index([customerGroup])
+  @@index([fullName])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([createdBy])
+  @@index([updatedBy])
+  @@index([ascCenterId])
+  @@map("customers")
+}
+
+model Employee {
+  id                    String             @id @default(uuid(7))
+  employeeCode          String             @unique @map("employee_code")
+  gender                GenderEnum
+  fullName              String             @map("full_name")
+  dateOfBirth           DateTime           @map("date_of_birth") @db.Date
+  primaryPhone          String             @map("primary_phone")
+  secondaryPhone        String?            @map("secondary_phone")
+  email                 String             @unique
+  permanentAddress      String             @map("permanent_address")
+  avatar                String?
+  department            DepartmentEnum
+  position              PositionEnum
+  startDate             DateTime           @map("start_date") @db.Date
+  ascCenterId           String             @map("asc_center_id")
+  baseSalary            Decimal?           @map("base_salary") @db.Decimal(15, 2)
+  status                EmployeeStatusEnum @default(active)
+  nationalId            String             @unique @map("national_id")
+  idIssueDate           DateTime           @map("id_issue_date") @db.Date
+  idAddress             String             @map("id_address")
+  idIssuingAuthority    String             @map("id_issuing_authority")
+  bankAccount           String?            @map("bank_account")
+  taxId                 String?            @map("tax_id")
+  bankName              String?            @map("bank_name")
+  emergencyContactName  String?            @map("emergency_contact_name")
+  emergencyContactPhone String?            @map("emergency_contact_phone")
+  userId                String?            @unique @map("user_id")
+  notes                 String?
+  createdAt             DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdBy             String             @map("created_by")
+  ascCenter             AscCenter          @relation(fields: [ascCenterId], references: [id])
+  creator               User               @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
+  user                  User?              @relation(fields: [userId], references: [id])
+  repairCasesAssigned   RepairCase[]       @relation("RepairCaseAssignedEmployee")
+
+  @@index([ascCenterId])
+  @@index([employeeCode])
+  @@index([nationalId])
+  @@index([primaryPhone])
+  @@index([ascCenterId, position])
+  @@index([position, status])
+  @@index([department, position])
+  @@index([ascCenterId, status])
+  @@index([position, status, ascCenterId])
+  @@map("employees")
+}
+
+model TechnicianProfile {
+  id                 String                     @id @default(uuid(7))
+  userId             String                     @unique @map("user_id")
+  ascCenterId        String                     @map("asc_center_id")
+  skillLevel         TechnicianSkillLevel       @default(basic) @map("skill_level")
+  specializations    TechnicianSpecialization[]
+  certifications     String?
+  experienceYears    Int                        @default(0) @map("experience_years")
+  maxConcurrentCases Int                        @default(5) @map("max_concurrent_cases")
+  isAvailable        Boolean                    @default(true) @map("is_available")
+  averageRepairTime  Int?                       @map("average_repair_time")
+  customerRating     Decimal?                   @map("customer_rating") @db.Decimal(3, 2)
+  completedCases     Int                        @default(0) @map("completed_cases")
+  createdAt          DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  user               User                       @relation(fields: [userId], references: [id])
+  ascCenter          AscCenter                  @relation(fields: [ascCenterId], references: [id])
+  repairCases        RepairCase[]               @relation("TechnicianAssignedToRepairCases")
+
+  @@index([userId])
+  @@index([ascCenterId])
+  @@map("technician_profiles")
+}

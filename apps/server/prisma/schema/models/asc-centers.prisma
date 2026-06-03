@@ -1,0 +1,932 @@
+model AccessoryIssue {
+  id                 String               @id @default(uuid(7))
+  issueNumber        String               @unique @map("issue_number")
+  ascCenterId        String               @map("asc_center_id")
+  issuedToUserId     String               @map("issued_to_user_id")
+  issuePurpose       IssuePurpose         @default(repair_case)
+  repairCaseId       String?              @map("repair_case_id")
+  issueDate          DateTime             @map("issue_date") @db.Date
+  expectedReturnDate DateTime?            @map("expected_return_date") @db.Date
+  status             AccessoryIssueStatus @default(issued)
+  notes              String?
+  issuedBy           String               @map("issued_by")
+  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  items              AccessoryIssueItem[]
+  ascCenter          AscCenter            @relation(fields: [ascCenterId], references: [id])
+  issuer             User                 @relation("AccessoryIssueCreatedBy", fields: [issuedBy], references: [id])
+  issuedToUser       User                 @relation("AccessoryIssueReceivedBy", fields: [issuedToUserId], references: [id])
+  repairCase         RepairCase?          @relation(fields: [repairCaseId], references: [id])
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([issuedToUserId])
+  @@index([repairCaseId])
+  @@map("accessory_issues")
+}
+
+model AccessoryIssueItem {
+  id               String                   @id @default(uuid(7))
+  issueId          String                   @map("issue_id")
+  accessoryId      String                   @map("accessory_id")
+  issuedQuantity   Int                      @map("issued_quantity")
+  returnedQuantity Int                      @default(0) @map("returned_quantity")
+  consumedQuantity Int                      @default(0) @map("consumed_quantity")
+  unitPrice        Decimal?                 @map("unit_price") @db.Decimal(10, 2)
+  status           AccessoryIssueItemStatus @default(issued)
+  accessory        Accessory                @relation(fields: [accessoryId], references: [id])
+  issue            AccessoryIssue           @relation(fields: [issueId], references: [id])
+
+  @@index([issueId])
+  @@index([accessoryId])
+  @@map("accessory_issue_items")
+}
+
+model AccessoryIsUsedOutsideOfWarranty {
+  id           String   @id @default(uuid(7)) @map("id")
+  ascCenterId  String   @map("asc_center_id")
+  repairCaseId String   @map("repair_case_id")
+  accessoryId  String   @map("accessory_id")
+  name         String   @map("name")
+  usedQuantity Int      @map("used_quantity")
+  unitPrice    Decimal  @map("unit_price") @db.Decimal(10, 2)
+  taxRate      Decimal  @map("tax_rate") @db.Decimal(10, 2)
+  totalPrice   Decimal  @map("total_price") @db.Decimal(10, 2)
+  remark       String?  @map("remark")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  ascCenter  AscCenter  @relation(fields: [ascCenterId], references: [id], onDelete: Cascade)
+  repairCase RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  accessory  Accessory  @relation(fields: [accessoryId], references: [id], onDelete: Cascade)
+
+  @@index([ascCenterId])
+  @@index([repairCaseId])
+  @@index([accessoryId])
+  @@map("accessory_is_used_outside_of_warranty")
+}
+
+model AccessoryRequest {
+  id                 String                   @id @default(uuid(7))
+  requestNumber      String                   @unique @map("request_number")
+  ascCenterId        String                   @map("asc_center_id")
+  repairCaseId       String?                  @map("repair_case_id")
+  requestedBy        String                   @map("requested_by")
+  requestDate        DateTime                 @map("request_date") @db.Date
+  urgency            AccessoryRequestUrgency  @default(normal)
+  justification      String?
+  status             AccessoryRequestStatus   @default(draft)
+  statusRecall       StatusRecall?            @map("status_recall")
+  approvedBy         String?                  @map("approved_by")
+  approvedDate       DateTime?                @map("approved_date") @db.Date
+  rejectionReason    String?                  @map("rejection_reason")
+  totalEstimatedCost Decimal?                 @map("total_estimated_cost") @db.Decimal(10, 2)
+  createdAt          DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  items              AccessoryRequestItem[]
+  supplyVouchers     AccessorySupplyVoucher[]
+  approver           User?                    @relation("AccessoryRequestApprover", fields: [approvedBy], references: [id])
+  ascCenter          AscCenter                @relation(fields: [ascCenterId], references: [id])
+  requester          User                     @relation("AccessoryRequestRequester", fields: [requestedBy], references: [id])
+  repairCase         RepairCase?              @relation(fields: [repairCaseId], references: [id])
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([statusRecall])
+  @@index([requestedBy])
+  @@map("accessory_requests")
+}
+
+model AccessoryRequestItem {
+  id                 String                       @id @default(uuid(7))
+  requestId          String                       @map("request_id")
+  accessoryId        String                       @map("accessory_id")
+  requestedQuantity  Int                          @map("requested_quantity")
+  approvedQuantity   Int                          @default(0) @map("approved_quantity")
+  fulfilledQuantity  Int                          @default(0) @map("fulfilled_quantity")
+  unitPrice          Decimal?                     @map("unit_price") @db.Decimal(10, 2)
+  totalPrice         Decimal?                     @map("total_price") @db.Decimal(10, 2)
+  notes              String?
+  status             AccessoryRequestItemStatus   @default(pending)
+  accessory          Accessory                    @relation(fields: [accessoryId], references: [id])
+  request            AccessoryRequest             @relation(fields: [requestId], references: [id])
+  supplyVoucherItems AccessorySupplyVoucherItem[]
+
+  @@index([requestId])
+  @@index([accessoryId])
+  @@map("accessory_request_items")
+}
+
+model AccessoryStockTransaction {
+  id               String               @id @default(uuid(7))
+  accessoryId      String               @map("accessory_id")
+  ascCenterId      String?              @map("asc_center_id") // Make optional for warehouse imports
+  totalWarehouseId String?              @map("total_warehouse_id")
+  transactionType  StockTransactionType @map("transaction_type")
+  operation        StockOperation
+  quantity         Int
+  unitPrice        Decimal?             @map("unit_price") @db.Decimal(10, 2)
+  totalValue       Decimal?             @map("total_value") @db.Decimal(10, 2)
+  referenceId      String?              @map("reference_id")
+  referenceType    String?              @map("reference_type")
+  notes            String?
+  balanceAfter     Int                  @map("balance_after")
+  createdBy        String               @map("created_by")
+  createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  accessory        Accessory            @relation(fields: [accessoryId], references: [id])
+  ascCenter        AscCenter?           @relation(fields: [ascCenterId], references: [id]) // Make optional
+  creator          User                 @relation(fields: [createdBy], references: [id])
+  totalWarehouse   TotalWarehouse?      @relation(fields: [totalWarehouseId], references: [id])
+
+  @@index([accessoryId, createdAt])
+  @@index([ascCenterId, createdAt])
+  @@index([totalWarehouseId, createdAt])
+  @@index([transactionType, operation])
+  @@map("accessory_stock_transactions")
+}
+
+model AccessoryRetailVoucher {
+  id            String                       @id @default(uuid(7))
+  voucherNumber String                       @unique
+  customerId    String                       @map("customer_id")
+  ascCenterId   String                       @map("asc_center_id")
+  createdBy     String?                      @map("created_by")
+  notes         String?
+  createdAt     DateTime                     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime                     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  items         AccessoryRetailVoucherItem[]
+  customer      Customer                     @relation("RetailVoucherCustomer", fields: [customerId], references: [id])
+  ascCenter     AscCenter                    @relation(fields: [ascCenterId], references: [id])
+  creator       User?                        @relation("RetailVoucherCreator", fields: [createdBy], references: [id])
+
+  @@index([ascCenterId, customerId])
+  @@index([createdBy])
+  @@map("accessory_retail_vouchers")
+}
+
+model AccessoryRetailVoucherItem {
+  id          String                 @id @default(uuid(7))
+  voucherId   String                 @map("voucher_id")
+  accessoryId String                 @map("accessory_id")
+  qtyIssued   Int                    @map("qty_issued")
+  accessory   Accessory              @relation(fields: [accessoryId], references: [id])
+  voucher     AccessoryRetailVoucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+
+  @@unique([voucherId, accessoryId])
+  @@index([accessoryId])
+  @@map("accessory_retail_voucher_items")
+}
+
+model AccessorySupplyVoucher {
+  id               String              @id @default(uuid(7))
+  voucherNumber    String              @unique
+  ascCenterId      String              @map("asc_center_id")
+  totalWarehouseId String?             @map("total_warehouse_id")
+  issueDate        DateTime            @map("issue_date") @db.Date
+  status           SupplyVoucherStatus @default(issued)
+  issuedBy         String              @map("issued_by")
+  receivedBy       String?             @map("received_by")
+  receivedAt       DateTime?           @map("received_at") @db.Timestamptz(3)
+  notes            String?
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  requestId        String?             @map("request_id")
+
+  items          AccessorySupplyVoucherItem[]
+  ascCenter      AscCenter                    @relation(fields: [ascCenterId], references: [id])
+  request        AccessoryRequest?            @relation(fields: [requestId], references: [id])
+  totalWarehouse TotalWarehouse?              @relation(fields: [totalWarehouseId], references: [id])
+
+  @@index([totalWarehouseId, ascCenterId, issueDate])
+  @@map("accessory_supply_vouchers")
+}
+
+model AccessorySupplyVoucherItem {
+  id              String    @id @default(uuid(7))
+  voucherId       String    @map("voucher_id")
+  accessoryId     String    @map("accessory_id")
+  qtyIssued       Int       @map("qty_issued")
+  requestItemId   String?   @map("request_item_id")
+  qtyAccepted     Int?      @map("qty_accepted")
+  qtyRejected     Int       @default(0) @map("qty_rejected")
+  rejectReason    String?   @map("reject_reason")
+  rejectNote      String?   @map("reject_note")
+  rejectHandled   Boolean   @default(false) @map("reject_handled")
+  rejectHandledBy String?   @map("reject_handled_by")
+  rejectHandledAt DateTime? @map("reject_handled_at") @db.Timestamptz(3)
+
+  voucher     AccessorySupplyVoucher @relation(fields: [voucherId], references: [id])
+  accessory   Accessory              @relation(fields: [accessoryId], references: [id])
+  requestItem AccessoryRequestItem?  @relation(fields: [requestItemId], references: [id])
+
+  @@unique([voucherId, accessoryId])
+  @@index([accessoryId])
+  @@index([requestItemId])
+  @@index([rejectHandled, voucherId])
+  @@map("accessory_supply_voucher_items")
+}
+
+model AscAccessoryStock {
+  id            String    @id @default(uuid(7))
+  ascCenterId   String    @map("asc_center_id")
+  accessoryId   String    @map("accessory_id")
+  currentStock  Int       @default(0) @map("current_stock")
+  reservedStock Int       @default(0) @map("reserved_stock")
+  minStockLevel Int       @default(5) @map("min_stock_level")
+  maxStockLevel Int       @default(100) @map("max_stock_level")
+  lastUpdated   DateTime  @default(now()) @map("last_updated") @db.Timestamptz(3)
+  accessory     Accessory @relation(fields: [accessoryId], references: [id])
+  ascCenter     AscCenter @relation(fields: [ascCenterId], references: [id])
+
+  // @@unique([ascCenterId, accessoryId])
+  @@unique([ascCenterId, accessoryId], name: "ascCenterId_accessoryId")
+  @@map("asc_accessory_stock")
+}
+
+model AscCenter {
+  id                          String                      @id @default(uuid(7))
+  centerName                  String                      @map("center_name")
+  centerCode                  String                      @unique @map("center_code")
+  companyName                 String?                     @map("company_name")
+  region                      String?
+  email                       String?
+  address                     String?
+  wardId                      String?                     @map("ward_id")
+  provinceId                  String?                     @map("province_id")
+  phone                       String?
+  licenseNumber               String?                     @map("license_number")
+  status                      AscCenterStatus             @default(active)
+  createdAt                   DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                   DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  accessoryIssues             AccessoryIssue[]
+  accessoryRequests           AccessoryRequest[]
+  stockTransactions           AccessoryStockTransaction[]
+  stockLevels                 AscAccessoryStock[]
+  AccessorySupplyVouchers     AccessorySupplyVoucher[]
+  province                    Province?                   @relation(fields: [provinceId], references: [id])
+  ward                        Ward?                       @relation(fields: [wardId], references: [id])
+  employees                   Employee[]
+  productWarranties           ProductWarranty[]
+  purchaseOrders              PurchaseOrder[]
+  repairAppointments          RepairAppointment[]
+  repairCases                 RepairCase[]
+  repairCaseTransfersFromAsc  RepairCaseTransfer[]        @relation("RepairCaseTransferredFrom")
+  repairCaseTransfersToAsc    RepairCaseTransfer[]        @relation("RepairCaseTransferredTo")
+  users                       User[]
+  warrantyClaims              WarrantyClaim[]
+  warrantyCoordinations       WarrantyCoordination[]      @relation("CoordinatorAsc")
+  warrantyCoordinationsTarget WarrantyCoordination[]      @relation("TargetAsc")
+  technicianProfiles          TechnicianProfile[]
+
+  customers                        Customer[]                         @relation("CustomerAscCenter")
+  documents                        Document[]
+  payments                         Payment[]
+  AccessoryIsUsedOutsideOfWarranty AccessoryIsUsedOutsideOfWarranty[]
+  stocktakes                       AscStocktake[]
+  accessoryRetailVouchers          AccessoryRetailVoucher[]
+
+  @@map("asc_centers")
+}
+
+model AscStocktake {
+  id          String   @id @default(uuid(7))
+  ascCenterId String   @map("asc_center_id")
+  notes       String?
+  createdBy   String   @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  ascCenter AscCenter          @relation(fields: [ascCenterId], references: [id])
+  creator   User               @relation("AscStocktakeCreator", fields: [createdBy], references: [id])
+  items     AscStocktakeItem[]
+
+  @@index([ascCenterId, createdAt])
+  @@map("asc_stocktakes")
+}
+
+model AscStocktakeItem {
+  id          String  @id @default(uuid(7))
+  stocktakeId String  @map("stocktake_id")
+  accessoryId String  @map("accessory_id")
+  previousQty Int     @map("previous_qty")
+  newQty      Int     @map("new_qty")
+  deltaQty    Int     @map("delta_qty")
+  notes       String?
+
+  stocktake AscStocktake @relation(fields: [stocktakeId], references: [id])
+  accessory Accessory    @relation("AscStocktakeItem", fields: [accessoryId], references: [id])
+
+  @@unique([stocktakeId, accessoryId])
+  @@index([stocktakeId])
+  @@index([accessoryId])
+  @@map("asc_stocktake_items")
+}
+
+model Payment {
+  id                String        @id @default(uuid(7))
+  paymentNumber     String?       @map("payment_number")
+  repairCaseId      String        @map("repair_case_id")
+  caseNumber        String        @map("case_number")
+  status            PaymentStatus @default(pending)
+  ascCenterId       String        @map("asc_center_id")
+  totalCost         Decimal       @default(0) @map("total_cost") @db.Decimal(10, 2)
+  // Extended breakdown fields for reporting
+  laborOrInspection Decimal       @default(0) @map("labor_or_inspection") @db.Decimal(10, 2)
+  shippingCost      Decimal       @default(0) @map("shipping_cost") @db.Decimal(10, 2)
+  distanceFee       Decimal       @default(0) @map("distance_fee") @db.Decimal(10, 2)
+  warrantyForm      WarrantyForm? @map("warranty_form")
+  paymentPeriodId   String?       @map("payment_period_id")
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  changedBy         String?       @map("changed_by")
+  changedAt         DateTime?     @map("changed_at") @db.Timestamptz(3)
+
+  // Relations
+  repairCase    RepairCase     @relation(fields: [repairCaseId], references: [id])
+  ascCenter     AscCenter      @relation(fields: [ascCenterId], references: [id])
+  paymentPeriod PaymentPeriod? @relation(fields: [paymentPeriodId], references: [id])
+
+  @@index([repairCaseId])
+  @@index([ascCenterId])
+  @@index([paymentPeriodId])
+  @@map("payments")
+}
+
+// New table for grouping payments by period
+model PaymentPeriod {
+  id        String   @id @default(uuid(7))
+  name      String
+  startDate DateTime @map("start_date") @db.Timestamptz(3)
+  endDate   DateTime @map("end_date") @db.Timestamptz(3)
+
+  payments Payment[]
+
+  @@map("payment_periods")
+}
+
+model ProductWarranty {
+  id                String                @id @default(uuid(7))
+  modelId           String                @map("model_id")
+  serialNumber      String                @map("serial_number")
+  customerName      String?               @map("customer_name")
+  customerPhone     String?               @map("customer_phone")
+  customerEmail     String?               @map("customer_email")
+  customerAddress   String?               @map("customer_address")
+  purchaseDate      DateTime              @map("purchase_date") @db.Date
+  purchaseLocation  String?               @map("purchase_location")
+  warrantyStartDate DateTime              @map("warranty_start_date") @db.Date
+  warrantyEndDate   DateTime              @map("warranty_end_date") @db.Date
+  warrantyPolicyId  String                @map("warranty_policy_id")
+  registrationDate  DateTime?             @map("registration_date") @db.Date
+  registeredBy      String?               @map("registered_by")
+  ascCenterId       String                @map("asc_center_id")
+  status            ProductWarrantyStatus @default(active)
+  notes             String?
+  createdAt         DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ascCenter         AscCenter             @relation(fields: [ascCenterId], references: [id])
+  model             Model                 @relation(fields: [modelId], references: [id])
+  registeredByUser  User?                 @relation(fields: [registeredBy], references: [id])
+  warrantyPolicy    WarrantyPolicy        @relation(fields: [warrantyPolicyId], references: [id])
+  repairCases       RepairCase[]
+  warrantyClaims    WarrantyClaim[]
+
+  @@unique([modelId, serialNumber])
+  @@map("product_warranties")
+}
+
+model PurchaseOrder {
+  id                   String              @id @default(uuid(7))
+  orderNumber          String              @unique @map("order_number")
+  ascCenterId          String              @map("asc_center_id")
+  supplierName         String              @map("supplier_name")
+  supplierContact      String?             @map("supplier_contact")
+  orderDate            DateTime            @map("order_date") @db.Date
+  expectedDeliveryDate DateTime?           @map("expected_delivery_date") @db.Date
+  actualDeliveryDate   DateTime?           @map("actual_delivery_date") @db.Date
+  status               PurchaseOrderStatus @default(draft)
+  totalAmount          Decimal             @default(0) @map("total_amount") @db.Decimal(10, 2)
+  paymentStatus        PaymentStatus       @default(pending)
+  notes                String?
+  createdBy            String              @map("created_by")
+  approvedBy           String?             @map("approved_by")
+  createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  items                PurchaseOrderItem[]
+  approver             User?               @relation("PurchaseOrderApprovedBy", fields: [approvedBy], references: [id])
+  ascCenter            AscCenter           @relation(fields: [ascCenterId], references: [id])
+  creator              User                @relation("PurchaseOrderCreatedBy", fields: [createdBy], references: [id])
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([createdBy])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id               String         @id @default(uuid(7))
+  purchaseOrderId  String         @map("purchase_order_id")
+  accessoryId      String         @map("accessory_id")
+  orderedQuantity  Int            @map("ordered_quantity")
+  receivedQuantity Int            @default(0) @map("received_quantity")
+  unitPrice        Decimal        @map("unit_price") @db.Decimal(10, 2)
+  totalPrice       Decimal        @map("total_price") @db.Decimal(10, 2)
+  deliveryStatus   DeliveryStatus @default(pending)
+  accessory        Accessory      @relation(fields: [accessoryId], references: [id])
+  purchaseOrder    PurchaseOrder  @relation(fields: [purchaseOrderId], references: [id])
+
+  @@index([purchaseOrderId])
+  @@index([accessoryId])
+  @@map("purchase_order_items")
+}
+
+model Quotation {
+  id                   String          @id @default(uuid(7))
+  repairCaseId         String          @map("repair_case_id")
+  quotationNumber      String          @unique @map("quotation_number")
+  status               QuotationStatus @default(draft)
+  laborCost            Decimal         @default(0) @map("labor_cost") @db.Decimal(10, 2)
+  partsCost            Decimal         @default(0) @map("parts_cost") @db.Decimal(10, 2)
+  serviceFee           Decimal         @default(0) @map("service_fee") @db.Decimal(10, 2)
+  totalCost            Decimal         @default(0) @map("total_cost") @db.Decimal(10, 2)
+  discountAmount       Decimal         @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  finalAmount          Decimal         @default(0) @map("final_amount") @db.Decimal(10, 2)
+  description          String?
+  notes                String?
+  validUntil           DateTime?       @map("valid_until") @db.Date
+  createdBy            String          @map("created_by")
+  approvedBy           String?         @map("approved_by")
+  rejectedBy           String?         @map("rejected_by")
+  rejectionReason      String?         @map("rejection_reason")
+  sentToCustomerDate   DateTime?       @map("sent_to_customer_date") @db.Date
+  customerResponseDate DateTime?       @map("customer_response_date") @db.Date
+  customerNotes        String?         @map("customer_notes")
+  createdAt            DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  approver             User?           @relation("QuotationApprovedBy", fields: [approvedBy], references: [id])
+  creator              User            @relation("QuotationCreatedBy", fields: [createdBy], references: [id])
+  rejector             User?           @relation("QuotationRejectedBy", fields: [rejectedBy], references: [id])
+  repairCase           RepairCase      @relation(fields: [repairCaseId], references: [id])
+
+  @@index([repairCaseId])
+  @@index([status])
+  @@index([quotationNumber])
+  @@map("quotations")
+}
+
+// Model lưu trữ phiếu thu hồi sản phẩm đổi mới chung cho nhiều phiếu sửa chữa
+model ProductReplacementRecall {
+  id           String   @id @default(uuid(7))
+  recallNumber String   @unique @map("recall_number") // Số phiếu thu hồi, format: THDM-YYYYMMDD-XXXX
+  createdBy    String   @map("created_by")
+  notes        String? // Ghi chú khi tạo phiếu thu hồi
+  totalCases   Int      @default(0) @map("total_cases") // Số lượng phiếu sửa chữa trong phiếu thu hồi này
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Quan hệ với các phiếu sửa chữa được thu hồi
+  repairCases ProductReplacementRecallItem[]
+
+  // Quan hệ với User
+  creator User @relation("ProductReplacementRecallCreator", fields: [createdBy], references: [id])
+
+  @@index([createdBy])
+  @@index([createdAt])
+  @@map("product_replacement_recalls")
+}
+
+// Bảng trung gian liên kết ProductReplacementRecall với RepairCase
+model ProductReplacementRecallItem {
+  id           String   @id @default(uuid(7))
+  recallId     String   @map("recall_id")
+  repairCaseId String   @map("repair_case_id")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  recall     ProductReplacementRecall @relation(fields: [recallId], references: [id], onDelete: Cascade)
+  repairCase RepairCase               @relation(fields: [repairCaseId], references: [id])
+
+  @@unique([recallId, repairCaseId])
+  @@index([recallId])
+  @@index([repairCaseId])
+  @@map("product_replacement_recall_items")
+}
+
+model RepairCase {
+  id                               String                             @id @default(uuid(7))
+  caseNumber                       String                             @unique @map("case_number")
+  ascCenterId                      String                             @map("asc_center_id")
+  areaId                           String?                            @map("area_id")
+  customerId                       String                             @map("customer_id")
+  status                           RepairCaseStatus                   @default(tiepnhan)
+  priority                         RepairCasePriority                 @default(normal)
+  modelId                          String?                            @map("model_id")
+  serialNumber                     String?                            @map("serial_number")
+  purchaseDate                     DateTime?                          @map("purchase_date") @db.Date
+  purchaseLocation                 String?                            @map("purchase_location")
+  purchaseLocationId               String?                            @map("purchase_location_id")
+  purchaseOrderNumber              String?                            @map("purchase_order_number")
+  productWarrantyId                String?                            @map("product_warranty_id")
+  productNotes                     String?                            @map("product_notes")
+  locknlockCaseNumber              String?                            @map("locknlock_case_number")
+  warrantyForm                     WarrantyForm?                      @map("warranty_form")
+  warrantyServiceType              WarrantyServiceType?               @map("warranty_service_type")
+  solutionId                       String?                            @map("solution_id")
+  damageDescription                String                             @map("damage_description")
+  diagnosis                        String?
+  exchangeProduct                  String?                            @map("exchange_product")
+  invoiceCode                      String?                            @map("invoice_code")
+  repairSolution                   String?                            @map("repair_solution")
+  repairNotes                      String?                            @map("repair_notes")
+  totalCost                        Decimal                            @default(0) @map("total_cost") @db.Decimal(10, 2)
+  laborCost                        Decimal                            @default(0) @map("labor_cost") @db.Decimal(10, 2)
+  partsCost                        Decimal                            @default(0) @map("parts_cost") @db.Decimal(10, 2)
+  serviceFee                       Decimal                            @default(0) @map("service_fee") @db.Decimal(10, 2)
+  shippingCost                     Decimal                            @default(0) @map("shipping_cost") @db.Decimal(10, 2)
+  shippingProvinceId               String?                            @map("shipping_province_id")
+  shippingWardId                   String?                            @map("shipping_ward_id")
+  discountAmount                   Decimal                            @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  otherFee                         Decimal                            @default(0) @map("other_fee") @db.Decimal(10, 2)
+  otherFeeNote                     String?                            @map("other_fee_note")
+  receivedDate                     DateTime                           @map("received_date") @db.Date
+  estimatedCompletionDate          DateTime?                          @map("estimated_completion_date") @db.Date
+  promisedDeliveryDate             DateTime?                          @map("promised_delivery_date") @db.Date
+  actualCompletionDate             DateTime?                          @map("actual_completion_date") @db.Date
+  paymentDate                      DateTime?                          @map("payment_date") @db.Date
+  paymentMethod                    String?                            @map("payment_method")
+  paymentReference                 String?                            @map("payment_reference")
+  paymentNotes                     String?                            @map("payment_notes")
+  deliveryNotes                    String?                            @map("delivery_notes")
+  ascPaymentAmount                 Decimal?                           @map("asc_payment_amount") @db.Decimal(10, 2)
+  companyDeduction                 Decimal?                           @map("company_deduction") @db.Decimal(10, 2)
+  taxAmount                        Decimal?                           @map("tax_amount") @db.Decimal(10, 2)
+  processingFee                    Decimal?                           @map("processing_fee") @db.Decimal(10, 2)
+  netPayment                       Decimal?                           @map("net_payment") @db.Decimal(10, 2)
+  finalCompletionDate              DateTime?                          @map("final_completion_date") @db.Date
+  assignedEmployeeId               String?                            @map("assigned_employee_id")
+  assignedTechnicianId             String?                            @map("assigned_technician_id")
+  technicianName                   String?                            @map("technician_name")
+  createdBy                        String                             @map("created_by")
+  approvedBy                       String?                            @map("approved_by")
+  receiverName                     String?                            @map("receiver_name")
+  receiverPhone                    String?                            @map("receiver_phone")
+  householdProductType             HouseholdProductType?              @map("household_product_type")
+  foodSafetyCompliance             FoodSafetyCompliance?              @map("food_safety_compliance")
+  sealIntegrityStatus              SealIntegrityStatus?               @map("seal_integrity_status")
+  plasticDurabilityLevel           PlasticDurabilityLevel?            @map("plastic_durability_level")
+  estimatedStartDate               DateTime?                          @map("estimated_start_date") @db.Date
+  estimatedCost                    Decimal?                           @map("estimated_cost") @db.Decimal(10, 2)
+  actualRepairTime                 Int?                               @map("actual_repair_time")
+  estimatedRepairTime              Int?                               @map("estimated_repair_time")
+  resolution                       RepairCaseResolution?              @map("resolution")
+  createdAt                        DateTime                           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                        DateTime                           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  distanceFee                      Decimal?                           @map("distance_fee") @db.Decimal(10, 2)
+  distanceFeeCalculatedAt          DateTime?                          @map("distance_fee_calculated_at") @db.Timestamptz(3)
+  distanceFeeCalculatedBy          String?                            @map("distance_fee_calculated_by")
+  serviceDistance                  Decimal?                           @map("service_distance") @db.Decimal(6, 2)
+  errorSource                      String?                            @map("error_source")
+  errorGroup                       String?                            @map("error_group")
+  repairLevel                      String?                            @map("repair_level")
+  warrantyResolution               String?                            @map("warranty_resolution")
+  repairActivity                   String?                            @map("repair_activity")
+  statusRecall                     StatusRecall?                      @map("status_recall")
+  accessoryIssues                  AccessoryIssue[]
+  accessoryRequest                 AccessoryRequest[]
+  quotations                       Quotation[]
+  appointments                     RepairAppointment[]
+  accessories                      RepairCaseAccessory[]
+  images                           RepairCaseImage[]
+  statusHistory                    RepairCaseStatusHistory[]
+  fieldHistory                     RepairCaseFieldHistory[]
+  aiHumanApprovalRequests          AiHumanApprovalRequest[]
+  transfer                         RepairCaseTransfer?
+  paymentDetail                    RepairCasePaymentDetail?
+  satisfaction                     RepairCaseSatisfaction?
+  csRtStatus                       RepairCaseCsRtStatus?
+  waitAccessoryItems               WaitAccessoryItem[]
+  errorAccessoryItems              ErrorAccessoryItem[]
+  approver                         User?                              @relation("RepairCaseApprovedBy", fields: [approvedBy], references: [id])
+  area                             Area?                              @relation(fields: [areaId], references: [id])
+  ascCenter                        AscCenter                          @relation(fields: [ascCenterId], references: [id])
+  customer                         Customer                           @relation("CustomerRepairCases", fields: [customerId], references: [id])
+  assignedEmployee                 Employee?                          @relation("RepairCaseAssignedEmployee", fields: [assignedEmployeeId], references: [id])
+  creator                          User                               @relation("RepairCaseCreatedBy", fields: [createdBy], references: [id])
+  distanceFeeCalculator            User?                              @relation("RepairCaseDistanceFeeCalculator", fields: [distanceFeeCalculatedBy], references: [id])
+  model                            Model?                             @relation(fields: [modelId], references: [id])
+  productWarranty                  ProductWarranty?                   @relation(fields: [productWarrantyId], references: [id])
+  purchaseLocationDetails          PurchaseLocation?                  @relation(fields: [purchaseLocationId], references: [id])
+  solution                         Solution?                          @relation(fields: [solutionId], references: [id])
+  shippingProvince                 Province?                          @relation("RepairCaseShippingProvince", fields: [shippingProvinceId], references: [id])
+  shippingWard                     Ward?                              @relation("RepairCaseShippingWard", fields: [shippingWardId], references: [id])
+  warrantyClaims                   WarrantyClaim[]
+  errorPhenomena                   RepairCaseErrorPhenomenon[]
+  reasons                          RepairCaseReason[]
+  payments                         Payment[]
+  accessoryIsUsedOutsideOfWarranty AccessoryIsUsedOutsideOfWarranty[]
+  productReplacementRecallItems    ProductReplacementRecallItem[]
+  technicianAssignedTo             TechnicianProfile?                 @relation("TechnicianAssignedToRepairCases", fields: [assignedTechnicianId], references: [id])
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([statusRecall])
+  @@index([createdBy])
+  @@index([customerId])
+  @@index([assignedEmployeeId])
+  @@index([serialNumber])
+  @@index([locknlockCaseNumber])
+  @@index([warrantyForm])
+  @@index([promisedDeliveryDate])
+  @@index([purchaseLocationId])
+  @@index([caseNumber]) // Optimize case number prefix searches for generation
+  @@index([status, ascCenterId])
+  @@index([assignedEmployeeId, status])
+  @@index([status, createdAt])
+  @@index([customerId, status])
+  @@index([ascCenterId, status, createdAt])
+  @@index([shippingProvinceId])
+  @@index([shippingWardId])
+  @@map("repair_cases")
+}
+
+model RepairCaseTransfer {
+  repairCaseId                     String      @id @map("repair_case_id")
+  branchTransferReason             String?     @map("branch_transfer_reason")
+  branchTransferDate               DateTime?   @map("branch_transfer_date") @db.Date
+  transferredFromAscId             String?     @map("transferred_from_asc_id")
+  transferredToAscId               String?     @map("transferred_to_asc_id")
+  transferApprovedBy               String?     @map("transfer_approved_by")
+  transferRequestReason            String?     @map("transfer_request_reason")
+  transferRequestNotes             String?     @map("transfer_request_notes")
+  transferRequestedAt              DateTime?   @map("transfer_requested_at") @db.Timestamptz(3)
+  transferRequestedBy              String?     @map("transfer_requested_by")
+  transferRejectedBy               String?     @map("transfer_rejected_by")
+  transferRejectedAt               DateTime?   @map("transfer_rejected_at") @db.Timestamptz(3)
+  transferRejectionReason          String?     @map("transfer_rejection_reason")
+  transferApprovedAt               DateTime?   @map("transfer_approved_at") @db.Timestamptz(3)
+  transferApprovalNotes            String?     @map("transfer_approval_notes")
+  transferCoordinationInstructions String?     @map("transfer_coordination_instructions")
+  transferDeadline                 DateTime?   @map("transfer_deadline") @db.Timestamptz(3)
+  transferReceivedBy               String?     @map("transfer_received_by")
+  transferReceivedAt               DateTime?   @map("transfer_received_at") @db.Timestamptz(3)
+  transferReceiptNotes             String?     @map("transfer_receipt_notes")
+  transferMetadata                 Json?       @map("transfer_metadata")
+  repairCase                       RepairCase  @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  transferApprover                 User?       @relation("RepairCaseTransferApprover", fields: [transferApprovedBy], references: [id])
+  transferRequester                User?       @relation("RepairCaseTransferRequester", fields: [transferRequestedBy], references: [id])
+  transferRejecter                 User?       @relation("RepairCaseTransferRejecter", fields: [transferRejectedBy], references: [id])
+  transferReceiver                 User?       @relation("RepairCaseTransferReceiver", fields: [transferReceivedBy], references: [id])
+  transferredFromAsc               AscCenter?  @relation("RepairCaseTransferredFrom", fields: [transferredFromAscId], references: [id])
+  transferredToAsc                 AscCenter?  @relation("RepairCaseTransferredTo", fields: [transferredToAscId], references: [id])
+
+  @@map("repair_case_transfers")
+}
+
+model RepairCasePaymentDetail {
+  repairCaseId            String                 @id @map("repair_case_id")
+  paymentProcessedBy      String?                @map("payment_processed_by")
+  paymentProcessedAt      DateTime?              @map("payment_processed_at") @db.Timestamptz(3)
+  paymentMetadata         Json?                  @map("payment_metadata")
+  paymentApproved         Boolean?               @map("payment_approved")
+  paymentApprovedBy       String?                @map("payment_approved_by")
+  paymentApprovedAt       DateTime?              @map("payment_approved_at") @db.Timestamptz(3)
+  paymentApprovalNotes    String?                @map("payment_approval_notes")
+  paymentApprovalReference String?               @map("payment_approval_reference")
+  adjustedPaymentAmount   Decimal?               @map("adjusted_payment_amount") @db.Decimal(10, 2)
+  paymentApprovalMetadata Json?                  @map("payment_approval_metadata")
+  paymentPendingStatus    PaymentPendingStatus?  @map("payment_pending_status")
+  paymentPendingNote      String?                @map("payment_pending_note")
+  repairCase              RepairCase             @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  paymentProcessor        User?                  @relation("RepairCasePaymentProcessor", fields: [paymentProcessedBy], references: [id])
+  paymentApprover         User?                  @relation("RepairCasePaymentApprover", fields: [paymentApprovedBy], references: [id])
+
+  @@map("repair_case_payment_details")
+}
+
+model RepairCaseSatisfaction {
+  repairCaseId            String              @id @map("repair_case_id")
+  satisfactionRating      SatisfactionRating? @map("satisfaction_rating")
+  satisfactionComment     String?             @map("satisfaction_comment")
+  satisfactionDate        DateTime?           @map("satisfaction_date") @db.Date
+  satisfactionCollectedBy String?             @map("satisfaction_collected_by")
+  repairCase              RepairCase          @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  satisfactionCollector   User?               @relation("RepairCaseSatisfactionCollector", fields: [satisfactionCollectedBy], references: [id])
+
+  @@map("repair_case_satisfactions")
+}
+
+model RepairCaseCsRtStatus {
+  repairCaseId      String     @id @map("repair_case_id")
+  csStatus          CSStatus?  @map("cs_status")
+  csStatusNote      String?    @map("cs_status_note")
+  csStatusUpdatedAt DateTime?  @map("cs_status_updated_at") @db.Timestamptz(3)
+  rtStatus          RTStatus?  @map("rt_status")
+  rtStatusUpdatedAt DateTime?  @map("rt_status_updated_at") @db.Timestamptz(3)
+  repairCase        RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+
+  @@map("repair_case_cs_rt_statuses")
+}
+
+model WaitAccessoryItem {
+  id           String     @id @default(uuid(7))
+  repairCaseId String     @map("repair_case_id")
+  partName     String     @map("part_name")
+  quantity     Int
+  sortOrder    Int        @default(0) @map("sort_order")
+  repairCase   RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+
+  @@index([repairCaseId])
+  @@map("wait_accessory_items")
+}
+
+model ErrorAccessoryItem {
+  id           String     @id @default(uuid(7))
+  repairCaseId String     @map("repair_case_id")
+  partName     String     @map("part_name")
+  quantity     Int
+  sortOrder    Int        @default(0) @map("sort_order")
+  repairCase   RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+
+  @@index([repairCaseId])
+  @@map("error_accessory_items")
+}
+
+model RepairCaseAccessory {
+  id           String     @id @default(uuid(7))
+  repairCaseId String     @map("repair_case_id")
+  accessoryId  String     @map("accessory_id")
+  quantity     Int
+  unitPrice    Decimal?   @map("unit_price") @db.Decimal(10, 2)
+  totalPrice   Decimal?   @map("total_price") @db.Decimal(10, 2)
+  addedBy      String     @map("added_by")
+  addedAt      DateTime   @default(now()) @map("added_at") @db.Timestamptz(3)
+  accessory    Accessory  @relation(fields: [accessoryId], references: [id])
+  addedByUser  User       @relation("RepairCaseAccessoryAddedBy", fields: [addedBy], references: [id])
+  repairCase   RepairCase @relation(fields: [repairCaseId], references: [id])
+
+  @@index([repairCaseId])
+  @@index([accessoryId])
+  @@map("repair_case_accessories")
+}
+
+model RepairCaseErrorPhenomenon {
+  id                String   @id @default(uuid(7))
+  repairCaseId      String   @map("repair_case_id")
+  errorPhenomenonId String   @map("error_phenomenon_id")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  createdBy         String   @map("created_by")
+
+  repairCase      RepairCase      @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  errorPhenomenon ErrorPhenomenon @relation(fields: [errorPhenomenonId], references: [id])
+  creator         User            @relation("RepairCaseErrorPhenomenonCreatedBy", fields: [createdBy], references: [id])
+
+  @@unique([repairCaseId, errorPhenomenonId])
+  @@index([repairCaseId])
+  @@index([errorPhenomenonId])
+  @@map("repair_case_error_phenomena")
+}
+
+model RepairCaseFieldHistory {
+  id            String   @id @default(uuid(7))
+  repairCaseId  String   @map("repair_case_id")
+  fieldName     String   @map("field_name")
+  fieldLabel    String?  @map("field_label") // Vietnamese field name for display
+  previousValue String?  @map("previous_value") // JSON string for complex values
+  newValue      String?  @map("new_value") // JSON string for complex values
+  changeType    String   @default("update") @map("change_type") // update, create, delete
+  changedBy     String   @map("changed_by")
+  changedAt     DateTime @default(now()) @map("changed_at") @db.Timestamptz(3)
+  reason        String? // Change reason if provided
+  metadata      Json? // Additional context as JSON
+
+  // Relations
+  changedByUser User       @relation("RepairCaseFieldHistoryChangedBy", fields: [changedBy], references: [id])
+  repairCase    RepairCase @relation(fields: [repairCaseId], references: [id])
+
+  @@index([repairCaseId])
+  @@index([fieldName])
+  @@index([changedBy])
+  @@index([changedAt])
+  @@index([repairCaseId, changedAt])
+  @@index([repairCaseId, fieldName])
+  @@map("repair_case_field_history")
+}
+
+model RepairCaseImage {
+  id               String              @id @default(uuid(7))
+  repairCaseId     String              @map("repair_case_id")
+  imageType        RepairCaseImageType @map("image_type")
+  imagePath        String              @map("image_path")
+  originalFilename String?             @map("original_filename")
+  fileSize         Int?                @map("file_size")
+  mimeType         String?             @map("mime_type")
+  description      String?
+  uploadedBy       String              @map("uploaded_by")
+  uploadedAt       DateTime            @default(now()) @map("uploaded_at") @db.Timestamptz(3)
+  repairCase       RepairCase          @relation(fields: [repairCaseId], references: [id])
+  uploader         User                @relation(fields: [uploadedBy], references: [id])
+
+  @@index([repairCaseId, imageType])
+  @@map("repair_case_images")
+}
+
+model RepairCaseReason {
+  id           String     @id @default(uuid(7))
+  repairCaseId String     @map("repair_case_id")
+  reasonId     String     @map("reason_id")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  createdBy    String     @map("created_by")
+  repairCase   RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  reason       Reason     @relation(fields: [reasonId], references: [id])
+  creator      User       @relation("RepairCaseReasonCreatedBy", fields: [createdBy], references: [id])
+
+  @@unique([repairCaseId, reasonId])
+  @@index([repairCaseId])
+  @@index([reasonId])
+  @@map("repair_case_reasons")
+}
+
+model RepairCaseStatusHistory {
+  id             String            @id @default(uuid(7))
+  repairCaseId   String            @map("repair_case_id")
+  previousStatus RepairCaseStatus? @map("previous_status")
+  newStatus      RepairCaseStatus  @map("new_status")
+  changedBy      String            @map("changed_by")
+  reason         String?
+  notes          String?
+  metadata       Json?
+  changedAt      DateTime          @default(now()) @map("changed_at") @db.Timestamptz(3)
+  changedByUser  User              @relation(fields: [changedBy], references: [id])
+  repairCase     RepairCase        @relation(fields: [repairCaseId], references: [id])
+
+  @@index([repairCaseId])
+  @@index([newStatus])
+  @@index([changedBy])
+  @@index([changedAt])
+  @@index([repairCaseId, changedAt])
+  @@map("repair_case_status_history")
+}
+
+model WarrantyClaim {
+  id                String                 @id @default(uuid(7))
+  claimNumber       String                 @unique @map("claim_number")
+  productWarrantyId String                 @map("product_warranty_id")
+  repairCaseId      String?                @map("repair_case_id")
+  ascCenterId       String                 @map("asc_center_id")
+  claimType         WarrantyClaimType      @map("claim_type")
+  claimDate         DateTime               @map("claim_date") @db.Date
+  issueDescription  String                 @map("issue_description")
+  diagnosis         String?
+  recommendedAction String?                @map("recommended_action")
+  estimatedCost     Decimal?               @map("estimated_cost") @db.Decimal(10, 2)
+  status            WarrantyClaimStatus    @default(submitted)
+  reviewedBy        String?                @map("reviewed_by")
+  reviewDate        DateTime?              @map("review_date") @db.Date
+  reviewNotes       String?                @map("review_notes")
+  approvalAmount    Decimal?               @map("approval_amount") @db.Decimal(10, 2)
+  rejectionReason   String?                @map("rejection_reason")
+  completedDate     DateTime?              @map("completed_date") @db.Date
+  urgencyLevel      WarrantyClaimUrgency   @default(normal) @map("urgency_level")
+  actualCost        Decimal?               @map("actual_cost") @db.Decimal(10, 2)
+  completedBy       String?                @map("completed_by")
+  createdBy         String                 @map("created_by")
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ascCenter         AscCenter              @relation(fields: [ascCenterId], references: [id])
+  completer         User?                  @relation("WarrantyClaimCompleter", fields: [completedBy], references: [id])
+  creator           User                   @relation(fields: [createdBy], references: [id])
+  productWarranty   ProductWarranty        @relation(fields: [productWarrantyId], references: [id])
+  repairCase        RepairCase?            @relation(fields: [repairCaseId], references: [id])
+  reviewer          User?                  @relation("WarrantyClaimReviewer", fields: [reviewedBy], references: [id])
+  coordinations     WarrantyCoordination[]
+
+  @@index([ascCenterId])
+  @@index([status])
+  @@index([createdBy])
+  @@index([productWarrantyId])
+  @@map("warranty_claims")
+}
+
+model WarrantyCoordination {
+  id               String                       @id @default(uuid(7))
+  warrantyClaimId  String                       @map("warranty_claim_id")
+  coordinationType WarrantyCoordinationType     @map("coordination_type")
+  coordinatorAscId String                       @map("coordinator_asc_id")
+  targetAscId      String?                      @map("target_asc_id")
+  message          String
+  response         String?
+  priority         WarrantyCoordinationPriority @default(normal)
+  status           WarrantyCoordinationStatus   @default(pending)
+  createdBy        String                       @map("created_by")
+  respondedBy      String?                      @map("responded_by")
+  createdAt        DateTime                     @default(now()) @map("created_at") @db.Timestamptz(3)
+  respondedAt      DateTime?                    @map("responded_at") @db.Timestamptz(3)
+  coordinatorAsc   AscCenter                    @relation("CoordinatorAsc", fields: [coordinatorAscId], references: [id])
+  creator          User                         @relation("WarrantyCoordinationCreator", fields: [createdBy], references: [id])
+  responder        User?                        @relation("WarrantyCoordinationResponder", fields: [respondedBy], references: [id])
+  targetAsc        AscCenter?                   @relation("TargetAsc", fields: [targetAscId], references: [id])
+  warrantyClaim    WarrantyClaim                @relation(fields: [warrantyClaimId], references: [id])
+
+  @@index([warrantyClaimId])
+  @@index([coordinatorAscId])
+  @@index([createdBy])
+  @@map("warranty_coordination")
+}

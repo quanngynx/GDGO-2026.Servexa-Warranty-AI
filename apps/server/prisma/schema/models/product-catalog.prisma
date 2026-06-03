@@ -1,0 +1,247 @@
+model Accessory {
+  id              String                 @id @default(uuid(7))
+  categoryId      String                 @map("category_id")
+  name            String
+  partNumber      String                 @map("part_number")
+  description     String?
+  image           String?                @map("image")
+  partGroupNumber String?                @map("part_group_number")
+  partGroupName   String?                @map("part_group_name")
+  partDescription String?                @map("part_description")
+  itemNumber      String?                @map("item_number")
+  englishName     String?                @map("english_name")
+  customerPrice   String?                @map("customer_price")
+  unitPrice       Decimal?               @map("unit_price") @db.Decimal(10, 2)
+  stockQuantity   Int                    @default(0) @map("stock_quantity")
+  minStockLevel   Int                    @default(5) @map("min_stock_level")
+  supplier        String?
+  status          AccessoryStatus        @default(active)
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  category        Category               @relation(fields: [categoryId], references: [id])
+  issueItems      AccessoryIssueItem[]
+  requestItems    AccessoryRequestItem[]
+
+  stockTransactions     AccessoryStockTransaction[]
+  stockLevels           AscAccessoryStock[]
+  purchaseOrderItems    PurchaseOrderItem[]
+  repairCaseAccessories RepairCaseAccessory[]
+  supplyVoucherItems    AccessorySupplyVoucherItem[]
+
+  totalWarehouseStock              TotalWarehouseStock[]              @relation("TotalWarehouseStock")
+  AccessoryIsUsedOutsideOfWarranty AccessoryIsUsedOutsideOfWarranty[]
+  warehouseStocktakeItems          WarehouseStocktakeItem[]
+  ascStocktakeItems                AscStocktakeItem[]                 @relation("AscStocktakeItem")
+  retailVoucherItems               AccessoryRetailVoucherItem[]
+
+  @@map("accessories")
+}
+
+model Category {
+  id               String            @id @default(uuid(7))
+  name             String            @unique
+  description      String?
+  status           CategoryStatus    @default(active)
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  // Default costs for models under this category
+  laborCost        Decimal           @default(0) @map("labor_cost") @db.Decimal(10, 2)
+  inspectionCost   Decimal           @default(0) @map("inspection_cost") @db.Decimal(10, 2)
+  accessories      Accessory[]
+  errorPhenomena   ErrorPhenomenon[]
+  models           Model[]
+  warrantyPolicies WarrantyPolicy[]
+
+  @@map("categories")
+}
+
+model ErrorPhenomenon {
+  id                       String                      @id @default(uuid(7))
+  categoryId               String?                     @map("category_id")
+  name                     String
+  description              String?
+  status                   ErrorPhenomenonStatus       @default(active)
+  createdAt                DateTime                    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  category                 Category?                   @relation(fields: [categoryId], references: [id])
+  solutions                ErrorPhenomenonSolution[]
+  reasons                  Reason[]
+  repairCaseErrorPhenomena RepairCaseErrorPhenomenon[]
+
+  @@unique([categoryId, name])
+  @@index([categoryId])
+  @@index([status])
+  @@map("error_phenomena")
+}
+
+model ErrorPhenomenonSolution {
+  id                String          @id @default(uuid(7))
+  errorPhenomenonId String          @map("error_phenomenon_id")
+  solutionId        String          @map("solution_id")
+  isPreferred       Boolean         @default(false) @map("is_preferred")
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  errorPhenomenon   ErrorPhenomenon @relation(fields: [errorPhenomenonId], references: [id])
+  solution          Solution        @relation(fields: [solutionId], references: [id])
+
+  @@unique([errorPhenomenonId, solutionId])
+  @@index([solutionId])
+  @@map("error_phenomenon_solutions")
+}
+
+model Model {
+  id                 String            @id @default(uuid(7))
+  categoryId         String            @map("category_id")
+  name               String
+  modelCode          String            @unique @map("model_code")
+  image              String?
+  status             ModelStatus       @default(active)
+  stockNumber        Int               @default(0) @map("stock_number")
+  laborCost          Decimal?          @map("labor_cost") @db.Decimal(10, 2)
+  inspectionCost     Decimal?          @map("inspection_cost") @db.Decimal(10, 2)
+  // Orange columns for import
+  itemName           String?           @map("item_name")
+  globalCategory     String?           @map("global_category")
+  largeCategory      String?           @map("large_category")
+  mediumCategory     String?           @map("medium_category")
+  productName        String?           @map("product_name")
+  productDescription String?           @map("product_description")
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt          DateTime?         @map("deleted_at") @db.Timestamptz(3)
+  category           Category          @relation(fields: [categoryId], references: [id])
+  productWarranties  ProductWarranty[]
+  repairCases        RepairCase[]
+  warrantyPolicies   WarrantyPolicy[]
+
+  @@map("models")
+}
+
+model Reason {
+  id                  String             @id @default(uuid(7))
+  errorPhenomenonId   String             @map("error_phenomenon_id")
+  name                String
+  description         String?
+  estimatedRepairTime Int?               @map("estimated_repair_time")
+  status              ReasonStatus       @default(active)
+  createdAt           DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  errorPhenomenon     ErrorPhenomenon    @relation(fields: [errorPhenomenonId], references: [id])
+  repairCaseReasons   RepairCaseReason[]
+
+  @@unique([errorPhenomenonId, name])
+  @@map("reasons")
+}
+
+model Solution {
+  id             String                    @id @default(uuid(7))
+  name           String
+  description    String?
+  instructions   String
+  estimatedTime  Int?                      @map("estimated_time")
+  difficulty     SolutionDifficulty        @default(medium)
+  requiredTools  String?                   @map("required_tools")
+  requiredParts  String?                   @map("required_parts")
+  status         SolutionStatus            @default(active)
+  createdBy      String                    @map("created_by")
+  createdAt      DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  errorPhenomena ErrorPhenomenonSolution[]
+  repairCases    RepairCase[]
+  creator        User                      @relation("SolutionCreatedBy", fields: [createdBy], references: [id])
+
+  @@map("solutions")
+}
+
+model TotalWarehouse {
+  id        String               @id @default(uuid(7))
+  name      String               @map("name")
+  address   String               @map("address")
+  status    TotalWarehouseStatus @default(active)
+  createdAt DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdBy String?              @map("created_by")
+  updatedBy String?              @map("updated_by")
+
+  accessorySupplyVouchers    AccessorySupplyVoucher[]
+  accessoryStockTransactions AccessoryStockTransaction[]
+  stockLevels                TotalWarehouseStock[]
+  stocktakes                 WarehouseStocktake[]
+
+  @@index([name])
+  @@index([createdAt])
+  @@map("total_warehouses")
+}
+
+model TotalWarehouseStock {
+  id               String    @id @default(uuid(7))
+  totalWarehouseId String    @map("total_warehouse_id")
+  accessoryId      String    @map("accessory_id")
+  currentStock     Int       @default(0) @map("current_stock")
+  reservedStock    Int       @default(0) @map("reserved_stock")
+  minStockLevel    Int       @default(10) @map("min_stock_level")
+  maxStockLevel    Int       @default(1000) @map("max_stock_level")
+  location         String?
+  lastRestocked    DateTime? @map("last_restocked") @db.Timestamptz(3)
+  lastUpdated      DateTime  @default(now()) @map("last_updated") @db.Timestamptz(3)
+
+  totalWarehouse TotalWarehouse @relation(fields: [totalWarehouseId], references: [id])
+  accessory      Accessory      @relation("TotalWarehouseStock", fields: [accessoryId], references: [id])
+
+  @@unique([totalWarehouseId, accessoryId])
+  @@index([accessoryId])
+  @@index([currentStock])
+  @@map("total_warehouse_stock")
+}
+
+model WarehouseStocktake {
+  id               String   @id @default(uuid(7))
+  totalWarehouseId String   @map("total_warehouse_id")
+  notes            String?
+  createdBy        String   @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  totalWarehouse TotalWarehouse           @relation(fields: [totalWarehouseId], references: [id])
+  creator        User                     @relation(fields: [createdBy], references: [id])
+  items          WarehouseStocktakeItem[]
+
+  @@index([totalWarehouseId, createdAt])
+  @@map("warehouse_stocktakes")
+}
+
+model WarehouseStocktakeItem {
+  id          String  @id @default(uuid(7))
+  stocktakeId String  @map("stocktake_id")
+  accessoryId String  @map("accessory_id")
+  previousQty Int     @map("previous_qty")
+  newQty      Int     @map("new_qty")
+  deltaQty    Int     @map("delta_qty")
+  notes       String?
+
+  stocktake WarehouseStocktake @relation(fields: [stocktakeId], references: [id])
+  accessory Accessory          @relation(fields: [accessoryId], references: [id])
+
+  @@unique([stocktakeId, accessoryId])
+  @@index([stocktakeId])
+  @@index([accessoryId])
+  @@map("warehouse_stocktake_items")
+}
+
+model WarrantyPolicy {
+  id                     String               @id @default(uuid(7))
+  categoryId             String?              @map("category_id")
+  modelId                String?              @map("model_id")
+  warrantyType           WarrantyType         @map("warranty_type")
+  warrantyDurationMonths Int                  @map("warranty_duration_months")
+  coverageDescription    String?              @map("coverage_description")
+  termsConditions        String?              @map("terms_conditions")
+  effectiveFrom          DateTime             @map("effective_from") @db.Date
+  effectiveTo            DateTime?            @map("effective_to") @db.Date
+  status                 WarrantyPolicyStatus @default(active)
+  createdAt              DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  productWarranties      ProductWarranty[]
+  category               Category?            @relation(fields: [categoryId], references: [id])
+  model                  Model?               @relation(fields: [modelId], references: [id])
+
+  @@map("warranty_policies")
+}

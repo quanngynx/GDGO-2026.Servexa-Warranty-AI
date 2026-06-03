@@ -1,0 +1,54 @@
+/// AI RAG corpus (separate from HR `Document` in documents.prisma)
+enum AiKnowledgeDocumentStatus {
+  pending
+  processing
+  ready
+  failed
+}
+
+model AiKnowledgeDocument {
+  id              String                    @id @default(uuid(7))
+  tenantId        String                    @map("tenant_id")
+  documentScope   String                    @map("document_scope")
+  title           String
+  sourceUri       String?                   @map("source_uri")
+  mimeType        String?                   @map("mime_type")
+  contentHash     String                    @map("content_hash")
+  documentVersion Int                       @default(1) @map("document_version")
+  status          AiKnowledgeDocumentStatus @default(pending)
+  ingestedAt      DateTime?                 @map("ingested_at") @db.Timestamptz(3)
+  metadata        Json?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  chunks AiKnowledgeChunk[]
+
+  @@unique([tenantId, contentHash, documentVersion])
+  @@index([tenantId, documentScope])
+  @@index([tenantId, status])
+  @@map("ai_knowledge_documents")
+}
+
+model AiKnowledgeChunk {
+  id               String @id @default(uuid(7))
+  documentId       String @map("document_id")
+  tenantId         String @map("tenant_id")
+  chunkIndex       Int    @map("chunk_index")
+  text             String @db.Text
+  chunkHash        String @map("chunk_hash")
+  embeddingModel   String @map("embedding_model")
+  embeddingVersion String @map("embedding_version")
+  /// Google text-embedding-004 default dimension; re-embed with new model via embeddingVersion
+  embedding        Unsupported("vector(768)")?
+  tokenCount       Int?   @map("token_count")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  document AiKnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, chunkIndex])
+  @@index([tenantId, embeddingModel])
+  @@index([chunkHash])
+  @@map("ai_knowledge_chunks")
+}
