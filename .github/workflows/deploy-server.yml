@@ -42,11 +42,30 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            echo "Pull latest server image"
             docker compose --env-file .env.production -f docker-compose.prod.yml pull server
+            echo "Start postgres and server"
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d postgres server
 
-            sleep 15
+            echo "Docker status"
+            docker ps -a
 
-            curl -f http://127.0.0.1:3000/
+            echo "Server logs"
+            docker logs -n 150 servexa-server || true
 
-            docker image prune -f
+            echo "Wait for server health"
+            for i in {1..5}; do
+              if curl -fsS http://127.0.0.1:3000/health; then
+                echo "Server is healthy"
+                docker image prune -f
+                exit 0
+              fi
+
+              echo "Waiting for server... attempt $i"
+              sleep 3
+            done
+
+            echo "Final server logs"
+            docker logs -n 300 servexa-server || true
+
+            exit 1
