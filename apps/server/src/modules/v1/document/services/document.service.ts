@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";

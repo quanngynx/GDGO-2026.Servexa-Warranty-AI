@@ -1,30 +1,12 @@
-import prisma from "@servexa-warranty-ai/db";
-import type { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import prisma from "@/core/infra/prisma";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 
+import { documentRecordSelect } from "../document.types";
 import type { IDocumentRepository } from "../interfaces/document-repository.interface";
-
-const documentSelect = {
-  id: true,
-  title: true,
-  description: true,
-  detailedDescription: true,
-  documentType: true,
-  filePath: true,
-  originalFileName: true,
-  fileSize: true,
-  mimeType: true,
-  checksum: true,
-  ascCenterId: true,
-  createdById: true,
-  updatedById: true,
-  deletedAt: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies Prisma.DocumentSelect;
 
 export class DocumentRepository implements IDocumentRepository {
   async findMany(args: Prisma.DocumentFindManyArgs) {
-    return prisma.document.findMany({ ...args, select: documentSelect });
+    return prisma.document.findMany({ ...args, select: documentRecordSelect });
   }
 
   async count(where: Prisma.DocumentWhereInput) {
@@ -34,19 +16,19 @@ export class DocumentRepository implements IDocumentRepository {
   async findById(id: string) {
     return prisma.document.findUnique({
       where: { id },
-      select: documentSelect,
+      select: documentRecordSelect,
     });
   }
 
   async createOne(data: Prisma.DocumentCreateInput) {
-    return prisma.document.create({ data, select: documentSelect });
+    return prisma.document.create({ data, select: documentRecordSelect });
   }
 
   async updateOneById(id: string, data: Prisma.DocumentUpdateInput) {
     return prisma.document.update({
       where: { id },
       data,
-      select: documentSelect,
+      select: documentRecordSelect,
     });
   }
 
@@ -57,7 +39,7 @@ export class DocumentRepository implements IDocumentRepository {
         deletedAt: new Date(),
         updatedBy: { connect: { id: updatedById } },
       },
-      select: documentSelect,
+      select: documentRecordSelect,
     });
   }
 
