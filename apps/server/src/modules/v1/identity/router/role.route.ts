@@ -1,68 +1,58 @@
-import { Router, type IRouter } from 'express'
+import { Router, type IRouter } from "express";
 
-import { authenticateMiddleware} from '@/middlewares'
+import { RoutePermissions } from "@/core/constants/route-permissions";
+import {
+  authenticatedWithPermissions,
+  requireRoutePermissions,
+} from "@/middlewares/authz.middleware";
 
-import roleController from '../controllers/role.controller'
+import roleController from "../controllers/role.controller";
 
-const roleRoute: IRouter = Router()
+const P = RoutePermissions.roles;
 
-roleRoute.use(authenticateMiddleware)
+const roleRoute: IRouter = Router();
 
-/**
- * Get all roles
- * @route GET /v1/identity/roles
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.get('/', roleController.findAllRoles)
-/**
- * Get role tree
- * @route GET /v1/identity/roles/tree
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.get('/tree', roleController.getRoleTree)
-/**
- * Get a role by ID
- * @route GET /v1/identity/roles/:roleId
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.get('/:roleId', roleController.findOneById)
-/**
- * Get parents by role ID
- * @route GET /v1/identity/roles/parent/:roleId
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.get('/parent/:roleId', roleController.findParentsByRoleId)
-/**
- * Get children by role ID
- * @route GET /v1/identity/roles/children/:roleId
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.get('/children/:roleId', roleController.findChildrenByRoleId)
-/**
- * Create a role
- * @route POST /v1/identity/roles
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.post('/', roleController.createRole)
-/**
- * Add parent to role
- * @route POST /v1/identity/roles/:roleId/parent/:parentRoleId
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.post('/:roleId/parent/:parentRoleId', roleController.addParentToRole)
-/**
- * Delete parent from role
- * @route DELETE /v1/identity/roles/:roleId/parent/:parentRoleId
- * @access Private
- * @returns {Promise<void>}
- */
-roleRoute.delete('/:roleId/parent/:parentRoleId', roleController.deleteParentFromRole)
+roleRoute.use(...authenticatedWithPermissions);
 
-export default roleRoute
+roleRoute.get(
+  "/",
+  requireRoutePermissions([P.read]),
+  roleController.findAllRoles,
+);
+roleRoute.get(
+  "/tree",
+  requireRoutePermissions([P.read]),
+  roleController.getRoleTree,
+);
+roleRoute.get(
+  "/:roleId",
+  requireRoutePermissions([P.read]),
+  roleController.findOneById,
+);
+roleRoute.get(
+  "/parent/:roleId",
+  requireRoutePermissions([P.read]),
+  roleController.findParentsByRoleId,
+);
+roleRoute.get(
+  "/children/:roleId",
+  requireRoutePermissions([P.read]),
+  roleController.findChildrenByRoleId,
+);
+roleRoute.post(
+  "/",
+  requireRoutePermissions([P.write]),
+  roleController.createRole,
+);
+roleRoute.post(
+  "/:roleId/parent/:parentRoleId",
+  requireRoutePermissions([P.write]),
+  roleController.addParentToRole,
+);
+roleRoute.delete(
+  "/:roleId/parent/:parentRoleId",
+  requireRoutePermissions([P.write]),
+  roleController.deleteParentFromRole,
+);
+
+export default roleRoute;

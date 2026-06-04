@@ -5,8 +5,8 @@ import { RoleClosureRepository } from '../repositories/role-closure.repository';
 import { RolePermissionRepository } from '../repositories/role-permission.repository';
 
 import type { PermissionStrategy } from '../interfaces';
-import type { UserRoleGetPayload } from '@servexa-warranty-ai/db/prisma/models';
 import logger from '@/core/logging/logging.config';
+import type { UserRoleGetPayload } from '@/core/infra/prisma/generated/models';
 
 type UserRolesInHasPermissionMethod = Pick<
   UserRoleGetPayload<{

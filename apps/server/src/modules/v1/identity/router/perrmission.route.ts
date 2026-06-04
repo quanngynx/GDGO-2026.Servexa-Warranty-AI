@@ -1,55 +1,49 @@
-import { Router, type IRouter } from 'express'
+import { Router, type IRouter } from "express";
 
-import { authenticateMiddleware } from '@/middlewares'
+import { RoutePermissions } from "@/core/constants/route-permissions";
+import {
+  authenticatedWithPermissions,
+  requireRoutePermissions,
+} from "@/middlewares/authz.middleware";
 
-import permissionController from '../controllers/permission.controller'
-import permissionCatalogController from '../controllers/permission-catalog.controller'
+import permissionController from "../controllers/permission.controller";
+import permissionCatalogController from "../controllers/permission-catalog.controller";
 
-const permissionRoute: IRouter = Router()
+const P = RoutePermissions.permissions;
 
-permissionRoute.use(authenticateMiddleware)
+const permissionRoute: IRouter = Router();
 
-/**
- * Check permission
- * @route POST /v1/identity/permissions/check
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.post('/check', permissionController.checkPermission)
-/**
- * Get all permission catalogs
- * @route GET /v1/identity/permissions
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.get('/', permissionCatalogController.findAll)
-/**
- * Get a permission catalog by ID
- * @route GET /v1/identity/permissions/:permissionId
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.get('/:permissionId', permissionCatalogController.findOneById)
-/**
- * Create a permission catalog
- * @route POST /v1/identity/permissions
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.post('/', permissionCatalogController.create)
-/**
- * Update a permission catalog
- * @route PATCH /v1/identity/permissions/:permissionId
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.patch('/:permissionId', permissionCatalogController.update)
-/**
- * Delete a permission catalog
- * @route DELETE /v1/identity/permissions/:permissionId
- * @access Private
- * @returns {Promise<void>}
- */
-permissionRoute.delete('/:permissionId', permissionCatalogController.delete)
+permissionRoute.use(...authenticatedWithPermissions);
 
-export default permissionRoute
+permissionRoute.post(
+  "/check",
+  requireRoutePermissions([P.read]),
+  permissionController.checkPermission,
+);
+permissionRoute.get(
+  "/",
+  requireRoutePermissions([P.read]),
+  permissionCatalogController.findAll,
+);
+permissionRoute.get(
+  "/:permissionId",
+  requireRoutePermissions([P.read]),
+  permissionCatalogController.findOneById,
+);
+permissionRoute.post(
+  "/",
+  requireRoutePermissions([P.write]),
+  permissionCatalogController.create,
+);
+permissionRoute.patch(
+  "/:permissionId",
+  requireRoutePermissions([P.write]),
+  permissionCatalogController.update,
+);
+permissionRoute.delete(
+  "/:permissionId",
+  requireRoutePermissions([P.write]),
+  permissionCatalogController.delete,
+);
+
+export default permissionRoute;

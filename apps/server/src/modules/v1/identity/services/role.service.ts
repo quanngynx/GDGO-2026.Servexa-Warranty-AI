@@ -1,4 +1,4 @@
-import prisma from '@servexa-warranty-ai/db';
+import prisma from '@/core/infra/prisma';
 
 import { RoleRepository } from '../repositories/role.repository';
 import { RoleClosureRepository } from '../repositories/role-closure.repository';
@@ -9,7 +9,7 @@ import { PermissionCacheService } from './permission-cache.service';
 import { ExtractPagination } from '@/utils/extract-pagination';
 
 import type { FindAllRolesDto, RoleCreationDto } from '../dtos/role.dto';
-import type { Prisma, Role } from '@servexa-warranty-ai/db/prisma/client';
+import type { Prisma, Role } from '@/core/infra/prisma/generated/client';
 import { createOperationalError } from '@/middlewares/error-middleware';
 import { HTTP_RESPONSE_CODE } from '@/core/constants/http.constant';
 

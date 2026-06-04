@@ -1,5 +1,6 @@
-import prisma, { IoredisService } from '@servexa-warranty-ai/db'
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import prisma from '@/core/infra/prisma'
+import { IoredisService } from '@/core/infra/ioredis/ioredis-service'
+import { Prisma } from '@/core/infra/prisma/generated/client'
 
 type KeyTokenSelect = Prisma.KeyTokenSelect
 

@@ -1,6 +1,6 @@
-import prisma from '@servexa-warranty-ai/db'
+import prisma from '@/core/infra/prisma'
 
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client';
+import { Prisma } from '@/core/infra/prisma/generated/client';
 
 type UserRoleQuery = Prisma.UserRoleSelect | undefined;
 type UserRoleInclude = Prisma.UserRoleInclude | undefined;

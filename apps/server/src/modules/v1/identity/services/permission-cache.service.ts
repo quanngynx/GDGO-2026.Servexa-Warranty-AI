@@ -1,4 +1,4 @@
-import { IoredisService } from '@servexa-warranty-ai/db'
+import { IoredisService } from "@/core/infra/ioredis/ioredis-service";
 import { KEY_CACHE } from '@/core/constants/key-cache.constant'
 
 export class PermissionCacheService {
