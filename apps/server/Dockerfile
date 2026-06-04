@@ -48,8 +48,7 @@ RUN mkdir -p node_modules/@servexa-warranty-ai \
   && ln -s ../../packages/ai-contracts node_modules/@servexa-warranty-ai/ai-contracts \
   && ln -s ../../packages/event-contracts node_modules/@servexa-warranty-ai/event-contracts
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai --ignore-scripts \
-  && pnpm rebuild bcrypt sharp
+  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai
 
 FROM deps AS build
 ENV CI=true
@@ -69,7 +68,8 @@ RUN mkdir -p node_modules/@servexa-warranty-ai \
 RUN pnpm --filter server db:generate
 RUN pnpm turbo run build --filter=server...
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm prune --prod
+  pnpm prune --prod \
+  && pnpm rebuild bcrypt sharp
 
 FROM ${NODE_IMAGE}@${NODE_DIGEST} AS production
 RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=locked \
