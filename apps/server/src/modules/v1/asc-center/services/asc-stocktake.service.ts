@@ -11,6 +11,8 @@ import type {
   FindStocktakeStockLevelsInput,
   CreateAscStocktakeInput,
 } from '../dtos/asc-stocktake.dto';
+import type { AscStocktakeDetail, AscStocktakeStockLevelRow } from '../asc-stocktake.types';
+import type { BasePagination } from 'src/types/pagination';
 
 export class AscStocktakeService implements IAscStocktakeService {
   constructor(
@@ -29,7 +31,7 @@ export class AscStocktakeService implements IAscStocktakeService {
     };
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<AscStocktakeDetail> {
     const found = await this.repository.findById(id);
     if (!found) {
       throw createOperationalError('Stocktake not found', HTTP_RESPONSE_CODE.NOT_FOUND);
@@ -62,7 +64,7 @@ export class AscStocktakeService implements IAscStocktakeService {
     };
   }
 
-  async findStockLevels(input: FindStocktakeStockLevelsInput) {
+  async findStockLevels(input: FindStocktakeStockLevelsInput): Promise<{ items: AscStocktakeStockLevelRow[] | null; pagination: BasePagination }> {
     const [items, total] = await Promise.all([
       this.repository.findStockLevels(input),
       this.repository.countStockLevels(input),
@@ -74,7 +76,7 @@ export class AscStocktakeService implements IAscStocktakeService {
     };
   }
 
-  async create(input: CreateAscStocktakeInput, userId: string) {
+  async create(input: CreateAscStocktakeInput, userId: string): Promise<AscStocktakeDetail | null> {
     try {
       const result = await this.repository.createWithSideEffects({
         ...input,

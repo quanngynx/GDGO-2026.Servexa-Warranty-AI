@@ -1,10 +1,18 @@
 import { Router, type IRouter } from 'express'
 
-import { authenticateMiddleware} from '@/middlewares'
+import { RoutePermissions } from '@/core/constants/route-permissions'
+import {
+  authenticatedWithPermissions,
+  requireRoutePermissions,
+} from '@/middlewares/authz.middleware'
 
 import { AscCenterController } from '../controllers/asc-center.controller'
 import { AscCenterRepository } from '../repositories/asc-center.repository'
 import { AscCenterService } from '../services/asc-center.service'
+
+const P = RoutePermissions.ascCenter
+const read = requireRoutePermissions([P.read])
+const write = requireRoutePermissions([P.write])
 
 const ascCenterRoute: IRouter = Router()
 
@@ -12,49 +20,13 @@ const ascCenterRepository = new AscCenterRepository()
 const ascCenterService = new AscCenterService(ascCenterRepository)
 const ascCenterController = new AscCenterController(ascCenterService)
 
-ascCenterRoute.use(authenticateMiddleware)
+ascCenterRoute.use(...authenticatedWithPermissions)
 
-/**
- * Get all ASC centers
- * @route GET /v1/asc-center/asc-centers
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.get('/', ascCenterController.findAll)
-/**
- * Get an ASC center by ID
- * @route GET /v1/asc-center/asc-centers/:ascCenterId
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.get('/:ascCenterId', ascCenterController.findOneById)
-/**
- * Create an ASC center
- * @route POST /v1/asc-center/asc-centers
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.post('/', ascCenterController.create)
-/**
- * Replace an ASC center
- * @route PUT /v1/asc-center/asc-centers/:ascCenterId
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.put('/:ascCenterId', ascCenterController.replace)
-/**
- * Update an ASC center
- * @route PATCH /v1/asc-center/asc-centers/:ascCenterId
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.patch('/:ascCenterId', ascCenterController.update)
-/**
- * Delete an ASC center
- * @route DELETE /v1/asc-center/asc-centers/:ascCenterId
- * @access Private
- * @returns {Promise<void>}
- */
-ascCenterRoute.delete('/:ascCenterId', ascCenterController.delete)
+ascCenterRoute.get('/', read, ascCenterController.findAll)
+ascCenterRoute.get('/:ascCenterId', read, ascCenterController.findOneById)
+ascCenterRoute.post('/', write, ascCenterController.create)
+ascCenterRoute.put('/:ascCenterId', write, ascCenterController.replace)
+ascCenterRoute.patch('/:ascCenterId', write, ascCenterController.update)
+ascCenterRoute.delete('/:ascCenterId', write, ascCenterController.delete)
 
 export default ascCenterRoute

@@ -1,11 +1,10 @@
-import type {
+import {
+  type RepairCaseStatusHistory,
+  type RepairCaseFieldHistory,
+  type AccessoryRequest,
+  type RepairCaseAccessory,
   Prisma,
-  RepairCaseStatusHistory,
-  RepairCaseFieldHistory,
-  AccessoryRequest,
-  RepairCase,
-  RepairCaseAccessory,
-} from "@servexa-warranty-ai/db/prisma/client";
+} from "@/core/infra/prisma/generated/client";
 import type {
   FindAllRepairCasesInput,
   CreateRepairCaseInput,
@@ -21,10 +20,10 @@ import type {
 export interface IRepairCaseRepository {
   findMany(input: FindAllRepairCasesInput): Promise<RepairCaseListItem[]>;
   count(input: FindAllRepairCasesInput): Promise<number>;
-  findOneById(id: string): Promise<(RepairCase & Prisma.RepairCaseInclude) | null>;
+  findOneById(id: string): Promise<RepairCaseDetail | null>;
   findStatusHistory(id: string): Promise<RepairCaseStatusHistory[]>;
   findFieldHistory(id: string): Promise<RepairCaseFieldHistory[]>;
-  findAccessoryRequests(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null>;
+  findAccessoryRequests(id: string): Promise<AccessoryRequest[] | null>;
   findImages(id: string): Promise<RepairCaseImageDto[]>;
   findImageById(
     id: string,
@@ -33,7 +32,7 @@ export interface IRepairCaseRepository {
   findAccessoryRowById(
     id: string,
     accessoryRowId: string,
-  ): Promise<(RepairCaseAccessory & Prisma.RepairCaseAccessoryInclude) | null>;
+  ): Promise<RepairCaseAccessory | null>;
   findManyForExport(
     kind:
       | "fixing"

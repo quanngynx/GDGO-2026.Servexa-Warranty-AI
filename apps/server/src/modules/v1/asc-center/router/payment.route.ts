@@ -1,12 +1,21 @@
-import { Router, type IRouter } from 'express';
-import { PaymentController } from '../controllers/payment.controller';
-import { authenticateMiddleware } from '@/middlewares/authenticate.middleware';
-// import { Roles } from '@/enums/roles';
+import { Router, type IRouter } from "express";
+
+import { RoutePermissions } from "@/core/constants/route-permissions";
+import {
+  authenticatedWithPermissions,
+  requireRoutePermissions,
+} from "@/middlewares/authz.middleware";
+import { PaymentController } from "../controllers/payment.controller";
+
+const P = RoutePermissions.payment;
 
 const router: IRouter = Router();
 const controller = new PaymentController();
 
-router.use(authenticateMiddleware);
+const read = requireRoutePermissions([P.read]);
+const write = requireRoutePermissions([P.write]);
+
+router.use(...authenticatedWithPermissions);
 
 // IMPORTANT: literal `/payment-periods` MUST be registered before `/:id`-style routes.
 /**
@@ -15,20 +24,20 @@ router.use(authenticateMiddleware);
  * @access Private
  * @returns {Promise<void>}
  */
-router.get('/payment-periods', controller.findAllPaymentPeriods);
+router.get("/payment-periods", read, controller.findAllPaymentPeriods);
 /**
  * Get all payments
  * @route GET /v1/asc-center/payments
  * @access Private
  * @returns {Promise<void>}
  */
-router.get('/', controller.findAllPayments);
+router.get("/", read, controller.findAllPayments);
 /**
  * Mark a payment as paid
  * @route POST /v1/asc-center/payments/:id/mark-paid/:paymentPeriodId
  * @access Private
  * @returns {Promise<void>}
  */
-router.post('/:id/mark-paid/:paymentPeriodId', controller.markPaid);
+router.post("/:id/mark-paid/:paymentPeriodId", write, controller.markPaid);
 
 export default router;

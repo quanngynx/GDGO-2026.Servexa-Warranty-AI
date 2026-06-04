@@ -4,7 +4,7 @@ import {
   AccessoryRequestStatus,
   StatusRecall,
   AccessoryRequestItemStatus,
-} from '@servexa-warranty-ai/db/prisma/client'
+} from '@/core/infra/prisma/generated/enums'
 
 export const accessoryRequestUrgencySchema = z.enum(AccessoryRequestUrgency)
 export const accessoryRequestStatusSchema = z.enum(AccessoryRequestStatus)

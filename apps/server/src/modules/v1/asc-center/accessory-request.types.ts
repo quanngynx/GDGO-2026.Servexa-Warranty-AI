@@ -1,8 +1,8 @@
-import type {
-  AccessoryRequest,
-  AccessoryRequestItem,
+import {
+  type AccessoryRequest,
+  type AccessoryRequestItem,
   Prisma,
-} from "@servexa-warranty-ai/db/prisma/client";
+} from "@/core/infra/prisma/generated/client";
 
 export const accessoryRequestSelect = {
   id: true,

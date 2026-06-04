@@ -1,5 +1,5 @@
-import prisma from "@servexa-warranty-ai/db";
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import prisma from "@/core/infra/prisma";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 import type { IAccessoryRequestRepository } from "../interfaces/accessory-request-repository.interface";
 import type { FindAllAccessoryRequestsInput } from "../dtos/accessory-request.dto";
 import {

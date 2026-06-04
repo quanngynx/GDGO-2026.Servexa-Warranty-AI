@@ -1,65 +1,25 @@
-import { Router, type IRouter } from 'express';
-import { AscStocktakeController } from '../controllers/asc-stocktake.controller';
-import { authenticateMiddleware } from '@/middlewares/authenticate.middleware';
+import { Router, type IRouter } from 'express'
 
-const router: IRouter = Router();
-const controller = new AscStocktakeController();
+import { RoutePermissions } from '@/core/constants/route-permissions'
+import {
+  authenticatedWithPermissions,
+  requireRoutePermissions,
+} from '@/middlewares/authz.middleware'
+import { AscStocktakeController } from '../controllers/asc-stocktake.controller'
 
-router.use(authenticateMiddleware);
+const P = RoutePermissions.stocktake
+const read = requireRoutePermissions([P.read])
+const write = requireRoutePermissions([P.write])
 
-// const standardRoles = [
-//   Roles.SUPER_ADMIN,
-//   Roles.ADMIN,
-//   Roles.COMPANY_ADMIN,
-//   Roles.ASC_ADMIN,
-//   Roles.ASC_MANAGER,
-//   Roles.ASC_COORDINATOR,
-//   Roles.ASC_TECHNICIAN,
-// ];
-// const writeRoles = [
-//   Roles.SUPER_ADMIN,
-//   Roles.ADMIN,
-//   Roles.COMPANY_ADMIN,
-//   Roles.ASC_ADMIN,
-//   Roles.ASC_MANAGER,
-//   Roles.ASC_TECHNICIAN,
-// ];
+const router: IRouter = Router()
+const controller = new AscStocktakeController()
 
-// Order matters: register specific routes before `/:id`
-/**
- * Get accessories for a stocktake
- * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/accessories
- * @access Private
- * @returns {Promise<void>}
- */
-router.get('/asc-centers/:ascCenterId/accessories', controller.findAccessoriesForStocktake);
-/**
- * Get stock levels for a stocktake
- * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/stock-levels
- * @access Private
- * @returns {Promise<void>}
- */
-router.get('/asc-centers/:ascCenterId/stock-levels', controller.findStockLevels);
-/**
- * Get history by center for a stocktake
- * @route GET /v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId
- * @access Private
- * @returns {Promise<void>}
- */
-router.get('/asc-centers/:ascCenterId', controller.findHistoryByCenter);
-/**
- * Get a stocktake by ID
- * @route GET /v1/asc-center/asc-stocktakes/:id
- * @access Private
- * @returns {Promise<void>}
- */
-router.get('/:id', controller.findOneById);
-/**
- * Create a stocktake
- * @route POST /v1/asc-center/asc-stocktakes
- * @access Private
- * @returns {Promise<void>}
- */
-router.post('/', controller.create);
+router.use(...authenticatedWithPermissions)
 
-export default router;
+router.get('/asc-centers/:ascCenterId/accessories', read, controller.findAccessoriesForStocktake)
+router.get('/asc-centers/:ascCenterId/stock-levels', read, controller.findStockLevels)
+router.get('/asc-centers/:ascCenterId', read, controller.findHistoryByCenter)
+router.get('/:id', read, controller.findOneById)
+router.post('/', write, controller.create)
+
+export default router

@@ -1,10 +1,10 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 import {
-  Prisma,
   AccessoryRequestStatus,
   AccessoryRequestItemStatus,
-} from "@servexa-warranty-ai/db/prisma/client";
-import type { AccessoryRequestStatus as AccessoryRequestStatusType } from "@servexa-warranty-ai/db/prisma/client";
+} from "@/core/infra/prisma/generated/enums";
+import type { AccessoryRequestStatus as AccessoryRequestStatusType } from "@/core/infra/prisma/generated/client";
 import type { AccessoryRequestDetail } from "../accessory-request.types";
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";

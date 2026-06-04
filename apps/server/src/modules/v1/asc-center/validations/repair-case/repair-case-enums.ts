@@ -6,7 +6,7 @@ import {
   WarrantyForm,
   WarrantyServiceType,
   StatusRecall,
-} from '@servexa-warranty-ai/db/prisma/client'
+} from '@/core/infra/prisma/generated/client'
 
 export const repairCaseStatusSchema = z.enum(RepairCaseStatus)
 export const repairCasePrioritySchema = z.enum(RepairCasePriority)

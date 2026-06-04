@@ -1,5 +1,5 @@
-import prisma from '@servexa-warranty-ai/db'
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import prisma from '@/core/infra/prisma'
+import { type AccessoryRequest, Prisma } from '@/core/infra/prisma/generated/client'
 import type { IRepairCaseRepository } from '../interfaces/repair-case-repository.interface'
 import type {
   FindAllRepairCasesInput,
@@ -8,168 +8,12 @@ import type {
   ReplaceRepairCaseInput,
   UpdateRepairCaseInput,
 } from '../dtos/repair-case.dto'
-
-export const repairCaseListSelect = {
-  id: true,
-  caseNumber: true,
-  ascCenterId: true,
-  customerId: true,
-  status: true,
-  priority: true,
-  warrantyForm: true,
-  warrantyServiceType: true,
-  statusRecall: true,
-  serialNumber: true,
-  serviceFee: true,
-  laborCost: true,
-  partsCost: true,
-  shippingCost: true,
-  shippingProvinceId: true,
-  shippingWardId: true,
-  distanceFee: true,
-  totalCost: true,
-  errorGroup: true,
-  errorSource: true,
-  repairLevel: true,
-  purchaseDate: true,
-  purchaseLocation: true,
-  purchaseOrderNumber: true,
-  householdProductType: true,
-  csRtStatus: { select: { csStatus: true, rtStatus: true, } },
-  exchangeProduct: true,
-  invoiceCode: true,
-  waitAccessoryItems: { select: { repairCaseId: true, partName: true, quantity: true } },
-  errorAccessoryItems: { select: { repairCaseId: true, partName: true, quantity: true } },
-  paymentDetail: { select: { paymentPendingStatus: true } },
-  receivedDate: true,
-  promisedDeliveryDate: true,
-  actualCompletionDate: true,
-  finalCompletionDate: true,
-  createdAt: true,
-  updatedAt: true,
-  ascCenter: { select: { centerName: true, centerCode: true } },
-  customer: { select: { fullName: true, phone1: true, email: true, address: true } },
-  model: {
-    select: {
-      name: true,
-      modelCode: true,
-      laborCost: true,
-      inspectionCost: true,
-      category: {
-        select: {
-          id: true,
-          name: true,
-        },
-      } 
-    } 
-  },
-  purchaseLocationDetails: {
-    select: {
-      name: true,
-      code: true,
-      group: {
-        select: { name: true, code: true },
-      },
-    },
-  },
-  shippingProvince: { select: { name: true, code: true } },
-  shippingWard: { select: { name: true, code: true } },
-  creator: { select: { username: true, fullName: true } },
-  errorPhenomena: {
-    select: {
-      errorPhenomenon: {
-        select: {
-          name: true,
-          categoryId: true,
-        },
-      },
-    },
-  },
-  reasons: {
-    select: {
-      reason: {
-        select: {
-          name: true,
-          errorPhenomenonId: true,
-        },
-      },
-    },
-  },
-  accessories: {
-    select: {
-      // accessoryId: true,
-      // repairCaseId: true,
-      quantity: true,
-      unitPrice: true,
-      totalPrice: true,
-      addedAt: true,
-      accessory: {
-        select: {
-          name: true,
-          partNumber: true,
-          itemNumber: true,
-          description: true,
-        },
-      },
-    },
-  },
-  assignedEmployee: { select: { fullName: true, employeeCode: true } },
-  technicianName: true,
-  areaId: true,
-} satisfies Prisma.RepairCaseSelect
-
-export const repairCaseDetailSelect = {
-  ...repairCaseListSelect,
-  solutionId: true,
-  damageDescription: true,
-  diagnosis: true,
-  repairSolution: true,
-  repairNotes: true,
-  discountAmount: true,
-  otherFee: true,
-  otherFeeNote: true,
-  estimatedCompletionDate: true,
-  promisedDeliveryDate: true,
-  paymentDate: true,
-  paymentMethod: true,
-  paymentReference: true,
-  paymentNotes: true,
-  deliveryNotes: true,
-  ascPaymentAmount: true,
-  companyDeduction: true,
-  taxAmount: true,
-  processingFee: true,
-  netPayment: true,
-  assignedEmployeeId: true,
-  assignedTechnicianId: true,
-  createdBy: true,
-  approvedBy: true,
-  receiverName: true,
-  receiverPhone: true,
-  foodSafetyCompliance: true,
-  sealIntegrityStatus: true,
-  plasticDurabilityLevel: true,
-  estimatedStartDate: true,
-  estimatedCost: true,
-  actualRepairTime: true,
-  estimatedRepairTime: true,
-  distanceFeeCalculatedAt: true,
-  distanceFeeCalculatedBy: true,
-  serviceDistance: true,
-  warrantyResolution: true,
-  repairActivity: true,
-  statusRecall: true,
-  solution: true,
-  _count: {
-    select: {
-      accessories: true,
-      images: true,
-      statusHistory: true,
-      fieldHistory: true,
-      accessoryRequest: true,
-    },
-  },
-} satisfies Prisma.RepairCaseSelect
+import {
+  repairCaseDetailSelect,
+  repairCaseListSelect,
+  type RepairCaseDetail,
+  type RepairCaseListItem,
+} from '../repair-case.types'
 
 export class RepairCaseRepository implements IRepairCaseRepository {
   private buildRepairCasesWhere(input: FindAllRepairCasesInput): Prisma.RepairCaseWhereInput {
@@ -198,7 +42,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
     }
   }
 
-  async findMany(input: FindAllRepairCasesInput) {
+  async findMany(input: FindAllRepairCasesInput): Promise<RepairCaseListItem[]> {
     const skip = ((input.page || 1) - 1) * (input.limit || 10)
     return prisma.repairCase.findMany({
       where: this.buildRepairCasesWhere(input),
@@ -215,11 +59,11 @@ export class RepairCaseRepository implements IRepairCaseRepository {
     })
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<RepairCaseDetail | null> {
     return prisma.repairCase.findUnique({
       where: { id },
       select: repairCaseDetailSelect,
-    }) as any
+    })
   }
 
   async findStatusHistory(id: string) {
@@ -238,7 +82,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
     })
   }
 
-  async findAccessoryRequests(id: string) {
+  async findAccessoryRequests(id: string): Promise<AccessoryRequest[] | null> {
     return prisma.accessoryRequest.findMany({
       where: { repairCaseId: id },
       orderBy: { requestDate: 'desc' },

@@ -1,11 +1,9 @@
 import type { BasePagination } from "@/types/pagination";
-import type {
-  RepairCaseStatusHistory,
-  RepairCaseFieldHistory,
-  AccessoryRequest,
-  RepairCase,
-  Prisma,
-} from "@servexa-warranty-ai/db/prisma/client";
+import {
+  type RepairCaseStatusHistory,
+  type RepairCaseFieldHistory,
+  type AccessoryRequest,
+} from "@/core/infra/prisma/generated/client";
 import type {
   FindAllRepairCasesInput,
   FindWaitingAccessoriesInput,
@@ -28,11 +26,11 @@ export interface IRepairCaseService {
   findWaitingAccessories(
     input: FindWaitingAccessoriesInput,
   ): Promise<{ items: RepairCaseListItem[], pagination: BasePagination }>;
-  findOneById(id: string): Promise<(RepairCase & Prisma.RepairCaseInclude) | null>;
+  findOneById(id: string): Promise<RepairCaseDetail | null>;
 
   findStatusHistory(id: string): Promise<RepairCaseStatusHistory[]>;
   findFieldHistory(id: string): Promise<RepairCaseFieldHistory[]>;
-  findAccessoryRequests(id: string): Promise<(AccessoryRequest & Prisma.AccessoryRequestInclude)[] | null>;
+  findAccessoryRequests(id: string): Promise<AccessoryRequest[] | null>;
   findImages(id: string): Promise<RepairCaseImageDto[]>;
   findImageById(id: string, imageId: string): Promise<RepairCaseImageDto>;
 

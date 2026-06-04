@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccessoryStatus } from '@servexa-warranty-ai/db/prisma/client';
+import { AccessoryStatus } from '@/core/infra/prisma/generated/client';
 
 export const findStocktakeAccessoriesSchema = z.object({
   page: z.coerce.number().min(1).default(1),

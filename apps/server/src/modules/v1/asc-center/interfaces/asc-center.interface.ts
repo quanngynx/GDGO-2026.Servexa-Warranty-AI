@@ -1,4 +1,4 @@
-import type { AscCenter, Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import type { AscCenter, Prisma } from '@/core/infra/prisma/generated/client'
 
 import type { CreateAscCenterDto, ReplaceAscCenterDto, UpdateAscCenterDto } from '../dtos/asc-center.dto'
 import type { FindAllAscCentersInput } from '../services/asc-center.service'

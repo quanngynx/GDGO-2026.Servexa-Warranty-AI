@@ -5,7 +5,7 @@ import type { IRepairCaseService } from "../interfaces/repair-case-service.inter
 import type { IRepairCaseRepository } from "../interfaces/repair-case-repository.interface";
 import { RepairCaseRepository } from "../repositories/repair-case.repository";
 import { RepairCaseExcelService } from "./repair-case-excel.service";
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 import type {
   FindAllRepairCasesInput,
   FindWaitingAccessoriesInput,
