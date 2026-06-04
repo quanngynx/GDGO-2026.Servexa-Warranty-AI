@@ -34,7 +34,6 @@ ignoredBuiltDependencies:
   - esbuild
   - msw
   - prisma
-  - sharp
   - workerd
 
 onlyBuiltDependencies:
@@ -42,3 +41,4 @@ onlyBuiltDependencies:
   - bcrypt
   - grpc-tools
   - protobufjs
+  - sharp

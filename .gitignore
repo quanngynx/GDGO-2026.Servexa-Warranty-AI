@@ -54,4 +54,5 @@ temp
 /.docker-deploy-test
 /apps/server/.docker-deploy-test
 .docker-deploy-test*
+.docker-ghcr-smoke.env
 .env.production

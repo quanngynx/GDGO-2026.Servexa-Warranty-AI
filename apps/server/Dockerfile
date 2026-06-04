@@ -47,8 +47,9 @@ RUN mkdir -p node_modules/@servexa-warranty-ai \
   && ln -s ../../packages/proto node_modules/@servexa-warranty-ai/proto \
   && ln -s ../../packages/ai-contracts node_modules/@servexa-warranty-ai/ai-contracts \
   && ln -s ../../packages/event-contracts node_modules/@servexa-warranty-ai/event-contracts
+# Skip postinstall (prisma generate) until apps/server sources are copied in the build stage.
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai
+  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai --ignore-scripts
 
 FROM deps AS build
 ENV CI=true
@@ -67,9 +68,13 @@ RUN mkdir -p node_modules/@servexa-warranty-ai \
   && ln -s ../../packages/event-contracts node_modules/@servexa-warranty-ai/event-contracts
 RUN pnpm --filter server db:generate
 RUN pnpm turbo run build --filter=server...
+# Native addons (bcrypt, sharp): deps used --ignore-scripts, so run their install scripts explicitly.
+RUN npm --prefix /app/node_modules/bcrypt run install \
+  && npm --prefix /app/node_modules/sharp run install
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm prune --prod \
-  && pnpm rebuild bcrypt sharp
+  pnpm prune --prod
+RUN npm --prefix /app/node_modules/bcrypt run install \
+  && npm --prefix /app/node_modules/sharp run install
 
 FROM ${NODE_IMAGE}@${NODE_DIGEST} AS production
 RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=locked \
