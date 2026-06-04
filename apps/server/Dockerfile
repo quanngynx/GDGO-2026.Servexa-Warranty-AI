@@ -30,13 +30,18 @@ RUN --mount=type=cache,id=apt-deps-cache,target=/var/cache/apt,sharing=locked \
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 # Flat node_modules so `node dist/index.mjs` resolves packages from /app/node_modules.
 RUN echo "node-linker=hoisted" > .npmrc
+# All workspace package.json stubs so frozen-lockfile matches pnpm-lock.yaml importers.
 COPY apps/server/package.json apps/server/
+COPY apps/web/package.json apps/web/
+COPY apps/fumadocs/package.json apps/fumadocs/
 COPY packages/ai-contracts/package.json packages/ai-contracts/
 COPY packages/config/package.json packages/config/
 COPY packages/db/package.json packages/db/
 COPY packages/env/package.json packages/env/
 COPY packages/event-contracts/package.json packages/event-contracts/
+COPY packages/infra/package.json packages/infra/
 COPY packages/proto/package.json packages/proto/
+COPY packages/ui/package.json packages/ui/
 RUN mkdir -p node_modules/@servexa-warranty-ai \
   && ln -s ../../packages/db node_modules/@servexa-warranty-ai/db \
   && ln -s ../../packages/env node_modules/@servexa-warranty-ai/env \
