@@ -1,4 +1,4 @@
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client';
+import { Prisma } from '@/core/infra/prisma/generated/client';
 
 export class ExtractPagination {
   buildSortOrder = <T>(sortBy?: string, sortOrder?: string): T => {

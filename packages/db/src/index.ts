@@ -1,7 +1,7 @@
-import { createPrismaClient } from "./prisma";
-import { IoredisService } from "./ioredis/ioredis-service";
+// import { createPrismaClient } from "./prisma";
+// import { IoredisService } from "./ioredis/ioredis-service";
 
-const prisma = createPrismaClient();
+// const prisma = createPrismaClient();
 
-export default prisma;
-export { IoredisService };
+// export default prisma;
+// export { IoredisService };
