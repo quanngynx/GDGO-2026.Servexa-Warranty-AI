@@ -42,7 +42,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build postgres server
+            docker compose --env-file .env.production -f docker-compose.prod.yml pull server
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d postgres server
 
             sleep 15
 

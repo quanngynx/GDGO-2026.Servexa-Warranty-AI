@@ -58,6 +58,7 @@ services:
         condition: service_healthy
     networks:
       - server_internal
+      - db_internal
     ports:
       - "${SERVER_PORT}:3000"
 
