@@ -1,4 +1,7 @@
-import type { Employee, Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import {
+  type Employee,
+  Prisma,
+} from "@/core/infra/prisma/generated/client";
 
 type EmployeeSelect = Prisma.EmployeeSelect;
 type EmployeeInclude = Prisma.EmployeeInclude;
@@ -13,7 +16,7 @@ type EmployeeOptions<
 export interface IEmployeeRepository {
   findAll(
     query: Prisma.EmployeeFindManyArgs,
-  ): Promise<(Employee[] & Prisma.EmployeeInclude) | null | undefined>;
+  ): Promise<Employee[] | null | undefined>;
   count(where: Prisma.EmployeeWhereInput): Promise<number>;
   findOneById<
     TSelect extends EmployeeSelect | undefined,

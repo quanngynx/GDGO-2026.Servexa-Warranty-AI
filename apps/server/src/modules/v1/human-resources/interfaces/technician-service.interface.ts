@@ -5,11 +5,26 @@ import type {
   UpdateTechnicianDto,
 } from "../dtos/technician.dto";
 import type { FindAllTechniciansInput } from "../services/technician.service";
-import type { Prisma, TechnicianProfile } from "@servexa-warranty-ai/db/prisma/client";
+import {
+  Prisma,
+  type TechnicianProfile,
+} from "@/core/infra/prisma/generated/client";
 
 export interface ITechnicianService {
-  findAll(query: FindAllTechniciansInput): Promise<{ items: (TechnicianProfile & Prisma.TechnicianProfileInclude)[] | null | undefined, pagination: BasePagination }>;
-  findOneById(technicianProfileId: string): Promise<TechnicianProfile & Prisma.TechnicianProfileInclude | null | undefined>;
+  findAll(
+    query: FindAllTechniciansInput,
+  ): Promise<{
+    items:
+      | (TechnicianProfile & Prisma.TechnicianProfileInclude)[]
+      | null
+      | undefined;
+    pagination: BasePagination;
+  }>;
+  findOneById(
+    technicianProfileId: string,
+  ): Promise<
+    (TechnicianProfile & Prisma.TechnicianProfileInclude) | null | undefined
+  >;
   create(input: CreateTechnicianDto): Promise<unknown>;
   update(
     technicianProfileId: string,

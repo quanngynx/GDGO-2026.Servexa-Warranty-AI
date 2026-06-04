@@ -1,4 +1,7 @@
-import type { Customer, Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import {
+  type Customer,
+  Prisma,
+} from "@/core/infra/prisma/generated/client";
 
 type CustomerSelect = Prisma.CustomerSelect;
 type CustomerInclude = Prisma.CustomerInclude;
@@ -11,7 +14,9 @@ type CustomerOptions<
 };
 
 export interface ICustomerRepository {
-  findAll(query: Prisma.CustomerFindManyArgs): Promise<(Customer & Prisma.CustomerInclude)[] | null | undefined>;
+  findAll(
+    query: Prisma.CustomerFindManyArgs,
+  ): Promise<(Customer & Prisma.CustomerInclude)[] | null | undefined>;
   count(where: Prisma.CustomerWhereInput): Promise<number>;
   findOneById<
     TSelect extends CustomerSelect | undefined,

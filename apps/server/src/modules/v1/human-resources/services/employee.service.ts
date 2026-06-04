@@ -1,5 +1,5 @@
-import prisma from '@servexa-warranty-ai/db'
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import prisma from '@/core/infra/prisma'
+import { Prisma, type Employee } from '@/core/infra/prisma/generated/client'
 
 import { HTTP_RESPONSE_CODE } from '@/core/constants/http.constant'
 import { createOperationalError } from '@/middlewares/error-middleware'
@@ -14,6 +14,7 @@ import type {
 import type { IEmployeeRepository } from '../interfaces/employee-repository.interface'
 import type { IEmployeeService } from '../interfaces/employee-service.interface'
 import { EmployeeRepository } from '../repositories/employee.repository'
+import type { BasePagination } from 'src/types/pagination'
 
 const employeeSelect = {
   id: true,
@@ -122,7 +123,7 @@ export class EmployeeService implements IEmployeeService {
     }
   }
 
-  async findAll(query: FindAllEmployeesInput) {
+  async findAll(query: FindAllEmployeesInput): Promise<{ items: (Employee & Prisma.EmployeeInclude)[] | null | undefined, pagination: BasePagination }> {
     const where: Prisma.EmployeeWhereInput = {
       ...(query.status ? { status: query.status } : {}),
       ...(query.department ? { department: query.department } : {}),
@@ -181,7 +182,7 @@ export class EmployeeService implements IEmployeeService {
     return { items, pagination: buildPagination(query.page, query.limit, total) }
   }
 
-  async findOneById(employeeId: string) {
+  async findOneById(employeeId: string): Promise<Employee & Prisma.EmployeeInclude | null | undefined> {
     const found = await this.employeeRepository.findOneById(employeeId, {
       select: employeeSelect,
       include: {

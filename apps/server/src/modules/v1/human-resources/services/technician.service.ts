@@ -1,5 +1,5 @@
-import prisma from "@servexa-warranty-ai/db";
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import prisma from "@/core/infra/prisma";
+import { Prisma, type TechnicianProfile } from "@/core/infra/prisma/generated/client";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";
@@ -13,6 +13,7 @@ import type {
 import type { ITechnicianRepository } from "../interfaces/technician-repository.interface";
 import type { ITechnicianService } from "../interfaces/technician-service.interface";
 import { TechnicianRepository } from "../repositories/technician.repository";
+import type { BasePagination } from "src/types/pagination";
 
 const technicianSelect = {
   id: true,
@@ -70,7 +71,7 @@ export class TechnicianService implements ITechnicianService {
       );
   }
 
-  async findAll(query: FindAllTechniciansInput) {
+  async findAll(query: FindAllTechniciansInput): Promise<{ items: (TechnicianProfile & Prisma.TechnicianProfileInclude)[] | null | undefined, pagination: BasePagination }> {
     const where: Prisma.TechnicianProfileWhereInput = {
       ...(query.skillLevel ? { skillLevel: query.skillLevel } : {}),
       ...(query.isAvailable !== undefined
@@ -122,7 +123,7 @@ export class TechnicianService implements ITechnicianService {
     };
   }
 
-  async findOneById(technicianProfileId: string) {
+  async findOneById(technicianProfileId: string): Promise<TechnicianProfile & Prisma.TechnicianProfileInclude | null | undefined> {
     const found = await this.technicianRepository.findOneById(
       technicianProfileId,
       {

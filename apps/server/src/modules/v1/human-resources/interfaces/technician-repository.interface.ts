@@ -1,4 +1,7 @@
-import type { Prisma, TechnicianProfile } from "@servexa-warranty-ai/db/prisma/client";
+import {
+  Prisma,
+  type TechnicianProfile,
+} from "@/core/infra/prisma/generated/client";
 
 type TechnicianSelect = Prisma.TechnicianProfileSelect;
 type TechnicianInclude = Prisma.TechnicianProfileInclude;
@@ -11,7 +14,9 @@ type TechnicianOptions<
 };
 
 export interface ITechnicianRepository {
-  findAll(query: Prisma.TechnicianProfileFindManyArgs): Promise<(TechnicianProfile & Prisma.TechnicianProfileInclude)[] | null | undefined>;
+  findAll(
+    query: Prisma.TechnicianProfileFindManyArgs,
+  ): Promise<TechnicianProfile[] | null | undefined>;
   count(where: Prisma.TechnicianProfileWhereInput): Promise<number>;
   findOneById<
     TSelect extends TechnicianSelect | undefined,
@@ -19,14 +24,18 @@ export interface ITechnicianRepository {
   >(
     id: string,
     options?: TechnicianOptions<TSelect, TInclude>,
-  ): Promise<TechnicianProfile & Prisma.TechnicianProfileInclude | null | undefined>;
+  ): Promise<
+    (TechnicianProfile & Prisma.TechnicianProfileInclude) | null | undefined
+  >;
   findOneByUserId<
     TSelect extends TechnicianSelect | undefined,
     TInclude extends TechnicianInclude | undefined,
   >(
     userId: string,
     options?: TechnicianOptions<TSelect, TInclude>,
-  ): Promise<TechnicianProfile & Prisma.TechnicianProfileInclude | null | undefined>;
+  ): Promise<
+    (TechnicianProfile & Prisma.TechnicianProfileInclude) | null | undefined
+  >;
   createOne<
     TSelect extends TechnicianSelect | undefined,
     TInclude extends TechnicianInclude | undefined,
