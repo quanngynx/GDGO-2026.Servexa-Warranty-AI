@@ -1,4 +1,4 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 import { repairEscalationPayloadSchema } from "@servexa-warranty-ai/ai-contracts";
 
 import { RepairCaseService } from "@/modules/v1/asc-center/services/repair-case.service";

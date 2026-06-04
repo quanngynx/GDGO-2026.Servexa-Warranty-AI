@@ -1,5 +1,5 @@
 import type { HitlActionKind } from "@servexa-warranty-ai/ai-contracts";
-import type { AiHitlActionKind } from "@servexa-warranty-ai/db/prisma/client";
+import type { AiHitlActionKind } from "@/core/infra/prisma/generated/enums";
 
 import { customerResponseDraftHandler } from "@/modules/v1/ai/hitl/handlers/customer-response-draft.handler";
 import { repairEscalationHandler } from "@/modules/v1/ai/hitl/handlers/repair-escalation.handler";

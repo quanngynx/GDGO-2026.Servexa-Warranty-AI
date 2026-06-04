@@ -1,4 +1,4 @@
-import type { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 
 /** Coerce validated JSON-serializable values for Prisma JSON columns. */
 export function toInputJsonValue(value: unknown): Prisma.InputJsonValue {

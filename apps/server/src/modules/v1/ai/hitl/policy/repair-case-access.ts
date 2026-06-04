@@ -1,4 +1,4 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";

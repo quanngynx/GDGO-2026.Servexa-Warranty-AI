@@ -1,4 +1,4 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 import { customerResponseDraftPayloadSchema } from "@servexa-warranty-ai/ai-contracts";
 
 export async function customerResponseDraftHandler(

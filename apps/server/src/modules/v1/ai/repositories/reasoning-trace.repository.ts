@@ -1,9 +1,9 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 import {
   Prisma,
   ReasoningTraceStatus,
   ReasoningTraceStepType,
-} from "@servexa-warranty-ai/db/prisma/client";
+} from "@/core/infra/prisma/generated/client";
 
 import type {
   CreateReasoningTraceInput,

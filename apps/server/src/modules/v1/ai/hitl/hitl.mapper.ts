@@ -1,4 +1,4 @@
-import type { AiHumanApprovalRequest } from "@servexa-warranty-ai/db/prisma/client";
+import type { AiHumanApprovalRequest } from "@/core/infra/prisma/generated/client";
 import {
   DEFAULT_HITL_APPROVAL_OPTIONS,
   type HitlActionKind,

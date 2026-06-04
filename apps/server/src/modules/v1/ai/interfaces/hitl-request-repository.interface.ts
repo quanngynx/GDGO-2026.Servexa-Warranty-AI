@@ -3,7 +3,7 @@ import type {
   AiHitlRequestStatus,
   AiHitlRiskLevel,
   Prisma,
-} from "@servexa-warranty-ai/db/prisma/client";
+} from "@/core/infra/prisma/generated/client";
 
 export type CreateHitlRequestInput = {
   kind: AiHitlActionKind;

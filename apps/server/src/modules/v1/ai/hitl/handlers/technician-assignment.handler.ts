@@ -1,4 +1,4 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 import { technicianAssignmentPayloadSchema } from "@servexa-warranty-ai/ai-contracts";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";

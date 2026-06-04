@@ -1,7 +1,7 @@
 import { logger } from "@/core/logging";
 import type { ReasoningTrace, ReasoningTraceStreamEvent } from "@servexa-warranty-ai/ai-contracts";
 import { reasoningTraceStreamEventSchema } from "@servexa-warranty-ai/event-contracts";
-import { IoredisService } from "@servexa-warranty-ai/db";
+import { IoredisService } from "@/core/infra/ioredis/ioredis-service";;
 
 import {
   reasoningTraceService,
