@@ -1,60 +1,45 @@
-import { Router, type IRouter } from 'express'
+import { Router, type IRouter } from "express";
 
-import { authenticateMiddleware} from '@/middlewares'
+import { authenticatedWithPermissions } from "@/middlewares/authz.middleware";
 
-import { TotalWarehouseController } from '../controllers/total-warehouse.controller'
-import { TotalWarehouseRepository } from '../repositories/total-warehouse.repository'
-import { TotalWarehouseService } from '../services/total-warehouse.service'
+import { TotalWarehouseController } from "../controllers/total-warehouse.controller";
+import { TotalWarehouseRepository } from "../repositories/total-warehouse.repository";
+import { TotalWarehouseService } from "../services/total-warehouse.service";
+import { catalogRead, catalogWrite } from "../use-cases/permission.uc";
 
-const totalWarehouseRoute: IRouter = Router()
+const totalWarehouseRoute: IRouter = Router();
 
-const totalWarehouseRepository = new TotalWarehouseRepository()
-const totalWarehouseService = new TotalWarehouseService(totalWarehouseRepository)
-const totalWarehouseController = new TotalWarehouseController(totalWarehouseService)
+const totalWarehouseRepository = new TotalWarehouseRepository();
+const totalWarehouseService = new TotalWarehouseService(
+  totalWarehouseRepository,
+);
+const totalWarehouseController = new TotalWarehouseController(
+  totalWarehouseService,
+);
 
-totalWarehouseRoute.use(authenticateMiddleware)
+totalWarehouseRoute.use(...authenticatedWithPermissions);
 
-/**
- * Get all total warehouses
- * @route GET /v1/product-catalog/total-warehouses
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.get('/', totalWarehouseController.findAll)
-/**
- * Get a total warehouse by ID
- * @route GET /v1/product-catalog/total-warehouses/:totalWarehouseId
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.get('/:totalWarehouseId', totalWarehouseController.findOneById)
-/**
- * Create a total warehouse
- * @route POST /v1/product-catalog/total-warehouses
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.post('/', totalWarehouseController.create)
-/**
- * Replace a total warehouse
- * @route PUT /v1/product-catalog/total-warehouses/:totalWarehouseId
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.put('/:totalWarehouseId', totalWarehouseController.replace)
-/**
- * Update a total warehouse
- * @route PATCH /v1/product-catalog/total-warehouses/:totalWarehouseId
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.patch('/:totalWarehouseId', totalWarehouseController.update)
-/**
- * Delete a total warehouse
- * @route DELETE /v1/product-catalog/total-warehouses/:totalWarehouseId
- * @access Private
- * @returns {Promise<void>}
- */
-totalWarehouseRoute.delete('/:totalWarehouseId', totalWarehouseController.delete)
+totalWarehouseRoute.get("/", catalogRead, totalWarehouseController.findAll);
+totalWarehouseRoute.get(
+  "/:totalWarehouseId",
+  catalogRead,
+  totalWarehouseController.findOneById,
+);
+totalWarehouseRoute.post("/", catalogWrite, totalWarehouseController.create);
+totalWarehouseRoute.put(
+  "/:totalWarehouseId",
+  catalogWrite,
+  totalWarehouseController.replace,
+);
+totalWarehouseRoute.patch(
+  "/:totalWarehouseId",
+  catalogWrite,
+  totalWarehouseController.update,
+);
+totalWarehouseRoute.delete(
+  "/:totalWarehouseId",
+  catalogWrite,
+  totalWarehouseController.delete,
+);
 
-export default totalWarehouseRoute
+export default totalWarehouseRoute;

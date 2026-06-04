@@ -1,4 +1,4 @@
-import type { Model, Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { type Model, Prisma } from '@/core/infra/prisma/generated/client'
 import type { CreateModelDto, ReplaceModelDto, UpdateModelDto } from '../dtos/model.dto'
 import type { FindAllModelsInput } from '../services/model.service'
 import type { BasePagination } from '@/types/pagination'

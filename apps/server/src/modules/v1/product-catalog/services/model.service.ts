@@ -1,4 +1,4 @@
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { Prisma, type Model } from '@/core/infra/prisma/generated/client'
 
 import { HTTP_RESPONSE_CODE } from '@/core/constants/http.constant'
 import { createOperationalError } from '@/middlewares/error-middleware'
@@ -10,6 +10,7 @@ import type { IModelRepository } from '../interfaces/model-repository.interface'
 import type { IModelService } from '../interfaces/model-service.interface'
 import { CategoryRepository } from '../repositories/category.repository'
 import { ModelRepository } from '../repositories/model.repository'
+import type { BasePagination } from 'src/types/pagination'
 
 const modelSelect = {
   id: true,
@@ -102,7 +103,7 @@ export class ModelService implements IModelService {
     }
   }
 
-  async findAll(query: FindAllModelsInput) {
+  async findAll(query: FindAllModelsInput): Promise<{ items: (Model & Prisma.ModelInclude)[] | null, pagination: BasePagination }> {
     const where: Prisma.ModelWhereInput = {
       deletedAt: null,
       ...(query.status ? { status: query.status } : {}),
@@ -136,7 +137,7 @@ export class ModelService implements IModelService {
     }
   }
 
-  async findOneById(modelId: string) {
+  async findOneById(modelId: string): Promise<Model & Prisma.ModelInclude | null> {
     const found = await this.modelRepository.findOneById(modelId, {
       select: modelDetailSelect,
     })
@@ -199,7 +200,7 @@ export class ModelService implements IModelService {
     return data
   }
 
-  async create(input: CreateModelDto) {
+  async create(input: CreateModelDto): Promise<Model & Prisma.ModelInclude | null> {
     const duplicate = (await this.modelRepository.findOneByModelCode(input.modelCode, {
       select: { id: true },
     })) as { id: string } | null
@@ -213,7 +214,7 @@ export class ModelService implements IModelService {
     return this.modelRepository.createOne(this.buildCreateData(input), { select: modelSelect })
   }
 
-  async update(modelId: string, input: ReplaceModelDto | UpdateModelDto) {
+  async update(modelId: string, input: ReplaceModelDto | UpdateModelDto): Promise<Model & Prisma.ModelInclude | null> {
     const existing = (await this.modelRepository.findOneById(modelId, {
       select: { id: true, modelCode: true, deletedAt: true },
     })) as { id: string; modelCode: string; deletedAt: Date | null } | null
@@ -259,7 +260,7 @@ export class ModelService implements IModelService {
     return { success: true as const }
   }
 
-  async restore(modelId: string) {
+  async restore(modelId: string): Promise<Model & Prisma.ModelInclude | null> {
     const existing = (await this.modelRepository.findOneById(modelId, {
       select: { id: true, deletedAt: true },
     })) as { id: string; deletedAt: Date | null } | null

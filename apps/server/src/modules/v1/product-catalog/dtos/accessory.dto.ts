@@ -18,8 +18,8 @@ import {
   updateTotalWarehouseStockSchema,
 } from '../validations'
 import type { BasePagination } from 'src/types/pagination'
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
-import type { AccessoryStatus as AccessoryStatusType } from '@servexa-warranty-ai/db/prisma/client'
+import { Prisma } from '@/core/infra/prisma/generated/client'
+import type { AccessoryStatus as AccessoryStatusType } from '@/core/infra/prisma/generated/client'
 
 export type FindAllAccessoriesInput = z.infer<typeof findAllAccessoriesSchema>
 export type FindAllAccessoryStocksInput = z.infer<typeof findAllAccessoryStocksSchema>

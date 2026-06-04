@@ -1,4 +1,4 @@
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { Prisma } from '@/core/infra/prisma/generated/client'
 import type { ImportModelRow } from '..';
 
 export type ImportError = { row: number; message: string }

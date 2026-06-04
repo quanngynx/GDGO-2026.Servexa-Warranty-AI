@@ -1,4 +1,4 @@
-import type { Prisma, Solution } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma, type Solution } from "@/core/infra/prisma/generated/client";
 
 type SolutionSelect = Prisma.SolutionSelect;
 type SolutionInclude = Prisma.SolutionInclude;

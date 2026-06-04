@@ -1,4 +1,4 @@
-import type { Model, Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { type Model, Prisma } from '@/core/infra/prisma/generated/client'
 
 type ModelSelect = Prisma.ModelSelect
 type ModelInclude = Prisma.ModelInclude

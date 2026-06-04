@@ -1,5 +1,5 @@
 import { env } from "@servexa-warranty-ai/env/server";
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma, type Accessory } from "@/core/infra/prisma/generated/client";
 
 import { HTTP_RESPONSE_CODE } from "@/core/constants/http.constant";
 import { createOperationalError } from "@/middlewares/error-middleware";
@@ -22,9 +22,12 @@ import type {
   UpdateAccessoryDto,
   UpdateAscAccessoryStockDto,
   UpdateTotalWarehouseStockDto,
+  ResponseCreateAccessoryDto,
+  ResponseUpdateAccessoryDto,
 } from "../dtos/accessory.dto";
 import type { IAccessoryService } from "../interfaces/accessory-service.interface";
 import { AccessoryRepository } from "../repositories/accessory.repository";
+import type { BasePagination } from "src/types/pagination";
 
 const accessorySelect = {
   id: true,
@@ -85,7 +88,7 @@ export class AccessoryService implements IAccessoryService {
     private readonly accessoryRepository: AccessoryRepository = new AccessoryRepository(),
   ) {}
 
-  async findAll(query: FindAllAccessoriesInput) {
+  async findAll(query: FindAllAccessoriesInput): Promise<{ items: (Accessory & Prisma.AccessoryInclude)[] | null, pagination: BasePagination }> {
     const where: Prisma.AccessoryWhereInput = {
       ...(query.status ? { status: query.status } : {}),
       ...(query.categoryId ? { categoryId: query.categoryId } : {}),
@@ -120,7 +123,7 @@ export class AccessoryService implements IAccessoryService {
     };
   }
 
-  async findOneById(accessoryId: string) {
+  async findOneById(accessoryId: string): Promise<Accessory & Prisma.AccessoryInclude | null> {
     const found = await this.accessoryRepository.findOneById(accessoryId, {
       select: {
         ...accessorySelect,
@@ -147,7 +150,7 @@ export class AccessoryService implements IAccessoryService {
     return found;
   }
 
-  async create(input: CreateAccessoryDto) {
+  async create(input: CreateAccessoryDto): Promise<ResponseCreateAccessoryDto> {
     const duplicate = await this.accessoryRepository.findOneByPartNumber(
       input.partNumber,
       {
@@ -192,7 +195,7 @@ export class AccessoryService implements IAccessoryService {
   async update(
     accessoryId: string,
     input: ReplaceAccessoryDto | UpdateAccessoryDto,
-  ) {
+  ): Promise<ResponseUpdateAccessoryDto> {
     const existing = await this.accessoryRepository.findOneById(accessoryId, {
       select: { id: true, partNumber: true },
     });

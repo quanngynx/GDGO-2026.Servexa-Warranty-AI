@@ -1,4 +1,4 @@
-import { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { Prisma, type Category } from '@/core/infra/prisma/generated/client'
 
 import { HTTP_RESPONSE_CODE } from '@/core/constants/http.constant'
 import { createOperationalError } from '@/middlewares/error-middleware'
@@ -8,6 +8,7 @@ import type { CreateCategoryDto, ReplaceCategoryDto, UpdateCategoryDto } from '.
 import type { ICategoryRepository } from '../interfaces/category-repository.interface'
 import type { ICategoryService } from '../interfaces/category-service.interface'
 import { CategoryRepository } from '../repositories/category.repository'
+import type { BasePagination } from 'src/types/pagination'
 
 const categorySelect = {
   id: true,
@@ -32,7 +33,7 @@ export type FindAllCategoriesInput = {
 export class CategoryService implements ICategoryService {
   constructor(private readonly categoryRepository: ICategoryRepository = new CategoryRepository()) {}
 
-  async findAll(query: FindAllCategoriesInput) {
+  async findAll(query: FindAllCategoriesInput): Promise<{ items: (Category & Prisma.CategoryInclude)[] | null, pagination: BasePagination }> {
     const where: Prisma.CategoryWhereInput = {
       ...(query.status ? { status: query.status } : {}),
       ...(query.search
@@ -64,7 +65,7 @@ export class CategoryService implements ICategoryService {
     }
   }
 
-  async findOneById(categoryId: string) {
+  async findOneById(categoryId: string): Promise<Category & Prisma.CategoryInclude | null> {
     const found = await this.categoryRepository.findOneById(categoryId, {
       select: categorySelect,
     })
@@ -76,7 +77,7 @@ export class CategoryService implements ICategoryService {
     return found
   }
 
-  async create(input: CreateCategoryDto) {
+  async create(input: CreateCategoryDto): Promise<Category & Prisma.CategoryInclude | null> {
     const duplicate = (await this.categoryRepository.findOneByName(input.name, {
       select: { id: true },
     })) as { id: string } | null
@@ -97,7 +98,7 @@ export class CategoryService implements ICategoryService {
     )
   }
 
-  async update(categoryId: string, input: ReplaceCategoryDto | UpdateCategoryDto) {
+  async update(categoryId: string, input: ReplaceCategoryDto | UpdateCategoryDto): Promise<Category & Prisma.CategoryInclude | null> {
     const existing = (await this.categoryRepository.findOneById(categoryId, {
       select: { id: true, name: true },
     })) as { id: string; name: string } | null

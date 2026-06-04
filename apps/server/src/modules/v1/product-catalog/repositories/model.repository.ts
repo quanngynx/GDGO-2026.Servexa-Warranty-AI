@@ -1,5 +1,5 @@
-import prisma from '@servexa-warranty-ai/db'
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import prisma from '@/core/infra/prisma'
+import { Prisma } from '@/core/infra/prisma/generated/client'
 
 import type { IModelRepository, ModelExportRow, ModelOptions } from '../interfaces/model-repository.interface'
 

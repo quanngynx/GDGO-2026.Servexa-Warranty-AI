@@ -1,8 +1,8 @@
-import type {
+import {
   Prisma,
-  WarrantyPolicy,
-  WarrantyType,
-} from "@servexa-warranty-ai/db/prisma/client";
+  type WarrantyPolicy,
+  type WarrantyType,
+} from "@/core/infra/prisma/generated/client";
 
 type WarrantyPolicySelect = Prisma.WarrantyPolicySelect;
 type WarrantyPolicyInclude = Prisma.WarrantyPolicyInclude;
