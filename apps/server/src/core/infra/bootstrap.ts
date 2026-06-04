@@ -12,7 +12,11 @@ import { ErrorHandler } from "../helpers/error-handling.helper";
 import { errorHandler } from "@/middlewares/error-middleware";
 import mainRouter from "@/routes";
 
-import prisma, { IoredisService } from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
+import {
+  connectBootstrapRedis,
+  getBootstrapRedis,
+} from "@/core/infra/ioredis/redis-bootstrap";
 import { logger } from "../logging";
 import { corsOptions } from "@/configs/cors";
 import {
@@ -64,14 +68,16 @@ export class AppBootStrap {
     await prisma.$connect();
     logger.info(`[${env.BRANDING_NAME}] Database connected successfully`);
 
-    const redisService = new IoredisService();
     try {
-      await redisService.connect();
+      await connectBootstrapRedis();
       logger.info(`[${env.BRANDING_NAME}] Redis connected successfully`);
     } catch (error) {
       logger.error(`[${env.BRANDING_NAME}] Redis connection failed`, {
         error: error instanceof Error ? error.message : String(error),
       });
+      if (env.NODE_ENV === "production") {
+        throw error;
+      }
     }
   }
 
@@ -83,6 +89,28 @@ export class AppBootStrap {
     // Public routes (specific routes first)
     this.app.get("/", (_req, res) => {
       res.status(200).send("OK");
+    });
+
+    this.app.get("/health", async (_req, res) => {
+      let dbOk = false;
+      try {
+        await prisma.$queryRaw`SELECT 1`;
+        dbOk = true;
+      } catch {
+        dbOk = false;
+      }
+
+      const redis = getBootstrapRedis();
+      const redisOk = redis ? await redis.healthCheck() : false;
+      const redisRequired = env.NODE_ENV === "production";
+      const ok = dbOk && (!redisRequired || redisOk);
+
+      res.status(ok ? 200 : 503).json({
+        status: ok ? "ok" : "degraded",
+        db: dbOk,
+        redis: redisOk,
+        timestamp: new Date().toISOString(),
+      });
     });
     this.app.use("", mainRouter);
 
