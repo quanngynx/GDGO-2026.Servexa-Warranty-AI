@@ -1,4 +1,4 @@
-import { IoredisService } from '@servexa-warranty-ai/db'
+import { IoredisService } from "@/core/infra/ioredis/ioredis-service";
 import { env } from '@servexa-warranty-ai/env/server'
 import JWT, { type JwtPayload, type VerifyErrors } from 'jsonwebtoken'
 
