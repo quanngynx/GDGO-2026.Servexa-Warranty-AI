@@ -33,7 +33,7 @@ const {
   mockUserRoleCreate: vi.fn(),
 }))
 
-vi.mock('@servexa-warranty-ai/db', () => ({
+vi.mock('@/core/infra/prisma', () => ({
   default: {
     roleClosure: {
       findMany: mockRoleClosureFindMany,

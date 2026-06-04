@@ -17,7 +17,7 @@ const mockSet = vi.fn().mockResolvedValue(undefined)
 const mockDelete = vi.fn().mockResolvedValue(1)
 const mockFindAllByPattern = vi.fn()
 
-vi.mock('@servexa-warranty-ai/db', () => ({
+vi.mock('@/core/infra/ioredis/ioredis-service', () => ({
   IoredisService: vi.fn().mockImplementation(() => ({
     connect: mockConnect,
     get: mockGet,

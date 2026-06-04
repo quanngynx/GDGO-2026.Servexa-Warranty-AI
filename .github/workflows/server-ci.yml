@@ -12,6 +12,29 @@ jobs:
   server-ci:
     name: Server CI
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
       NODE_ENV: test
       PORT: "3000"
@@ -22,6 +45,8 @@ jobs:
       CORS_ORIGIN: http://localhost:3001
       CORS_ORIGIN_WEB: http://localhost:3001
       TEMP_REFRESH_TOKEN_SECRET: ci-test-refresh-token-secret
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: "6379"
 
     steps:
       - name: Checkout source
@@ -47,3 +72,24 @@ jobs:
 
       - name: Build server
         run: pnpm --filter server build
+
+      - name: Apply database migrations
+        run: pnpm --filter server exec prisma migrate deploy
+
+      - name: Smoke test production start
+        working-directory: apps/server
+        run: |
+          node dist/index.mjs &
+          pid=$!
+          for i in $(seq 1 30); do
+            if curl -sf "http://127.0.0.1:${PORT}/health" >/dev/null; then
+              kill "$pid" 2>/dev/null || true
+              wait "$pid" 2>/dev/null || true
+              exit 0
+            fi
+            sleep 1
+          done
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          echo "Server did not respond on port ${PORT}"
+          exit 1

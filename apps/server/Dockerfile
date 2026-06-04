@@ -80,8 +80,6 @@ RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=loc
   && useradd --uid 1001 --gid nodejs --shell /usr/sbin/nologin --create-home nodejs
 
 ENV NODE_ENV=production
-# Workspace packages are TypeScript sources resolved at runtime (see tsdown externals).
-ENV NODE_OPTIONS="--experimental-strip-types --experimental-specifier-resolution=node"
 STOPSIGNAL SIGTERM
 
 WORKDIR /app
@@ -90,11 +88,6 @@ COPY --from=build --chown=nodejs:nodejs /app/package.json ./package.json
 COPY --from=build --chown=nodejs:nodejs /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=build --chown=nodejs:nodejs /app/.npmrc ./.npmrc
 COPY --from=build --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=build --chown=nodejs:nodejs /app/packages/db ./packages/db
-COPY --from=build --chown=nodejs:nodejs /app/packages/env ./packages/env
-COPY --from=build --chown=nodejs:nodejs /app/packages/proto ./packages/proto
-COPY --from=build --chown=nodejs:nodejs /app/packages/ai-contracts ./packages/ai-contracts
-COPY --from=build --chown=nodejs:nodejs /app/packages/event-contracts ./packages/event-contracts
 COPY --from=build --chown=nodejs:nodejs /app/apps/server/dist ./apps/server/dist
 COPY --from=build --chown=nodejs:nodejs /app/apps/server/package.json ./apps/server/package.json
 
@@ -108,7 +101,7 @@ WORKDIR /app/apps/server
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
-  CMD ["node", "-e", "const p=Number(process.env.PORT||3000);fetch(`http://127.0.0.1:${p}/`).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+  CMD ["node", "-e", "const p=Number(process.env.PORT||3000);fetch(`http://127.0.0.1:${p}/health`).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "dist/index.mjs"]
