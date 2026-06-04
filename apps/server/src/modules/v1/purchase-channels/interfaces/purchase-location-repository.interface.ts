@@ -1,4 +1,4 @@
-import type { Prisma } from '@servexa-warranty-ai/db/prisma/client'
+import { Prisma } from '@/core/infra/prisma/generated/client'
 
 export type PurchaseLocationOptions<
   TSelect extends Prisma.PurchaseLocationSelect | undefined,
