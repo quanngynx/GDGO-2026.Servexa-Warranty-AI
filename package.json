@@ -40,7 +40,7 @@
     "@cloudflare/workers-types": "^4.20251213.0",
     "@servexa-warranty-ai/config": "workspace:*",
     "@types/node": "catalog:",
-    "turbo": "^2.8.12",
+    "turbo": "^2.9.14",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.28.1"
