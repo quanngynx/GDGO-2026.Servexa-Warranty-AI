@@ -43,7 +43,6 @@ COPY packages/infra/package.json packages/infra/
 COPY packages/proto/package.json packages/proto/
 COPY packages/ui/package.json packages/ui/
 RUN mkdir -p node_modules/@servexa-warranty-ai \
-  && ln -s ../../packages/db node_modules/@servexa-warranty-ai/db \
   && ln -s ../../packages/env node_modules/@servexa-warranty-ai/env \
   && ln -s ../../packages/proto node_modules/@servexa-warranty-ai/proto \
   && ln -s ../../packages/ai-contracts node_modules/@servexa-warranty-ai/ai-contracts \
@@ -58,17 +57,15 @@ ENV DATABASE_URL="postgresql://build:build@127.0.0.1:5432/build?schema=public"
 COPY apps/server apps/server
 COPY packages/ai-contracts packages/ai-contracts
 COPY packages/config packages/config
-COPY packages/db packages/db
 COPY packages/env packages/env
 COPY packages/event-contracts packages/event-contracts
 COPY packages/proto packages/proto
 RUN mkdir -p node_modules/@servexa-warranty-ai \
-  && ln -s ../../packages/db node_modules/@servexa-warranty-ai/db \
   && ln -s ../../packages/env node_modules/@servexa-warranty-ai/env \
   && ln -s ../../packages/proto node_modules/@servexa-warranty-ai/proto \
   && ln -s ../../packages/ai-contracts node_modules/@servexa-warranty-ai/ai-contracts \
   && ln -s ../../packages/event-contracts node_modules/@servexa-warranty-ai/event-contracts
-RUN pnpm --filter @servexa-warranty-ai/db db:generate
+RUN pnpm --filter server db:generate
 RUN pnpm turbo run build --filter=server...
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
   pnpm prune --prod

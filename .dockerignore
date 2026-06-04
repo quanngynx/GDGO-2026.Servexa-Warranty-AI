@@ -12,9 +12,11 @@
 apps/server/.env
 apps/server/.env.production
 
-# Apps not required for the server image
+# Apps not required for the server image (keep package.json for pnpm frozen-lockfile)
 apps/web
+!apps/web/package.json
 apps/fumadocs
+!apps/fumadocs/package.json
 apps/ai-services
 
 # Docs, tests, and local tooling
