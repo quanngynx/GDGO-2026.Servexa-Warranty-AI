@@ -8,7 +8,7 @@ import {
   type HitlRequest,
   type HitlResumeResponse,
 } from "@servexa-warranty-ai/ai-contracts";
-import type { AiHitlActionKind, AiHitlRiskLevel } from "@servexa-warranty-ai/db/prisma/client";
+import type { AiHitlActionKind, AiHitlRiskLevel } from "@/core/infra/prisma/generated/client";
 
 import { env } from "@servexa-warranty-ai/env/server";
 

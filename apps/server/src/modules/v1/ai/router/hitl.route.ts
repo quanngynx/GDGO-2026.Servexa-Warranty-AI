@@ -18,9 +18,25 @@ hitlRoute.post(
   requirePermissions(HITL_CREATE_ANY_PERMISSIONS, { mode: "any" }),
   hitlController.createRequest,
 );
-hitlRoute.get("/requests", hitlController.listRequests);
-hitlRoute.get("/requests/:id", hitlController.getRequest);
-hitlRoute.post("/requests/:id/decision", hitlController.submitDecision);
-hitlRoute.post("/requests/:id/resume", hitlController.resumeGraph);
+hitlRoute.get(
+  "/requests",
+  requirePermissions(HITL_CREATE_ANY_PERMISSIONS, { mode: "any" }),
+  hitlController.listRequests,
+);
+hitlRoute.get(
+  "/requests/:id",
+  requirePermissions(HITL_CREATE_ANY_PERMISSIONS, { mode: "any" }),
+  hitlController.getRequest,
+);
+hitlRoute.post(
+  "/requests/:id/decision",
+  requirePermissions(HITL_CREATE_ANY_PERMISSIONS, { mode: "any" }),
+  hitlController.submitDecision,
+);
+hitlRoute.post(
+  "/requests/:id/resume",
+  requirePermissions(HITL_CREATE_ANY_PERMISSIONS, { mode: "any" }),
+  hitlController.resumeGraph,
+);
 
 export default hitlRoute;

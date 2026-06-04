@@ -1,8 +1,8 @@
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 
 import { google } from "@ai-sdk/google";
 import { embed } from "ai";
-import { Prisma } from "@servexa-warranty-ai/db/prisma/client";
+import { Prisma } from "@/core/infra/prisma/generated/client";
 import { sha256Hex } from "src/utils/encryption";
 // import { type Buffer } from "exceljs"
 

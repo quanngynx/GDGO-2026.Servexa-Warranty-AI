@@ -1,6 +1,6 @@
 import { google } from "@ai-sdk/google";
 import { embed } from "ai";
-import prisma from "@servexa-warranty-ai/db";
+import prisma from "@/core/infra/prisma";
 
 import { logger } from "@/core/logging";
 

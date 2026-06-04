@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { aiJobEnvelopeSchema } from "@servexa-warranty-ai/event-contracts";
-import { IoredisService } from "@servexa-warranty-ai/db";
+import { IoredisService } from "@/core/infra/ioredis/ioredis-service";;
 import { env } from "@servexa-warranty-ai/env/server";
 
 import type {
