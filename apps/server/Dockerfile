@@ -48,7 +48,8 @@ RUN mkdir -p node_modules/@servexa-warranty-ai \
   && ln -s ../../packages/ai-contracts node_modules/@servexa-warranty-ai/ai-contracts \
   && ln -s ../../packages/event-contracts node_modules/@servexa-warranty-ai/event-contracts
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
-  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai --ignore-scripts
+  pnpm install --frozen-lockfile --filter server... --filter servexa-warranty-ai --ignore-scripts \
+  && pnpm rebuild bcrypt sharp
 
 FROM deps AS build
 ENV CI=true
