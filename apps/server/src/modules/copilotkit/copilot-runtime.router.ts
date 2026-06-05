@@ -57,7 +57,8 @@ export function createCopilotKitRouter(): IRouter {
   const copilotHandler = createCopilotExpressHandler({
     mode: "single-route",
     runtime: getRuntime(),
-    basePath: "/api/copilotkit",
+    // Mounted at `/api/copilotkit` in bootstrap; path is relative to that mount.
+    basePath: "/",
   });
 
   const router = Router();

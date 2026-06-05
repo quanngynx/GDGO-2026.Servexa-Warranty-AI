@@ -50,6 +50,9 @@ export type EnvServer = Readonly<{
   /** Shared secret for worker → server internal knowledge ingest webhook. */
   AI_INTERNAL_INGEST_SECRET?: string | undefined;
 
+  /** Shared secret for `x-api-key` on `/` and `/health/deep` (required in production). */
+  PUBLIC_ROUTES_API_KEY?: string | undefined;
+
   AI_RAG_CONTEXT_ENABLED: boolean;
   AI_RAG_CONTEXT_TOP_K: number;
 
@@ -107,6 +110,8 @@ export const env = createEnv({
     AI_STREAM_MAXLEN_APPROX: z.coerce.number().int().positive().default(5000),
 
     AI_INTERNAL_INGEST_SECRET: z.string().min(8).optional(),
+
+    PUBLIC_ROUTES_API_KEY: z.string().min(8).optional(),
 
     /** When true, `completeUnaryPrompt` prepends top-k RAG snippets to the prompt (same DB as Prisma `ai_knowledge_*`). */
     AI_RAG_CONTEXT_ENABLED: envBoolean(false),

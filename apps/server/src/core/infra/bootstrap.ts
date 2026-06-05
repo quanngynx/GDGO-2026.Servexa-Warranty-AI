@@ -27,8 +27,10 @@ import {
 import { handleBootstrapAiChat } from "@/modules/v1/ai/helpers/bootstrap-ai-chat.helper";
 import { createCopilotKitRouter } from "@/modules/copilotkit/copilot-runtime.router";
 import { helmetConfig } from "@/configs/helmet";
+import { publicRoutesRateLimiter } from "@/configs/rate-limit";
 import { describeLangfuseConfig, initServerTelemetry } from "@/core/observability/telemetry";
 import { uploadDir } from "@/configs/upload-dir";
+import { publicRoutesApiKeyMiddleware } from "@/middlewares/api-key.middleware";
 
 export class AppBootStrap {
   public app: express.Express = express();
@@ -82,45 +84,56 @@ export class AppBootStrap {
   }
 
   private initializeRoutes(): void {
-    this.app.get("", (_req: Request, res: Response) => {
-      res.json({ status: "OK", timestamp: new Date().toISOString() });
+    const publicRateLimit = publicRoutesRateLimiter;
+
+    this.app.get("/health", publicRateLimit, (_req, res) => {
+      res.status(200).json({ status: "ok" });
     });
 
-    // Public routes (specific routes first)
-    this.app.get("/", (_req, res) => {
-      res.status(200).send("OK");
-    });
+    this.app.get(
+      "/health/deep",
+      publicRateLimit,
+      publicRoutesApiKeyMiddleware,
+      async (_req, res) => {
+        let dbOk = false;
+        try {
+          await prisma.$queryRaw`SELECT 1`;
+          dbOk = true;
+        } catch {
+          dbOk = false;
+        }
 
-    this.app.get("/health", async (_req, res) => {
-      let dbOk = false;
-      try {
-        await prisma.$queryRaw`SELECT 1`;
-        dbOk = true;
-      } catch {
-        dbOk = false;
-      }
+        const redis = getBootstrapRedis();
+        const redisOk = redis ? await redis.healthCheck() : false;
+        const redisRequired = env.NODE_ENV === "production";
+        const ok = dbOk && (!redisRequired || redisOk);
 
-      const redis = getBootstrapRedis();
-      const redisOk = redis ? await redis.healthCheck() : false;
-      const redisRequired = env.NODE_ENV === "production";
-      const ok = dbOk && (!redisRequired || redisOk);
+        res.status(ok ? 200 : 503).json({
+          status: ok ? "ok" : "degraded",
+          db: dbOk,
+          redis: redisOk,
+          timestamp: new Date().toISOString(),
+        });
+      },
+    );
 
-      res.status(ok ? 200 : 503).json({
-        status: ok ? "ok" : "degraded",
-        db: dbOk,
-        redis: redisOk,
-        timestamp: new Date().toISOString(),
-      });
-    });
-    this.app.use("", mainRouter);
+    this.app.get(
+      "/",
+      publicRateLimit,
+      publicRoutesApiKeyMiddleware,
+      (_req: Request, res: Response) => {
+        res.status(200).send("OK");
+      },
+    );
 
-    this.app.use(createCopilotKitRouter());
-    // Generic API route (catch-all for /api)
-    // this.app.use("/api", apikeyAuthMiddleware, (req: Request, res: Response, next: NextFunction) => {
-    //   res.json({ status: "Success!", message: "API is running", timestamp: new Date().toISOString() })
-    // })
+    this.app.use(mainRouter);
+    this.app.use("/api/copilotkit", createCopilotKitRouter());
 
     this.app.post("/ai", handleBootstrapAiChat);
+
+    this.app.use((_req, res) => {
+      res.status(404).json({ message: "Not found" });
+    });
   }
 
   private initializeErrorHandling(): void {

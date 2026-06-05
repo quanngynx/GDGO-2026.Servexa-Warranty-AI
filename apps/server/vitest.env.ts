@@ -9,6 +9,7 @@ const testEnvDefaults: Record<string, string> = {
   CORS_ORIGIN: "http://localhost:3001",
   CORS_ORIGIN_WEB: "http://localhost:3001",
   TEMP_REFRESH_TOKEN_SECRET: "vitest-refresh-token-secret",
+  PUBLIC_ROUTES_API_KEY: "vitest-public-routes-key",
 };
 
 for (const [key, value] of Object.entries(testEnvDefaults)) {

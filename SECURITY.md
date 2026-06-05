@@ -76,7 +76,8 @@ Understanding the system helps write accurate reports.
 - **Internal ingest:** Worker → server knowledge ingest uses `x-internal-ingest-key` (`AI_INTERNAL_INGEST_SECRET`). Treat this like an API secret; protect network path in production.
 - **File uploads:** Shared multer configuration enforces allowed MIME types, size limits, and upload paths under `uploads/` (path traversal rejected). Repair-case images use a dedicated, restricted uploader.
 - **Production runtime:** Server ships as bundled `dist/index.mjs` (tsdown). Do not rely on Node experimental TypeScript flags in production.
-- **Health:** `GET /health` checks database and Redis; production startup fails if Redis is required and unavailable.
+- **Public routes:** `GET /health` is a lightweight liveness probe (no auth). `GET /` and `GET /health/deep` require `x-api-key` matching `PUBLIC_ROUTES_API_KEY` (rate-limited; no JWT). Deep health checks database and Redis.
+- **Production Redis:** Startup fails if Redis is required and unavailable.
 
 For deeper runtime rules (Node vs Python, RAG corpus, job ownership), see [`documents/ai-runtime-policy.md`](documents/ai-runtime-policy.md).
 
