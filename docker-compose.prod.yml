@@ -56,6 +56,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    environment:
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_SECRET_ENV: ${INFISICAL_SECRET_ENV:-prod}
+      INFISICAL_SECRET_PATH: ${INFISICAL_SECRET_PATH:-/server}
+      INFISICAL_API_URL: ${INFISICAL_API_URL:-https://app.infisical.com}
+      INFISICAL_MACHINE_IDENTITY_ID: ${INFISICAL_MACHINE_IDENTITY_ID}
     networks:
       - server_internal
       - db_internal

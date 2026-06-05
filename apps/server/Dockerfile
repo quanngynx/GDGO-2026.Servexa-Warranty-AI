@@ -77,12 +77,20 @@ RUN npm --prefix /app/node_modules/bcrypt run install \
   && npm --prefix /app/node_modules/sharp run install
 
 FROM ${NODE_IMAGE}@${NODE_DIGEST} AS production
+
 RUN --mount=type=cache,id=apt-production-cache,target=/var/cache/apt,sharing=locked \
   apt-get update \
   && apt-get install -y --no-install-recommends \
     dumb-init \
     openssl \
     ca-certificates \
+    curl \
+    bash \
+    gnupg \
+  && curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | bash \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends infisical \
+  && infisical --version \
   && rm -rf /var/lib/apt/lists/* \
   && groupadd --gid 1001 nodejs \
   && useradd --uid 1001 --gid nodejs --shell /usr/sbin/nologin --create-home nodejs
@@ -98,9 +106,11 @@ COPY --from=build --chown=nodejs:nodejs /app/.npmrc ./.npmrc
 COPY --from=build --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=build --chown=nodejs:nodejs /app/apps/server/dist ./apps/server/dist
 COPY --from=build --chown=nodejs:nodejs /app/apps/server/package.json ./apps/server/package.json
+COPY --chown=nodejs:nodejs apps/server/docker-entrypoint.infisical.sh ./apps/server/docker-entrypoint.infisical.sh
 
 RUN mkdir -p apps/server/uploads apps/server/logs \
-  && chown -R nodejs:nodejs apps/server/uploads apps/server/logs
+  && chown -R nodejs:nodejs apps/server/uploads apps/server/logs \
+  && chmod +x apps/server/docker-entrypoint.infisical.sh
 
 USER nodejs
 
@@ -112,4 +122,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
   CMD ["node", "-e", "const p=Number(process.env.PORT||3000);fetch(`http://127.0.0.1:${p}/health`).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/index.mjs"]
+CMD ["./docker-entrypoint.infisical.sh"]
