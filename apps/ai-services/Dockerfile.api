@@ -9,15 +9,24 @@ ENV PORT=8081
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
+    ca-certificates \
+    bash \
+  && curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | bash \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends infisical \
+  && infisical --version \
   && rm -rf /var/lib/apt/lists/*
 
 COPY apps/ai-services/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY apps/ai-services ./apps/ai-services
+COPY apps/ai-services/docker-entrypoint.infisical.sh ./apps/ai-services/docker-entrypoint.infisical.sh
+RUN chmod +x ./apps/ai-services/docker-entrypoint.infisical.sh
 
 WORKDIR /app/apps/ai-services
 
 EXPOSE ${PORT}
 
-CMD ["sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port ${PORT}"]
+ENTRYPOINT ["/app/apps/ai-services/docker-entrypoint.infisical.sh"]
+CMD ["sh", "-c", "uvicorn apps/ai-services/src.main:app --host 0.0.0.0 --port ${PORT}"]

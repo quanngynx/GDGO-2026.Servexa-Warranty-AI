@@ -1,8 +1,18 @@
 substitutions:
-  _REGION: asia-southeast1
+  _REGION: us-central1
   _SERVICE_NAME: servexa-ai-services
   _VPC_NETWORK: default
   _VPC_SUBNET: default
+  _SERVICE_ACCOUNT_NAME: servexa-cloud-build-deployer
+
+  _APP_ENV: production
+  _PORT: "8081"
+
+  _INFISICAL_SECRET_ENV: prod
+  _INFISICAL_SECRET_PATH: /ai-api
+  _INFISICAL_API_URL: https://app.infisical.com
+  _INFISICAL_PROJECT_ID: your-infisical-project-id
+  _INFISICAL_MACHINE_IDENTITY_ID: your-infisical-machine-identity-id
 
 steps:
   - name: gcr.io/cloud-builders/docker
@@ -32,7 +42,7 @@ steps:
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
-      - --port=8081
+      - --port=${_PORT}
       - --memory=1Gi
       - --cpu=1
       - --min-instances=0
@@ -40,8 +50,8 @@ steps:
       - --vpc-network=${_VPC_NETWORK}
       - --vpc-subnet=${_VPC_SUBNET}
       - --vpc-egress=private-ranges-only
-      - --set-env-vars=APP_ENV=production
-      - --set-secrets=DATABASE_URL=AI_DATABASE_URL:latest,AI_REDIS_URL=AI_REDIS_URL:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest
+      - --service-account=${_SERVICE_ACCOUNT_NAME}@$PROJECT_ID.iam.gserviceaccount.com
+      - --set-env-vars=APP_ENV=${_APP_ENV},PORT=${_PORT},SERVICE_ACCOUNT_NAME=${_SERVICE_ACCOUNT_NAME},INFISICAL_PROJECT_ID=${_INFISICAL_PROJECT_ID},INFISICAL_SECRET_ENV=${_INFISICAL_SECRET_ENV},INFISICAL_SECRET_PATH=${_INFISICAL_SECRET_PATH},INFISICAL_API_URL=${_INFISICAL_API_URL},INFISICAL_MACHINE_IDENTITY_ID=${_INFISICAL_MACHINE_IDENTITY_ID}
 
 images:
   - gcr.io/$PROJECT_ID/servexa-ai-services:$COMMIT_SHA

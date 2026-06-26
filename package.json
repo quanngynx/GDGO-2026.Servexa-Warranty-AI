@@ -12,7 +12,7 @@
     "check-types": "turbo check-types",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
-    "dev:docker-compose":"docker compose -f docker-compose.yml up -d --force-recreate postgres redis",
+    "dev:docker-compose": "docker compose -f docker-compose.yml up -d --force-recreate postgres redis",
     "pull:server:docker": "docker compose --env-file .env.production -f docker-compose.prod.yml pull server",
     "dev:server:docker": "docker compose -f docker-compose.prod.yml up -d --force-recreate postgres server",
     "db:push": "turbo -F @servexa-warranty-ai/db db:push",
@@ -43,5 +43,5 @@
     "turbo": "^2.9.14",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@10.28.1"
+  "packageManager": "pnpm@11.5.2"
 }

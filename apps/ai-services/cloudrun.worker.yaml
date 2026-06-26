@@ -5,7 +5,7 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccountName: ai-worker-sa
+      serviceAccountName: ${SERVICE_ACCOUNT_NAME}
       containers:
         - image: gcr.io/PROJECT_ID/ai-worker-service:latest
           env:
