@@ -12,6 +12,7 @@ import {
 import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
 import { useOperationalContextPatch } from '@/features/ai-copilot/context/operational-context-provider'
+import { DatePickerWithRange } from "@servexa-warranty-ai/ui/components/date-picker";
 
 type FilterOption = { label: string; value: string }
 
@@ -40,6 +41,32 @@ export function RepairCasesTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const { setOperationalContext, clearOperationalContext } = useOperationalContextPatch();
+
+  const dateFromStr = search.dateFrom as string | undefined;
+  const dateToStr = search.dateTo as string | undefined;
+  const dateRange = {
+    from: dateFromStr ? new Date(dateFromStr) : undefined,
+    to: dateToStr ? new Date(dateToStr) : undefined,
+  };
+
+  const handleDateRangeChange = (value: { from?: Date; to?: Date } | undefined) => {
+    navigate({
+      search: (prev) => {
+        const next = { ...prev } as Record<string, unknown>;
+        if (value?.from) {
+          next.dateFrom = value.from.toISOString();
+        } else {
+          delete next.dateFrom;
+        }
+        if (value?.to) {
+          next.dateTo = value.to.toISOString();
+        } else {
+          delete next.dateTo;
+        }
+        return next;
+      },
+    });
+  };
 
   const {
     columnFilters,
@@ -154,7 +181,13 @@ export function RepairCasesTable({
               ]
             : []),
         ]}
-      />
+      >
+        <DatePickerWithRange 
+          value={dateRange} 
+          onChange={handleDateRangeChange}
+          placeholder="Filter by created date" 
+        />
+      </DataTableToolbar>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

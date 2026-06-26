@@ -41,6 +41,8 @@ export function RepairCasesManagement() {
     search: search.search || undefined,
     status: search.status?.[0] as RepairCaseStatus | undefined,
     ascCenterId: search.ascCenterId?.[0],
+    dateFrom: search.dateFrom,
+    dateTo: search.dateTo,
   })
 
   const repairCases = data?.metadata.items ?? []
@@ -73,7 +75,7 @@ export function RepairCasesManagement() {
         </div>
       </Header>
 
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+      <Main className='flex flex-1 flex-col gap-4 sm:gap-4 pb-2'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Repair Cases</h2>

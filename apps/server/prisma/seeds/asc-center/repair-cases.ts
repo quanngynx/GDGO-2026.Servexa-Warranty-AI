@@ -1,4 +1,4 @@
-import prisma from "../..";
+import prisma from '../../../src/core/infra/prisma';
 import {
   FoodSafetyCompliance,
   HouseholdProductType,
@@ -9,7 +9,7 @@ import {
   SealIntegrityStatus,
   WarrantyForm,
   WarrantyServiceType,
-} from "../../../prisma/generated/enums";
+} from "../../../src/core/infra/prisma/generated/enums";
 
 export type SeedRepairCasesOptions = {
   ascCenterId: string

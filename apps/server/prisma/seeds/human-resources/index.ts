@@ -1,4 +1,4 @@
-import prisma from '../..'
+import prisma from '../../../src/core/infra/prisma'
 
 export async function seedHumanResources() {
   console.log('👥 Starting Human Resources seeding...')
@@ -58,7 +58,8 @@ export async function seedHumanResources() {
     where: { userId: technicianUser.id },
     update: { isAvailable: true },
     create: {
-      userId: technicianUser.id,
+      user: { connect: { id: technicianUser.id } },
+      ascCenter: { connect: { id: ascCenter.id } },
       skillLevel: 'intermediate',
       specializations: ['general_repair'],
       experienceYears: 5,

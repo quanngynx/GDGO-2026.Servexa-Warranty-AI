@@ -29,6 +29,8 @@ export type RequestListRepairCasesDto = {
   customerId?: string;
   modelId?: string;
   priority?: RepairCasePriority;
+  dateFrom?: string | Date;
+  dateTo?: string | Date;
 };
 
 export type WarrantyForm = "in_warranty" | "out_of_warranty";

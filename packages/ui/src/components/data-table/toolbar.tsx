@@ -23,6 +23,7 @@ type DataTableToolbarProps<TData> = {
       icon?: React.ComponentType<{ className?: string }>
     }[]
   }[]
+  children?: React.ReactNode
 }
 
 const searchInputClassName = 'h-8 w-[150px] lg:w-[250px]'
@@ -34,6 +35,7 @@ export function DataTableToolbar<TData>({
   searchKey,
   searchDebounceMs = 500,
   filters = [],
+  children,
 }: DataTableToolbarProps<TData>) {
   const textFilterColumnId = filterColumnId ?? searchKey
   const isFiltered =
@@ -78,6 +80,7 @@ export function DataTableToolbar<TData>({
               />
             )
           })}
+          {children}
         </div>
         {isFiltered && (
           <Button

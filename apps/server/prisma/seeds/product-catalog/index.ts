@@ -1,4 +1,4 @@
-import prisma from '../..'
+import prisma from '../../../src/core/infra/prisma'
 
 export async function seedProductCatalog() {
   console.log('📦 Starting Product Catalog seeding...')

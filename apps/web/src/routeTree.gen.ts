@@ -30,6 +30,7 @@ import { Route as AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRout
 import { Route as AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/index'
 import { Route as AuthenticatedGENERALRepairCasesManagementIndexRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/index'
 import { Route as AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport } from './routes/_authenticated/(GENERAL)/payment-pending-repair-cases/index'
+import { Route as AuthenticatedGENERALRepairCasesManagementIdRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -165,12 +166,19 @@ const AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute =
     path: '/payment-pending-repair-cases/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedGENERALRepairCasesManagementIdRoute =
+  AuthenticatedGENERALRepairCasesManagementIdRouteImport.update({
+    id: '/(GENERAL)/repair-cases-management/$id',
+    path: '/repair-cases-management/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
   '/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
@@ -193,6 +201,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/': typeof AuthenticatedIndexRoute
+  '/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/payment-pending-repair-cases': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/repair-cases-management': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
   '/accessories-management': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
@@ -217,6 +226,7 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/(GENERAL)/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/_authenticated/(GENERAL)/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/_authenticated/(GENERAL)/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
+    | '/repair-cases-management/$id'
     | '/payment-pending-repair-cases/'
     | '/repair-cases-management/'
     | '/accessories-management/'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/'
+    | '/repair-cases-management/$id'
     | '/payment-pending-repair-cases'
     | '/repair-cases-management'
     | '/accessories-management'
@@ -286,6 +298,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/_authenticated/'
+    | '/_authenticated/(GENERAL)/repair-cases-management/$id'
     | '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
     | '/_authenticated/(GENERAL)/repair-cases-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/'
@@ -460,11 +473,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/(GENERAL)/repair-cases-management/$id': {
+      id: '/_authenticated/(GENERAL)/repair-cases-management/$id'
+      path: '/repair-cases-management/$id'
+      fullPath: '/repair-cases-management/$id'
+      preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedGENERALRepairCasesManagementIdRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   AuthenticatedGENERALRepairCasesManagementIndexRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
@@ -485,6 +506,8 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedGENERALRepairCasesManagementIdRoute:
+    AuthenticatedGENERALRepairCasesManagementIdRoute,
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute:
     AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute,
   AuthenticatedGENERALRepairCasesManagementIndexRoute:

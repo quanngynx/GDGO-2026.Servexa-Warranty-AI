@@ -40,6 +40,7 @@ export type FindAllTechniciansInput = {
   isAvailable?: boolean;
   ascCenterId?: string;
   userId?: string;
+  search?: string;
 };
 
 export class TechnicianService implements ITechnicianService {
@@ -79,6 +80,14 @@ export class TechnicianService implements ITechnicianService {
         : {}),
       ...(query.userId ? { userId: query.userId } : {}),
       ...(query.ascCenterId ? { ascCenterId: query.ascCenterId } : {}),
+      ...(query.search ? {
+        user: {
+          OR: [
+            { fullName: { contains: query.search, mode: "insensitive" as const } },
+            { username: { contains: query.search, mode: "insensitive" as const } }
+          ]
+        }
+      } : {}),
     };
 
     const [items, total] = await Promise.all([

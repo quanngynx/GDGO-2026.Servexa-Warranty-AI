@@ -11,4 +11,5 @@ export const findAllTechniciansSchema = z.object({
   isAvailable: z.coerce.boolean().optional(),
   ascCenterId: z.uuidv7().optional(),
   userId: z.uuidv7().optional(),
+  search: z.string().optional(),
 })

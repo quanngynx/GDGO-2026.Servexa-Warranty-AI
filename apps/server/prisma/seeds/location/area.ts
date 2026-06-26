@@ -1,5 +1,5 @@
-import prisma from "../..";
-import type { Area } from "../../../prisma/generated/browser";
+import prisma from '../../../src/core/infra/prisma';
+import type { Area } from "../../../src/core/infra/prisma/generated/browser";
 
 export async function seedAreas() {
   console.log("🗺️ Starting Areas seeding...");

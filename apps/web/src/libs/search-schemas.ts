@@ -24,4 +24,6 @@ export const repairCasesListSearchSchema = adminListSearchSchema.extend({
   caseId: z.string().optional(),
   status: z.array(z.string()).default([]),
   ascCenterId: z.array(z.string()).default([]),
+  dateFrom: z.string().optional(),
+  dateTo: z.string().optional(),
 })

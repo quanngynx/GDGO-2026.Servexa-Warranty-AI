@@ -24,6 +24,7 @@ export type ListTechniciansParams = {
   page?: number;
   limit?: number;
   isAvailable?: boolean;
+  search?: string;
   sortBy?: "createdAt" | "updatedAt" | "experienceYears" | "completedCases";
   sortOrder?: "asc" | "desc";
 };
