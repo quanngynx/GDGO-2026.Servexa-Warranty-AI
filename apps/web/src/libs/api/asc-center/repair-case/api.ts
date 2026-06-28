@@ -49,17 +49,17 @@ class RepairCaseAPI extends BaseApi {
       `/v1/asc-center/repair-cases/${repairCaseId}/images`,
     );
   }
-  uploadImage(
+  uploadImages(
     repairCaseId: string,
-    image: File,
+    images: File[],
     imageType: RepairCaseImageType,
     description?: string,
   ) {
     const formData = new FormData();
-    formData.append("image", image);
+    images.forEach(img => formData.append("files", img));
     formData.append("imageType", imageType);
     if (description) formData.append("description", description);
-    return this.tryPost<BaseApiResponse<RepairCaseImageDto>, FormData>(
+    return this.tryPost<BaseApiResponse<RepairCaseImageDto[]>, FormData>(
       `/v1/asc-center/repair-cases/${repairCaseId}/images`,
       formData,
     );

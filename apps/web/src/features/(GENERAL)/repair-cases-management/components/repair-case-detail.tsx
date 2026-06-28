@@ -11,6 +11,7 @@ import { Header } from '@/components/layout/header'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { SelectTechnician } from '@/components/selects/select-technician'
+import { RepairCaseImages } from './repair-case-images'
 
 export function RepairCaseDetail({ id }: { id: string }) {
   const { data, isLoading, isError, error } = useRepairCaseDetailQuery(id)
@@ -225,7 +226,7 @@ export function RepairCaseDetail({ id }: { id: string }) {
             </div>
           </TabsContent>
           <TabsContent value="images">
-            <div className="p-8 text-center text-muted-foreground">Images content coming soon.</div>
+            <RepairCaseImages repairCaseId={id} />
           </TabsContent>
           <TabsContent value="history">
             <div className="p-8 text-center text-muted-foreground">History content coming soon.</div>

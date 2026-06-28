@@ -35,7 +35,7 @@ export function RepairCasesManagement() {
     [ascCenterList?.items],
   )
 
-  const { data, isLoading } = useRepairCasesQuery({
+  const { data, isLoading, isFetching, refetch } = useRepairCasesQuery({
     page: search.page,
     limit: search.pageSize,
     search: search.search || undefined,
@@ -83,7 +83,7 @@ export function RepairCasesManagement() {
               Search and filter repair cases by status and ASC center.
             </p>
           </div>
-          <RepairCasesPrimaryButtons />
+          <RepairCasesPrimaryButtons onRefresh={refetch} isRefreshing={isFetching} />
         </div>
         <RepairCasesTable
           data={repairCases}

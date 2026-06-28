@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Search, ArrowRight, Clock, Lightbulb } from 'lucide-react';
-import { 
+import { ArrowRight, Clock, Lightbulb } from 'lucide-react';
+import {
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -37,10 +37,10 @@ const typeLabels: Record<SearchResult['type'], string> = {
   technician: 'Technician',
 };
 
-function SearchResultItem({ 
-  result, 
-  onSelect 
-}: { 
+function SearchResultItem({
+  result,
+  onSelect
+}: {
   result: SearchResult;
   onSelect: (result: SearchResult) => void;
 }) {
@@ -79,18 +79,18 @@ function SearchResultItem({
   );
 }
 
-function SuggestionItem({ 
-  suggestion, 
-  onSelect 
-}: { 
+function SuggestionItem({
+  suggestion,
+  onSelect
+}: {
   suggestion: AISearchSuggestion;
   onSelect: (query: string) => void;
 }) {
   const isRecent = suggestion.type === 'recent';
-  
+
   return (
-    <CommandItem 
-      value={suggestion.id} 
+    <CommandItem
+      value={suggestion.id}
       onSelect={() => onSelect(suggestion.query)}
       className="cursor-pointer"
     >
@@ -114,7 +114,7 @@ function SuggestionItem({
 export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange || setInternalOpen;
 
@@ -145,12 +145,12 @@ export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchD
   }, []);
 
   // Filter results based on search query
-  const filteredResults = searchQuery.trim() 
+  const filteredResults = searchQuery.trim()
     ? mockSearchResults.filter(result =>
-        result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        result.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        result.highlight?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      result.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      result.highlight?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : [];
 
   // Group results by type
@@ -167,14 +167,14 @@ export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchD
   const suggestedQueries = mockSuggestions.filter(s => s.type === 'suggested');
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput 
+    <CommandDialog open={open} onOpenChange={setOpen} className="sm:max-w-4xl">
+      <CommandInput
         placeholder="Search repairs, parts, manuals... (⌘K)"
         value={searchQuery}
         onValueChange={setSearchQuery}
         className="text-sm"
       />
-      
+
       <CommandList>
         {!searchQuery && (
           <>

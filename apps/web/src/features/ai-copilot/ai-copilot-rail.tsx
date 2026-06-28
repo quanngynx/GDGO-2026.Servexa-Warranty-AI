@@ -145,12 +145,23 @@ function AICopilotChatRail({
 }
 
 export function AICopilotRail() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("servexa-copilot-collapsed");
+      if (stored !== null) {
+        return stored === "true";
+      }
+    }
+    return true;
+  });
   const [contextOpen, setContextOpen] = useState(false);
   const panel = useServexaCopilotPanel(SERVEXA_COPILOT_AGENT_ID);
 
   const handleCollapsedChange = (next: boolean) => {
     setCollapsed(next);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("servexa-copilot-collapsed", String(next));
+    }
     if (next) setContextOpen(false);
   };
 
