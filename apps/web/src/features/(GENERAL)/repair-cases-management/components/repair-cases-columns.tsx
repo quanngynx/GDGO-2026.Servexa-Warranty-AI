@@ -146,6 +146,12 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
     },
   },
   {
+    accessorKey: "ascCenterId",
+    header: "ASC Center",
+    enableSorting: false,
+    enableHiding: true,
+  },
+  {
     id: "actions",
     cell: DataTableRowActions,
   },
