@@ -7,6 +7,7 @@ import { seedProductCatalog } from './product-catalog'
 import { seedHumanResources } from './human-resources'
 import { seedASCCenters } from './asc-center/asc-centers'
 import { seedRepairCases } from './asc-center/repair-cases'
+import { seedPurchaseChannels } from './purchase-channel'
 
 export * from './identity/user'
 export * from './identity/hitl-permissions'
@@ -28,6 +29,7 @@ export const runSeeds = async (options: RunSeedsOptions = {}) => {
   await seedProductCatalog()  // seeds categories + models (needed by repair-cases)
   await seedASCCenters()
   await seedHumanResources()  // seeds customer + employee (needed by repair-cases, depends on ascCenter + admin user)
+  await seedPurchaseChannels()
   await seedRepairCases()
   return {
     identityUser: result,

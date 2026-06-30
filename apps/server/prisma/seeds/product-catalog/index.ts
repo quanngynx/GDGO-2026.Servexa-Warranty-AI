@@ -1,38 +1,29 @@
 import prisma from '../../../src/core/infra/prisma'
+import { seedCategories } from './categories'
+import { seedModels } from './models'
 
 export async function seedProductCatalog() {
-  console.log('📦 Starting Product Catalog seeding...')
+  console.log('Starting Product Catalog seeding...')
 
-  // Category required by Model
-  const category = await prisma.category.upsert({
-    where: { name: 'LocknLock Hộp nhựa / Hộp thực phẩm' },
-    update: {},
-    create: {
-      name: 'LocknLock Hộp nhựa / Hộp thực phẩm',
-      description: 'Danh mục sản phẩm hộp nhựa và hộp thực phẩm LocknLock',
-      laborCost: 50000,
-      inspectionCost: 30000,
-    },
+  const categories = await seedCategories()
+  const models = await seedModels()
+
+  // Seed for TotalWarehouse
+  let totalWarehouse = await prisma.totalWarehouse.findFirst({
+    where: { name: 'Main Central Warehouse HCM' },
   })
+  if (!totalWarehouse) {
+    totalWarehouse = await prisma.totalWarehouse.create({
+      data: {
+        name: 'Main Central Warehouse HCM',
+        address: 'District 1, Ho Chi Minh City',
+        status: 'active',
+      },
+    })
+  }
 
-  // The model code searched for by repair-cases seed
-  const model = await prisma.model.upsert({
-    where: { modelCode: 'B32123091' },
-    update: {},
-    create: {
-      categoryId: category.id,
-      name: 'LocknLock Hộp thực phẩm B32123091',
-      modelCode: 'B32123091',
-      status: 'active',
-      itemName: 'Food Container',
-      globalCategory: 'Household',
-      largeCategory: 'Food Storage',
-      mediumCategory: 'Plastic Container',
-      productName: 'LocknLock B32123091',
-    },
-  })
-
-  console.log(`✅ Product Catalog seeding completed!
-    - 1 Category: ${category.name}
-    - 1 Model: ${model.modelCode} — ${model.name}`)
+  console.log(`Product Catalog seeding completed!
+    - ${categories.length} Categories seeded
+    - ${models.length} Models seeded
+    - 1 TotalWarehouse: ${totalWarehouse.name}`)
 }
