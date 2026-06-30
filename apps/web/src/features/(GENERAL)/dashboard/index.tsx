@@ -2,8 +2,8 @@ import { AIInsightCard } from '@/components/ai-insight-card'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { NavigationChats } from '@/components/navigation-chats'
-import { NavigationIntergratedApps } from '@/components/navigation-intergrated-apps'
+// import { NavigationChats } from '@/components/navigation-chats'
+// import { NavigationIntergratedApps } from '@/components/navigation-intergrated-apps'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
@@ -25,8 +25,8 @@ export function Dashboard() {
       <Header>
         <div className="ms-auto flex items-center space-x-4">
           <Search />
-          <NavigationChats />
-          <NavigationIntergratedApps />
+          {/* <NavigationChats /> */}
+          {/* <NavigationIntergratedApps /> */}
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />

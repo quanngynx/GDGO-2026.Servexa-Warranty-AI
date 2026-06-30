@@ -14,6 +14,7 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as AuthenticatedGENERALRepairCasesManagementRouteRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/route'
 import { Route as AuthenticatedAiGeminiIndexRouteImport } from './routes/_authenticated/ai/gemini/index'
 import { Route as AuthenticatedAiExampleIndexRouteImport } from './routes/_authenticated/ai/example/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/index'
@@ -56,6 +57,12 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedGENERALRepairCasesManagementRouteRoute =
+  AuthenticatedGENERALRepairCasesManagementRouteRouteImport.update({
+    id: '/(GENERAL)/repair-cases-management',
+    path: '/repair-cases-management',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAiGeminiIndexRoute =
   AuthenticatedAiGeminiIndexRouteImport.update({
     id: '/ai/gemini/',
@@ -156,9 +163,9 @@ const AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute =
   )
 const AuthenticatedGENERALRepairCasesManagementIndexRoute =
   AuthenticatedGENERALRepairCasesManagementIndexRouteImport.update({
-    id: '/(GENERAL)/repair-cases-management/',
-    path: '/repair-cases-management/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedGENERALRepairCasesManagementRouteRoute,
   } as any)
 const AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute =
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport.update({
@@ -168,9 +175,9 @@ const AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute =
   } as any)
 const AuthenticatedGENERALRepairCasesManagementIdRoute =
   AuthenticatedGENERALRepairCasesManagementIdRouteImport.update({
-    id: '/(GENERAL)/repair-cases-management/$id',
-    path: '/repair-cases-management/$id',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedGENERALRepairCasesManagementRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -178,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/repair-cases-management': typeof AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren
   '/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/(GENERAL)/repair-cases-management': typeof AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren
   '/_authenticated/(GENERAL)/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/_authenticated/(GENERAL)/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/_authenticated/(GENERAL)/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
+    | '/repair-cases-management'
     | '/repair-cases-management/$id'
     | '/payment-pending-repair-cases/'
     | '/repair-cases-management/'
@@ -298,6 +308,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/_authenticated/'
+    | '/_authenticated/(GENERAL)/repair-cases-management'
     | '/_authenticated/(GENERAL)/repair-cases-management/$id'
     | '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
     | '/_authenticated/(GENERAL)/repair-cases-management/'
@@ -360,6 +371,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/(GENERAL)/repair-cases-management': {
+      id: '/_authenticated/(GENERAL)/repair-cases-management'
+      path: '/repair-cases-management'
+      fullPath: '/repair-cases-management'
+      preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/ai/gemini/': {
       id: '/_authenticated/ai/gemini/'
@@ -461,10 +479,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/(GENERAL)/repair-cases-management/': {
       id: '/_authenticated/(GENERAL)/repair-cases-management/'
-      path: '/repair-cases-management'
+      path: '/'
       fullPath: '/repair-cases-management/'
       preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRoute
     }
     '/_authenticated/(GENERAL)/payment-pending-repair-cases/': {
       id: '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
@@ -475,19 +493,36 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/(GENERAL)/repair-cases-management/$id': {
       id: '/_authenticated/(GENERAL)/repair-cases-management/$id'
-      path: '/repair-cases-management/$id'
+      path: '/$id'
       fullPath: '/repair-cases-management/$id'
       preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRoute
     }
   }
 }
 
+interface AuthenticatedGENERALRepairCasesManagementRouteRouteChildren {
+  AuthenticatedGENERALRepairCasesManagementIdRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRoute
+  AuthenticatedGENERALRepairCasesManagementIndexRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+}
+
+const AuthenticatedGENERALRepairCasesManagementRouteRouteChildren: AuthenticatedGENERALRepairCasesManagementRouteRouteChildren =
+  {
+    AuthenticatedGENERALRepairCasesManagementIdRoute:
+      AuthenticatedGENERALRepairCasesManagementIdRoute,
+    AuthenticatedGENERALRepairCasesManagementIndexRoute:
+      AuthenticatedGENERALRepairCasesManagementIndexRoute,
+  }
+
+const AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren =
+  AuthenticatedGENERALRepairCasesManagementRouteRoute._addFileChildren(
+    AuthenticatedGENERALRepairCasesManagementRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedGENERALRepairCasesManagementIdRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRoute
+  AuthenticatedGENERALRepairCasesManagementRouteRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
-  AuthenticatedGENERALRepairCasesManagementIndexRoute: typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
@@ -506,12 +541,10 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedGENERALRepairCasesManagementIdRoute:
-    AuthenticatedGENERALRepairCasesManagementIdRoute,
+  AuthenticatedGENERALRepairCasesManagementRouteRoute:
+    AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren,
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute:
     AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute,
-  AuthenticatedGENERALRepairCasesManagementIndexRoute:
-    AuthenticatedGENERALRepairCasesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute:

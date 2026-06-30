@@ -2,9 +2,11 @@ import { useRepairCaseDetailQuery } from '../hooks/use-repair-case-detail-query'
 import { Card, CardContent, CardHeader, CardTitle } from '@servexa-warranty-ai/ui/components/card'
 import { Badge } from '@servexa-warranty-ai/ui/components/badge'
 import { Separator } from '@servexa-warranty-ai/ui/components/separator'
-import { AlertCircle, RefreshCw, Printer, ChevronDown, User2, Package, Tickets, CircleDollarSign, MessagesSquare } from 'lucide-react'
+import { AlertCircle, RefreshCw, Printer, ChevronDown, User2, Package, Tickets, CircleDollarSign, MessagesSquare, UploadCloud } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@servexa-warranty-ai/ui/components/alert'
 import { Button } from '@servexa-warranty-ai/ui/components/button'
+import { Dialog, DialogContent, DialogTrigger } from '@servexa-warranty-ai/ui/components/dialog'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@servexa-warranty-ai/ui/components/tooltip'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@servexa-warranty-ai/ui/components/tabs'
 import { useNavigate } from '@tanstack/react-router'
 import { Header } from '@/components/layout/header'
@@ -12,6 +14,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { SelectTechnician } from '@/components/selects/select-technician'
 import { RepairCaseImages } from './repair-case-images'
+import { RepairCaseHistories } from './repair-case-histories'
 
 export function RepairCaseDetail({ id }: { id: string }) {
   const { data, isLoading, isError, error } = useRepairCaseDetailQuery(id)
@@ -65,12 +68,22 @@ export function RepairCaseDetail({ id }: { id: string }) {
           <div>
             <h1 className="text-xl font-bold tracking-tight">Repair Ticket #{repairCase.caseNumber}</h1>
             <div className="flex items-center gap-2 mt-2">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200 capitalize font-medium border-transparent">
-                {repairCase.warrantyForm?.replace(/_/g, ' ') || 'Unknown'}
-              </Badge>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200 capitalize font-medium border-transparent">
-                {repairCase.status?.replace(/_/g, ' ') || 'Unknown'}
-              </Badge>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200 capitalize font-medium border-transparent">
+                    {repairCase.warrantyForm?.replace(/_/g, ' ') || 'Unknown'}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>Warranty Form</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200 capitalize font-medium border-transparent">
+                    {repairCase.status?.replace(/_/g, ' ') || 'Unknown'}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>Status</TooltipContent>
+              </Tooltip>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -81,6 +94,19 @@ export function RepairCaseDetail({ id }: { id: string }) {
               <Printer className="mr-2 h-4 w-4" />
               Print
             </Button>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="font-medium">
+                  <UploadCloud className="mr-2 h-4 w-4" />
+                  Upload images
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] min-h-[50vh] overflow-y-auto">
+                <RepairCaseImages repairCaseId={id} hideList />
+              </DialogContent>
+            </Dialog>
+
             <Button className="font-medium bg-[#004299] hover:bg-[#00337a] text-white">
               Status Change
               <ChevronDown className="ml-2 h-4 w-4" />
@@ -103,7 +129,7 @@ export function RepairCaseDetail({ id }: { id: string }) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <User2 className='h-4 w-4' />
-                      <span className="text-xs font-medium">Customer Information</span>
+                      <span className="text-xs font-bold">Customer Information</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -128,7 +154,7 @@ export function RepairCaseDetail({ id }: { id: string }) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Package className='h-4 w-4' />
-                      <span className="text-xs font-medium">Product Details</span>
+                      <span className="text-xs font-bold">Product Details</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -139,11 +165,18 @@ export function RepairCaseDetail({ id }: { id: string }) {
                       <span className="font-medium">Serial Number:</span> {repairCase.serialNumber || 'N/A'}
                     </div>
                     <div>
-                      <span className="font-medium">Warranty Form:</span> <span className="capitalize">{repairCase.warrantyForm?.replace(/_/g, ' ') || 'N/A'}</span>
+                      <span className="font-medium">Order ID:</span> <span className="capitalize">ORD-1910289412391283</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Warranty Type:</span> <span className="capitalize">Customer brings to ASC</span>
                     </div>
                     <div>
                       <span className="font-medium">Service Type:</span> <span className="capitalize">{repairCase.warrantyServiceType?.replace(/_/g, ' ') || 'N/A'}</span>
                     </div>
+                    <div>
+                      <span className="font-medium">Where to buy:</span> <span className="capitalize">Shopee - online</span>
+                    </div>
+
                   </CardContent>
                 </Card>
               </section>
@@ -153,22 +186,64 @@ export function RepairCaseDetail({ id }: { id: string }) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Tickets className='h-4 w-4' />
-                      <span className="text-xs font-medium">Repair Information</span>
+                      <span className="text-xs font-bold">Repair Information - #{repairCase.caseNumber}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div>
                       <span className="font-medium">ASC Center:</span> {repairCase.ascCenter?.centerName || 'N/A'}
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-medium whitespace-nowrap">Assigned Technician:</span>
-                      <SelectTechnician
-                        value={repairCase.assignedTechnicianId}
-                        onValueChange={(val) => {
-                          console.log('Selected technician ID:', val)
-                        }}
-                        className="w-full max-w-[200px]"
-                      />
+                    <div className="grid grid-cols-3 grid-rows-2 gap-4 my-4">
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium whitespace-nowrap">Assigned Technician:</span>
+                        <SelectTechnician
+                          value={repairCase.assignedTechnicianId}
+                          onValueChange={(val) => {
+                            console.log('Selected technician ID:', val)
+                          }}
+                          className="w-full max-w-[200px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium whitespace-nowrap">Error phenomena:</span>
+                        <SelectTechnician
+                          value={repairCase.assignedTechnicianId}
+                          onValueChange={(val) => {
+                            console.log('Selected technician ID:', val)
+                          }}
+                          className="w-full max-w-[200px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium whitespace-nowrap">Reason/Cause:</span>
+                        <SelectTechnician
+                          value={repairCase.assignedTechnicianId}
+                          onValueChange={(val) => {
+                            console.log('Selected technician ID:', val)
+                          }}
+                          className="w-full max-w-[200px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium whitespace-nowrap">Error Source:</span>
+                        <SelectTechnician
+                          value={repairCase.assignedTechnicianId}
+                          onValueChange={(val) => {
+                            console.log('Selected technician ID:', val)
+                          }}
+                          className="w-full max-w-[200px]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium whitespace-nowrap">Repair Level:</span>
+                        <SelectTechnician
+                          value={repairCase.assignedTechnicianId}
+                          onValueChange={(val) => {
+                            console.log('Selected technician ID:', val)
+                          }}
+                          className="w-full max-w-[200px]"
+                        />
+                      </div>
                     </div>
                     {repairCase.diagnosis && (
                       <div className="mt-4">
@@ -226,10 +301,10 @@ export function RepairCaseDetail({ id }: { id: string }) {
             </div>
           </TabsContent>
           <TabsContent value="images">
-            <RepairCaseImages repairCaseId={id} />
+            <RepairCaseImages repairCaseId={id} hideUpload />
           </TabsContent>
           <TabsContent value="history">
-            <div className="p-8 text-center text-muted-foreground">History content coming soon.</div>
+            <RepairCaseHistories repairCaseId={id} />
           </TabsContent>
           <TabsContent value="components">
             <div className="p-8 text-center text-muted-foreground">Components content coming soon.</div>

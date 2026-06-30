@@ -1,4 +1,3 @@
-import { Button } from '@servexa-warranty-ai/ui/components/button'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -9,8 +8,7 @@ import { useAscCentersQuery } from '@/features/(SYSTEM-ADMINISTRATION)/asc-cente
 import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
 import type { RepairCaseStatus } from '@/libs/api/asc-center/repair-case/data-transfer-object'
 import type { ResponseAscCenterListDto } from '@/libs/api/asc-center/asc-center/data-transfer-object'
-import { MessagesSquare, Package } from 'lucide-react'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { getRouteApi } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { RepairCasesPrimaryButtons } from './components/repair-cases-primary-buttons'
 import { RepairCasesTable } from './components/repair-cases-table'
@@ -22,7 +20,6 @@ const route = getRouteApi('/_authenticated/(GENERAL)/repair-cases-management/')
 export function RepairCasesManagement() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const appNavigate = useNavigate()
 
   const { data: ascCentersData } = useAscCentersQuery({ page: 1, limit: 100 })
   const ascCenterList = listPayloadFromApi<ResponseAscCenterListDto>(ascCentersData)
@@ -53,22 +50,6 @@ export function RepairCasesManagement() {
       <Header fixed>
         <div className='ms-auto flex items-center space-x-4'>
           <Search />
-          <Button
-            size='icon'
-            variant='outline'
-            className='md:size-7'
-            onClick={() => appNavigate({ to: '/chats' })}
-          >
-            <MessagesSquare className='size-[1.2rem]' />
-          </Button>
-          <Button
-            size='icon'
-            variant='outline'
-            className='md:size-7'
-            onClick={() => appNavigate({ to: '/apps' })}
-          >
-            <Package className='size-[1.2rem]' />
-          </Button>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
