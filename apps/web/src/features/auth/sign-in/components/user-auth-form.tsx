@@ -130,7 +130,7 @@ export function UserAuthForm({
             </FormItem>
           )}
         />
-        <Button className="mt-2" type="submit" disabled={isLoading}>
+        <Button className="mt-2 py-4" type="submit" disabled={isLoading}>
           {isLoading ? <Loader2 className="animate-spin" /> : <LogIn />}
           Sign in
         </Button>
