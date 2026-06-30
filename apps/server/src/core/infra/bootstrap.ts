@@ -11,6 +11,7 @@ import { env } from "@servexa-warranty-ai/env/server";
 import { ErrorHandler } from "../helpers/error-handling.helper";
 import { errorHandler } from "@/middlewares/error-middleware";
 import mainRouter from "@/routes";
+import path from "path";
 
 import prisma from "@/core/infra/prisma";
 import {
@@ -125,6 +126,8 @@ export class AppBootStrap {
         res.status(200).send("OK");
       },
     );
+
+    this.app.use("/uploads", express.static(path.join(process.cwd(), "uploads"), { maxAge: "30d" }));
 
     this.app.use(mainRouter);
     this.app.use("/api/copilotkit", createCopilotKitRouter());

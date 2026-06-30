@@ -223,7 +223,18 @@ export class RepairCaseService implements IRepairCaseService {
 
   async deleteImage(id: string, imageId: string) {
     try {
-      await this.repairCaseRepository.deleteImage(id, imageId);
+      const deletedImage = await this.repairCaseRepository.deleteImage(id, imageId);
+      if (deletedImage && deletedImage.imagePath) {
+        const fs = await import("fs");
+        const path = await import("path");
+        const UPLOADS_ROOT = path.resolve(process.cwd(), "uploads");
+        const fullPath = path.resolve(UPLOADS_ROOT, deletedImage.imagePath);
+        if (fullPath.startsWith(UPLOADS_ROOT) && fs.existsSync(fullPath)) {
+          fs.promises.unlink(fullPath).catch(err => {
+            console.error("Failed to delete image file from disk", err);
+          });
+        }
+      }
     } catch (error) {
       if ((error as Error).message === "NOT_FOUND") {
         throw createOperationalError(

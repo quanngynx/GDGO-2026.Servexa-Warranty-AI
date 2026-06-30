@@ -1,5 +1,5 @@
 import prisma from '@/core/infra/prisma'
-import { type AccessoryRequest, Prisma } from '@/core/infra/prisma/generated/client'
+import { type AccessoryRequest, Prisma, type RepairCaseImageType, type RepairCaseAccessory } from '@/core/infra/prisma/generated/client'
 import type { IRepairCaseRepository } from '../interfaces/repair-case-repository.interface'
 import type {
   FindAllRepairCasesInput,
@@ -7,6 +7,9 @@ import type {
   CreateRepairCaseInput,
   ReplaceRepairCaseInput,
   UpdateRepairCaseInput,
+  RepairCaseImageDto,
+  GrantedAccessoryDto,
+  GrantAccessoriesInput,
 } from '../dtos/repair-case.dto'
 import {
   repairCaseDetailSelect,
@@ -94,14 +97,14 @@ export class RepairCaseRepository implements IRepairCaseRepository {
       where: { repairCaseId: id },
       orderBy: { uploadedAt: 'desc' },
       include: { uploader: { select: { fullName: true } } },
-    }) as any
+    }) as unknown as RepairCaseImageDto[]
   }
 
   async findImageById(id: string, imageId: string) {
     return prisma.repairCaseImage.findUnique({
       where: { id: imageId, repairCaseId: id },
       include: { uploader: { select: { fullName: true } } },
-    }) as any
+    }) as unknown as RepairCaseImageDto
   }
 
   async findAccessoryRowById(id: string, accessoryRowId: string) {
@@ -111,7 +114,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
         accessory: { select: { partNumber: true, name: true } },
         addedByUser: { select: { fullName: true } },
       },
-    }) as any
+    }) as unknown as RepairCaseAccessory
   }
 
   async findManyForExport(
@@ -143,7 +146,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
       where,
       select: repairCaseDetailSelect,
       orderBy: { receivedDate: 'desc' },
-    }) as any
+    })
   }
 
   async findRepeatedHuyphieuSerials() {
@@ -194,7 +197,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
             : undefined,
         },
         select: repairCaseDetailSelect,
-      }) as any
+      })
     })
   }
 
@@ -212,7 +215,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
 
       for (const [key, value] of Object.entries(patch)) {
         if (key === 'status') continue // Handled separately
-        const oldVal = (existing as any)[key]
+        const oldVal = existing[key as keyof typeof existing]
         if (oldVal !== value && value !== undefined) {
           fieldHistoryData.push({
             repairCaseId: id,
@@ -250,13 +253,13 @@ export class RepairCaseRepository implements IRepairCaseRepository {
         })
       }
 
-      return updated as any
+      return updated as unknown as RepairCaseDetail
     })
   }
 
-  async grantAccessories(repairCaseId: string, ascCenterId: string, items: any[], userId: string) {
+  async grantAccessories(repairCaseId: string, ascCenterId: string, items: GrantAccessoriesInput['items'], userId: string) {
     return prisma.$transaction(async (tx) => {
-      const results: any[] = []
+      const results: GrantedAccessoryDto[] = []
 
       for (const item of items) {
         // 1. Load AscAccessoryStock
@@ -295,7 +298,7 @@ export class RepairCaseRepository implements IRepairCaseRepository {
         let unitPrice = item.unitPrice
         if (unitPrice === undefined) {
           const acc = await tx.accessory.findUnique({ where: { id: item.accessoryId } })
-          unitPrice = acc?.unitPrice || 0
+          unitPrice = acc?.unitPrice ? Number(acc.unitPrice) : 0
         }
 
         const totalPrice = Number(unitPrice) * item.quantity
@@ -384,11 +387,11 @@ export class RepairCaseRepository implements IRepairCaseRepository {
     })
   }
 
-  async addImages(repairCaseId: string, files: Express.Multer.File[], imageType: any, description: string | undefined, userId: string) {
+  async addImages(repairCaseId: string, files: Express.Multer.File[], imageType: string, description: string | undefined, userId: string) {
     const data = files.map((f) => ({
       repairCaseId,
-      imageType,
-      imagePath: f.path,
+      imageType: imageType as RepairCaseImageType,
+      imagePath: `repair-cases/${f.filename}`,
       originalFilename: f.originalname,
       fileSize: f.size,
       mimeType: f.mimetype,
@@ -402,23 +405,24 @@ export class RepairCaseRepository implements IRepairCaseRepository {
     return prisma.repairCaseImage.findMany({
       where: {
         repairCaseId,
-        imageType,
+        imageType: imageType as RepairCaseImageType,
         uploadedBy: userId,
       },
       orderBy: { uploadedAt: 'desc' },
       take: files.length,
       include: { uploader: { select: { fullName: true } } },
-    }) as any
+    }) as unknown as RepairCaseImageDto[]
   }
 
   async deleteImage(repairCaseId: string, imageId: string) {
-    await prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx) => {
       const img = await tx.repairCaseImage.findUnique({ where: { id: imageId, repairCaseId } })
       if (!img) throw new Error('NOT_FOUND')
 
-      await tx.repairCaseImage.delete({ where: { id: imageId } })
-      
-      // In a real scenario we'd do fs.unlink, but the service handles that part if needed, or we just ignore
+      return tx.repairCaseImage.delete({
+        where: { id: imageId },
+        include: { uploader: { select: { fullName: true } } },
+      }) as unknown as RepairCaseImageDto
     })
   }
 }
