@@ -32,6 +32,11 @@ export function DynamicBreadcrumb() {
         pathname: match.pathname,
         routeId: match.routeId,
       };
+    })
+    .filter((breadcrumb, index, self) => {
+      // Remove consecutive duplicates that occur due to layout routes inheriting context
+      if (index === 0) return true;
+      return breadcrumb.title !== self[index - 1].title;
     });
 
   // Don't render if there are no breadcrumbs or only one (home)

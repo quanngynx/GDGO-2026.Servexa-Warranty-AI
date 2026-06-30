@@ -14,9 +14,20 @@ import {
 } from "@servexa-warranty-ai/ui/components/dropdown-menu";
 import { SignOutDialog } from "@/components/sign-out-dialog";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@servexa-warranty-ai/ui/components/tooltip";
+import { useProfileQuery } from "@/features/auth/hooks/use-profile-query";
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState();
+  const { data: user, isLoading } = useProfileQuery();
+
+  const fallbackText = user?.fullName
+    ? user.fullName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase()
+    : "U";
 
   return (
     <>
@@ -26,8 +37,7 @@ export function ProfileDropdown() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-                  <AvatarFallback>SN</AvatarFallback>
+                  <AvatarFallback>{isLoading ? "..." : fallbackText}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -37,9 +47,11 @@ export function ProfileDropdown() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col gap-1.5">
-              <p className="text-sm leading-none font-medium">satnaing</p>
+              <p className="text-sm leading-none font-medium">
+                {isLoading ? "Loading..." : user?.fullName || "User"}
+              </p>
               <p className="text-xs leading-none text-muted-foreground">
-                satnaingdev@gmail.com
+                {isLoading ? "..." : user?.email || ""}
               </p>
             </div>
           </DropdownMenuLabel>
