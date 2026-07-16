@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -22,7 +23,9 @@ import { Button } from '@servexa-warranty-ai/ui/components/button'
 import { Textarea } from '@servexa-warranty-ai/ui/components/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { useCreatePurchaseLocationMutation } from '../hooks/use-create-purchase-location-mutation'
+import { useUpdatePurchaseLocationMutation } from '../hooks/use-update-purchase-location-mutation'
 import { usePurchaseLocationGroupsQuery } from '../hooks/use-purchase-location-groups-query'
+import type { ResponsePurchaseLocationDto } from '@/libs/api/purchase-channels/purchase-location/data-transfer-object'
 
 const formSchema = z.object({
   groupId: z.string().min(1, 'Group is required'),
@@ -31,6 +34,7 @@ const formSchema = z.object({
   website: z.string().optional(),
   address: z.string().optional(),
   description: z.string().optional(),
+  isActive: z.boolean(),
 })
 
 type LocationForm = z.infer<typeof formSchema>
@@ -38,9 +42,10 @@ type LocationForm = z.infer<typeof formSchema>
 type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  currentRow?: ResponsePurchaseLocationDto
 }
 
-export function PurchaseLocationActionDialog({ open, onOpenChange }: Props) {
+export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }: Props) {
   const form = useForm<LocationForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,17 +55,42 @@ export function PurchaseLocationActionDialog({ open, onOpenChange }: Props) {
       website: '',
       address: '',
       description: '',
+      isActive: true,
     },
   })
 
   const { data: groupsData } = usePurchaseLocationGroupsQuery({ limit: 1000 })
   const groups = groupsData?.metadata?.items || []
 
-  const { mutateAsync: createLocation, isPending } = useCreatePurchaseLocationMutation()
+  const { mutateAsync: createLocation, isPending: isCreating } = useCreatePurchaseLocationMutation()
+  const { mutateAsync: updateLocation, isPending: isUpdating } = useUpdatePurchaseLocationMutation()
+
+  const isPending = isCreating || isUpdating
+  const isEditing = !!currentRow
+
+  useEffect(() => {
+    if (currentRow && open) {
+      form.reset({
+        groupId: currentRow.groupId,
+        name: currentRow.name,
+        code: currentRow.code,
+        website: currentRow.website || '',
+        address: currentRow.address || '',
+        description: currentRow.description || '',
+        isActive: currentRow.isActive,
+      })
+    } else if (!open) {
+      form.reset()
+    }
+  }, [currentRow, open, form])
 
   const onSubmit = async (values: LocationForm) => {
     try {
-      await createLocation(values)
+      if (isEditing) {
+        await updateLocation({ id: currentRow.id, data: values })
+      } else {
+        await createLocation(values)
+      }
       form.reset()
       onOpenChange(false)
     } catch (error) {
@@ -78,9 +108,9 @@ export function PurchaseLocationActionDialog({ open, onOpenChange }: Props) {
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>Add New Purchase Location</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Purchase Location' : 'Add New Purchase Location'}</DialogTitle>
           <DialogDescription>
-            Create new location here. Click save when you're done.
+            {isEditing ? "Make changes to the location here. Click save when you're done." : "Create new location here. Click save when you're done."}
           </DialogDescription>
         </DialogHeader>
         <div className='max-h-[70vh] overflow-y-auto py-1 pe-3'>
@@ -200,6 +230,28 @@ export function PurchaseLocationActionDialog({ open, onOpenChange }: Props) {
                   </FormItem>
                 )}
               />
+              {isEditing && (
+                <FormField
+                  control={form.control}
+                  name='isActive'
+                  render={({ field }) => (
+                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                      <FormLabel className='col-span-2 text-end'>Status</FormLabel>
+                      <SelectDropdown
+                        defaultValue={field.value ? 'true' : 'false'}
+                        onValueChange={(value) => field.onChange(value === 'true')}
+                        placeholder='Select status'
+                        className='col-span-4'
+                        items={[
+                          { label: 'Active', value: 'true' },
+                          { label: 'Inactive', value: 'false' },
+                        ]}
+                      />
+                      <FormMessage className='col-span-4 col-start-3' />
+                    </FormItem>
+                  )}
+                />
+              )}
             </form>
           </Form>
         </div>
@@ -208,7 +260,7 @@ export function PurchaseLocationActionDialog({ open, onOpenChange }: Props) {
             Cancel
           </Button>
           <Button type='submit' form='location-form' disabled={isPending}>
-            {isPending ? 'Saving...' : 'Add location'}
+            {isPending ? 'Saving...' : isEditing ? 'Save changes' : 'Add location'}
           </Button>
         </DialogFooter>
       </DialogContent>

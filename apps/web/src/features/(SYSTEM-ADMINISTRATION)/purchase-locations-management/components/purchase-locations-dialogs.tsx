@@ -37,8 +37,7 @@ export function PurchaseLocationsDialogs() {
                 setCurrentRow(null)
               }, 500)
             }}
-            // Note: currentRow handling not fully implemented in PurchaseLocationActionDialog yet 
-            // but left here to prevent breaking the flow
+            currentRow={currentRow}
           />
 
           <PurchaseLocationsDeleteDialog
