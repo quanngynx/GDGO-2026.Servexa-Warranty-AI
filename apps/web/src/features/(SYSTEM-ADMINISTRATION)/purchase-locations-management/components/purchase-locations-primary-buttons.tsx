@@ -6,7 +6,10 @@ export function PurchaseLocationsPrimaryButtons() {
   const { setOpen } = usePurchaseLocations()
   return (
     <div className='flex gap-2'>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
+      <Button variant='outline' className='space-x-1' onClick={() => setOpen('add-group')}>
+        <span>Add Group</span> <MapPinPlus size={18} />
+      </Button>
+      <Button className='space-x-1' onClick={() => setOpen('add-location')}>
         <span>Add Location</span> <MapPinPlus size={18} />
       </Button>
     </div>
