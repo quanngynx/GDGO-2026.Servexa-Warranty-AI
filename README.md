@@ -1,107 +1,438 @@
 <p align="center">
-  <img src="./apps/web/src/assets/favicon.svg" alt="Servexa Warranty AI Logo" width="240" />
+  <img src="./apps/web/src/assets/favicon.svg" width="180" alt="Servexa Warranty AI">
 </p>
 
-# Servexa Warranty AI
+<h1 align="center">
+Servexa Warranty AI
+</h1>
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Express, and more.
+<p align="center">
+AI-powered Warranty Intelligence Platform built with RAG, LangGraph and Agentic AI.
+</p>
 
-## Features
+<p align="center">
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Router** - File-based routing with full type safety
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Express** - Fast, unopinionated web framework
-- **Node.js** - Runtime environment
-- **Prisma** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Turborepo** - Optimized monorepo build system
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![Express](https://img.shields.io/badge/Express-5-black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748)
+![LangGraph](https://img.shields.io/badge/LangGraph-Agentic-green)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## Getting Started
+</p>
 
-First, install the dependencies:
+---
 
-```bash
-pnpm install
+# Overview
+
+Servexa Warranty AI is an AI-powered platform that helps customer support teams, and technicians quickly access warranty information, diagnose product issues, and retrieve technical knowledge from internal documentation using Retrieval-Augmented Generation (RAG) and AI Agents.
+
+Instead of relying solely on Large Language Models, Servexa retrieves relevant information from proprietary manuals, warranty policies, and technical documents before generating accurate responses.
+
+---
+
+# Problem Statement
+
+Many companies face common challenges in after-sales support:
+
+- Customers cannot easily determine warranty eligibility.
+- Customer support repeatedly answers the same questions.
+- Technicians spend significant time searching manuals.
+- Knowledge is scattered across PDFs and internal documents.
+- Traditional chatbots cannot answer organization-specific questions.
+
+---
+
+# Solution
+
+Servexa Warranty AI combines:
+
+- AI Agents
+- Retrieval-Augmented Generation (RAG)
+- Vector Search
+- Knowledge Base
+- Large Language Models
+
+to provide:
+
+- Warranty lookup
+- Product troubleshooting
+- Technical knowledge retrieval
+- Repair recommendations
+- Context-aware AI Assistant
+
+---
+
+# Key Features
+
+## Customer
+
+- Warranty lookup
+- AI Chat Assistant
+- Repair guidance
+- Product troubleshooting
+- Knowledge search
+
+## Support Team
+
+- AI Copilot
+- Context-aware responses
+- Document search
+- Repair recommendations
+- Case summarization
+
+## AI Platform
+
+- RAG Pipeline
+- Vector Search
+- Multi-Agent orchestration
+- LangGraph workflows
+- Tool Calling
+- Streaming responses
+
+---
+
+# System Architecture
+
+```text
+                     User
+                      │
+                      ▼
+          React + TanStack Router
+                      │
+                      ▼
+               Express API Server
+                      │
+        ┌─────────────┴──────────────┐
+        │                            │
+        ▼                            ▼
+ Authentication               AI Gateway
+                                     │
+                  ┌──────────────────┴───────────────┐
+                  ▼                                  ▼
+             LangGraph Agent                  Gemini / OpenAI
+                  │
+      ┌───────────┴────────────┐
+      ▼                        ▼
+   RAG Service             Tool Calling
+      │
+      ▼
+ PostgreSQL + pgvector
+      │
+      ▼
+ Manuals / Warranty Docs / Knowledge Base
 ```
 
-## Database Setup
+```mermaid
+flowchart TD
 
-This project uses PostgreSQL with Prisma.
+    U[👤 User]
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+    FE["React + TanStack Router<br/>Frontend"]
 
-3. Apply the schema to your database:
+    API["Express API Server"]
 
-```bash
-pnpm run db:push
+    AUTH["Authentication"]
+
+    AIG["AI Gateway"]
+
+    LG["LangGraph Agent"]
+
+    LLM["Gemini / OpenAI"]
+
+    TOOL["Tool Calling"]
+
+    RAG["RAG Service"]
+
+    VDB["PostgreSQL + pgvector"]
+
+    DOC["Warranty Manuals<br/>Knowledge Base<br/>PDF Documents"]
+
+    U --> FE
+    FE --> API
+
+    API --> AUTH
+    API --> AIG
+
+    AIG --> LG
+    AIG --> LLM
+
+    LG --> RAG
+    LG --> TOOL
+
+    RAG --> VDB
+    VDB --> DOC
 ```
 
-Then, run the development server:
+---
 
-```bash
-pnpm run dev
+# AI Workflow
+
+```text
+User Question
+      │
+      ▼
+Express API
+      │
+      ▼
+AI Gateway
+      │
+      ▼
+LangGraph Agent
+      │
+      ▼
+Retrieve Relevant Documents
+      │
+      ▼
+Vector Search (pgvector)
+      │
+      ▼
+Prompt Construction
+      │
+      ▼
+Gemini / OpenAI
+      │
+      ▼
+Answer + Sources
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+---
 
-## UI Customization
+# Technology Stack
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+| Layer           | Technology              |
+| --------------- | ----------------------- |
+| Frontend        | React 19                |
+| Routing         | TanStack Router         |
+| Backend         | Express                 |
+| ORM             | Prisma                  |
+| Database        | PostgreSQL              |
+| Vector Database | pgvector                |
+| AI Framework    | LangGraph               |
+| LLM             | Gemini / OpenAI         |
+| Cache           | Redis                   |
+| Monorepo        | Turborepo               |
+| Styling         | TailwindCSS + shadcn/ui |
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+---
 
-### Add more shared components
-
-Run this from the project root to add more primitives to the shared UI package:
-
-```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
-```
-
-Import shared components like this:
-
-```tsx
-import { Button } from "@servexa-warranty-ai/ui/components/button";
-```
-
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Deployment (Cloudflare via Alchemy)
-
-- Dev: cd apps/web && pnpm run alchemy dev
-- Deploy: cd apps/web && pnpm run deploy
-- Destroy: cd apps/web && pnpm run destroy
-
-For more details, see the guide on [Deploying to Cloudflare with Alchemy](https://www.better-t-stack.dev/docs/guides/cloudflare-alchemy).
-
-## Project Structure
+# Project Structure
 
 ```
 servexa-warranty-ai/
+│
 ├── apps/
-│   ├── web/         # Frontend application (React + TanStack Router)
-│   └── server/      # Backend API (Express)
+│   ├── web/
+│   ├── server/
+│   └── ai-services/
+│
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   └── db/          # Database schema & queries
+│   ├── ai-contracts/
+│   ├── config/
+│   ├── db/
+│   ├── env/
+│   ├── event-contracts/
+│   ├── infra/
+│   ├── proto/
+│   ├── ui/
+│   └── shared/
+│
+├── documents/
+├── postman/
+│
+└── scripts/
 ```
 
-## Available Scripts
+---
 
-- `pnpm run dev`: Start all applications in development mode
-- `pnpm run build`: Build all applications
-- `pnpm run dev:web`: Start only the web application
-- `pnpm run dev:server`: Start only the server
-- `pnpm run check-types`: Check TypeScript types across all apps
-- `pnpm run db:push`: Push schema changes to database
-- `pnpm run db:generate`: Generate database client/types
-- `pnpm run db:migrate`: Run database migrations
-- `pnpm run db:studio`: Open database studio UI
+# Getting Started
+
+## Prerequisites
+
+- Node.js 22+
+- pnpm
+- PostgreSQL
+- Redis
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/your-org/servexa-warranty-ai.git
+
+cd servexa-warranty-ai
+
+pnpm install
+```
+
+---
+
+# Environment Variables
+
+Create:
+
+```
+apps/server/.env
+```
+
+Example:
+
+```env
+DATABASE_URL=
+REDIS_URL=
+
+JWT_SECRET=
+
+GEMINI_API_KEY=
+
+OPENAI_API_KEY=
+
+PORT=3000
+```
+
+---
+
+# Database Setup
+
+Generate Prisma Client
+
+```bash
+pnpm db:generate
+```
+
+Push schema
+
+```bash
+pnpm db:push
+```
+
+Or run migrations
+
+```bash
+pnpm db:migrate
+```
+
+---
+
+# Running Locally
+
+Start everything
+
+```bash
+pnpm dev
+```
+
+Frontend
+
+```
+http://localhost:5173
+```
+
+Backend
+
+```
+http://localhost:3000
+```
+
+---
+
+# Available Scripts
+
+| Command          | Description            |
+| ---------------- | ---------------------- |
+| pnpm dev         | Run all services       |
+| pnpm build       | Production build       |
+| pnpm check-types | Type checking          |
+| pnpm db:generate | Generate Prisma client |
+| pnpm db:push     | Push schema            |
+| pnpm db:migrate  | Run migrations         |
+| pnpm db:studio   | Prisma Studio          |
+
+---
+
+# Deployment
+
+## Development
+
+```bash
+cd apps/web
+
+pnpm alchemy dev
+```
+
+## Production
+
+```bash
+cd apps/web
+
+pnpm deploy
+```
+
+---
+
+# Roadmap
+
+## Phase 1
+
+- Authentication
+- Warranty Lookup
+- AI Chat
+- RAG Search
+- Knowledge Base
+
+## Phase 2
+
+- Human-in-the-loop
+- Agent Memory
+- Suggested Actions
+- AI Copilot
+
+## Phase 3
+
+- Multi-Agent
+- OCR
+- Image Diagnosis
+- Voice Assistant
+- Multimodal AI
+
+---
+
+# Screenshots
+
+> Coming soon
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Open Pull Request
+
+---
+
+# License
+
+MIT License
+
+---
+
+# Acknowledgements
+
+Built with:
+
+- Better-T-Stack
+- React
+- Express
+- Prisma
+- PostgreSQL
+- LangGraph
+- Gemini
+- OpenAI
+- TailwindCSS
+- shadcn/ui
