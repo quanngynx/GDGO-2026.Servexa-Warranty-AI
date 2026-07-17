@@ -23,10 +23,12 @@ import { AccessoriesProvider } from './components/accessories-provider'
 import { AccessoriesTable } from './components/accessories-table'
 import { useAccessoriesQuery } from './hooks/use-accessories-query'
 import { useTotalWarehousesQuery } from './hooks/use-total-warehouses-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/')
 
 export function AccessoriesManagement() {
+    const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -86,20 +88,19 @@ export function AccessoriesManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Accessories Management</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Accessories Management")}</h2>
             <p className='text-muted-foreground'>
-              Manage accessories by total warehouse or browse the global catalog.
-            </p>
+              {t("Manage accessories by total warehouse or browse the global catalog.")}</p>
           </div>
           <AccessoriesPrimaryButtons />
         </div>
 
         {warehouseList.length > 0 && (
           <div className='flex max-w-sm flex-col gap-2'>
-            <Label htmlFor='warehouse-select'>Total warehouse</Label>
+            <Label htmlFor='warehouse-select'>{t("Total warehouse")}</Label>
             <Select value={warehouseId} onValueChange={handleWarehouseChange}>
               <SelectTrigger id='warehouse-select' className='w-full'>
-                <SelectValue placeholder='Select a warehouse' />
+                <SelectValue placeholder={t("Select a warehouse")} />
               </SelectTrigger>
               <SelectContent>
                 {warehouseList.map((warehouse) => (

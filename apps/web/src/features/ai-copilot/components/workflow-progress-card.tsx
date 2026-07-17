@@ -8,6 +8,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/collapsible";
 
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type WorkflowProgressCardProps = {
   progress: WorkflowProgress;
@@ -24,6 +25,7 @@ function connectorTone(current: StepStatus, next: StepStatus): string {
 }
 
 function StepIndicator({ status }: { status: StepStatus }) {
+    const { t } = useTranslation();
   if (status === "done") {
     return (
       <span
@@ -68,6 +70,7 @@ function StepIndicator({ status }: { status: StepStatus }) {
 }
 
 function WorkflowStepper({ progress }: { progress: WorkflowProgress }) {
+    const { t } = useTranslation();
   return (
     <ol
       className="flex w-full min-w-0 items-start overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -164,6 +167,7 @@ export function WorkflowProgressCard({
   progress,
   className,
 }: WorkflowProgressCardProps) {
+    const { t } = useTranslation();
   return (
     <Collapsible
       defaultOpen
@@ -174,8 +178,7 @@ export function WorkflowProgressCard({
           className="size-4 shrink-0 text-muted-foreground"
           aria-hidden
         />
-        Workflow progress
-      </CollapsibleTrigger>
+        {t("Workflow progress")}</CollapsibleTrigger>
 
       <CollapsibleContent className="px-2 pb-2 pt-1">
         <WorkflowStepper progress={progress} />

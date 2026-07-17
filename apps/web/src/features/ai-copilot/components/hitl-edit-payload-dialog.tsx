@@ -13,6 +13,7 @@ import { Label } from "@servexa-warranty-ai/ui/components/label";
 import { Textarea } from "@servexa-warranty-ai/ui/components/textarea";
 
 import { HitlTechnicianSelectField } from "./hitl-technician-select-field";
+import { useTranslation } from "react-i18next";
 
 type HitlEditPayloadDialogProps = {
   request: HitlRequest;
@@ -29,6 +30,7 @@ export function HitlEditPayloadDialog({
   onSubmit,
   isSubmitting,
 }: HitlEditPayloadDialogProps) {
+    const { t } = useTranslation();
   const [reason, setReason] = useState("");
   const [body, setBody] = useState(
     String((request.payload.body) ?? request.description),
@@ -72,12 +74,12 @@ export function HitlEditPayloadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit approval</DialogTitle>
+          <DialogTitle>{t("Edit approval")}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-3 py-2">
           {request.kind === "customer_response_draft" ? (
             <div className="flex flex-col gap-2">
-              <Label htmlFor="hitl-draft-body">Draft message</Label>
+              <Label htmlFor="hitl-draft-body">{t("Draft message")}</Label>
               <Textarea
                 id="hitl-draft-body"
                 value={body}
@@ -97,20 +99,19 @@ export function HitlEditPayloadDialog({
             />
           ) : null}
           <div className="flex flex-col gap-2">
-            <Label htmlFor="hitl-reason">Reason / notes</Label>
+            <Label htmlFor="hitl-reason">{t("Reason / notes")}</Label>
             <Textarea
               id="hitl-reason"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              placeholder="Optional context for audit"
+              placeholder={t("Optional context for audit")}
             />
           </div>
         </div>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {t("Cancel")}</Button>
           <Button
             type="button"
             onClick={handleSubmit}
@@ -119,8 +120,7 @@ export function HitlEditPayloadDialog({
               (request.kind === "technician_assignment" && !techId.trim())
             }
           >
-            Save edits
-          </Button>
+            {t("Save edits")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

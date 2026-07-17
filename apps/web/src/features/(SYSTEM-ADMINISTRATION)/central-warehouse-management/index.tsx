@@ -12,12 +12,14 @@ import { CentralWarehousePrimaryButtons } from './components/central-warehouse-p
 import { CentralWarehouseProvider } from './components/central-warehouse-provider'
 import { CentralWarehouseTable } from './components/central-warehouse-table'
 import { useTotalWarehousesQuery } from './hooks/use-total-warehouses-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/',
 )
 
 export function CentralWarehouseManagement() {
+    const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -46,10 +48,9 @@ export function CentralWarehouseManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Central Warehouse Management</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Central Warehouse Management")}</h2>
             <p className='text-muted-foreground'>
-              Manage total warehouses and central inventory locations.
-            </p>
+              {t("Manage total warehouses and central inventory locations.")}</p>
           </div>
           <CentralWarehousePrimaryButtons />
         </div>

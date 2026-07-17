@@ -12,12 +12,14 @@ import { CustomersTable } from "./components/customer-table";
 import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
 import type { ResponseCustomerListDto } from '@/libs/api/human-resources/customer/data-transfer-object'
 import { useCustomersQuery } from './hooks/use-customers-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi(
   "/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/"
 );
 
 export function CustomerManagement() {
+    const { t } = useTranslation();
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
@@ -46,9 +48,8 @@ export function CustomerManagement() {
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">
-              Customer Management
-            </h2>
-            <p className="text-muted-foreground">Manage your customers here.</p>
+              {t("Customer Management")}</h2>
+            <p className="text-muted-foreground">{t("Manage your customers here.")}</p>
           </div>
           <CustomersPrimaryButtons />
         </div>

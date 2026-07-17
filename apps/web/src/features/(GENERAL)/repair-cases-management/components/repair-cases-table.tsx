@@ -13,6 +13,7 @@ import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
 import { useOperationalContextPatch } from '@/features/ai-copilot/context/operational-context-provider'
 import { DatePickerWithRange } from "@servexa-warranty-ai/ui/components/date-picker";
+import { useTranslation } from "react-i18next";
 
 type FilterOption = { label: string; value: string }
 
@@ -37,6 +38,7 @@ export function RepairCasesTable({
   navigate,
   ascCenterFilterOptions = [],
 }: RepairCasesTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     ascCenterId: false,
@@ -187,7 +189,7 @@ export function RepairCasesTable({
         <DatePickerWithRange 
           value={dateRange} 
           onChange={handleDateRangeChange}
-          placeholder="Filter by created date" 
+          placeholder={t("Filter by created date")} 
         />
       </DataTableToolbar>
       <div className="overflow-hidden rounded-md border">
@@ -223,8 +225,7 @@ export function RepairCasesTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -256,8 +257,7 @@ export function RepairCasesTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

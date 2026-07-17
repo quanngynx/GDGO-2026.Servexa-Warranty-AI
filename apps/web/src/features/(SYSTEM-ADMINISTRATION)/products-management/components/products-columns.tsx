@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { statusTypes } from '../data/data'
 import { type Model } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const productsColumns: ColumnDef<Model>[] = [
   {
@@ -38,7 +39,7 @@ export const productsColumns: ColumnDef<Model>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('name')}</LongText>
     ),
@@ -52,12 +53,12 @@ export const productsColumns: ColumnDef<Model>[] = [
   },
   {
     accessorKey: 'modelCode',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Model Code' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Model Code")} />,
     cell: ({ row }) => <div className='font-mono text-sm'>{row.getValue('modelCode')}</div>,
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Status")} />,
     cell: ({ row }) => {
       const status = row.getValue('status') as string
       const badgeColor = statusTypes.get(status) ?? ''
@@ -72,7 +73,7 @@ export const productsColumns: ColumnDef<Model>[] = [
   },
   {
     id: 'categoryName',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Category' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Category")} />,
     cell: ({ row }) => (
       <LongText className='max-w-36'>{row.original.category?.name ?? '—'}</LongText>
     ),

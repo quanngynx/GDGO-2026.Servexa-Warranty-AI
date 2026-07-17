@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from '@servexa-warranty-ai/ui/components/data-t
 import { LongText } from '@/components/long-text'
 import { type Document } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const documentsColumns: ColumnDef<Document>[] = [
   {
@@ -36,7 +37,7 @@ export const documentsColumns: ColumnDef<Document>[] = [
   },
   {
     accessorKey: 'title',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Title' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Title")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('title')}</LongText>
     ),
@@ -50,7 +51,7 @@ export const documentsColumns: ColumnDef<Document>[] = [
   },
   {
     accessorKey: 'documentType',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Type' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Type")} />,
     cell: ({ row }) => (
       <span className='text-sm capitalize'>{row.getValue('documentType')}</span>
     ),
@@ -58,7 +59,7 @@ export const documentsColumns: ColumnDef<Document>[] = [
   },
   {
     accessorKey: 'version',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Version' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Version")} />,
     cell: ({ row }) => <span className='text-sm'>{row.getValue('version')}</span>,
   },
   {

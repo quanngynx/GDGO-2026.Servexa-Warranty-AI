@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { statusTypes } from '../data/data'
 import { type TotalWarehouse } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const centralWarehouseColumns: ColumnDef<TotalWarehouse>[] = [
   {
@@ -38,7 +39,7 @@ export const centralWarehouseColumns: ColumnDef<TotalWarehouse>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('name')}</LongText>
     ),
@@ -52,7 +53,7 @@ export const centralWarehouseColumns: ColumnDef<TotalWarehouse>[] = [
   },
   {
     accessorKey: 'address',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Address' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Address")} />,
     cell: ({ row }) => (
       <LongText className='max-w-64'>{row.getValue('address') ?? '—'}</LongText>
     ),
@@ -60,7 +61,7 @@ export const centralWarehouseColumns: ColumnDef<TotalWarehouse>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Status")} />,
     cell: ({ row }) => {
       const status = row.getValue('status') as string
       const badgeColor = statusTypes.get(status) ?? ''

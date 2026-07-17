@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { statusTypes } from '../data/data'
 import { type AscCenter } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const ascCentersColumns: ColumnDef<AscCenter>[] = [
   {
@@ -38,7 +39,7 @@ export const ascCentersColumns: ColumnDef<AscCenter>[] = [
   },
   {
     accessorKey: 'centerName',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Center Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Center Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('centerName')}</LongText>
     ),
@@ -52,12 +53,12 @@ export const ascCentersColumns: ColumnDef<AscCenter>[] = [
   },
   {
     accessorKey: 'centerCode',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Center Code' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Center Code")} />,
     cell: ({ row }) => <div className='font-mono text-sm'>{row.getValue('centerCode')}</div>,
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Status")} />,
     cell: ({ row }) => {
       const status = row.getValue('status') as string
       const badgeColor = statusTypes.get(status) ?? ''

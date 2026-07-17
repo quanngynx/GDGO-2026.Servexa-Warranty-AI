@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 import type { OperationalPageContext } from "../hooks/use-operational-context";
+import { useTranslation } from "react-i18next";
 
 type CopilotRailHeaderProps = {
   operational: OperationalPageContext;
@@ -26,6 +27,7 @@ export function CopilotRailHeader({
   showTitle = true,
   className,
 }: CopilotRailHeaderProps) {
+    const { t } = useTranslation();
   const scopeParts = [operational.currentRoute];
   if (operational.caseNumber || operational.repairCaseId) {
     scopeParts.push(
@@ -44,17 +46,16 @@ export function CopilotRailHeader({
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           {showTitle ? (
-            <p className="truncate text-sm font-semibold tracking-tight">Operations Intelligence</p>
+            <p className="truncate text-sm font-semibold tracking-tight">{t("Operations Intelligence")}</p>
           ) : (
-            <p className="truncate text-sm font-semibold tracking-tight">Context panel</p>
+            <p className="truncate text-sm font-semibold tracking-tight">{t("Context panel")}</p>
           )}
           <p className="truncate text-xs text-muted-foreground">{scopeParts.join(" · ")}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           {pendingApprovalCount > 0 ? (
             <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:text-amber-200">
-              {pendingApprovalCount} pending
-            </span>
+              {pendingApprovalCount} {t("pending")}</span>
           ) : null}
           {backend ? (
             <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase text-muted-foreground">
@@ -64,16 +65,15 @@ export function CopilotRailHeader({
           {isRunning ? (
             <span className="flex items-center gap-1 text-[11px] text-muted-foreground" aria-live="polite">
               <Loader2 className="size-3.5 animate-spin" aria-hidden />
-              Thinking
-            </span>
+              {t("Thinking")}</span>
           ) : (
-            <span className="text-[11px] text-muted-foreground">Ready</span>
+            <span className="text-[11px] text-muted-foreground">{t("Ready")}</span>
           )}
         </div>
       </div>
       {typeof railMeta?.confidence === "number" ? (
         <p className="text-[11px] text-muted-foreground">
-          Model confidence: {(railMeta.confidence * 100).toFixed(0)}%
+          {t("Model confidence:")}{(railMeta.confidence * 100).toFixed(0)}%
         </p>
       ) : null}
       {runError ? (

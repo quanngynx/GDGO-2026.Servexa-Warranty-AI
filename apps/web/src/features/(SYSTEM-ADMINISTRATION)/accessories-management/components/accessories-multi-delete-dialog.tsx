@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@servexa-warranty-ai/ui/com
 import { Input } from "@servexa-warranty-ai/ui/components/input";
 import { Label } from "@servexa-warranty-ai/ui/components/label";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { useTranslation } from "react-i18next";
 
 type UserMultiDeleteDialogProps<TData> = {
   open: boolean;
@@ -23,6 +24,7 @@ export function UsersMultiDeleteDialog<TData>({
   onOpenChange,
   table,
 }: UserMultiDeleteDialogProps<TData>) {
+    const { t } = useTranslation();
   const [value, setValue] = useState("");
 
   const selectedRows = table.getFilteredSelectedRowModel().rows;
@@ -60,19 +62,18 @@ export function UsersMultiDeleteDialog<TData>({
             className="me-1 inline-block stroke-destructive"
             size={18}
           />{" "}
-          Delete {selectedRows.length}{" "}
+          {t("Delete")}{selectedRows.length}{" "}
           {selectedRows.length > 1 ? "users" : "user"}
         </span>
       }
       desc={
         <div className="space-y-4">
           <p className="mb-2">
-            Are you sure you want to delete the selected users? <br />
-            This action cannot be undone.
-          </p>
+            {t("Are you sure you want to delete the selected users?")}<br />
+            {t("This action cannot be undone.")}</p>
 
           <Label className="my-4 flex flex-col items-start gap-1.5">
-            <span className="">Confirm by typing "{CONFIRM_WORD}":</span>
+            <span className="">{t("Confirm by typing \"")}{CONFIRM_WORD}":</span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -81,10 +82,9 @@ export function UsersMultiDeleteDialog<TData>({
           </Label>
 
           <Alert variant="destructive">
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

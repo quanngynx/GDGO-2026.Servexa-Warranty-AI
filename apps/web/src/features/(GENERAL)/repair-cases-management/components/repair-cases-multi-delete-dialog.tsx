@@ -10,6 +10,7 @@ import { Label } from '@servexa-warranty-ai/ui/components/label'
 import type { RepairCaseDto } from '@/libs/api/asc-center/repair-case/data-transfer-object'
 import { repairCaseAPI } from '@/libs/api/asc-center/repair-case/api'
 import { repairCaseQueryKeys } from '../hooks/query-keys'
+import { useTranslation } from "react-i18next";
 
 type RepairCasesMultiDeleteDialogProps<TData> = {
   open: boolean
@@ -24,6 +25,7 @@ export function RepairCasesMultiDeleteDialog<TData>({
   onOpenChange,
   table,
 }: RepairCasesMultiDeleteDialogProps<TData>) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const queryClient = useQueryClient()
@@ -65,20 +67,18 @@ export function RepairCasesMultiDeleteDialog<TData>({
       disabled={value.trim() !== CONFIRM_WORD || isDeleting}
       title={
         <span className='text-destructive'>
-          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> Delete{' '}
-          {selectedRows.length} repair case{selectedRows.length > 1 ? 's' : ''}
+          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> {t("Delete")}{' '}
+          {selectedRows.length} {t("repair case")}{selectedRows.length > 1 ? 's' : ''}
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete the selected repair cases?
-            <br />
-            This action cannot be undone.
-          </p>
+            {t("Are you sure you want to delete the selected repair cases?")}<br />
+            {t("This action cannot be undone.")}</p>
 
           <Label className='my-4 flex flex-col items-start gap-1.5'>
-            <span>Confirm by typing &quot;{CONFIRM_WORD}&quot;:</span>
+            <span>{t("Confirm by typing &quot;")}{CONFIRM_WORD}{t("&quot;:")}</span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -87,10 +87,9 @@ export function RepairCasesMultiDeleteDialog<TData>({
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

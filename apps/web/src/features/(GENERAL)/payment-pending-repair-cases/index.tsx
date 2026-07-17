@@ -7,8 +7,10 @@ import { Search } from "@/components/search";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { MessagesSquare, Package } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export function PaymentPendingRepairCases() {
+    const { t } = useTranslation();
   const navigate = useNavigate()
   return (
     <>
@@ -42,10 +44,9 @@ export function PaymentPendingRepairCases() {
       <Main>
         <div className="mb-2 flex items-center justify-between space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">
-            Payment Pending Repair Cases
-          </h1>
+            {t("Payment Pending Repair Cases")}</h1>
           <div className="flex items-center space-x-2">
-            <Button>Download</Button>
+            <Button>{t("Download")}</Button>
           </div>
         </div>
       </Main>

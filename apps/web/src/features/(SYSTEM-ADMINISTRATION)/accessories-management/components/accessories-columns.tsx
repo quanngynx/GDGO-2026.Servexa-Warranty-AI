@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { statusTypes } from '../data/data'
 import { type Accessory } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const accessoriesColumns: ColumnDef<Accessory>[] = [
   {
@@ -38,7 +39,7 @@ export const accessoriesColumns: ColumnDef<Accessory>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('name')}</LongText>
     ),
@@ -52,7 +53,7 @@ export const accessoriesColumns: ColumnDef<Accessory>[] = [
   },
   {
     accessorKey: 'partNumber',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Part Number' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Part Number")} />,
     cell: ({ row }) => (
       <LongText className='max-w-40'>{row.getValue('partNumber') ?? '—'}</LongText>
     ),
@@ -60,7 +61,7 @@ export const accessoriesColumns: ColumnDef<Accessory>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Status' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Status")} />,
     cell: ({ row }) => {
       const status = row.getValue('status') as string
       const badgeColor = statusTypes.get(status) ?? ''

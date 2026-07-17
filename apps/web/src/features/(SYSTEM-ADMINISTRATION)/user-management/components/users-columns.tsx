@@ -7,6 +7,7 @@ import { LongText } from "@/components/long-text";
 import { callTypes, roles } from "../data/data";
 import { type User } from "../data/schema";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { t } from "i18next";
 
 export const usersColumns: ColumnDef<User>[] = [
   {
@@ -39,7 +40,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "username",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Username" />
+      <DataTableColumnHeader column={column} title={t("Username")} />
     ),
     cell: ({ row }) => (
       <LongText className="max-w-36 ps-3">{row.getValue("username")}</LongText>
@@ -55,7 +56,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     id: "fullName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title={t("Name")} />
     ),
     cell: ({ row }) => {
       const { firstName, lastName } = row.original
@@ -66,7 +67,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title={t("Email")} />
     ),
     cell: ({ row }) => (
       <div className="w-fit ps-2 text-nowrap">{row.getValue("email")}</div>
@@ -75,7 +76,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "phoneNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number" />
+      <DataTableColumnHeader column={column} title={t("Phone Number")} />
     ),
     cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
     enableSorting: false,
@@ -83,7 +84,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title={t("Status")} />
     ),
     cell: ({ row }) => {
       const { status } = row.original;
@@ -105,7 +106,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
+      <DataTableColumnHeader column={column} title={t("Role")} />
     ),
     cell: ({ row }) => {
       const { role } = row.original;

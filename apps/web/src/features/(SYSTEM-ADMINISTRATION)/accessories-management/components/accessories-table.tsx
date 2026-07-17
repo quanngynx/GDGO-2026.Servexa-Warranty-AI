@@ -26,6 +26,7 @@ import { accessoryStatusOptions } from '../data/data'
 import { type Accessory } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { accessoriesColumns as columns } from './accessories-columns'
+import { useTranslation } from "react-i18next";
 
 type DataTableProps = {
   data: Accessory[]
@@ -42,6 +43,7 @@ export function AccessoriesTable({
   search,
   navigate,
 }: DataTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -140,8 +142,7 @@ export function AccessoriesTable({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -167,8 +168,7 @@ export function AccessoriesTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

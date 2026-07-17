@@ -27,6 +27,7 @@ import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { useCreateUserMutation } from '../hooks/use-create-user-mutation'
 import { useUpdateUserMutation } from '../hooks/use-update-user-mutation'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z
   .object({
@@ -92,6 +93,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UserAction
   const createMutation = useCreateUserMutation()
   const updateMutation = useUpdateUserMutation()
   const isPending = createMutation.isPending || updateMutation.isPending
+  const { t } = useTranslation()
 
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),

@@ -14,10 +14,12 @@ import { RepairCasesPrimaryButtons } from './components/repair-cases-primary-but
 import { RepairCasesTable } from './components/repair-cases-table'
 import { useRepairCasesQuery } from './hooks/use-repair-cases-query'
 import { RepairCasesProvider } from './components/repair-cases-provider'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi('/_authenticated/(GENERAL)/repair-cases-management/')
 
 export function RepairCasesManagement() {
+    const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -59,10 +61,9 @@ export function RepairCasesManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-4 pb-2'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Repair Cases</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Repair Cases")}</h2>
             <p className='text-muted-foreground'>
-              Search and filter repair cases by status and ASC center.
-            </p>
+              {t("Search and filter repair cases by status and ASC center.")}</p>
           </div>
           <RepairCasesPrimaryButtons onRefresh={refetch} isRefreshing={isFetching} />
         </div>

@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { type Accessory } from '../data/schema'
+import { useTranslation } from "react-i18next";
 
 type AccessoriesDeleteDialogProps = {
   open: boolean
@@ -20,6 +21,7 @@ export function AccessoriesDeleteDialog({
   onOpenChange,
   currentRow,
 }: AccessoriesDeleteDialogProps) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
 
   const handleDelete = () => {
@@ -38,31 +40,25 @@ export function AccessoriesDeleteDialog({
       disabled={value.trim() !== currentRow.name}
       title={
         <span className='text-destructive'>
-          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> Delete
-          Accessory
-        </span>
+          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> {t("Delete\n Accessory")}</span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete <span className='font-bold'>{currentRow.name}</span>?
-            This cannot be undone.
-          </p>
+            {t("Are you sure you want to delete")}<span className='font-bold'>{currentRow.name}</span>{t("?\n This cannot be undone.")}</p>
 
           <Label className='my-2'>
-            Accessory name:
-            <Input
+            {t("Accessory name:")}<Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter accessory name to confirm deletion.'
+              placeholder={t("Enter accessory name to confirm deletion.")}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

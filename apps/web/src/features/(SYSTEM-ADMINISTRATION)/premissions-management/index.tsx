@@ -12,10 +12,12 @@ import { PermissionsPrimaryButtons } from './components/permissions-primary-butt
 import { PermissionsProvider } from './components/permissions-provider'
 import { PermissionsTable } from './components/permissions-table'
 import { usePermissionsQuery } from './hooks/use-permissions-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/')
 
 export function PermissionsManagement() {
+    const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -43,8 +45,8 @@ export function PermissionsManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Permissions Management</h2>
-            <p className='text-muted-foreground'>Manage system permissions and access rules.</p>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Permissions Management")}</h2>
+            <p className='text-muted-foreground'>{t("Manage system permissions and access rules.")}</p>
           </div>
           <PermissionsPrimaryButtons />
         </div>

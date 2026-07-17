@@ -2,6 +2,7 @@ import { Badge } from '@servexa-warranty-ai/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@servexa-warranty-ai/ui/components/card';
 import { GitBranch, TrendingUp, TrendingDown, Minus, Clock } from 'lucide-react';
 import { mockRepairBottlenecks, type RepairBottleneck } from '../data/mock-data';
+import { useTranslation } from "react-i18next";
 
 const trendIcons: Record<RepairBottleneck['trend'], React.ReactNode> = {
   increasing: <TrendingUp className="w-3 h-3 text-alert-critical" />,
@@ -16,6 +17,7 @@ const trendLabels: Record<RepairBottleneck['trend'], { text: string; color: stri
 };
 
 export function RepairBottlenecksWidget() {
+    const { t } = useTranslation();
   const totalBlocked = mockRepairBottlenecks.reduce((sum, b) => sum + b.casesBlocked, 0);
   
   return (
@@ -26,8 +28,8 @@ export function RepairBottlenecksWidget() {
             <GitBranch className="w-4 h-4 text-ai-primary" />
           </div>
           <div>
-            <CardTitle className="text-base">Repair Bottlenecks</CardTitle>
-            <p className="text-xs text-muted-foreground">{totalBlocked} cases blocked</p>
+            <CardTitle className="text-base">{t("Repair Bottlenecks")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{totalBlocked} {t("cases blocked")}</p>
           </div>
         </div>
       </CardHeader>
@@ -58,17 +60,16 @@ export function RepairBottlenecksWidget() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="text-xs">
-                    {bottleneck.casesBlocked} cases
-                  </Badge>
+                    {bottleneck.casesBlocked} {t("cases")}</Badge>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Clock className="w-3 h-3" />
-                  <span>Avg {bottleneck.avgWaitTime}h wait</span>
+                  <span>{t("Avg")}{bottleneck.avgWaitTime}{t("h wait")}</span>
                 </div>
               </div>
               
               <p className="text-[11px] text-muted-foreground mt-2">
-                Top cause: {bottleneck.topCause}
+                {t("Top cause:")}{bottleneck.topCause}
               </p>
             </div>
           );
