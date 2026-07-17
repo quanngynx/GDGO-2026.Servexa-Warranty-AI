@@ -37,6 +37,11 @@ const purchaseLocationSelect = {
       code: true,
     },
   },
+  _count: {
+    select: {
+      repairCases: true,
+    },
+  },
 } satisfies Prisma.PurchaseLocationSelect
 
 export class PurchaseLocationService implements IPurchaseLocationService {

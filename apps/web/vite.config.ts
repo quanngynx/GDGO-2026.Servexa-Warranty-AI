@@ -32,7 +32,14 @@ function manualChunkForNodeModule(id: string) {
 }
 
 export default defineConfig({
-  plugins: [tailwindcss(), tanstackRouter({}), react()],
+  plugins: [
+    tailwindcss(),
+    tanstackRouter({
+      autoCodeSplitting: true,
+      target: "react",
+    }),
+    react(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
