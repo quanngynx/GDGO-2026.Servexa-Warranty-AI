@@ -1,4 +1,8 @@
-# servexa-warranty-ai
+<p align="center">
+  <img src="./apps/web/src/assets/favicon.svg" alt="Servexa Warranty AI Logo" width="240" />
+</p>
+
+# Servexa Warranty AI
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Express, and more.
 
