@@ -95,35 +95,6 @@ to provide:
 
 # System Architecture
 
-```text
-                     User
-                      │
-                      ▼
-          React + TanStack Router
-                      │
-                      ▼
-               Express API Server
-                      │
-        ┌─────────────┴──────────────┐
-        │                            │
-        ▼                            ▼
- Authentication               AI Gateway
-                                     │
-                  ┌──────────────────┴───────────────┐
-                  ▼                                  ▼
-             LangGraph Agent                  Gemini / OpenAI
-                  │
-      ┌───────────┴────────────┐
-      ▼                        ▼
-   RAG Service             Tool Calling
-      │
-      ▼
- PostgreSQL + pgvector
-      │
-      ▼
- Manuals / Warranty Docs / Knowledge Base
-```
-
 ```mermaid
 flowchart TD
 
