@@ -15,7 +15,7 @@
     "./postcss.config": "./postcss.config.mjs"
   },
   "scripts": {
-    "build": "tsc --noEmit",
+    "build": "echo \"No build step for UI package\"",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
