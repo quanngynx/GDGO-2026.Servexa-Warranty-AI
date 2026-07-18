@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestHooksRouteImport } from './routes/test-hooks'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
@@ -30,10 +31,31 @@ import { Route as AuthenticatedSYSTEMADMINISTRATIONCustomerManagementIndexRouteI
 import { Route as AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/index'
 import { Route as AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport } from './routes/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/index'
+import { Route as AuthenticatedSETTINGSSettingsIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/index'
+import { Route as AuthenticatedSETTINGSHelpCenterIndexRouteImport } from './routes/_authenticated/(SETTINGS)/help-center/index'
+import { Route as AuthenticatedREPORTSWeeklyReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/weekly-report/index'
+import { Route as AuthenticatedREPORTSPurchaseLocationErrorReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/purchase-location-error-report/index'
+import { Route as AuthenticatedREPORTSPscCostReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/psc-cost-report/index'
+import { Route as AuthenticatedREPORTSPaymentReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/payment-report/index'
+import { Route as AuthenticatedREPORTSOutOfWarrantyReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/out-of-warranty-report/index'
+import { Route as AuthenticatedREPORTSModelErrorReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/model-error-report/index'
+import { Route as AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRouteImport } from './routes/_authenticated/(REPORTS)/history-of-repair-cases-status-changes/index'
+import { Route as AuthenticatedREPORTSCostReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/cost-report/index'
+import { Route as AuthenticatedREPORTSCategoryErrorReportIndexRouteImport } from './routes/_authenticated/(REPORTS)/category-error-report/index'
+import { Route as AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRouteImport } from './routes/_authenticated/(REPORTS)/accessories-status-statistics/index'
 import { Route as AuthenticatedGENERALRepairCasesManagementIndexRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/index'
 import { Route as AuthenticatedGENERALPaymentPendingRepairCasesIndexRouteImport } from './routes/_authenticated/(GENERAL)/payment-pending-repair-cases/index'
 import { Route as AuthenticatedGENERALRepairCasesManagementIdRouteImport } from './routes/_authenticated/(GENERAL)/repair-cases-management/$id'
+import { Route as AuthenticatedSETTINGSSettingsNotificationsIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/notifications/index'
+import { Route as AuthenticatedSETTINGSSettingsDisplayIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/display/index'
+import { Route as AuthenticatedSETTINGSSettingsAppearanceIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/appearance/index'
+import { Route as AuthenticatedSETTINGSSettingsAccountIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/account/index'
 
+const TestHooksRoute = TestHooksRouteImport.update({
+  id: '/test-hooks',
+  path: '/test-hooks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -166,6 +188,78 @@ const AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute =
       getParentRoute: () => AuthenticatedRouteRoute,
     } as any,
   )
+const AuthenticatedSETTINGSSettingsIndexRoute =
+  AuthenticatedSETTINGSSettingsIndexRouteImport.update({
+    id: '/(SETTINGS)/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSETTINGSHelpCenterIndexRoute =
+  AuthenticatedSETTINGSHelpCenterIndexRouteImport.update({
+    id: '/(SETTINGS)/help-center/',
+    path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSWeeklyReportIndexRoute =
+  AuthenticatedREPORTSWeeklyReportIndexRouteImport.update({
+    id: '/(REPORTS)/weekly-report/',
+    path: '/weekly-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute =
+  AuthenticatedREPORTSPurchaseLocationErrorReportIndexRouteImport.update({
+    id: '/(REPORTS)/purchase-location-error-report/',
+    path: '/purchase-location-error-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSPscCostReportIndexRoute =
+  AuthenticatedREPORTSPscCostReportIndexRouteImport.update({
+    id: '/(REPORTS)/psc-cost-report/',
+    path: '/psc-cost-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSPaymentReportIndexRoute =
+  AuthenticatedREPORTSPaymentReportIndexRouteImport.update({
+    id: '/(REPORTS)/payment-report/',
+    path: '/payment-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSOutOfWarrantyReportIndexRoute =
+  AuthenticatedREPORTSOutOfWarrantyReportIndexRouteImport.update({
+    id: '/(REPORTS)/out-of-warranty-report/',
+    path: '/out-of-warranty-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSModelErrorReportIndexRoute =
+  AuthenticatedREPORTSModelErrorReportIndexRouteImport.update({
+    id: '/(REPORTS)/model-error-report/',
+    path: '/model-error-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute =
+  AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRouteImport.update({
+    id: '/(REPORTS)/history-of-repair-cases-status-changes/',
+    path: '/history-of-repair-cases-status-changes/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSCostReportIndexRoute =
+  AuthenticatedREPORTSCostReportIndexRouteImport.update({
+    id: '/(REPORTS)/cost-report/',
+    path: '/cost-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSCategoryErrorReportIndexRoute =
+  AuthenticatedREPORTSCategoryErrorReportIndexRouteImport.update({
+    id: '/(REPORTS)/category-error-report/',
+    path: '/category-error-report/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute =
+  AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRouteImport.update({
+    id: '/(REPORTS)/accessories-status-statistics/',
+    path: '/accessories-status-statistics/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedGENERALRepairCasesManagementIndexRoute =
   AuthenticatedGENERALRepairCasesManagementIndexRouteImport.update({
     id: '/',
@@ -184,9 +278,34 @@ const AuthenticatedGENERALRepairCasesManagementIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedGENERALRepairCasesManagementRouteRoute,
   } as any)
+const AuthenticatedSETTINGSSettingsNotificationsIndexRoute =
+  AuthenticatedSETTINGSSettingsNotificationsIndexRouteImport.update({
+    id: '/(SETTINGS)/settings/notifications/',
+    path: '/settings/notifications/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSETTINGSSettingsDisplayIndexRoute =
+  AuthenticatedSETTINGSSettingsDisplayIndexRouteImport.update({
+    id: '/(SETTINGS)/settings/display/',
+    path: '/settings/display/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSETTINGSSettingsAppearanceIndexRoute =
+  AuthenticatedSETTINGSSettingsAppearanceIndexRouteImport.update({
+    id: '/(SETTINGS)/settings/appearance/',
+    path: '/settings/appearance/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSETTINGSSettingsAccountIndexRoute =
+  AuthenticatedSETTINGSSettingsAccountIndexRouteImport.update({
+    id: '/(SETTINGS)/settings/account/',
+    path: '/settings/account/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
+  '/test-hooks': typeof TestHooksRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -194,6 +313,18 @@ export interface FileRoutesByFullPath {
   '/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/accessories-status-statistics/': typeof AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute
+  '/category-error-report/': typeof AuthenticatedREPORTSCategoryErrorReportIndexRoute
+  '/cost-report/': typeof AuthenticatedREPORTSCostReportIndexRoute
+  '/history-of-repair-cases-status-changes/': typeof AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute
+  '/model-error-report/': typeof AuthenticatedREPORTSModelErrorReportIndexRoute
+  '/out-of-warranty-report/': typeof AuthenticatedREPORTSOutOfWarrantyReportIndexRoute
+  '/payment-report/': typeof AuthenticatedREPORTSPaymentReportIndexRoute
+  '/psc-cost-report/': typeof AuthenticatedREPORTSPscCostReportIndexRoute
+  '/purchase-location-error-report/': typeof AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute
+  '/weekly-report/': typeof AuthenticatedREPORTSWeeklyReportIndexRoute
+  '/help-center/': typeof AuthenticatedSETTINGSHelpCenterIndexRoute
+  '/settings/': typeof AuthenticatedSETTINGSSettingsIndexRoute
   '/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
   '/asc-centers-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
   '/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
@@ -208,8 +339,13 @@ export interface FileRoutesByFullPath {
   '/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/ai/example/': typeof AuthenticatedAiExampleIndexRoute
   '/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
+  '/settings/account/': typeof AuthenticatedSETTINGSSettingsAccountIndexRoute
+  '/settings/appearance/': typeof AuthenticatedSETTINGSSettingsAppearanceIndexRoute
+  '/settings/display/': typeof AuthenticatedSETTINGSSettingsDisplayIndexRoute
+  '/settings/notifications/': typeof AuthenticatedSETTINGSSettingsNotificationsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/test-hooks': typeof TestHooksRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -217,6 +353,18 @@ export interface FileRoutesByTo {
   '/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/payment-pending-repair-cases': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/repair-cases-management': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/accessories-status-statistics': typeof AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute
+  '/category-error-report': typeof AuthenticatedREPORTSCategoryErrorReportIndexRoute
+  '/cost-report': typeof AuthenticatedREPORTSCostReportIndexRoute
+  '/history-of-repair-cases-status-changes': typeof AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute
+  '/model-error-report': typeof AuthenticatedREPORTSModelErrorReportIndexRoute
+  '/out-of-warranty-report': typeof AuthenticatedREPORTSOutOfWarrantyReportIndexRoute
+  '/payment-report': typeof AuthenticatedREPORTSPaymentReportIndexRoute
+  '/psc-cost-report': typeof AuthenticatedREPORTSPscCostReportIndexRoute
+  '/purchase-location-error-report': typeof AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute
+  '/weekly-report': typeof AuthenticatedREPORTSWeeklyReportIndexRoute
+  '/help-center': typeof AuthenticatedSETTINGSHelpCenterIndexRoute
+  '/settings': typeof AuthenticatedSETTINGSSettingsIndexRoute
   '/accessories-management': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
   '/asc-centers-management': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
   '/central-warehouse-management': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
@@ -231,11 +379,16 @@ export interface FileRoutesByTo {
   '/user-management': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/ai/example': typeof AuthenticatedAiExampleIndexRoute
   '/ai/gemini': typeof AuthenticatedAiGeminiIndexRoute
+  '/settings/account': typeof AuthenticatedSETTINGSSettingsAccountIndexRoute
+  '/settings/appearance': typeof AuthenticatedSETTINGSSettingsAppearanceIndexRoute
+  '/settings/display': typeof AuthenticatedSETTINGSSettingsDisplayIndexRoute
+  '/settings/notifications': typeof AuthenticatedSETTINGSSettingsNotificationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/test-hooks': typeof TestHooksRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
@@ -244,6 +397,18 @@ export interface FileRoutesById {
   '/_authenticated/(GENERAL)/repair-cases-management/$id': typeof AuthenticatedGENERALRepairCasesManagementIdRoute
   '/_authenticated/(GENERAL)/payment-pending-repair-cases/': typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
   '/_authenticated/(GENERAL)/repair-cases-management/': typeof AuthenticatedGENERALRepairCasesManagementIndexRoute
+  '/_authenticated/(REPORTS)/accessories-status-statistics/': typeof AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute
+  '/_authenticated/(REPORTS)/category-error-report/': typeof AuthenticatedREPORTSCategoryErrorReportIndexRoute
+  '/_authenticated/(REPORTS)/cost-report/': typeof AuthenticatedREPORTSCostReportIndexRoute
+  '/_authenticated/(REPORTS)/history-of-repair-cases-status-changes/': typeof AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute
+  '/_authenticated/(REPORTS)/model-error-report/': typeof AuthenticatedREPORTSModelErrorReportIndexRoute
+  '/_authenticated/(REPORTS)/out-of-warranty-report/': typeof AuthenticatedREPORTSOutOfWarrantyReportIndexRoute
+  '/_authenticated/(REPORTS)/payment-report/': typeof AuthenticatedREPORTSPaymentReportIndexRoute
+  '/_authenticated/(REPORTS)/psc-cost-report/': typeof AuthenticatedREPORTSPscCostReportIndexRoute
+  '/_authenticated/(REPORTS)/purchase-location-error-report/': typeof AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute
+  '/_authenticated/(REPORTS)/weekly-report/': typeof AuthenticatedREPORTSWeeklyReportIndexRoute
+  '/_authenticated/(SETTINGS)/help-center/': typeof AuthenticatedSETTINGSHelpCenterIndexRoute
+  '/_authenticated/(SETTINGS)/settings/': typeof AuthenticatedSETTINGSSettingsIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/': typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
   '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/': typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
@@ -258,11 +423,16 @@ export interface FileRoutesById {
   '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/': typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   '/_authenticated/ai/example/': typeof AuthenticatedAiExampleIndexRoute
   '/_authenticated/ai/gemini/': typeof AuthenticatedAiGeminiIndexRoute
+  '/_authenticated/(SETTINGS)/settings/account/': typeof AuthenticatedSETTINGSSettingsAccountIndexRoute
+  '/_authenticated/(SETTINGS)/settings/appearance/': typeof AuthenticatedSETTINGSSettingsAppearanceIndexRoute
+  '/_authenticated/(SETTINGS)/settings/display/': typeof AuthenticatedSETTINGSSettingsDisplayIndexRoute
+  '/_authenticated/(SETTINGS)/settings/notifications/': typeof AuthenticatedSETTINGSSettingsNotificationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/test-hooks'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -270,6 +440,18 @@ export interface FileRouteTypes {
     | '/repair-cases-management/$id'
     | '/payment-pending-repair-cases/'
     | '/repair-cases-management/'
+    | '/accessories-status-statistics/'
+    | '/category-error-report/'
+    | '/cost-report/'
+    | '/history-of-repair-cases-status-changes/'
+    | '/model-error-report/'
+    | '/out-of-warranty-report/'
+    | '/payment-report/'
+    | '/psc-cost-report/'
+    | '/purchase-location-error-report/'
+    | '/weekly-report/'
+    | '/help-center/'
+    | '/settings/'
     | '/accessories-management/'
     | '/asc-centers-management/'
     | '/central-warehouse-management/'
@@ -284,8 +466,13 @@ export interface FileRouteTypes {
     | '/user-management/'
     | '/ai/example/'
     | '/ai/gemini/'
+    | '/settings/account/'
+    | '/settings/appearance/'
+    | '/settings/display/'
+    | '/settings/notifications/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/test-hooks'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -293,6 +480,18 @@ export interface FileRouteTypes {
     | '/repair-cases-management/$id'
     | '/payment-pending-repair-cases'
     | '/repair-cases-management'
+    | '/accessories-status-statistics'
+    | '/category-error-report'
+    | '/cost-report'
+    | '/history-of-repair-cases-status-changes'
+    | '/model-error-report'
+    | '/out-of-warranty-report'
+    | '/payment-report'
+    | '/psc-cost-report'
+    | '/purchase-location-error-report'
+    | '/weekly-report'
+    | '/help-center'
+    | '/settings'
     | '/accessories-management'
     | '/asc-centers-management'
     | '/central-warehouse-management'
@@ -307,10 +506,15 @@ export interface FileRouteTypes {
     | '/user-management'
     | '/ai/example'
     | '/ai/gemini'
+    | '/settings/account'
+    | '/settings/appearance'
+    | '/settings/display'
+    | '/settings/notifications'
   id:
     | '__root__'
     | '/(auth)'
     | '/_authenticated'
+    | '/test-hooks'
     | '/(auth)/forgot-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
@@ -319,6 +523,18 @@ export interface FileRouteTypes {
     | '/_authenticated/(GENERAL)/repair-cases-management/$id'
     | '/_authenticated/(GENERAL)/payment-pending-repair-cases/'
     | '/_authenticated/(GENERAL)/repair-cases-management/'
+    | '/_authenticated/(REPORTS)/accessories-status-statistics/'
+    | '/_authenticated/(REPORTS)/category-error-report/'
+    | '/_authenticated/(REPORTS)/cost-report/'
+    | '/_authenticated/(REPORTS)/history-of-repair-cases-status-changes/'
+    | '/_authenticated/(REPORTS)/model-error-report/'
+    | '/_authenticated/(REPORTS)/out-of-warranty-report/'
+    | '/_authenticated/(REPORTS)/payment-report/'
+    | '/_authenticated/(REPORTS)/psc-cost-report/'
+    | '/_authenticated/(REPORTS)/purchase-location-error-report/'
+    | '/_authenticated/(REPORTS)/weekly-report/'
+    | '/_authenticated/(SETTINGS)/help-center/'
+    | '/_authenticated/(SETTINGS)/settings/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/'
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/'
@@ -333,15 +549,27 @@ export interface FileRouteTypes {
     | '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/'
     | '/_authenticated/ai/example/'
     | '/_authenticated/ai/gemini/'
+    | '/_authenticated/(SETTINGS)/settings/account/'
+    | '/_authenticated/(SETTINGS)/settings/appearance/'
+    | '/_authenticated/(SETTINGS)/settings/display/'
+    | '/_authenticated/(SETTINGS)/settings/notifications/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  TestHooksRoute: typeof TestHooksRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test-hooks': {
+      id: '/test-hooks'
+      path: '/test-hooks'
+      fullPath: '/test-hooks'
+      preLoaderRoute: typeof TestHooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -489,6 +717,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/(SETTINGS)/settings/': {
+      id: '/_authenticated/(SETTINGS)/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SETTINGS)/help-center/': {
+      id: '/_authenticated/(SETTINGS)/help-center/'
+      path: '/help-center'
+      fullPath: '/help-center/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/weekly-report/': {
+      id: '/_authenticated/(REPORTS)/weekly-report/'
+      path: '/weekly-report'
+      fullPath: '/weekly-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSWeeklyReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/purchase-location-error-report/': {
+      id: '/_authenticated/(REPORTS)/purchase-location-error-report/'
+      path: '/purchase-location-error-report'
+      fullPath: '/purchase-location-error-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSPurchaseLocationErrorReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/psc-cost-report/': {
+      id: '/_authenticated/(REPORTS)/psc-cost-report/'
+      path: '/psc-cost-report'
+      fullPath: '/psc-cost-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSPscCostReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/payment-report/': {
+      id: '/_authenticated/(REPORTS)/payment-report/'
+      path: '/payment-report'
+      fullPath: '/payment-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSPaymentReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/out-of-warranty-report/': {
+      id: '/_authenticated/(REPORTS)/out-of-warranty-report/'
+      path: '/out-of-warranty-report'
+      fullPath: '/out-of-warranty-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSOutOfWarrantyReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/model-error-report/': {
+      id: '/_authenticated/(REPORTS)/model-error-report/'
+      path: '/model-error-report'
+      fullPath: '/model-error-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSModelErrorReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/history-of-repair-cases-status-changes/': {
+      id: '/_authenticated/(REPORTS)/history-of-repair-cases-status-changes/'
+      path: '/history-of-repair-cases-status-changes'
+      fullPath: '/history-of-repair-cases-status-changes/'
+      preLoaderRoute: typeof AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/cost-report/': {
+      id: '/_authenticated/(REPORTS)/cost-report/'
+      path: '/cost-report'
+      fullPath: '/cost-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSCostReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/category-error-report/': {
+      id: '/_authenticated/(REPORTS)/category-error-report/'
+      path: '/category-error-report'
+      fullPath: '/category-error-report/'
+      preLoaderRoute: typeof AuthenticatedREPORTSCategoryErrorReportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(REPORTS)/accessories-status-statistics/': {
+      id: '/_authenticated/(REPORTS)/accessories-status-statistics/'
+      path: '/accessories-status-statistics'
+      fullPath: '/accessories-status-statistics/'
+      preLoaderRoute: typeof AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/(GENERAL)/repair-cases-management/': {
       id: '/_authenticated/(GENERAL)/repair-cases-management/'
       path: '/'
@@ -509,6 +821,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/repair-cases-management/$id'
       preLoaderRoute: typeof AuthenticatedGENERALRepairCasesManagementIdRouteImport
       parentRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRoute
+    }
+    '/_authenticated/(SETTINGS)/settings/notifications/': {
+      id: '/_authenticated/(SETTINGS)/settings/notifications/'
+      path: '/settings/notifications'
+      fullPath: '/settings/notifications/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSSettingsNotificationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SETTINGS)/settings/display/': {
+      id: '/_authenticated/(SETTINGS)/settings/display/'
+      path: '/settings/display'
+      fullPath: '/settings/display/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSSettingsDisplayIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SETTINGS)/settings/appearance/': {
+      id: '/_authenticated/(SETTINGS)/settings/appearance/'
+      path: '/settings/appearance'
+      fullPath: '/settings/appearance/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSSettingsAppearanceIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(SETTINGS)/settings/account/': {
+      id: '/_authenticated/(SETTINGS)/settings/account/'
+      path: '/settings/account'
+      fullPath: '/settings/account/'
+      preLoaderRoute: typeof AuthenticatedSETTINGSSettingsAccountIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
@@ -551,6 +891,18 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedGENERALRepairCasesManagementRouteRoute: typeof AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute: typeof AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute
+  AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute: typeof AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute
+  AuthenticatedREPORTSCategoryErrorReportIndexRoute: typeof AuthenticatedREPORTSCategoryErrorReportIndexRoute
+  AuthenticatedREPORTSCostReportIndexRoute: typeof AuthenticatedREPORTSCostReportIndexRoute
+  AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute: typeof AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute
+  AuthenticatedREPORTSModelErrorReportIndexRoute: typeof AuthenticatedREPORTSModelErrorReportIndexRoute
+  AuthenticatedREPORTSOutOfWarrantyReportIndexRoute: typeof AuthenticatedREPORTSOutOfWarrantyReportIndexRoute
+  AuthenticatedREPORTSPaymentReportIndexRoute: typeof AuthenticatedREPORTSPaymentReportIndexRoute
+  AuthenticatedREPORTSPscCostReportIndexRoute: typeof AuthenticatedREPORTSPscCostReportIndexRoute
+  AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute: typeof AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute
+  AuthenticatedREPORTSWeeklyReportIndexRoute: typeof AuthenticatedREPORTSWeeklyReportIndexRoute
+  AuthenticatedSETTINGSHelpCenterIndexRoute: typeof AuthenticatedSETTINGSHelpCenterIndexRoute
+  AuthenticatedSETTINGSSettingsIndexRoute: typeof AuthenticatedSETTINGSSettingsIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute
   AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONCentralWarehouseManagementIndexRoute
@@ -565,6 +917,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute: typeof AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute
   AuthenticatedAiExampleIndexRoute: typeof AuthenticatedAiExampleIndexRoute
   AuthenticatedAiGeminiIndexRoute: typeof AuthenticatedAiGeminiIndexRoute
+  AuthenticatedSETTINGSSettingsAccountIndexRoute: typeof AuthenticatedSETTINGSSettingsAccountIndexRoute
+  AuthenticatedSETTINGSSettingsAppearanceIndexRoute: typeof AuthenticatedSETTINGSSettingsAppearanceIndexRoute
+  AuthenticatedSETTINGSSettingsDisplayIndexRoute: typeof AuthenticatedSETTINGSSettingsDisplayIndexRoute
+  AuthenticatedSETTINGSSettingsNotificationsIndexRoute: typeof AuthenticatedSETTINGSSettingsNotificationsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -573,6 +929,30 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedGENERALRepairCasesManagementRouteRouteWithChildren,
   AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute:
     AuthenticatedGENERALPaymentPendingRepairCasesIndexRoute,
+  AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute:
+    AuthenticatedREPORTSAccessoriesStatusStatisticsIndexRoute,
+  AuthenticatedREPORTSCategoryErrorReportIndexRoute:
+    AuthenticatedREPORTSCategoryErrorReportIndexRoute,
+  AuthenticatedREPORTSCostReportIndexRoute:
+    AuthenticatedREPORTSCostReportIndexRoute,
+  AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute:
+    AuthenticatedREPORTSHistoryOfRepairCasesStatusChangesIndexRoute,
+  AuthenticatedREPORTSModelErrorReportIndexRoute:
+    AuthenticatedREPORTSModelErrorReportIndexRoute,
+  AuthenticatedREPORTSOutOfWarrantyReportIndexRoute:
+    AuthenticatedREPORTSOutOfWarrantyReportIndexRoute,
+  AuthenticatedREPORTSPaymentReportIndexRoute:
+    AuthenticatedREPORTSPaymentReportIndexRoute,
+  AuthenticatedREPORTSPscCostReportIndexRoute:
+    AuthenticatedREPORTSPscCostReportIndexRoute,
+  AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute:
+    AuthenticatedREPORTSPurchaseLocationErrorReportIndexRoute,
+  AuthenticatedREPORTSWeeklyReportIndexRoute:
+    AuthenticatedREPORTSWeeklyReportIndexRoute,
+  AuthenticatedSETTINGSHelpCenterIndexRoute:
+    AuthenticatedSETTINGSHelpCenterIndexRoute,
+  AuthenticatedSETTINGSSettingsIndexRoute:
+    AuthenticatedSETTINGSSettingsIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute:
     AuthenticatedSYSTEMADMINISTRATIONAccessoriesManagementIndexRoute,
   AuthenticatedSYSTEMADMINISTRATIONAscCentersManagementIndexRoute:
@@ -599,6 +979,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedSYSTEMADMINISTRATIONUserManagementIndexRoute,
   AuthenticatedAiExampleIndexRoute: AuthenticatedAiExampleIndexRoute,
   AuthenticatedAiGeminiIndexRoute: AuthenticatedAiGeminiIndexRoute,
+  AuthenticatedSETTINGSSettingsAccountIndexRoute:
+    AuthenticatedSETTINGSSettingsAccountIndexRoute,
+  AuthenticatedSETTINGSSettingsAppearanceIndexRoute:
+    AuthenticatedSETTINGSSettingsAppearanceIndexRoute,
+  AuthenticatedSETTINGSSettingsDisplayIndexRoute:
+    AuthenticatedSETTINGSSettingsDisplayIndexRoute,
+  AuthenticatedSETTINGSSettingsNotificationsIndexRoute:
+    AuthenticatedSETTINGSSettingsNotificationsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -607,6 +995,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  TestHooksRoute: TestHooksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

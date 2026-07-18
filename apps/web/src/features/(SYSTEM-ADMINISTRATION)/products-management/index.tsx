@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/products-management/')
 
 export function ProductsManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 

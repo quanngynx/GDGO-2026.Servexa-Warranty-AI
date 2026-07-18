@@ -1,5 +1,6 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
+import { formatIsoDateTime } from '@servexa-warranty-ai/ui/lib/format-time'
 import { Badge } from '@servexa-warranty-ai/ui/components/badge'
 import { Checkbox } from '@servexa-warranty-ai/ui/components/checkbox'
 import { DataTableColumnHeader } from '@servexa-warranty-ai/ui/components/data-table'
@@ -76,6 +77,22 @@ export const productsColumns: ColumnDef<Model>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title={t("Category")} />,
     cell: ({ row }) => (
       <LongText className='max-w-36'>{row.original.category?.name ?? '—'}</LongText>
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Created At")} />,
+    cell: ({ row }) => (
+      <LongText className='max-w-36'>{formatIsoDateTime(row.getValue('createdAt')) ?? '—'}</LongText>
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Updated At")} />,
+    cell: ({ row }) => (
+      <LongText className='max-w-36'>{formatIsoDateTime(row.getValue('updatedAt')) ?? '—'}</LongText>
     ),
     enableSorting: false,
   },

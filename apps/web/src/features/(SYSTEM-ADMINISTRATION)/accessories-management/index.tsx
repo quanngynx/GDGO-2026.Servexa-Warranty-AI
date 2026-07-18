@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -9,26 +8,20 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
 import type { ResponseAccessoryListDto } from '@/libs/api/product-catalog/accessory/data-transfer-object'
 import type { ResponseTotalWarehouseListDto } from '@/libs/api/product-catalog/total-warehouse/data-transfer-object'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@servexa-warranty-ai/ui/components/select'
-import { Label } from '@servexa-warranty-ai/ui/components/label'
 import { AccessoriesDialogs } from './components/accessories-dialogs'
 import { AccessoriesPrimaryButtons } from './components/accessories-primary-buttons'
 import { AccessoriesProvider } from './components/accessories-provider'
 import { AccessoriesTable } from './components/accessories-table'
 import { useAccessoriesQuery } from './hooks/use-accessories-query'
 import { useTotalWarehousesQuery } from './hooks/use-total-warehouses-query'
+import { useAscCentersQuery } from '../asc-centers-management/hooks/use-asc-centers-query'
+import type { ResponseAscCenterListDto } from '@/libs/api/asc-center/asc-center/data-transfer-object'
 import { useTranslation } from "react-i18next";
 
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/accessories-management/')
 
 export function AccessoriesManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -36,28 +29,47 @@ export function AccessoriesManagement() {
   const warehouseList =
     listPayloadFromApi<ResponseTotalWarehouseListDto>(warehousesData)?.items ?? []
 
-  const warehouseId = search.totalWarehouseId || warehouseList[0]?.id
-  const useGlobalList = warehouseList.length === 0 && !warehousesLoading
+  const { data: ascCentersData, isLoading: ascCentersLoading } = useAscCentersQuery()
+  const ascCenterList =
+    listPayloadFromApi<ResponseAscCenterListDto>(ascCentersData)?.items ?? []
 
-  useEffect(() => {
-    if (!search.totalWarehouseId && warehouseList[0]?.id) {
-      navigate({
-        search: {
-          ...search,
-          totalWarehouseId: warehouseList[0]!.id,
-        },
-        replace: true,
-      })
-    }
-  }, [search, search.totalWarehouseId, warehouseList, navigate])
+  const selectedWarehouseIds = new Set<string>(
+    search.totalWarehouseIds ? search.totalWarehouseIds.split(',') : [],
+  )
+  const selectedAscCenterIds = new Set<string>(
+    search.ascCenterIds ? search.ascCenterIds.split(',') : [],
+  )
 
-  const handleWarehouseChange = (nextWarehouseId: string) => {
+  const handleWarehouseChange = (newSelected: Set<string>) => {
     navigate({
       search: {
         ...search,
-        totalWarehouseId: nextWarehouseId,
+        totalWarehouseIds: newSelected.size > 0 ? Array.from(newSelected).join(',') : undefined,
         page: 1,
       },
+    })
+  }
+
+  const handleAscCenterChange = (newSelected: Set<string>) => {
+    navigate({
+      search: {
+        ...search,
+        ascCenterIds: newSelected.size > 0 ? Array.from(newSelected).join(',') : undefined,
+        page: 1,
+      },
+    })
+  }
+
+  const handleResetFilters = () => {
+    navigate({
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        search: undefined,
+        status: undefined,
+        totalWarehouseIds: undefined,
+        ascCenterIds: undefined,
+        page: 1,
+      }),
     })
   }
 
@@ -66,8 +78,8 @@ export function AccessoriesManagement() {
     limit: search.pageSize,
     search: search.search || undefined,
     status: search.status?.[0] as 'active' | 'inactive' | undefined,
-    totalWarehouseId: warehouseId,
-    useGlobalList,
+    totalWarehouseIds: search.totalWarehouseIds || undefined,
+    ascCenterIds: search.ascCenterIds || undefined,
   })
 
   const list = listPayloadFromApi<ResponseAccessoryListDto>(data)
@@ -77,8 +89,8 @@ export function AccessoriesManagement() {
   return (
     <AccessoriesProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -95,30 +107,19 @@ export function AccessoriesManagement() {
           <AccessoriesPrimaryButtons />
         </div>
 
-        {warehouseList.length > 0 && (
-          <div className='flex max-w-sm flex-col gap-2'>
-            <Label htmlFor='warehouse-select'>{t("Total warehouse")}</Label>
-            <Select value={warehouseId} onValueChange={handleWarehouseChange}>
-              <SelectTrigger id='warehouse-select' className='w-full'>
-                <SelectValue placeholder={t("Select a warehouse")} />
-              </SelectTrigger>
-              <SelectContent>
-                {warehouseList.map((warehouse) => (
-                  <SelectItem key={warehouse.id} value={warehouse.id}>
-                    {warehouse.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-
         <AccessoriesTable
           data={accessories}
-          isLoading={isLoading || warehousesLoading}
+          isLoading={isLoading || warehousesLoading || ascCentersLoading}
           totalPages={totalPages}
           search={search}
           navigate={navigate}
+          warehouseList={warehouseList}
+          ascCenterList={ascCenterList}
+          selectedWarehouseIds={selectedWarehouseIds}
+          selectedAscCenterIds={selectedAscCenterIds}
+          onWarehouseChange={handleWarehouseChange}
+          onAscCenterChange={handleAscCenterChange}
+          onResetFilters={handleResetFilters}
         />
       </Main>
 
