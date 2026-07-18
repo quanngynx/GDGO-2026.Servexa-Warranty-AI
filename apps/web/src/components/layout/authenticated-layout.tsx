@@ -22,7 +22,7 @@ type AuthenticatedLayoutProps = {
 };
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const defaultOpen = getCookie("sidebar_state") !== "false";
   const hideCopilotRail = useRouterState({
     select: (s) => isCopilotRailHiddenRoute(s.location.pathname),
@@ -35,7 +35,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
           <SidebarProvider defaultOpen={defaultOpen}>
             <SkipToMain />
             <AppSidebar />
-            <div className="flex min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 pb-4">
               <SidebarInset
                 className={cn(
                   "@container/content",
