@@ -11,6 +11,7 @@ const userManagementSearchSchema = adminListSearchSchema.extend({
 export const Route = createFileRoute(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/user-management/',
 )({
+  beforeLoad: () => ({ title: 'User Management' }),
   validateSearch: userManagementSearchSchema,
   component: UserManagement,
 })

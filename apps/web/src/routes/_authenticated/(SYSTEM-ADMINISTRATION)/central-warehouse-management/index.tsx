@@ -5,6 +5,7 @@ import { adminListWithStatusSearchSchema } from '../../../../libs/search-schemas
 export const Route = createFileRoute(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/central-warehouse-management/',
 )({
+  beforeLoad: () => ({ title: 'Central Warehouse Management' }),
   validateSearch: adminListWithStatusSearchSchema,
   component: CentralWarehouseManagement,
 })

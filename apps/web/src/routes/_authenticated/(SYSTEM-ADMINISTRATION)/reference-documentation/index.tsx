@@ -6,6 +6,7 @@ import { adminListSearchSchema } from '../../../../libs/search-schemas'
 export const Route = createFileRoute(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documentation/',
 )({
+  beforeLoad: () => ({ title: 'Reference Documentation' }),
   validateSearch: adminListSearchSchema,
   component: ReferenceDocumentationPage,
 })

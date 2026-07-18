@@ -4,6 +4,7 @@ import { useParams } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/_authenticated/ai/example/')({
+  beforeLoad: () => ({ title: 'Example' }),
   component: () => {
     const { integrationId } = useParams({ from: '/_authenticated/ai/example/' })
     useEffect(() => {
