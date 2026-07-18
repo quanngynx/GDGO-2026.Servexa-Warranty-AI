@@ -24,6 +24,7 @@
     "@ag-ui/client": "catalog:",
     "@ai-sdk/devtools": "^0.0.2",
     "@ai-sdk/google": "^3.0.1",
+    "@aws-sdk/client-s3": "^3.1090.0",
     "@copilotkit/runtime": "catalog:",
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
