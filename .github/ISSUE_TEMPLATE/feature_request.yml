@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a new capability, workflow, or improvement
+title: "[Feature]: "
+body:
+  - type: input
+    id: repository
+    attributes:
+      label: App or package
+      placeholder: "apps/web / apps/server / apps/ai-services / packages/..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What user, technician, support agent, or maintainer problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the expected behavior and any alternatives considered.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation approach
+      description: How should this be tested or reviewed (e.g., prompt evaluation, UI testing)?
+  - type: textarea
+    id: security
+    attributes:
+      label: Security and safety considerations
+      description: Note data handling, AI safety, prompt injection risks, or data privacy concerns.

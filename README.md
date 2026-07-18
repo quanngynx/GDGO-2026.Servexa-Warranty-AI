@@ -19,6 +19,12 @@ AI-powered Warranty Intelligence Platform built with RAG, LangGraph and Agentic 
 ![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748)
 ![LangGraph](https://img.shields.io/badge/LangGraph-Agentic-green)
 ![License](https://img.shields.io/badge/license-MIT-green)
+[![Policy as Code](https://img.shields.io/badge/policy-OPA-14B8A6)](https://www.openpolicyagent.org/)
+[![Total Stars](https://img.shields.io/github/stars/quanngynx/servexa-warranty-ai)](https://github.com/quanngynx/servexa-warranty-ai)
+[![Total Views](https://komarev.com/ghpvc/?username=quanngynx-servexa-warranty-ai&label=views)](https://github.com/quanngynx/servexa-warranty-ai)
+[![Total Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/quanngynx/servexa-warranty-ai/main/clone-badge.json)](https://github.com/quanngynx/servexa-warranty-ai)
+[![Unique Cloners](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/quanngynx/servexa-warranty-ai/main/uniques-badge.json)](https://github.com/quanngynx/servexa-warranty-ai)
+[![Followers](https://img.shields.io/github/followers/quanngynx)](https://github.com/quanngynx)
 
 </p>
 
@@ -407,3 +413,5 @@ Built with:
 - OpenAI
 - TailwindCSS
 - shadcn/ui
+
+# Open source
