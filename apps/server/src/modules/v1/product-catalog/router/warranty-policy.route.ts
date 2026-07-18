@@ -25,28 +25,70 @@ const warrantyPolicyController = new WarrantyPolicyController(
 
 warrantyPolicyRoute.use(...authenticatedWithPermissions);
 
+/**
+ * Get all warranty policies
+ * @route GET /v1/product-catalog/warranty-policies
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.get("/", catalogRead, warrantyPolicyController.findAll);
+/**
+ * Resolve a warranty policy
+ * @route GET /v1/product-catalog/warranty-policies/resolve
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.get(
   "/resolve",
   catalogRead,
   warrantyPolicyController.resolve,
 );
+/**
+ * Get a warranty policy by ID
+ * @route GET /v1/product-catalog/warranty-policies/:warrantyPolicyId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.get(
   "/:warrantyPolicyId",
   catalogRead,
   warrantyPolicyController.findOneById,
 );
+/**
+ * Create a warranty policy
+ * @route POST /v1/product-catalog/warranty-policies
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.post("/", catalogWrite, warrantyPolicyController.create);
+/**
+ * Replace a warranty policy
+ * @route PUT /v1/product-catalog/warranty-policies/:warrantyPolicyId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.put(
   "/:warrantyPolicyId",
   catalogWrite,
   warrantyPolicyController.replace,
 );
+/**
+ * Update a warranty policy
+ * @route PATCH /v1/product-catalog/warranty-policies/:warrantyPolicyId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.patch(
   "/:warrantyPolicyId",
   catalogWrite,
   warrantyPolicyController.update,
 );
+/**
+ * Delete a warranty policy
+ * @route DELETE /v1/product-catalog/warranty-policies/:warrantyPolicyId
+ * @access Private
+ * @returns {Promise<void>}
+ */
 warrantyPolicyRoute.delete(
   "/:warrantyPolicyId",
   catalogWrite,

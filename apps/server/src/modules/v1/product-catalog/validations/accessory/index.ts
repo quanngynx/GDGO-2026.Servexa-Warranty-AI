@@ -41,6 +41,8 @@ export const findAllAccessoriesSchema = z.object({
   sortOrder: sortOrderSchema.default('desc'),
   status: accessoryStatusSchema.optional(),
   categoryId: z.uuidv7().optional(),
+  totalWarehouseIds: z.string().optional(),
+  ascCenterIds: z.string().optional(),
 })
 
 export const findAllAccessoryStocksSchema = z.object({

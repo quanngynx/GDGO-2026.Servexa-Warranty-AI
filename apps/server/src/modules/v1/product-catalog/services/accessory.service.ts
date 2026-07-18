@@ -22,12 +22,16 @@ import type {
   UpdateAccessoryDto,
   UpdateAscAccessoryStockDto,
   UpdateTotalWarehouseStockDto,
+  ResponseAccessoryDto,
   ResponseCreateAccessoryDto,
   ResponseUpdateAccessoryDto,
 } from "../dtos/accessory.dto";
 import type { IAccessoryService } from "../interfaces/accessory-service.interface";
 import { AccessoryRepository } from "../repositories/accessory.repository";
 import type { BasePagination } from "src/types/pagination";
+import { getStorageProvider } from "@/core/file-storage/storage.factory";
+import { processAndOptimizeImage } from "@/core/file-storage/image-processor";
+import type { IStorageProvider } from "@/core/file-storage/storage-provider.interface";
 
 const accessorySelect = {
   id: true,
@@ -84,11 +88,37 @@ const warehouseOrderBy = (
 };
 
 export class AccessoryService implements IAccessoryService {
+  private readonly storageProvider: IStorageProvider = getStorageProvider()
+
   constructor(
     private readonly accessoryRepository: AccessoryRepository = new AccessoryRepository(),
   ) {}
 
-  async findAll(query: FindAllAccessoriesInput): Promise<{ items: (Accessory & Prisma.AccessoryInclude)[] | null, pagination: BasePagination }> {
+  private buildImageUrl(imagePath?: string | null): string | null {
+    if (!imagePath) return null
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath
+    }
+    const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`
+    if (cleanPath.startsWith('/uploads/')) {
+      const baseUrl = `http://localhost:${env.PORT || 3000}`
+      return `${baseUrl}${cleanPath}`
+    }
+    return imagePath
+  }
+
+  private async handleImageUpload(file?: Express.Multer.File): Promise<string | undefined> {
+    if (!file) return undefined
+    const optimizedBuffer = await processAndOptimizeImage(file.buffer)
+    const uploadResult = await this.storageProvider.uploadImage(
+      optimizedBuffer,
+      file.originalname,
+      'accessories',
+    )
+    return uploadResult.key
+  }
+
+  async findAll(query: FindAllAccessoriesInput): Promise<{ items: (Accessory & Prisma.AccessoryInclude & { imageUrl: string | null })[] | null, pagination: BasePagination }> {
     const where: Prisma.AccessoryWhereInput = {
       ...(query.status ? { status: query.status } : {}),
       ...(query.categoryId ? { categoryId: query.categoryId } : {}),
@@ -100,6 +130,28 @@ export class AccessoryService implements IAccessoryService {
               { partNumber: { contains: query.search, mode: "insensitive" } },
               { englishName: { contains: query.search, mode: "insensitive" } },
             ],
+          }
+        : {}),
+      ...(query.totalWarehouseIds
+        ? {
+            totalWarehouseStock: {
+              some: {
+                totalWarehouseId: {
+                  in: query.totalWarehouseIds.split(',').map((id) => id.trim()).filter(Boolean),
+                },
+              },
+            },
+          }
+        : {}),
+      ...(query.ascCenterIds
+        ? {
+            stockLevels: {
+              some: {
+                ascCenterId: {
+                  in: query.ascCenterIds.split(',').map((id) => id.trim()).filter(Boolean),
+                },
+              },
+            },
           }
         : {}),
     };
@@ -118,12 +170,15 @@ export class AccessoryService implements IAccessoryService {
     ]);
 
     return {
-      items,
+      items: items.map((item) => ({
+        ...item,
+        imageUrl: this.buildImageUrl(item.image),
+      })),
       pagination: buildPagination(query.page, query.limit, total),
     };
   }
 
-  async findOneById(accessoryId: string): Promise<Accessory & Prisma.AccessoryInclude | null> {
+  async findOneById(accessoryId: string): Promise<ResponseAccessoryDto> {
     const found = await this.accessoryRepository.findOneById(accessoryId, {
       select: {
         ...accessorySelect,
@@ -147,10 +202,13 @@ export class AccessoryService implements IAccessoryService {
       );
     }
 
-    return found;
+    return {
+      ...found,
+      imageUrl: this.buildImageUrl(found.image),
+    };
   }
 
-  async create(input: CreateAccessoryDto): Promise<ResponseCreateAccessoryDto> {
+  async create(input: CreateAccessoryDto, file?: Express.Multer.File): Promise<ResponseCreateAccessoryDto> {
     const duplicate = await this.accessoryRepository.findOneByPartNumber(
       input.partNumber,
       {
@@ -165,13 +223,16 @@ export class AccessoryService implements IAccessoryService {
       );
     }
 
+    const uploadedImageKey = await this.handleImageUpload(file)
+    const imageToSave = uploadedImageKey ?? input.image ?? null
+
     const created = await this.accessoryRepository.createOne(
       {
         category: { connect: { id: input.categoryId } },
         name: input.name,
         partNumber: input.partNumber,
         description: input.description,
-        image: input.image,
+        image: imageToSave,
         partGroupNumber: input.partGroupNumber,
         partGroupName: input.partGroupName,
         partDescription: input.partDescription,
@@ -189,12 +250,16 @@ export class AccessoryService implements IAccessoryService {
       },
       { select: accessorySelect },
     );
-    return created;
+    return {
+      ...created,
+      imageUrl: this.buildImageUrl(created.image),
+    };
   }
 
   async update(
     accessoryId: string,
     input: ReplaceAccessoryDto | UpdateAccessoryDto,
+    file?: Express.Multer.File,
   ): Promise<ResponseUpdateAccessoryDto> {
     const existing = await this.accessoryRepository.findOneById(accessoryId, {
       select: { id: true, partNumber: true },
@@ -228,12 +293,18 @@ export class AccessoryService implements IAccessoryService {
 
     const data: Prisma.AccessoryUpdateInput = {};
 
+    const uploadedImageKey = await this.handleImageUpload(file)
+    if (uploadedImageKey !== undefined) {
+      data.image = uploadedImageKey
+    } else if (input.image !== undefined) {
+      data.image = input.image
+    }
+
     if (input.categoryId !== undefined)
       data.category = { connect: { id: input.categoryId } };
     if (input.name !== undefined) data.name = input.name;
     if (input.partNumber !== undefined) data.partNumber = input.partNumber;
     if (input.description !== undefined) data.description = input.description;
-    if (input.image !== undefined) data.image = input.image;
     if (input.partGroupNumber !== undefined)
       data.partGroupNumber = input.partGroupNumber;
     if (input.partGroupName !== undefined)
@@ -265,7 +336,10 @@ export class AccessoryService implements IAccessoryService {
     const updated = await this.accessoryRepository.updateOneById(accessoryId, data, {
       select: accessorySelect,
     });
-    return updated;
+    return {
+      ...updated,
+      imageUrl: this.buildImageUrl(updated.image),
+    };
   }
 
   async delete(accessoryId: string) {
@@ -309,6 +383,7 @@ export class AccessoryService implements IAccessoryService {
               name: true,
               partNumber: true,
               description: true,
+              image: true,
               unitPrice: true,
               status: true,
               category: {
@@ -341,6 +416,12 @@ export class AccessoryService implements IAccessoryService {
         availableStock: item.currentStock - item.reservedStock,
         isLowStock: item.currentStock <= item.minStockLevel,
         needsRestock: item.currentStock < item.minStockLevel,
+        accessory: item.accessory
+          ? {
+              ...item.accessory,
+              imageUrl: this.buildImageUrl(item.accessory.image),
+            }
+          : item.accessory,
       })),
       pagination: buildPagination(input.page, input.limit, total),
     };
@@ -389,12 +470,20 @@ export class AccessoryService implements IAccessoryService {
             : { lastUpdated: input.sortOrder },
         select: {
           id: true,
+          accessoryId: true,
+          currentStock: true,
+          reservedStock: true,
+          minStockLevel: true,
+          maxStockLevel: true,
+          ascCenterId: true,
+          lastUpdated: true,
           accessory: {
             select: {
               name: true,
               partNumber: true,
               itemNumber: true,
               description: true,
+              image: true,
               unitPrice: true,
               status: true,
             },
@@ -430,6 +519,12 @@ export class AccessoryService implements IAccessoryService {
         ...item,
         currentQuantityFromLHTotalWarehouose:
           longHauStockMap.get(item.accessoryId) ?? 0,
+        accessory: item.accessory
+          ? {
+              ...item.accessory,
+              imageUrl: this.buildImageUrl(item.accessory.image),
+            }
+          : item.accessory,
       })),
       pagination: buildPagination(input.page, input.limit, total),
     };
@@ -438,6 +533,7 @@ export class AccessoryService implements IAccessoryService {
   async createFromTotalWarehouse(
     params: FindAccessoriesFromTotalWarehouseParams,
     input: CreateTotalWarehouseStockDto,
+    file?: Express.Multer.File,
   ) {
     const existing = await this.accessoryRepository.findOneTotalWarehouseStock(
       params.totalWarehouseId,
@@ -452,6 +548,15 @@ export class AccessoryService implements IAccessoryService {
         "Total warehouse stock already exists",
         HTTP_RESPONSE_CODE.CONFLICT,
       );
+    }
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(input.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
     }
 
     const created = await this.accessoryRepository.createTotalWarehouseStock(
@@ -477,8 +582,19 @@ export class AccessoryService implements IAccessoryService {
   async replaceFromTotalWarehouse(
     params: FindAccessoryStockByTotalWarehouseInput,
     input: ReplaceTotalWarehouseStockDto,
+    file?: Express.Multer.File,
   ) {
     await this.ensureTotalWarehouseStockExists(params);
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(params.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
+    }
+
     const updated = await this.accessoryRepository.updateTotalWarehouseStock(
       params.totalWarehouseId,
       params.accessoryId,
@@ -502,8 +618,18 @@ export class AccessoryService implements IAccessoryService {
   async updateFromTotalWarehouse(
     params: FindAccessoryStockByTotalWarehouseInput,
     input: UpdateTotalWarehouseStockDto,
+    file?: Express.Multer.File,
   ) {
     await this.ensureTotalWarehouseStockExists(params);
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(params.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
+    }
 
     const data: Prisma.TotalWarehouseStockUpdateInput = {};
     if (input.currentStock !== undefined)
@@ -544,6 +670,7 @@ export class AccessoryService implements IAccessoryService {
   async createFromAscCenter(
     params: FindAccessoriesFromAscCenterParams,
     input: CreateAscAccessoryStockDto,
+    file?: Express.Multer.File,
   ) {
     const existing = await this.accessoryRepository.findOneAscAccessoryStock(
       params.ascCenterId,
@@ -558,6 +685,15 @@ export class AccessoryService implements IAccessoryService {
         "ASC accessory stock already exists",
         HTTP_RESPONSE_CODE.CONFLICT,
       );
+    }
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(input.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
     }
 
     const created = await this.accessoryRepository.createAscAccessoryStock(
@@ -582,8 +718,19 @@ export class AccessoryService implements IAccessoryService {
   async replaceFromAscCenter(
     params: FindAccessoryStockByAscCenterInput,
     input: ReplaceAscAccessoryStockDto,
+    file?: Express.Multer.File,
   ) {
     await this.ensureAscAccessoryStockExists(params);
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(params.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
+    }
+
     const updated = await this.accessoryRepository.updateAscAccessoryStock(
       params.ascCenterId,
       params.accessoryId,
@@ -606,8 +753,18 @@ export class AccessoryService implements IAccessoryService {
   async updateFromAscCenter(
     params: FindAccessoryStockByAscCenterInput,
     input: UpdateAscAccessoryStockDto,
+    file?: Express.Multer.File,
   ) {
     await this.ensureAscAccessoryStockExists(params);
+
+    if (file) {
+      const uploadedImageKey = await this.handleImageUpload(file);
+      if (uploadedImageKey) {
+        await this.accessoryRepository.updateOneById(params.accessoryId, {
+          image: uploadedImageKey,
+        });
+      }
+    }
 
     const data: Prisma.AscAccessoryStockUpdateInput = {};
     if (input.currentStock !== undefined)

@@ -75,15 +75,10 @@ export class AccessoryRepository {
     })
   }
 
-  async findManyTotalWarehouseStock(query: Prisma.TotalWarehouseStockFindManyArgs) {
-    const { take, skip, where, orderBy, ...rest } = query
-    return prisma.totalWarehouseStock.findMany({
-      take,
-      skip,
-      where,
-      orderBy,
-      ...rest,
-    })
+  async findManyTotalWarehouseStock<T extends Prisma.TotalWarehouseStockFindManyArgs>(
+    query: Prisma.SelectSubset<T, Prisma.TotalWarehouseStockFindManyArgs>,
+  ) {
+    return prisma.totalWarehouseStock.findMany(query)
   }
 
   async findTotalWarehouseByName(name: string) {
@@ -152,7 +147,9 @@ export class AccessoryRepository {
     })
   }
 
-  async findManyAscAccessoryStock(query: Prisma.AscAccessoryStockFindManyArgs) {
+  async findManyAscAccessoryStock<T extends Prisma.AscAccessoryStockFindManyArgs>(
+    query: Prisma.SelectSubset<T, Prisma.AscAccessoryStockFindManyArgs>,
+  ) {
     return prisma.ascAccessoryStock.findMany(query)
   }
 
