@@ -1,5 +1,6 @@
 import { env } from "@servexa-warranty-ai/env/web";
 import { CopilotKit } from "@copilotkit/react-core";
+import { Header } from "@/components/layout/header";
 import React, { useState } from "react";
 import { z } from "zod";
 import "@copilotkit/react-core/v2/styles.css";
@@ -27,14 +28,17 @@ const AgenticChat: React.FC<AgenticChatProps> = ({ params }) => {
   const runtimeBase = env.VITE_SERVER_URL.replace(/\/$/, "");
 
   return (
-    <CopilotKit
-      runtimeUrl={`${runtimeBase}/api/copilotkit`}
-      useSingleEndpoint
-      enableInspector
-      agent={SERVEXA_COPILOT_AGENT_ID}
-    >
-      <Chat />
-    </CopilotKit>
+    <>
+      <Header />
+      <CopilotKit
+        runtimeUrl={`${runtimeBase}/api/copilotkit`}
+        useSingleEndpoint
+        enableInspector
+        agent={SERVEXA_COPILOT_AGENT_ID}
+      >
+        <Chat />
+      </CopilotKit>
+    </>
   );
 };
 const Chat = () => {
