@@ -84,3 +84,13 @@ Prisma schema is in `packages/db/prisma/schema/schema.prisma`. The generated cli
 
 ### Infrastructure
 `packages/infra/alchemy.run.ts` deploys `apps/web` as a Cloudflare Worker (Vite asset serving). The Alchemy config reads `.env` from the infra package and `../../apps/web/.env`.
+
+<!-- OPENWIKI:START -->
+
+## OpenWiki
+
+This repository uses OpenWiki for recurring code documentation. Start with `openwiki/quickstart.md`, then follow its links to architecture, workflows, domain concepts, operations, integrations, testing guidance, and source maps.
+
+The scheduled OpenWiki GitHub Actions workflow refreshes the repository wiki. Do not hand-edit generated OpenWiki pages unless explicitly asked; prefer updating source code/docs and letting OpenWiki regenerate.
+
+<!-- OPENWIKI:END -->
