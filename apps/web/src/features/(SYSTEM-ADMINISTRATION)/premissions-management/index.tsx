@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/permissions-management/')
 
 export function PermissionsManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -34,8 +34,8 @@ export function PermissionsManagement() {
   return (
     <PermissionsProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />

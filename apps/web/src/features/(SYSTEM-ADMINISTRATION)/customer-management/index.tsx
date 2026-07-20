@@ -19,7 +19,7 @@ const route = getRouteApi(
 );
 
 export function CustomerManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = route.useSearch();
   const navigate = route.useNavigate();
 
@@ -36,8 +36,8 @@ export function CustomerManagement() {
   return (
     <CustomersProvider>
       <Header fixed>
-        <Search />
         <div className="ms-auto flex items-center space-x-4">
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />

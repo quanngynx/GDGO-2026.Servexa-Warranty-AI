@@ -34,7 +34,7 @@ export function ReferenceDocumentsManagementView({
   search,
   navigate,
 }: ReferenceDocumentsManagementViewProps) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const { data, isLoading } = useDocumentsQuery({
     page: search.page,
     limit: search.pageSize,
@@ -48,8 +48,8 @@ export function ReferenceDocumentsManagementView({
   return (
     <DocumentsProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -80,7 +80,7 @@ export function ReferenceDocumentsManagementView({
 }
 
 export function ReferenceDocumentsManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = documentsManagementRoute.useSearch()
   const navigate = documentsManagementRoute.useNavigate()
   return <ReferenceDocumentsManagementView search={search} navigate={navigate} />

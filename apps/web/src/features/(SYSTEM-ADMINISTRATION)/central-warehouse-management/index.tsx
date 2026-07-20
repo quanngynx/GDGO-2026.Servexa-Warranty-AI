@@ -19,7 +19,7 @@ const route = getRouteApi(
 )
 
 export function CentralWarehouseManagement() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -37,8 +37,8 @@ export function CentralWarehouseManagement() {
   return (
     <CentralWarehouseProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
