@@ -20,7 +20,7 @@ const commandCenterKpis = [
 ]
 
 export function Dashboard() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       {/* ===== Top Heading ===== */}

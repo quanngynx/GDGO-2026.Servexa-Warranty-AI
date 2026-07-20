@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestHooksRouteImport } from './routes/test-hooks'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
@@ -51,11 +50,6 @@ import { Route as AuthenticatedSETTINGSSettingsDisplayIndexRouteImport } from '.
 import { Route as AuthenticatedSETTINGSSettingsAppearanceIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/appearance/index'
 import { Route as AuthenticatedSETTINGSSettingsAccountIndexRouteImport } from './routes/_authenticated/(SETTINGS)/settings/account/index'
 
-const TestHooksRoute = TestHooksRouteImport.update({
-  id: '/test-hooks',
-  path: '/test-hooks',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -305,7 +299,6 @@ const AuthenticatedSETTINGSSettingsAccountIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/test-hooks': typeof TestHooksRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -345,7 +338,6 @@ export interface FileRoutesByFullPath {
   '/settings/notifications/': typeof AuthenticatedSETTINGSSettingsNotificationsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/test-hooks': typeof TestHooksRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
@@ -388,7 +380,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/test-hooks': typeof TestHooksRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
@@ -432,7 +423,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/test-hooks'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -472,7 +462,6 @@ export interface FileRouteTypes {
     | '/settings/notifications/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/test-hooks'
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
@@ -514,7 +503,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(auth)'
     | '/_authenticated'
-    | '/test-hooks'
     | '/(auth)/forgot-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
@@ -558,18 +546,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  TestHooksRoute: typeof TestHooksRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test-hooks': {
-      id: '/test-hooks'
-      path: '/test-hooks'
-      fullPath: '/test-hooks'
-      preLoaderRoute: typeof TestHooksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -995,7 +975,6 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  TestHooksRoute: TestHooksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

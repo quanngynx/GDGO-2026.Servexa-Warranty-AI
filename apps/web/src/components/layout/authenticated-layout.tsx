@@ -35,7 +35,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
           <SidebarProvider defaultOpen={defaultOpen}>
             <SkipToMain />
             <AppSidebar />
-            <div className="flex min-w-0 flex-1 pb-4">
+            <div className="flex min-w-0 flex-1">
               <SidebarInset
                 className={cn(
                   "@container/content",
