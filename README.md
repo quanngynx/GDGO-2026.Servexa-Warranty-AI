@@ -1,256 +1,131 @@
 <p align="center">
-  <img src="./apps/web/src/assets/favicon.svg" width="180" alt="Servexa Warranty AI">
+  <img src="./apps/web/src/assets/favicon.svg" width="160" alt="Servexa Warranty AI logo">
 </p>
 
-<h1 align="center">
-Servexa Warranty AI
-</h1>
+<h1 align="center">Servexa Warranty AI</h1>
 
 <p align="center">
-AI-powered Warranty Intelligence Platform built with RAG, LangGraph and Agentic AI.
+  Evidence-driven AI decision support for warranty and after-sales operations.
 </p>
 
 <p align="center">
-
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
-![React](https://img.shields.io/badge/React-19-61DAFB)
-![Express](https://img.shields.io/badge/Express-5-black)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)
-![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748)
-![LangGraph](https://img.shields.io/badge/LangGraph-Agentic-green)
-![License](https://img.shields.io/badge/license-MIT-green)
-[![Policy as Code](https://img.shields.io/badge/policy-OPA-14B8A6)](https://www.openpolicyagent.org/)
-[![Total Stars](https://img.shields.io/github/stars/quanngynx/servexa-warranty-ai)](https://github.com/quanngynx/servexa-warranty-ai)
-[![Total Views](https://komarev.com/ghpvc/?username=quanngynx-servexa-warranty-ai&label=views)](https://github.com/quanngynx/servexa-warranty-ai)
-[![Total Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/quanngynx/servexa-warranty-ai/main/clone-badge.json)](https://github.com/quanngynx/servexa-warranty-ai)
-[![Unique Cloners](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/quanngynx/servexa-warranty-ai/main/uniques-badge.json)](https://github.com/quanngynx/servexa-warranty-ai)
-[![Followers](https://img.shields.io/github/followers/quanngynx)](https://github.com/quanngynx)
-
+  <a href="https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI/actions/workflows/server-ci.yml"><img src="https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI/actions/workflows/server-ci.yml/badge.svg" alt="Server CI"></a>
+  <a href="https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI/actions/workflows/ai-services-ci.yml"><img src="https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI/actions/workflows/ai-services-ci.yml/badge.svg" alt="AI Services CI"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
 </p>
 
----
+Servexa Warranty AI is an AI-native warranty operations platform for support teams, technicians, and managers. It combines business data, internal knowledge, retrieval-augmented generation (RAG), and governed AI workflows to help people investigate cases, apply warranty policy, find evidence, and decide the next action.
 
-# Overview
+It is designed as a collaborative copilot, not a generic chatbot or an autonomous replacement for warranty staff. High-risk business actions remain subject to Express authorization and human approval.
 
-Servexa Warranty AI is an AI-powered platform that helps customer support teams, and technicians quickly access warranty information, diagnose product issues, and retrieve technical knowledge from internal documentation using Retrieval-Augmented Generation (RAG) and AI Agents.
+## Product Overview
 
-Instead of relying solely on Large Language Models, Servexa retrieves relevant information from proprietary manuals, warranty policies, and technical documents before generating accurate responses.
+Warranty teams often work across disconnected policies, manuals, customer records, product histories, and repair cases. Servexa brings those sources into one workflow so users can:
 
----
+- inspect warranty, customer, product, repair, inventory, and knowledge context;
+- retrieve relevant internal evidence with PostgreSQL and pgvector;
+- use an AI copilot that preserves workflow context;
+- receive suggested actions without bypassing business rules;
+- review reasoning, evidence, and approval requests before consequential actions;
+- follow long-running work through durable events and browser streaming.
 
-# The team
+The product follows five principles:
 
-<table>
-  <tr>
-    <th>Member</th>
-    <th>Role</th>
-    <th>Key Contributions in Servexa Warranty AI</th>
-  </tr>
-  <tr>
-    <td>
-      <a href="https://github.com/quanngynx"><b>Nguyen Minh Quan</b></a>
-    </td>
-    <td>
-      <b>Team Lead</b><br/>
-      Full-Stack · System Design · System Architecture · DevOps
-    </td>
-    <td>
-      Designed the end-to-end Servexa Warranty AI system architecture and drew all system design / GCP architecture diagrams. Built the AI Gateway, RAG Service, and integrated the multi-layer AI agent pipeline.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="https://github.com/teikv"><b>teikv</b></a>
-    </td>
-    <td>
-      Supporting Developer · Pentest Support · Idea Presenter
-    </td>
-    <td>
-      Contributed to frontend and backend development across the banking web portal and mobile app. Assisted in penetration testing campaigns covering OWASP Top 10 vulnerability demonstrations (SQLi, XSS, IDOR, parameter tampering). Presented the Aegis concept, threat model, and defensive philosophy to stakeholders and judges. Helped shape the platform's security narrative and user-facing documentation.
-    </td>
-  </tr>
-</table>
+1. Answers should be grounded in evidence.
+2. AI should operate with the current business context.
+3. People retain control of risky decisions.
+4. Business state and authorization remain outside the AI runtime.
+5. Capabilities evolve through explicit roadmap gates.
 
-# Problem Statement
+See the [Product Vision](./documents/roadmap/PRODUCT_VISION.md) for the complete positioning and objectives.
 
-Many companies face common challenges in after-sales support:
+## Capability Status
 
-- Customers cannot easily determine warranty eligibility.
-- Customer support repeatedly answers the same questions.
-- Technicians spend significant time searching manuals.
-- Knowledge is scattered across PDFs and internal documents.
-- Traditional chatbots cannot answer organization-specific questions.
+The handbook separates an architecture decision from its implementation maturity. `Current Decision` means an approved boundary; it does not mean every part is complete.
 
----
+| Capability | Architecture horizon | Implementation status |
+| --- | --- | --- |
+| React, Express, and FastAPI service topology | Current Decision | Implemented |
+| LangGraph runtime and human-in-the-loop approval flow | Current Decision | Implemented |
+| Redis Streams producers, consumers, retry, and dead-letter foundations | Current Decision | Implemented |
+| RAG and PostgreSQL/pgvector retrieval | Current Decision | Partial |
+| Express SSE gateway | Current Decision | Partial |
+| Redis shared-state projection and patch flow | Current Decision | Partial |
+| Evidence, reasoning trace, fixed-schema generative UI, and subgraph streaming | Current Decision | Partial |
+| Express-to-FastAPI Internal HTTP boundary | Current Decision | Planned; active gRPC paths are migration debt |
+| Multimodal warranty workflows | Planned Evolution | Planned |
 
-# Defense that reasons—and proves its work
+Detailed evidence and release gates are maintained in the [System Overview](./documents/architecture/SYSTEM_OVERVIEW.md) and [Development Phases](./documents/roadmap/DEVELOPMENT_PHASES.md).
 
-# How Servexa Warranty AI works
+## System Architecture
 
-### System Design — Full Platform Overview
-
-Servexa Warranty AI combines:
-
-- AI Agents
-- Retrieval-Augmented Generation (RAG)
-- Vector Search
-- Knowledge Base
-- Large Language Models
-
-to provide:
-
-- Warranty lookup
-- Product troubleshooting
-- Technical knowledge retrieval
-- Repair recommendations
-- Context-aware AI Assistant
-
-### The decision path
-
-### Contracts between the layers
-
-# GCP Architecture
-
-### Production Architecture
-
-## The platform
-
-# What makes the system different
-
-# Key Features
-
-## Customer
-
-- Warranty lookup
-- AI Chat Assistant
-- Repair guidance
-- Product troubleshooting
-- Knowledge search
-
-## Support Team
-
-- AI Copilot
-- Context-aware responses
-- Document search
-- Repair recommendations
-- Case summarization
-
-## AI Platform
-
-- RAG Pipeline
-- Vector Search
-- Multi-Agent orchestration
-- LangGraph workflows
-- Tool Calling
-- Streaming responses
-
----
-
-# System Architecture
+Servexa uses explicit responsibility boundaries: React renders authorized projections, Express owns business and security decisions, and FastAPI owns AI reasoning and orchestration.
 
 ```mermaid
-flowchart TD
+flowchart LR
+    User["Support staff / technician / manager"]
+    React["React web application"]
+    Express["Express business platform<br/>Auth, APIs, uploads, workflows, SSE"]
+    FastAPI["FastAPI AI runtime<br/>LangGraph, RAG, tools, reasoning, UI"]
+    Postgres[("PostgreSQL + pgvector<br/>Business data, knowledge, checkpoints")]
+    Redis[("Redis<br/>Coordination, Streams, Pub/Sub")]
 
-    U[👤 User]
-
-    FE["React + TanStack Router<br/>Frontend"]
-
-    API["Express API Server"]
-
-    AUTH["Authentication"]
-
-    AIG["AI Gateway"]
-
-    LG["LangGraph Agent"]
-
-    LLM["Gemini / OpenAI"]
-
-    TOOL["Tool Calling"]
-
-    RAG["RAG Service"]
-
-    VDB["PostgreSQL + pgvector"]
-
-    DOC["Warranty Manuals<br/>Knowledge Base<br/>PDF Documents"]
-
-    U --> FE
-    FE --> API
-
-    API --> AUTH
-    API --> AIG
-
-    AIG --> LG
-    AIG --> LLM
-
-    LG --> RAG
-    LG --> TOOL
-
-    RAG --> VDB
-    VDB --> DOC
+    User -->|"HTTPS"| React
+    React -->|"HTTPS"| Express
+    Express -->|"SSE"| React
+    Express -->|"Current: gRPC<br/>Approved target: Internal HTTP"| FastAPI
+    Express -->|"Business transactions"| Postgres
+    FastAPI -->|"Knowledge retrieval and checkpoints"| Postgres
+    Express <-->|"Workflow coordination"| Redis
+    FastAPI <-->|"Durable AI jobs and events"| Redis
 ```
 
----
+*Component diagram — current service topology with the approved Express-to-FastAPI transport evolution.*
 
-# AI Workflow
+### Responsibility Boundaries
+
+| Surface | Owns | Must not own |
+| --- | --- | --- |
+| React | Rendering, user interaction, local projections, SSE consumption | Authorization decisions, business rules, AI orchestration, direct Redis access |
+| Express | Authentication, authorization, business APIs, transactions, uploads, workflow actions, SSE delivery | AI planning, RAG reasoning, generated UI decisions |
+| FastAPI | LangGraph, context building, retrieval, planning, tool coordination, reasoning, generated UI | Business transaction authority, direct browser communication |
+| PostgreSQL/pgvector | Durable business data, knowledge embeddings, AI checkpoints | Ephemeral workflow coordination |
+| Redis | Cache, shared-state coordination, Redis Streams, notification fan-out | Authoritative business records |
+
+Architecture details:
+
+- [Technical Architecture Handbook](./documents/architecture/TECHNICAL_MASTER_PLAN.md)
+- [AI Runtime](./documents/architecture/AI_RUNTIME.md)
+- [Event Architecture](./documents/architecture/EVENT_ARCHITECTURE.md)
+- [Shared State](./documents/architecture/SHARED_STATE.md)
+- [Deployment Architecture](./documents/platform/DEPLOYMENT_ARCHITECTURE.md)
+
+## Technology Stack
+
+| Area | Current technologies |
+| --- | --- |
+| Frontend | React 19, TypeScript, Vite, TanStack Router and Query, Tailwind CSS, shadcn/ui |
+| Business backend | Node.js, Express 5, Prisma |
+| AI runtime | Python 3.11+, FastAPI, LangGraph |
+| Persistence | PostgreSQL, pgvector |
+| Coordination and events | Redis, Redis Streams, Redis Pub/Sub |
+| Browser streaming | Server-Sent Events (SSE) through Express |
+| Monorepo | pnpm workspaces, Turborepo |
+| Delivery | Docker, Docker Compose, GitHub Actions, GHCR |
+| Current web deployment configuration | Alchemy with Cloudflare |
+| Approved platform direction | Containerized Cloud Run deployment |
+
+Kubernetes, multi-region deployment, service mesh, distributed event buses, GitOps, and multi-cloud operation remain **Future Evolution**, not current dependencies.
+
+## Repository Structure
 
 ```text
-User Question
-      │
-      ▼
-Express API
-      │
-      ▼
-AI Gateway
-      │
-      ▼
-LangGraph Agent
-      │
-      ▼
-Retrieve Relevant Documents
-      │
-      ▼
-Vector Search (pgvector)
-      │
-      ▼
-Prompt Construction
-      │
-      ▼
-Gemini / OpenAI
-      │
-      ▼
-Answer + Sources
-```
-
----
-
-# Technology Stack
-
-| Layer           | Technology              |
-| --------------- | ----------------------- |
-| Frontend        | React 19                |
-| Routing         | TanStack Router         |
-| Backend         | Express                 |
-| ORM             | Prisma                  |
-| Database        | PostgreSQL              |
-| Vector Database | pgvector                |
-| AI Framework    | LangGraph               |
-| LLM             | Gemini / OpenAI         |
-| Cache           | Redis                   |
-| Monorepo        | Turborepo               |
-| Styling         | TailwindCSS + shadcn/ui |
-
----
-
-# Project Structure
-
-```
 servexa-warranty-ai/
-│
 ├── apps/
-│   ├── web/
-│   ├── server/
-│   └── ai-services/
-│
+│   ├── web/             # React application
+│   ├── server/          # Express business platform
+│   ├── ai-services/     # FastAPI and LangGraph runtime
+│   └── fumadocs/        # Separate documentation application
 ├── packages/
 │   ├── ai-contracts/
 │   ├── config/
@@ -258,272 +133,172 @@ servexa-warranty-ai/
 │   ├── env/
 │   ├── event-contracts/
 │   ├── infra/
-│   ├── proto/
-│   ├── ui/
-│   └── shared/
-│
-├── docs/                    # Canonical engineering handbook
-├── documents/               # Preserved legacy/source material
-├── postman/
-│
+│   ├── proto/           # Active gRPC migration debt
+│   └── ui/
+├── documents/           # Canonical engineering handbook
+├── openwiki/            # Generated recurring code documentation
+├── postman/             # API collections
 └── scripts/
 ```
 
----
+## Local Development
 
-# Deployment choices
+### Prerequisites
 
-| Mode                     | Best for                                    | Included approach                                                                          |
-| ------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Local Compose            | Demos, development, and purple-team labs    | One-command multi-service environment behind the Nginx gateway.                            |
-| Kubernetes local overlay | Cluster validation and platform engineering | Kustomize base plus local patches for the complete control and data plane.                 |
-| Helm                     | Configurable packaged deployment            | Aegis platform chart with service, policy, data-store, and secret configuration.           |
-| AWS hackathon profile    | Cost-conscious cloud demonstrations         | Serverless-first and single-AZ choices where appropriate.                                  |
-| AWS production profile   | Architecture study and hardened adaptation  | Multi-AZ networking, separated tiers, encryption, audit, observability, and edge controls. |
+| Tool | Version or requirement |
+| --- | --- |
+| Git | Current supported release |
+| Node.js | 24 |
+| pnpm | 10.28.1 |
+| Python | 3.11 or newer |
+| Docker | Docker Desktop or Docker Engine with Compose v2 |
 
-The production Terraform profile is an architectural starting point, not a certification. Organizations must apply their own threat model, data residency rules, banking regulations, identity model, key-management policy, disaster-recovery objectives, and change controls.
+PostgreSQL and Redis run through Docker Compose for local development.
 
-# Validation results
-
-Aegis is validated as a security engineering system, not only as a set of services that boot. Public tests cover local behavior and safety contracts; a separate July 2026 source-assisted web/API plus AWS read-only posture review was used to triage hardening work without publishing sensitive evidence in this profile README.
-
-| Validation area                     | What was checked                                                                                                                                                                              | Result and status                                                                                                                                                                                                                                                     |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Local 100-case adversarial run      | Authentication, authorization, JWT handling, input validation, XSS probes, HTTP method handling, malformed requests, SSRF-style probes, resilience, and gateway behavior against `localhost`. | Produced a dev-facing hardening backlog: 43 pass, 4 warn, 53 fail. Most failures were controlled by gateway/API routing instability (`502`) rather than confirmed exploit paths, so the recommended next step is to stabilize routing and rerun authenticated checks. |
-| SOAR and policy safety              | Policy evaluation, playbook routing, action-worker dry runs, rollback behavior, rate limits, connector boundaries, secret handling, notifications, and audit integrity.                       | Covered by focused unit tests and safety checks in the SOAR engine. These tests support the core claim that response automation must pass policy, scope, execution, and audit gates.                                                                                  |
-| SOC dashboard behavior              | Login flow, response center workflows, dashboard workbench interactions, and frontend component behavior.                                                                                     | Covered by React/Vitest-style component tests and Go backend handler tests.                                                                                                                                                                                           |
-| Load and ingestion baseline         | Dashboard read load, SOAR ingestion stress, mixed read/write storms, and baseline latency scenarios.                                                                                          | k6 scenarios and result artifacts exist for local performance validation. These are baseline engineering checks, not production capacity claims.                                                                                                                      |
-| Source and IaC review               | Banking web/API source, SOC source, deployment config, Terraform profiles, cloud logging/detection posture, IAM/network posture, and AWS K8s/AD discovery across enabled regions.             | 24 findings were triaged into a hardening backlog. The AWS K8s/AD evidence audit recorded 9/9 true positives and 0 false positives for that review set.                                                                                                               |
-| Negative evidence from cloud review | EKS/Kubernetes objects, AWS Directory Service, Managed AD, AD Connector, EC2 Windows/domain-controller candidates, public AD ports, and public Kubernetes control-plane ports.                | No live EKS/AD objects or public K8s/AD control-plane exposure were identified in the reviewed AWS regions. Source/IaC review also did not find active EKS or AWS Directory Service definitions.                                                                      |
-
-The combined security review intentionally separates confirmed evidence from assumptions. Items such as secret handling, lab-only vulnerable modes, transport configuration, IAM scoping, detection coverage, and default-network hygiene are treated as hardening backlog unless a retest proves closure.
-
-Known coverage gaps remain: active authenticated browser/DAST testing, two-user authorization boundary tests, container image scanning, Prowler/ScoutSuite-style cloud posture scans, and deeper per-principal IAM analysis should be run before any production adaptation.
-
-# Getting Started
-
-## Prerequisites
-
-| Requirement                                              | Minimum version                      | Purpose                                           |
-| -------------------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
-| [Git](https://git-scm.com/)                              | 2.30+                                | Clone all repositories                            |
-| [WSL 2](https://learn.microsoft.com/windows/wsl/install) | Windows only                         | Linux backend used by Docker Desktop              |
-| [Docker Desktop](https://docs.docker.com/get-docker/)    | 24.0+                                | Container runtime + Compose V2 with WSL 2 backend |
-| RAM                                                      | **8 GB minimum** (16 GB recommended) | 3-node Kafka cluster + AI agents + databases      |
-| Disk                                                     | 10 GB+ free                          | Docker images, volumes, and build cache           |
-| [Node.js](https://nodejs.org/)                           | 22.x LTS                             | Typescript + React + Build tools                  |
-| [pnpm](https://pnpm.io/)                                 | 9.x                                  | Package manager                                   |
-| [PostgreSQL](https://www.postgresql.org/)                | 15+                                  | Primary persistence                               |
-| [Redis](https://redis.io/)                               | 7.x                                  | Cache + rate limiting + ephemeral storage         |
-
----
-
-## Installation
+### 1. Clone and Install
 
 ```bash
-git clone https://github.com/your-org/servexa-warranty-ai.git
-
-cd servexa-warranty-ai
-
+git clone https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI.git
+cd GDGO-2026.Servexa-Warranty-AI
 pnpm install
 ```
 
----
+Install the Python dependencies separately:
 
-# Environment Variables
-
-Create:
-
-```
-apps/server/.env
-```
-
-Example:
-
-```env
-DATABASE_URL=
-REDIS_URL=
-
-JWT_SECRET=
-
-GEMINI_API_KEY=
-
-OPENAI_API_KEY=
-
-PORT=3000
+```powershell
+cd apps/ai-services
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+cd ../..
 ```
 
----
+### 2. Configure the Environment
 
-# Database Setup
+Local environment files are intentionally ignored by Git. The repository does not currently provide a complete shareable root environment template, so obtain development values through the project secret-management process.
 
-Generate Prisma Client
+| File | Configuration group |
+| --- | --- |
+| `.env` | Local PostgreSQL and Redis container settings |
+| `apps/server/.env` | Database URL, CORS, authentication, Redis, AI transport, and provider settings |
+| `apps/web/.env` | `VITE_SERVER_URL` and the client environment |
+| `apps/ai-services/.env` | AI provider, Redis, database, gRPC, and internal service settings |
+
+Never commit secrets. See the [server setup](./apps/server/README.md), [AI service setup](./apps/ai-services/README.md), and [development environment handbook](./documents/platform/DEVELOPMENT_ENVIRONMENT.md).
+
+### 3. Start PostgreSQL and Redis
 
 ```bash
-pnpm db:generate
+pnpm dev:docker-compose
 ```
 
-Push schema
+The local Redis endpoint is `localhost:6381`. The PostgreSQL host port is controlled by `DATABASE_PORT` in the root `.env`.
+
+### 4. Prepare the Database
+
+The Express service owns the authoritative business schema:
 
 ```bash
-pnpm db:push
+pnpm --filter server db:generate
+pnpm --filter server db:migrate
+pnpm --filter server db:seed
 ```
 
-Or run migrations
+### 5. Start the Applications
+
+Run each command in a separate terminal:
 
 ```bash
-pnpm db:migrate
+pnpm dev:server
 ```
-
----
-
-# Running Locally
-
-Start everything
 
 ```bash
-pnpm dev
+pnpm dev:web
 ```
 
-Frontend
-
-```
-http://localhost:5173
-```
-
-Backend
-
-```
-http://localhost:3000
+```powershell
+cd apps/ai-services
+.\.venv\Scripts\Activate.ps1
+fastapi dev --port 8081
 ```
 
----
+The FastAPI process also starts the `ai.v1.AiService` gRPC server. Redis workers are separate processes; see [AI Services](./apps/ai-services/README.md) when testing asynchronous jobs.
 
-# Available Scripts
+### Local Endpoints
 
-| Command          | Description            |
-| ---------------- | ---------------------- |
-| pnpm dev         | Run all services       |
-| pnpm build       | Production build       |
-| pnpm check-types | Type checking          |
-| pnpm db:generate | Generate Prisma client |
-| pnpm db:push     | Push schema            |
-| pnpm db:migrate  | Run migrations         |
-| pnpm db:studio   | Prisma Studio          |
+| Service | Default endpoint |
+| --- | --- |
+| React web application | `http://localhost:3001` |
+| Express API | `http://localhost:3000` |
+| Express health check | `http://localhost:3000/health` |
+| FastAPI | `http://localhost:8081` |
+| AI gRPC service | `localhost:50051` |
+| Redis | `localhost:6381` |
 
----
+## Common Commands
 
-# Deployment
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev:web` | Start the React application |
+| `pnpm dev:server` | Start the Express service |
+| `pnpm dev:docker-compose` | Start local PostgreSQL and Redis |
+| `pnpm build` | Build JavaScript and TypeScript workspaces |
+| `pnpm check-types` | Run workspace type checks |
+| `pnpm --filter web test` | Run frontend tests |
+| `pnpm --filter server test` | Run server tests |
+| `pnpm --filter server db:generate` | Generate the server Prisma client |
+| `pnpm --filter server db:migrate` | Run development database migrations |
+| `pnpm --filter server db:seed` | Seed server data |
+| `pytest` from `apps/ai-services` | Run AI service tests |
 
-## Development
+## Delivery Status
 
-```bash
-cd apps/web
+| Delivery surface | Status | Repository evidence |
+| --- | --- | --- |
+| Express type-check, test, build, migration, and smoke-test workflow | Implemented | `.github/workflows/server-ci.yml` |
+| FastAPI test workflow | Implemented | `.github/workflows/ai-services-ci.yml` |
+| Express container build and GHCR publication | Implemented | `.github/workflows/build-server-image.yml` |
+| Express VM deployment after a successful image build | Implemented | `.github/workflows/deploy-server.yml` |
+| React deployment configuration with Alchemy and Cloudflare | Implemented configuration | `packages/infra/alchemy.run.ts` |
+| Containerized Cloud Run platform | Planned Evolution / Partial | Approved target; production topology is not complete |
 
-pnpm alchemy dev
-```
+Operational procedures and known limitations are maintained in the [Deployment Runbook](./documents/runbooks/deployment.md), [Rollback Runbook](./documents/runbooks/rollback.md), and [Incident Response Runbook](./documents/runbooks/incident-response.md).
 
-## Production
+## Documentation
 
-```bash
-cd apps/web
+Start with the [Engineering Handbook Index](./documents/README.md).
 
-pnpm deploy
-```
+| Need | Document |
+| --- | --- |
+| Product direction and phase status | [Roadmap Master](./documents/roadmap/ROADMAP_MASTER.md) |
+| Architecture decisions and boundaries | [Technical Master Plan](./documents/architecture/TECHNICAL_MASTER_PLAN.md) |
+| Delivery and operations direction | [DevOps Master Plan](./documents/platform/DEVOPS_MASTER_PLAN.md) |
+| Architecture decision records | [ADRs](./documents/adr/) |
+| Operational procedures | [Runbooks](./documents/runbooks/) |
+| Canonical terminology | [Glossary](./documents/glossary/GLOSSARY.md) |
+| Recurring code-oriented documentation | [OpenWiki Quickstart](./openwiki/quickstart.md) |
 
-## Troubleshooting
+`documents/` is the maintained engineering knowledge base. `openwiki/` is generated by its scheduled workflow and should not be hand-edited.
 
-| Issue                                 | Solution                                                                         |
-| ------------------------------------- | -------------------------------------------------------------------------------- |
-| Containers keep restarting            | Run `docker compose logs <service>` to check errors.                             |
-| `docker` command not found            | Install Docker Desktop, reopen PowerShell/Terminal, then run `docker --version`. |
-| `Cannot connect to the Docker daemon` | Open Docker Desktop and wait until it says **Docker Desktop is running**.        |
-| `docker compose` is not recognized    | Update Docker Desktop. Use `docker compose`, not the older `docker-compose`.     |
-| WSL shows `VERSION 1`                 | Run `wsl --set-default-version 2`, then restart Docker Desktop.                  |
-| Docker Desktop WSL error              | Run `wsl --update`, reboot Windows, then start Docker Desktop again.             |
+## Roadmap
 
----
+| Phase | Architecture horizon | Implementation status |
+| --- | --- | --- |
+| 0 — Foundation | Current Decision | Implemented |
+| 1 — Agentic Chat | Current Decision | Implemented |
+| 2 — Evidence and Suggested Actions | Current Decision | Partial |
+| 3 — Shared State | Current Decision | Partial |
+| 4 — Human-in-the-loop | Current Decision | Implemented |
+| 5 — Reasoning Trace | Current Decision | Partial |
+| 6 — Fixed-schema Generative UI | Current Decision | Partial |
+| 7 — Subgraphs Streaming | Current Decision | Partial |
+| 8 — Multimodal | Planned Evolution | Planned |
 
-# Validation philosophy
+Implementation evidence does not by itself satisfy a roadmap gate. The [Development Phases](./documents/roadmap/DEVELOPMENT_PHASES.md) document is authoritative for prerequisites, exit criteria, and phase completion.
 
-Aegis uses multiple validation layers because passing unit tests alone does not prove that a security control works across service boundaries.
+## Contributing, Security, and License
 
-- **Contract tests** validate Layer 1 and Layer 2 JSON schemas and required safety fields.
-- **Unit tests** cover policy evaluation, playbook routing, rollback, rate limiting, secret handling, notifications, and audit integrity.
-- **Integration tests** exercise Kafka, Redis, PostgreSQL verification, the staging sandbox, and connector behavior.
-- **Platform tests** inspect container security, frontend protections, prompt behavior, and SOAR controls.
-- **Adversarial suites** probe authentication, authorization, JWT handling, injection, XSS, event forgery, resilience, exposed services, secrets, and gateway behavior while preserving evidence per case.
-- **CI security checks** provide repeatable repository-level quality gates; environment-specific results remain separate from this organization profile.
-
-Security findings are not hidden behind a marketing badge. A failed check represents a control or configuration to investigate, while a blocked check means coverage was incomplete—not that the target passed.
-
-# Roadmap
-
-## Phase 1
-
-- Authentication
-- Warranty Lookup
-- AI Chat
-- RAG Search
-- Knowledge Base
-
-## Phase 2
-
-- Human-in-the-loop
-- Agent Memory
-- Suggested Actions
-- AI Copilot
-
-## Phase 3
-
-- Multi-Agent
-- OCR
-- Image Diagnosis
-- Voice Assistant
-- Multimodal AI
-
----
-
-# Screenshots
-
-> Coming soon
-
----
-
-# Start where you work
-
-| If you are a… | Begin with… | You can contribute… |
-| ------------- | ----------- | ------------------- |
-
-# Built for safe experimentation
-
-Little Boy's Aegis is a research, education, and security-simulation project—not a certified banking product or a substitute for production security controls. Run offensive scenarios only in systems you own or are explicitly authorized to test. Validate policies, secrets, network boundaries, connectors, and rollback behavior before adapting any component to a real environment.
-
-The project intentionally includes attack simulation and configurable vulnerable behaviors for defensive evaluation. Keep those modes isolated, use synthetic data, rotate every example credential, and never connect a lab control adapter to production infrastructure.
-
-# Contributing
-
-Contributions are welcome.
-
-1. Fork repository
-2. Create feature branch
-3. Commit changes
-4. Open Pull Request
-
----
-
-# Open source
-
-MIT License
-
----
-
-<div align="center">
-
-**Little Boy's Aegis — 1st Place, [Shinhan Bank Future Lab's Track](https://futureslab.com.vn) (Financial Services), [AABW 2026](https://aabw.genaifund.ai)**
-
-**Intelligence at machine speed, control at human depth.**
-
-[All repositories](https://github.com/orgs/Little-Boy-s-Aegis/repositories) | [Open source guide](#open-source) | [AABW Event](https://aabw.genaifund.ai) | [GenAI Fund](https://genaifund.ai) | [Shinhan Future's Lab](https://futureslab.com.vn)
-
-</div>
+- Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a change.
+- Report vulnerabilities according to [SECURITY.md](./SECURITY.md).
+- See the repository [contributors](https://github.com/quanngynx/GDGO-2026.Servexa-Warranty-AI/graphs/contributors).
+- Servexa Warranty AI is available under the [MIT License](./LICENSE).
