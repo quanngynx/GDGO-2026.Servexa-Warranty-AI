@@ -87,7 +87,7 @@ class KnowledgeController {
       }).send(res);
     })(req, res, next);
 
-  /** Worker-only: protected by `x-internal-ingest-key` (see documents/ai-runtime-policy.md). */
+  /** Worker-only: protected by `x-internal-ingest-key` (see docs/architecture/AI_RUNTIME.md#ai-runtime-policy). */
   internalIngest = (req: Request, res: Response, next: NextFunction) =>
     this.errorHandler.asyncHandler(async () => {
       const key = req.headers["x-internal-ingest-key"];

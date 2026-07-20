@@ -66,7 +66,7 @@ Env validation is in `packages/env/src/server.ts` and `packages/env/src/web.ts`.
 ## Architecture
 
 ### AI runtime policy
-See [documents/ai-runtime-policy.md](documents/ai-runtime-policy.md) for runtime ownership (Node vs Python), sync/async job rules, memory stance, and canonical RAG corpus (Prisma `ai_knowledge_*`).
+See [docs/architecture/AI_RUNTIME.md](docs/architecture/AI_RUNTIME.md#ai-runtime-policy) for runtime ownership (Node vs Python), sync/async job rules, memory stance, and canonical RAG corpus (Prisma `ai_knowledge_*`).
 
 ### Data Flow
 Web (`useChat` via `@ai-sdk/react`) → POST `{SERVER_URL}/ai` → Express server → Google Gemini (`gemini-2.5-flash`) → streaming response back to browser.
