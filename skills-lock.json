@@ -120,6 +120,24 @@
       "skillPath": "skills/copilotkit-upgrade/SKILL.md",
       "computedHash": "eca1e04d7b16b8cc292cb862d0cd60afbbb45205a95e30a752170c2a507cb8f3"
     },
+    "drawio-aws": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-aws/SKILL.md",
+      "computedHash": "d97a338cb304f4b54dc46ccf106cc36bc7403d6a3823439e35bd6e26670316de"
+    },
+    "drawio-bpmn": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-bpmn/SKILL.md",
+      "computedHash": "47389f786e32ea74553522c0a68956ec1ea00f25866cdbbdaecefc327c0b6548"
+    },
+    "drawio-gcp": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-gcp/SKILL.md",
+      "computedHash": "d9b1c3316058ba444b6e4cdc3225af30a0d17d6ffafd151142ec0fdc0bef1868"
+    },
     "durable-objects": {
       "source": "cloudflare/skills",
       "sourceType": "github",
