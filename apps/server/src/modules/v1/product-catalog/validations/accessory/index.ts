@@ -35,7 +35,7 @@ export const updateAccessorySchema = createAccessorySchema.partial().refine((val
 
 export const findAllAccessoriesSchema = z.object({
   page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(100).default(10),
+  limit: z.coerce.number().min(1).max(1000).default(10),
   search: z.string().optional().default(''),
   sortBy: sortBySchema.default('createdAt'),
   sortOrder: sortOrderSchema.default('desc'),
@@ -47,7 +47,7 @@ export const findAllAccessoriesSchema = z.object({
 
 export const findAllAccessoryStocksSchema = z.object({
   page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(100).default(10),
+  limit: z.coerce.number().min(1).max(1000).default(10),
   search: z.string().optional().default(''),
   sortBy: sortBySchema.default('createdAt'),
   sortOrder: sortOrderSchema.default('desc'),
