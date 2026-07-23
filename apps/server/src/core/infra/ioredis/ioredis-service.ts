@@ -34,7 +34,7 @@ export class IoredisService {
     }
   }
 
-  private getClient(): RedisClient {
+  getClient(): RedisClient {
     if (!this.client) {
       throw new Error('REDIS: Client not initialized. Call connect() first.');
     }
