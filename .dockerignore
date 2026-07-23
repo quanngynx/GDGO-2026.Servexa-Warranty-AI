@@ -1,4 +1,7 @@
-# Docker build context exclusions (repo root: docker build -f apps/server/Dockerfile .)
+# Docker build context exclusions
+# Both server and web Dockerfiles build from repo root:
+#   docker build -f apps/server/Dockerfile -t servexa-server .
+#   docker build -f apps/web/Dockerfile    -t servexa-web .
 
 .git
 .github
@@ -9,12 +12,9 @@
 **/node_modules
 **/.env
 **/.env.*
-apps/server/.env
-apps/server/.env.production
 
-# Apps not required for the server image (keep package.json for pnpm frozen-lockfile)
-apps/web
-!apps/web/package.json
+# Apps not needed by either Dockerfile (keep package.json for pnpm frozen-lockfile)
+# Note: apps/web and apps/server are NOT excluded — both have Dockerfiles.
 apps/fumadocs
 !apps/fumadocs/package.json
 apps/ai-services
@@ -37,4 +37,11 @@ packages/db/docker-compose*.yml
 **/.cursor
 **/.claude
 **/.agents
+**/.gemini
+**/.postman
 .docker-deploy-test*
+postman
+secrets
+.mcp.json
+bts.jsonc
+buf.yaml

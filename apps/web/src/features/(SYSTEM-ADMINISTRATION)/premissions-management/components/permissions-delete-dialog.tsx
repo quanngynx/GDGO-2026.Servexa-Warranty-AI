@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { type Permission } from '../data/schema'
 import { useDeletePermissionMutation } from '../hooks/use-delete-permission-mutation'
+import { useTranslation } from "react-i18next";
 
 type PermissionsDeleteDialogProps = {
   open: boolean
@@ -20,6 +21,7 @@ export function PermissionsDeleteDialog({
   onOpenChange,
   currentRow,
 }: PermissionsDeleteDialogProps) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
   const { mutate, isPending } = useDeletePermissionMutation()
 
@@ -43,31 +45,25 @@ export function PermissionsDeleteDialog({
       isLoading={isPending}
       title={
         <span className='text-destructive'>
-          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> Delete
-          Permission
-        </span>
+          <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} /> {t("Delete\n Permission")}</span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete <span className='font-bold'>{currentRow.name}</span>?
-            This cannot be undone.
-          </p>
+            {t("Are you sure you want to delete")}<span className='font-bold'>{currentRow.name}</span>{t("?\n This cannot be undone.")}</p>
 
           <Label className='my-2'>
-            Permission name:
-            <Input
+            {t("Permission name:")}<Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter permission name to confirm deletion.'
+              placeholder={t("Enter permission name to confirm deletion.")}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

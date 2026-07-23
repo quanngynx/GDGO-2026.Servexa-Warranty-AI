@@ -47,3 +47,36 @@ export type ModelApiResponse<T> = {
   status: number
   metadata: T
 }
+
+export type ResponseExportJobDto = {
+  id: string
+  requestedBy: string
+  tenantId: string | null
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled' | 'expired'
+  format: string
+  filters: Record<string, unknown> | null
+  columns: string[]
+  sort: Record<string, unknown> | null
+  snapshotAt: string
+  idempotencyKey: string | null
+  lastCursorId: string | null
+  estimatedRows: number | null
+  processedRows: number
+  rowCount: number | null
+  progressPercent: number | null
+  fileName: string | null
+  storageKey: string | null
+  fileSize: number | string | null
+  checksum: string | null
+  contentType: string | null
+  attemptCount: number
+  maxAttempts: number
+  errorCode: string | null
+  errorMessage: string | null
+  cancellationAt: string | null
+  startedAt: string | null
+  completedAt: string | null
+  expiresAt: string | null
+  createdAt: string
+  updatedAt: string
+}

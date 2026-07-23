@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@servexa-warranty-ai/u
 import { Clock, ArrowRight } from 'lucide-react';
 import { AIInsightCard } from '@/components/ai-insight-card';
 import { mockSLARisks, type SLARisk } from '../data/mock-data';
+import { useTranslation } from "react-i18next";
 
 const severityMap: Record<SLARisk['riskLevel'], 'critical' | 'warning' | 'info' | 'success'> = {
   critical: 'critical',
@@ -13,6 +14,7 @@ const severityMap: Record<SLARisk['riskLevel'], 'critical' | 'warning' | 'info' 
 };
 
 export function SLARiskWidget() {
+    const { t } = useTranslation();
   const criticalCount = mockSLARisks.filter(r => r.riskLevel === 'critical').length;
   
   return (
@@ -23,14 +25,13 @@ export function SLARiskWidget() {
             <Clock className="w-4 h-4 text-alert-critical" />
           </div>
           <div>
-            <CardTitle className="text-base">SLA Risk</CardTitle>
-            <p className="text-xs text-muted-foreground">AI-predicted breaches</p>
+            <CardTitle className="text-base">{t("SLA Risk")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("AI-predicted breaches")}</p>
           </div>
         </div>
         {criticalCount > 0 && (
           <Badge variant="destructive" className="text-xs">
-            {criticalCount} critical
-          </Badge>
+            {criticalCount} {t("critical")}</Badge>
         )}
       </CardHeader>
       <CardContent className="space-y-3">
@@ -68,8 +69,7 @@ export function SLARiskWidget() {
         ))}
         
         <Button variant="ghost" size="sm" className="w-full text-xs gap-1">
-          View all {mockSLARisks.length} at-risk cases
-          <ArrowRight className="w-3 h-3" />
+          {t("View all")}{mockSLARisks.length} {t("at-risk cases")}<ArrowRight className="w-3 h-3" />
         </Button>
       </CardContent>
     </Card>

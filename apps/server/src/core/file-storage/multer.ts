@@ -7,12 +7,18 @@ import { uploadDirs } from "@/core/constants/path.constant";
 import { allowedMimes } from "../constants/file.constant";
 
 export type ImageTypeDir =
-  | "/products/thumbnail_product"
-  | "/products/model_product"
-  | "/products/repair_form"
-  | "/products/shipping_fee_invoice"
-  | "/products/order_invoice"
-  | "/products/tmp";
+  | "/accessories"
+  | "/accessories/thumbnail"
+  | "/avatars/"
+  | "/products"
+  | "/products/thumbnail"
+  | "/products/model"
+  | "/repair-cases"
+  | "/repair-cases/after_repair"
+  | "/repair-cases/before_repair"
+  | "/repair-cases/model_serial"
+  | "/repair-cases/repair_ticket"
+  | "/repair-cases/warranty_invoice"
 
 export interface SourceImageType {
   locationFile: ImageTypeDir;
@@ -133,3 +139,26 @@ export const repairCaseMulterUpload = multer({
     files: 10,
   },
 });
+
+export const multerMemoryUpload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (_req, file, cb) => {
+    const imageMimes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/jpg",
+      "image/gif",
+      "image/avif",
+    ];
+    if (imageMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files (JPEG, PNG, WebP) are allowed"));
+    }
+  },
+  limits: {
+    fileSize: 15 * 1024 * 1024,
+  },
+});
+

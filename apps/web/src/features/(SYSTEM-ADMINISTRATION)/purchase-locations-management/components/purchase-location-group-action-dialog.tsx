@@ -21,6 +21,7 @@ import { Input } from '@servexa-warranty-ai/ui/components/input'
 import { Button } from '@servexa-warranty-ai/ui/components/button'
 import { Textarea } from '@servexa-warranty-ai/ui/components/textarea'
 import { useCreatePurchaseLocationGroupMutation } from '../hooks/use-create-purchase-location-group-mutation'
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required').trim(),
@@ -36,6 +37,7 @@ type Props = {
 }
 
 export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props) {
+    const { t } = useTranslation();
   const form = useForm<GroupForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,10 +70,9 @@ export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props)
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>Add New Purchase Location Group</DialogTitle>
+          <DialogTitle>{t("Add New Purchase Location Group")}</DialogTitle>
           <DialogDescription>
-            Create new group here. Click save when you're done.
-          </DialogDescription>
+            {t("Create new group here. Click save when you\'re done.")}</DialogDescription>
         </DialogHeader>
         <div className='py-1 pe-3'>
           <Form {...form}>
@@ -85,10 +86,10 @@ export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props)
                 name='name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Name *</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Name *")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Enter group name'
+                        placeholder={t("Enter group name")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -103,10 +104,10 @@ export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props)
                 name='code'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Code *</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Code *")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='e.g: retail_store'
+                        placeholder={t("e.g: retail_store")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -121,10 +122,10 @@ export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props)
                 name='description'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end mt-2'>Description</FormLabel>
+                    <FormLabel className='col-span-2 text-end mt-2'>{t("Description")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder='Enter description (optional)'
+                        placeholder={t("Enter description (optional)")}
                         className='col-span-4 resize-none'
                         rows={3}
                         {...field}
@@ -139,8 +140,7 @@ export function PurchaseLocationGroupActionDialog({ open, onOpenChange }: Props)
         </div>
         <DialogFooter>
           <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {t("Cancel")}</Button>
           <Button type='submit' form='group-form' disabled={isPending}>
             {isPending ? 'Saving...' : 'Add group'}
           </Button>

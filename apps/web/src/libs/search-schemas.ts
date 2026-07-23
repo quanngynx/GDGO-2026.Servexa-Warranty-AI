@@ -16,7 +16,8 @@ export const adminListWithIsActiveSearchSchema = adminListSearchSchema.extend({
 })
 
 export const adminListWithWarehouseSearchSchema = adminListWithStatusSearchSchema.extend({
-  totalWarehouseId: z.string().default(''),
+  totalWarehouseIds: z.string().optional(),
+  ascCenterIds: z.string().optional(),
 })
 
 /** Repair cases list (GENERAL) — URL sync for pagination, search, filters */

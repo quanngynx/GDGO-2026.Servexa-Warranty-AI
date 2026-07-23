@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@servexa-warranty-ai/ui/components/select";
+import { useTranslation } from "react-i18next";
 
 type SelectDropdownProps = {
   onValueChange?: (value: string) => void;
@@ -33,6 +34,7 @@ export function SelectDropdown({
   isControlled = false,
   withFormControl = true,
 }: SelectDropdownProps) {
+    const { t } = useTranslation();
   const defaultState = isControlled
     ? { value: defaultValue, onValueChange }
     : { defaultValue, onValueChange };
@@ -50,8 +52,7 @@ export function SelectDropdown({
             <div className="flex items-center justify-center gap-2">
               <Loader className="h-5 w-5 animate-spin" />
               {"  "}
-              Loading...
-            </div>
+              {t("Loading...")}</div>
           </SelectItem>
         ) : (
           items?.map(({ label, value }) => (

@@ -12,10 +12,12 @@ import { AscCentersPrimaryButtons } from './components/asc-centers-primary-butto
 import { AscCentersProvider } from './components/asc-centers-provider'
 import { AscCentersTable } from './components/asc-centers-table'
 import { useAscCentersQuery } from './hooks/use-asc-centers-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi('/_authenticated/(SYSTEM-ADMINISTRATION)/asc-centers-management/')
 
 export function AscCentersManagement() {
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -33,8 +35,8 @@ export function AscCentersManagement() {
   return (
     <AscCentersProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -44,10 +46,9 @@ export function AscCentersManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>ASC Centers Management</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("ASC Centers Management")}</h2>
             <p className='text-muted-foreground'>
-              Manage authorized service centers and their status.
-            </p>
+              {t("Manage authorized service centers and their status.")}</p>
           </div>
           <AscCentersPrimaryButtons />
         </div>

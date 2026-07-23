@@ -79,7 +79,7 @@ Understanding the system helps write accurate reports.
 - **Public routes:** `GET /health` is a lightweight liveness probe (no auth). `GET /` and `GET /health/deep` require `x-api-key` matching `PUBLIC_ROUTES_API_KEY` (rate-limited; no JWT). Deep health checks database and Redis.
 - **Production Redis:** Startup fails if Redis is required and unavailable.
 
-For deeper runtime rules (Node vs Python, RAG corpus, job ownership), see [`documents/ai-runtime-policy.md`](documents/ai-runtime-policy.md).
+For deeper runtime rules (Node vs Python, RAG corpus, job ownership), see [`docs/architecture/AI_RUNTIME.md`](docs/architecture/AI_RUNTIME.md#ai-runtime-policy).
 
 ## Secure development practices
 
@@ -98,5 +98,5 @@ When a fix is released, maintainers may publish a short advisory (GitHub Securit
 ## Related documentation
 
 - [`CLAUDE.md`](CLAUDE.md) — monorepo layout and commands
-- [`documents/ai-runtime-policy.md`](documents/ai-runtime-policy.md) — AI runtime ownership and data boundaries
+- [`docs/architecture/AI_RUNTIME.md`](docs/architecture/AI_RUNTIME.md#ai-runtime-policy) — AI runtime ownership and data boundaries
 - [`.github/workflows/server-ci.yml`](.github/workflows/server-ci.yml) — server build, migrate, and smoke checks

@@ -11,6 +11,7 @@ import {
 import { Badge } from '@servexa-warranty-ai/ui/components/badge';
 import { mockSearchResults, mockSuggestions } from './mock-data';
 import type { SearchResult, AISearchSuggestion } from './types';
+import { useTranslation } from "react-i18next";
 
 interface AISearchDialogProps {
   open?: boolean;
@@ -44,6 +45,7 @@ function SearchResultItem({
   result: SearchResult;
   onSelect: (result: SearchResult) => void;
 }) {
+    const { t } = useTranslation();
   const colors = typeColors[result.type];
   const label = typeLabels[result.type];
 
@@ -86,6 +88,7 @@ function SuggestionItem({
   suggestion: AISearchSuggestion;
   onSelect: (query: string) => void;
 }) {
+    const { t } = useTranslation();
   const isRecent = suggestion.type === 'recent';
 
   return (
@@ -112,6 +115,7 @@ function SuggestionItem({
 }
 
 export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchDialogProps) {
+    const { t } = useTranslation();
   const [internalOpen, setInternalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -169,7 +173,7 @@ export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchD
   return (
     <CommandDialog open={open} onOpenChange={setOpen} className="sm:max-w-4xl">
       <CommandInput
-        placeholder="Search repairs, parts, manuals... (⌘K)"
+        placeholder={t("Search repairs, parts, manuals... (⌘K)")}
         value={searchQuery}
         onValueChange={setSearchQuery}
         className="text-sm"
@@ -207,7 +211,7 @@ export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchD
         )}
 
         {searchQuery && filteredResults.length === 0 && (
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t("No results found.")}</CommandEmpty>
         )}
 
         {/* Search Results Grouped by Type */}
@@ -229,9 +233,8 @@ export function AISearchDialog({ open: controlledOpen, onOpenChange }: AISearchD
         <div className="border-t border-border/50 px-4 py-3 text-[11px] text-muted-foreground space-y-1">
           <div className="flex items-center gap-2">
             <kbd className="px-2 py-1 rounded bg-muted text-muted-foreground text-[10px] font-mono">
-              ⌘K
-            </kbd>
-            <span>to open • ESC to close</span>
+              {t("⌘K")}</kbd>
+            <span>{t("to open • ESC to close")}</span>
           </div>
         </div>
       )}

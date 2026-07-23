@@ -17,19 +17,14 @@ describe("useHitlDecision", () => {
     vi.clearAllMocks();
   });
 
-  it("approve calls submitDecision", async () => {
-    const { result } = renderHook(() => useHitlDecision());
-
-    await act(async () => {
-      await result.current.approve("req-1");
+  it("approve calls submitDecision", async () => { const { result } = renderHook(() => useHitlDecision()); await act(async () => { await result.current.approve("req-1");
     });
 
     expect(hitlApi.submitDecision).toHaveBeenCalledWith("req-1", { decision: "approve" });
     expect(result.current.isSubmitting).toBe(false);
   });
 
-  it("reject sets error on failure", async () => {
-    vi.mocked(hitlApi.submitDecision).mockRejectedValueOnce(new Error("network"));
+  it("reject sets error on failure", async () => { vi.mocked(hitlApi.submitDecision).mockRejectedValueOnce(new Error("network"));
     const { result } = renderHook(() => useHitlDecision());
 
     await act(async () => {

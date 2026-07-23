@@ -12,6 +12,7 @@ import {
   Bell
 } from 'lucide-react';
 import { mockAIAlerts, type AIAlert } from '../data/mock-data';
+import { useTranslation } from "react-i18next";
 
 const alertIcons: Record<AIAlert['type'], React.ReactNode> = {
   sla_breach: <Clock className="w-4 h-4" />,
@@ -42,6 +43,7 @@ function formatTimeAgo(date: Date): string {
 }
 
 export function AIAlertsFeed() {
+    const { t } = useTranslation();
   return (
     <Card className="col-span-full lg:col-span-1 row-span-2">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -50,13 +52,12 @@ export function AIAlertsFeed() {
             <Bell className="w-4 h-4 text-ai-primary" />
           </div>
           <div>
-            <CardTitle className="text-base">AI Alerts</CardTitle>
-            <p className="text-xs text-muted-foreground">Real-time intelligence</p>
+            <CardTitle className="text-base">{t("AI Alerts")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("Real-time intelligence")}</p>
           </div>
         </div>
         <Badge variant="secondary" className="text-xs">
-          {mockAIAlerts.filter(a => a.severity === 'critical').length} critical
-        </Badge>
+          {mockAIAlerts.filter(a => a.severity === 'critical').length} {t("critical")}</Badge>
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea className="h-[400px]">

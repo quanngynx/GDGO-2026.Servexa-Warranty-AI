@@ -1,6 +1,7 @@
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 import { Button } from "@servexa-warranty-ai/ui/components/button";
+import { useTranslation } from "react-i18next";
 
 type GeneralErrorProps = React.HTMLAttributes<HTMLDivElement> & {
   minimal?: boolean;
@@ -10,6 +11,7 @@ export function GeneralError({
   className,
   minimal = false,
 }: GeneralErrorProps) {
+    const { t } = useTranslation();
   const navigate = useNavigate();
   const { history } = useRouter();
   return (
@@ -18,16 +20,14 @@ export function GeneralError({
         {!minimal && (
           <h1 className="text-[7rem] leading-tight font-bold">500</h1>
         )}
-        <span className="font-medium">Oops! Something went wrong {`:')`}</span>
+        <span className="font-medium">{t("Oops! Something went wrong")}{`:')`}</span>
         <p className="text-center text-muted-foreground">
-          We apologize for the inconvenience. <br /> Please try again later.
-        </p>
+          {t("We apologize for the inconvenience.")}<br /> {t("Please try again later.")}</p>
         {!minimal && (
           <div className="mt-6 flex gap-4">
             <Button variant="outline" onClick={() => history.go(-1)}>
-              Go Back
-            </Button>
-            <Button onClick={() => navigate({ to: "/" })}>Back to Home</Button>
+              {t("Go Back")}</Button>
+            <Button onClick={() => navigate({ to: "/" })}>{t("Back to Home")}</Button>
           </div>
         )}
       </div>

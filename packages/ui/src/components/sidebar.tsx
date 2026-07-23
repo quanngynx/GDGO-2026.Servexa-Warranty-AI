@@ -2,7 +2,7 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "../hooks/use-mobile"
 import { cn } from "@servexa-warranty-ai/ui/lib/utils"
 import { Button } from "@servexa-warranty-ai/ui/components/button"
 import { Input } from "@servexa-warranty-ai/ui/components/input"
@@ -508,6 +508,7 @@ function SidebarMenuButton({
   const { isMobile, state } = useSidebar()
 
   const button = (
+    // @ts-ignore
     <Comp
       data-slot="sidebar-menu-button"
       data-sidebar="menu-button"
@@ -553,6 +554,7 @@ function SidebarMenuAction({
   const Comp = asChild ? Slot.Root : "button"
 
   return (
+    // @ts-ignore
     <Comp
       data-slot="sidebar-menu-action"
       data-sidebar="menu-action"
@@ -664,6 +666,7 @@ function SidebarMenuSubButton({
   const Comp = asChild ? Slot.Root : "a"
 
   return (
+    // @ts-ignore
     <Comp
       data-slot="sidebar-menu-sub-button"
       data-sidebar="menu-sub-button"

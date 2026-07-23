@@ -4,6 +4,7 @@ import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 import { HitlApprovalCard } from "./hitl-approval-card";
 import { HitlDecisionResult } from "./hitl-decision-result";
+import { useTranslation } from "react-i18next";
 
 type HitlApprovalListProps = {
   pending: HitlRequest[];
@@ -30,6 +31,7 @@ export function HitlApprovalList({
   onEdit,
   className,
 }: HitlApprovalListProps) {
+    const { t } = useTranslation();
   const recentDecided = decided.slice(0, 3);
 
   return (
@@ -38,16 +40,14 @@ export function HitlApprovalList({
       aria-label="Pending AI approvals"
     >
       <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">
-        Pending approvals
-        {pending.length > 0 ? ` (${pending.length})` : ""}
+        {t("Pending approvals")}{pending.length > 0 ? ` (${pending.length})` : ""}
       </p>
       {error ? (
         <p className="mb-2 px-2 text-xs text-destructive">{error}</p>
       ) : null}
       {pending.length === 0 ? (
         <p className="px-2 pb-1 text-xs text-muted-foreground">
-          Workflow actions that need your approval will appear here.
-        </p>
+          {t("Workflow actions that need your approval will appear here.")}</p>
       ) : (
         <ul className="space-y-2 px-1 pb-1">
           {pending.map((request) => (

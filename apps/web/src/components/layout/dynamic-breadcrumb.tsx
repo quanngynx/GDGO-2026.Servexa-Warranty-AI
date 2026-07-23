@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@servexa-warranty-ai/ui/components/breadcrumb";
+import { useTranslation } from "react-i18next";
 
 type BreadcrumbContext = {
   getTitle?: () => string;
@@ -14,6 +15,7 @@ type BreadcrumbContext = {
 };
 
 export function DynamicBreadcrumb() {
+  const { t } = useTranslation();
   const matches = useRouterState({
     select: (state) => state.matches,
   });
@@ -55,10 +57,10 @@ export function DynamicBreadcrumb() {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
+                  <BreadcrumbPage>{t(breadcrumb.title)}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link to={breadcrumb.pathname}>{breadcrumb.title}</Link>
+                    <Link to={breadcrumb.pathname}>{t(breadcrumb.title)}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

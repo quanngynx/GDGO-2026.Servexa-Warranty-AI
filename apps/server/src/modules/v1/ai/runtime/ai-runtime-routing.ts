@@ -1,7 +1,7 @@
 import type { AiJobType } from "@/modules/v1/ai/schemas/ai-request.schema";
 
 /**
- * Workloads that MUST go through the async Redis → worker path (see documents/ai-runtime-policy.md).
+ * Workloads that MUST go through the async Redis → worker path (see docs/architecture/AI_RUNTIME.md#ai-runtime-policy).
  */
 const ASYNC_ONLY_JOB_TYPES = new Set<AiJobType>([
   "report_generation",

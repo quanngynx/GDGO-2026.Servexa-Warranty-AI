@@ -74,7 +74,7 @@ export class AccessoryController {
 
       const params = findAccessoriesFromTotalWarehouseSchema.parse(req.params)
       const body = createTotalWarehouseStockSchema.parse(req.body)
-      const result = await this.accessoryService.createFromTotalWarehouse(params, body)
+      const result = await this.accessoryService.createFromTotalWarehouse(params, body, req.file)
 
       new SuccessResponse({
         message: 'Total warehouse stock created successfully',
@@ -92,7 +92,7 @@ export class AccessoryController {
 
       const params = findAccessoryStockByTotalWarehouseSchema.parse(req.params)
       const body = replaceTotalWarehouseStockSchema.parse(req.body)
-      const result = await this.accessoryService.replaceFromTotalWarehouse(params, body)
+      const result = await this.accessoryService.replaceFromTotalWarehouse(params, body, req.file)
 
       new SuccessResponse({
         message: 'Total warehouse stock replaced successfully',
@@ -109,7 +109,7 @@ export class AccessoryController {
 
       const params = findAccessoryStockByTotalWarehouseSchema.parse(req.params)
       const body = updateTotalWarehouseStockSchema.parse(req.body)
-      const result = await this.accessoryService.updateFromTotalWarehouse(params, body)
+      const result = await this.accessoryService.updateFromTotalWarehouse(params, body, req.file)
 
       new SuccessResponse({
         message: 'Total warehouse stock updated successfully',
@@ -142,7 +142,7 @@ export class AccessoryController {
 
       const params = findAccessoriesFromAscCenterSchema.parse(req.params)
       const body = createAscAccessoryStockSchema.parse(req.body)
-      const result = await this.accessoryService.createFromAscCenter(params, body)
+      const result = await this.accessoryService.createFromAscCenter(params, body, req.file)
 
       new SuccessResponse({
         message: 'ASC center stock created successfully',
@@ -160,7 +160,7 @@ export class AccessoryController {
 
       const params = findAccessoryStockByAscCenterSchema.parse(req.params)
       const body = replaceAscAccessoryStockSchema.parse(req.body)
-      const result = await this.accessoryService.replaceFromAscCenter(params, body)
+      const result = await this.accessoryService.replaceFromAscCenter(params, body, req.file)
 
       new SuccessResponse({
         message: 'ASC center stock replaced successfully',
@@ -177,7 +177,7 @@ export class AccessoryController {
 
       const params = findAccessoryStockByAscCenterSchema.parse(req.params)
       const body = updateAscAccessoryStockSchema.parse(req.body)
-      const result = await this.accessoryService.updateFromAscCenter(params, body)
+      const result = await this.accessoryService.updateFromAscCenter(params, body, req.file)
 
       new SuccessResponse({
         message: 'ASC center stock updated successfully',
@@ -242,7 +242,7 @@ export class AccessoryController {
       })
 
       const body = createAccessorySchema.parse(req.body)
-      const result = await this.accessoryService.create(body)
+      const result = await this.accessoryService.create(body, req.file)
 
       new SuccessResponse({
         message: 'Accessory created successfully',
@@ -260,7 +260,7 @@ export class AccessoryController {
 
       const { accessoryId } = findAccessoryByIdSchema.parse(req.params)
       const body = replaceAccessorySchema.parse(req.body)
-      const result = await this.accessoryService.update(accessoryId, body)
+      const result = await this.accessoryService.update(accessoryId, body, req.file)
 
       new SuccessResponse({
         message: 'Accessory replaced successfully',
@@ -277,7 +277,7 @@ export class AccessoryController {
 
       const { accessoryId } = findAccessoryByIdSchema.parse(req.params)
       const body = updateAccessorySchema.parse(req.body)
-      const result = await this.accessoryService.update(accessoryId, body)
+      const result = await this.accessoryService.update(accessoryId, body, req.file)
 
       new SuccessResponse({
         message: 'Accessory updated successfully',

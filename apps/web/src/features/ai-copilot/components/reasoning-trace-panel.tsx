@@ -14,6 +14,7 @@ import {
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 
 import { ReasoningTraceTimeline } from "./reasoning-trace-timeline";
+import { useTranslation } from "react-i18next";
 
 type ReasoningTracePanelProps = {
   reasoningTrace?: ReasoningTrace;
@@ -26,6 +27,7 @@ export function ReasoningTracePanel({
   latestReasoningEvent,
   className,
 }: ReasoningTracePanelProps) {
+    const { t } = useTranslation();
   const hasAny =
     Boolean(reasoningTrace?.events?.length) ||
     Boolean(latestReasoningEvent && reasoningTrace?.events?.some((e) => e.id === latestReasoningEvent.id));
@@ -37,8 +39,7 @@ export function ReasoningTracePanel({
     >
       <CollapsibleTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-medium hover:bg-muted">
         <Sparkles className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-        Reasoning trace
-      </CollapsibleTrigger>
+        {t("Reasoning trace")}</CollapsibleTrigger>
 
       <CollapsibleContent className="px-2 pb-2 pt-1">
         {reasoningTrace?.events?.length ? (
@@ -48,12 +49,10 @@ export function ReasoningTracePanel({
           />
         ) : hasAny ? (
           <p className="px-1 pb-2 text-xs text-muted-foreground">
-            Latest step is available, but the full trace is not yet populated.
-          </p>
+            {t("Latest step is available, but the full trace is not yet populated.")}</p>
         ) : (
           <p className="px-1 pb-2 text-xs text-muted-foreground">
-            No reasoning trace available yet.
-          </p>
+            {t("No reasoning trace available yet.")}</p>
         )}
       </CollapsibleContent>
     </Collapsible>

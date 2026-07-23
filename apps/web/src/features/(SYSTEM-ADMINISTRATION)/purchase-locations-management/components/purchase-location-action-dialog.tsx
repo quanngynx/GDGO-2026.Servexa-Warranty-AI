@@ -26,6 +26,7 @@ import { useCreatePurchaseLocationMutation } from '../hooks/use-create-purchase-
 import { useUpdatePurchaseLocationMutation } from '../hooks/use-update-purchase-location-mutation'
 import { usePurchaseLocationGroupsQuery } from '../hooks/use-purchase-location-groups-query'
 import type { ResponsePurchaseLocationDto } from '@/libs/api/purchase-channels/purchase-location/data-transfer-object'
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   groupId: z.string().min(1, 'Group is required'),
@@ -46,6 +47,7 @@ type Props = {
 }
 
 export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }: Props) {
+    const { t } = useTranslation();
   const form = useForm<LocationForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -125,11 +127,11 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='groupId'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Group *</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Group *")}</FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='Select group'
+                      placeholder={t("Select group")}
                       className='col-span-4'
                       items={groups.map((g) => ({
                         label: g.name,
@@ -145,10 +147,10 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='name'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Location Name *</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Location Name *")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Enter location name'
+                        placeholder={t("Enter location name")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -163,10 +165,10 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='code'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Location Code *</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Location Code *")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='e.g: store_01'
+                        placeholder={t("e.g: store_01")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -181,10 +183,10 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='website'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Website</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Website")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='https://example.com'
+                        placeholder={t("https://example.com")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -199,10 +201,10 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='address'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>Address</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>{t("Address")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Enter address (optional)'
+                        placeholder={t("Enter address (optional)")}
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -217,10 +219,10 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                 name='description'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end mt-2'>Description</FormLabel>
+                    <FormLabel className='col-span-2 text-end mt-2'>{t("Description")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder='Enter description (optional)'
+                        placeholder={t("Enter description (optional)")}
                         className='col-span-4 resize-none'
                         rows={3}
                         {...field}
@@ -236,11 +238,11 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
                   name='isActive'
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                      <FormLabel className='col-span-2 text-end'>Status</FormLabel>
+                      <FormLabel className='col-span-2 text-end'>{t("Status")}</FormLabel>
                       <SelectDropdown
                         defaultValue={field.value ? 'true' : 'false'}
                         onValueChange={(value) => field.onChange(value === 'true')}
-                        placeholder='Select status'
+                        placeholder={t("Select status")}
                         className='col-span-4'
                         items={[
                           { label: 'Active', value: 'true' },
@@ -257,8 +259,7 @@ export function PurchaseLocationActionDialog({ open, onOpenChange, currentRow }:
         </div>
         <DialogFooter>
           <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {t("Cancel")}</Button>
           <Button type='submit' form='location-form' disabled={isPending}>
             {isPending ? 'Saving...' : isEditing ? 'Save changes' : 'Add location'}
           </Button>

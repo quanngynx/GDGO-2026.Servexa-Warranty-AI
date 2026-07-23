@@ -18,8 +18,10 @@ import {
 import { Label } from '@servexa-warranty-ai/ui/components/label'
 import type { RepairCaseImageType } from '@/libs/api/asc-center/repair-case/data-transfer-object'
 import { env } from '@servexa-warranty-ai/env/web'
+import { useTranslation } from "react-i18next";
 
 export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repairCaseId: string, hideUpload?: boolean, hideList?: boolean }) {
+    const { t } = useTranslation();
   const { data, isLoading } = useRepairCaseImagesQuery(repairCaseId)
   const images = data?.metadata || []
 
@@ -151,8 +153,8 @@ export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repai
                   onChange={handleFileSelect}
                 />
                 <UploadCloud className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-                <p className="text-sm font-medium">Click or drag images here</p>
-                <p className="text-xs text-muted-foreground mt-1">Supports multiple files</p>
+                <p className="text-sm font-medium">{t("Click or drag images here")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("Supports multiple files")}</p>
               </div>
 
               {selectedFiles.length > 0 && (
@@ -161,8 +163,7 @@ export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repai
                     <div key={i} className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md text-sm">
                       <span className="truncate max-w-[150px]" title={file.name}>{file.name}</span>
                       <button type="button" onClick={() => removeSelectedFile(i)} className="text-muted-foreground hover:text-destructive">
-                        &times;
-                      </button>
+                        {t("&times;")}</button>
                     </div>
                   ))}
                 </div>
@@ -171,30 +172,30 @@ export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repai
               <div className="flex justify-between gap-4 sm:flex-row sm:items-end">
                 <div className='flex item-center justtify-center  gap-2'>
                   <div className="grid w-full max-w-xs items-center gap-1.5">
-                    <Label>Image Type</Label>
+                    <Label>{t("Image Type")}</Label>
                     <Select value={imageType} onValueChange={(v) => setImageType(v as RepairCaseImageType)}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder={t("Select type")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="model_serial">Model / Serial</SelectItem>
-                        <SelectItem value="repair_form">Repair Form</SelectItem>
-                        <SelectItem value="before_repair">Before Repair</SelectItem>
-                        <SelectItem value="after_repair">After Repair</SelectItem>
-                        <SelectItem value="parts_components">Parts / Components</SelectItem>
-                        <SelectItem value="warranty_invoice">Warranty Invoice</SelectItem>
-                        <SelectItem value="shipping_fee_invoice">Shipping Fee Invoice</SelectItem>
-                        <SelectItem value="repair_completion_receipt">Repair Completion Receipt</SelectItem>
+                        <SelectItem value="model_serial">{t("Model / Serial")}</SelectItem>
+                        <SelectItem value="repair_form">{t("Repair Form")}</SelectItem>
+                        <SelectItem value="before_repair">{t("Before Repair")}</SelectItem>
+                        <SelectItem value="after_repair">{t("After Repair")}</SelectItem>
+                        <SelectItem value="parts_components">{t("Parts / Components")}</SelectItem>
+                        <SelectItem value="warranty_invoice">{t("Warranty Invoice")}</SelectItem>
+                        <SelectItem value="shipping_fee_invoice">{t("Shipping Fee Invoice")}</SelectItem>
+                        <SelectItem value="repair_completion_receipt">{t("Repair Completion Receipt")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid w-full max-w-2xl items-center gap-1.5">
-                    <Label htmlFor="description">Description (optional)</Label>
+                    <Label htmlFor="description">{t("Description (optional)")}</Label>
                     <Input
                       id="description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder="E.g. front view"
+                      placeholder={t("E.g. front view")}
                     />
                   </div>
                 </div>
@@ -208,7 +209,7 @@ export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repai
                   ) : (
                     <UploadCloud className="mr-2 h-4 w-4" />
                   )}
-                  Upload {selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
+                  {t("Upload")}{selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
                 </Button>
               </div>
             </form>
@@ -225,8 +226,8 @@ export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repai
           ) : images.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border rounded-lg border-dashed">
               <ImageIcon className="h-12 w-12 mb-4 opacity-20" />
-              <p>No images found.</p>
-              <p className="text-sm">Upload an image to see it here.</p>
+              <p>{t("No images found.")}</p>
+              <p className="text-sm">{t("Upload an image to see it here.")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

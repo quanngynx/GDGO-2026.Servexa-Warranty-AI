@@ -7,6 +7,7 @@ import {
   technicianLabel,
   useTechniciansQuery,
 } from "../hooks/use-technicians-query";
+import { useTranslation } from "react-i18next";
 
 type HitlTechnicianSelectFieldProps = {
   value: string;
@@ -19,6 +20,7 @@ export function HitlTechnicianSelectField({
   onValueChange,
   disabled,
 }: HitlTechnicianSelectFieldProps) {
+    const { t } = useTranslation();
   const { data: technicians = [], isPending, isError } = useTechniciansQuery(true);
 
   const items = useMemo(
@@ -39,25 +41,24 @@ export function HitlTechnicianSelectField({
 
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor="hitl-tech-select">Technician</Label>
+      <Label htmlFor="hitl-tech-select">{t("Technician")}</Label>
       <SelectDropdown
         withFormControl={false}
         isControlled
         defaultValue={value || undefined}
         onValueChange={handleChange}
-        placeholder="Select a technician"
+        placeholder={t("Select a technician")}
         isPending={isPending}
         disabled={disabled || isError}
         className="w-full"
         items={items}
       />
       {isError ? (
-        <p className="text-xs text-destructive">Could not load technicians.</p>
+        <p className="text-xs text-destructive">{t("Could not load technicians.")}</p>
       ) : null}
       {!isPending && !isError && items.length === 0 ? (
         <p className="text-xs text-muted-foreground">
-          No available technicians found. Run the technician profile seed first.
-        </p>
+          {t("No available technicians found. Run the technician profile seed first.")}</p>
       ) : null}
     </div>
   );

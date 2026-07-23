@@ -13,6 +13,7 @@ import { DocumentsPrimaryButtons } from './components/reference-documents-primar
 import { DocumentsProvider } from './components/reference-documents-provider'
 import { DocumentsTable } from './components/reference-documents-table'
 import { useDocumentsQuery } from './hooks/use-documents-query'
+import { useTranslation } from "react-i18next";
 
 const documentsManagementRoute = getRouteApi(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/reference-documents-management/',
@@ -33,6 +34,7 @@ export function ReferenceDocumentsManagementView({
   search,
   navigate,
 }: ReferenceDocumentsManagementViewProps) {
+  const { t } = useTranslation();
   const { data, isLoading } = useDocumentsQuery({
     page: search.page,
     limit: search.pageSize,
@@ -46,8 +48,8 @@ export function ReferenceDocumentsManagementView({
   return (
     <DocumentsProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -57,10 +59,9 @@ export function ReferenceDocumentsManagementView({
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Reference Documents</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Reference Documents")}</h2>
             <p className='text-muted-foreground'>
-              Manage reference documentation and document versions.
-            </p>
+              {t("Manage reference documentation and document versions.")}</p>
           </div>
           <DocumentsPrimaryButtons />
         </div>
@@ -79,6 +80,7 @@ export function ReferenceDocumentsManagementView({
 }
 
 export function ReferenceDocumentsManagement() {
+  const { t } = useTranslation();
   const search = documentsManagementRoute.useSearch()
   const navigate = documentsManagementRoute.useNavigate()
   return <ReferenceDocumentsManagementView search={search} navigate={navigate} />
