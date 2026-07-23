@@ -10,6 +10,7 @@ import { lazy, Suspense } from "react";
 import { Outlet, useRouterState } from "@tanstack/react-router";
 import { AISearchDialog } from "@/features/ai-search";
 import { isCopilotRailHiddenRoute } from "@/features/ai-copilot/constants";
+import { useTranslation } from "react-i18next";
 
 const AICopilotRail = lazy(async () => {
   const mod = await import("@/features/ai-copilot/ai-copilot-rail");
@@ -21,6 +22,7 @@ type AuthenticatedLayoutProps = {
 };
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
+  const { t } = useTranslation();
   const defaultOpen = getCookie("sidebar_state") !== "false";
   const hideCopilotRail = useRouterState({
     select: (s) => isCopilotRailHiddenRoute(s.location.pathname),
@@ -50,7 +52,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
                       className="flex h-svh w-12 shrink-0 items-start justify-center border-l border-border bg-muted/40 pt-3"
                       aria-hidden
                     >
-                      <span className="text-[10px] text-muted-foreground">AI</span>
+                      <span className="text-[10px] text-muted-foreground">{t("AI")}</span>
                     </aside>
                   }
                 >

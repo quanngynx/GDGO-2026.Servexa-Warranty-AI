@@ -245,3 +245,59 @@ model WarrantyPolicy {
 
   @@map("warranty_policies")
 }
+
+enum ExportJobStatus {
+  pending
+  processing
+  completed
+  failed
+  cancelled
+  expired
+}
+
+model ProductExportJob {
+  id                String          @id @default(uuid(7))
+  requestedBy       String          @map("requested_by")
+  tenantId          String?         @map("tenant_id")
+  status            ExportJobStatus @default(pending)
+
+  format            String          @default("xlsx")
+  filters           Json?
+  columns           String[]
+  sort              Json?
+  snapshotAt        DateTime        @map("snapshot_at") @db.Timestamptz(3)
+  idempotencyKey    String?         @map("idempotency_key")
+  lastCursorId      String?         @map("last_cursor_id")
+
+  estimatedRows     Int?            @map("estimated_rows")
+  processedRows     Int             @default(0) @map("processed_rows")
+  rowCount          Int?            @map("row_count")
+  progressPercent   Int?            @map("progress_percent")
+
+  fileName          String?         @map("file_name")
+  storageKey        String?         @map("storage_key")
+  fileSize          BigInt?         @map("file_size")
+  checksum          String?
+  contentType       String?         @map("content_type")
+
+  attemptCount      Int             @default(0) @map("attempt_count")
+  maxAttempts       Int             @default(3) @map("max_attempts")
+  errorCode         String?         @map("error_code")
+  errorMessage      String?         @map("error_message")
+
+  cancellationAt    DateTime?       @map("cancellation_at") @db.Timestamptz(3)
+  startedAt         DateTime?       @map("started_at") @db.Timestamptz(3)
+  completedAt       DateTime?       @map("completed_at") @db.Timestamptz(3)
+  expiresAt         DateTime?       @map("expires_at") @db.Timestamptz(3)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  requester         User            @relation(fields: [requestedBy], references: [id])
+
+  @@unique([requestedBy, idempotencyKey])
+  @@index([requestedBy, createdAt])
+  @@index([tenantId, status])
+  @@index([status, createdAt])
+  @@index([expiresAt])
+  @@map("product_export_jobs")
+}

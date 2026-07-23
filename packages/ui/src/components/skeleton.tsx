@@ -1,3 +1,4 @@
+import * as React from "react"
 import { cn } from "@servexa-warranty-ai/ui/lib/utils"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {

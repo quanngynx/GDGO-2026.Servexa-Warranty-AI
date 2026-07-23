@@ -6,6 +6,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { type AscCenter } from '../data/schema'
 import { useDeleteAscCenterMutation } from '../hooks/use-delete-asc-center-mutation'
+import { useTranslation } from "react-i18next";
 
 type AscCentersDeleteDialogProps = {
   open: boolean
@@ -18,6 +19,7 @@ export function AscCentersDeleteDialog({
   onOpenChange,
   currentRow,
 }: AscCentersDeleteDialogProps) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
   const { mutate, isPending } = useDeleteAscCenterMutation()
 
@@ -42,31 +44,27 @@ export function AscCentersDeleteDialog({
       title={
         <span className='text-destructive'>
           <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} />{' '}
-          Delete ASC Center
-        </span>
+          {t("Delete ASC Center")}</span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            {t("Are you sure you want to delete")}{' '}
             <span className='font-bold'>{currentRow.centerName}</span> (
-            <span className='font-mono'>{currentRow.centerCode}</span>)? This cannot be undone.
-          </p>
+            <span className='font-mono'>{currentRow.centerCode}</span>{t(")? This cannot be undone.")}</p>
 
           <Label className='my-2'>
-            Center code:
-            <Input
+            {t("Center code:")}<Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter center code to confirm deletion.'
+              placeholder={t("Enter center code to confirm deletion.")}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

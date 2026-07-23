@@ -6,6 +6,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { type TotalWarehouse } from '../data/schema'
 import { useDeleteTotalWarehouseMutation } from '../hooks/use-delete-total-warehouse-mutation'
+import { useTranslation } from "react-i18next";
 
 type CentralWarehouseDeleteDialogProps = {
   open: boolean
@@ -18,6 +19,7 @@ export function CentralWarehouseDeleteDialog({
   onOpenChange,
   currentRow,
 }: CentralWarehouseDeleteDialogProps) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
   const { mutate, isPending } = useDeleteTotalWarehouseMutation()
 
@@ -42,30 +44,26 @@ export function CentralWarehouseDeleteDialog({
       title={
         <span className='text-destructive'>
           <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} />{' '}
-          Delete Warehouse
-        </span>
+          {t("Delete Warehouse")}</span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
-            <span className='font-bold'>{currentRow.name}</span>? This cannot be undone.
-          </p>
+            {t("Are you sure you want to delete")}{' '}
+            <span className='font-bold'>{currentRow.name}</span>{t("? This cannot be undone.")}</p>
 
           <Label className='my-2'>
-            Warehouse name:
-            <Input
+            {t("Warehouse name:")}<Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter warehouse name to confirm deletion.'
+              placeholder={t("Enter warehouse name to confirm deletion.")}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

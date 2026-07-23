@@ -1,7 +1,9 @@
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 import { type SVGProps } from "react";
+import { useTranslation } from "react-i18next";
 
 export function IconSlack({ className, ...props }: SVGProps<SVGSVGElement>) {
+    const { t } = useTranslation();
   return (
     <svg
       role="img"
@@ -17,7 +19,7 @@ export function IconSlack({ className, ...props }: SVGProps<SVGSVGElement>) {
       strokeLinejoin="round"
       {...props}
     >
-      <title>Slack</title>
+      <title>{t("Slack")}</title>
       <path strokeWidth="0" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 12v-6a2 2 0 0 1 4 0v6m0 -2a2 2 0 1 1 2 2h-6" />
       <path d="M12 12h6a2 2 0 0 1 0 4h-6m2 0a2 2 0 1 1 -2 2v-6" />

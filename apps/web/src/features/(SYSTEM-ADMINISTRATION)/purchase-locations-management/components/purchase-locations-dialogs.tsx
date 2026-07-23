@@ -1,4 +1,5 @@
-import { PurchaseLocationsActionDialog } from './purchase-locations-action-dialog'
+import { PurchaseLocationActionDialog } from './purchase-location-action-dialog'
+import { PurchaseLocationGroupActionDialog } from './purchase-location-group-action-dialog'
 import { PurchaseLocationsDeleteDialog } from './purchase-locations-delete-dialog'
 import { PurchaseLocationsInviteDialog } from './purchase-locations-invite-dialog'
 import { usePurchaseLocations } from './purchase-locations-provider'
@@ -7,10 +8,16 @@ export function PurchaseLocationsDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = usePurchaseLocations()
   return (
     <>
-      <PurchaseLocationsActionDialog
+      <PurchaseLocationActionDialog
         key='location-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
+        open={open === 'add-location'}
+        onOpenChange={() => setOpen('add-location')}
+      />
+
+      <PurchaseLocationGroupActionDialog
+        key='group-add'
+        open={open === 'add-group'}
+        onOpenChange={() => setOpen('add-group')}
       />
 
       <PurchaseLocationsInviteDialog
@@ -21,7 +28,7 @@ export function PurchaseLocationsDialogs() {
 
       {currentRow && (
         <>
-          <PurchaseLocationsActionDialog
+          <PurchaseLocationActionDialog
             key={`location-edit-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {

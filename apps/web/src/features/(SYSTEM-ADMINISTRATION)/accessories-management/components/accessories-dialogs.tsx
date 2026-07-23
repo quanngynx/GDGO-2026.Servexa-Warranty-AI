@@ -1,51 +1,44 @@
-import { UsersActionDialog } from './accessories-action-dialog'
+import { AccessoriesActionDialog } from './accessories-action-dialog'
 import { AccessoriesDeleteDialog } from './accessories-delete-dialog'
-import { UsersInviteDialog } from './accessories-invite-dialog'
 import { useAccessories } from './accessories-provider'
 
 export function AccessoriesDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useAccessories()
   return (
     <>
-      <UsersActionDialog
-        key="user-add"
-        open={open === "add"}
-        onOpenChange={() => setOpen("add")}
-      />
-
-      <UsersInviteDialog
-        key="user-invite"
-        open={open === "invite"}
-        onOpenChange={() => setOpen("invite")}
+      <AccessoriesActionDialog
+        key='accessory-add'
+        open={open === 'add'}
+        onOpenChange={() => setOpen('add')}
       />
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === "edit"}
+          <AccessoriesActionDialog
+            key={`accessory-edit-${currentRow.id}`}
+            open={open === 'edit'}
             onOpenChange={() => {
-              setOpen("edit");
+              setOpen('edit')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
 
           <AccessoriesDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === "delete"}
+            key={`accessory-delete-${currentRow.id}`}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete')
               setTimeout(() => {
-                setCurrentRow(null);
-              }, 500);
+                setCurrentRow(null)
+              }, 500)
             }}
             currentRow={currentRow}
           />
         </>
       )}
     </>
-  );
+  )
 }

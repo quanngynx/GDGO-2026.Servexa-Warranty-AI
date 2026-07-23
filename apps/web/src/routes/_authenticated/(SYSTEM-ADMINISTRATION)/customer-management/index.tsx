@@ -5,6 +5,7 @@ import { adminListSearchSchema } from '../../../../libs/search-schemas'
 export const Route = createFileRoute(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/customer-management/',
 )({
+  beforeLoad: () => ({ title: 'Customer Management' }),
   validateSearch: adminListSearchSchema,
   component: CustomerManagement,
 })

@@ -13,8 +13,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { useSearch } from '@servexa-warranty-ai/ui/contexts/search-provider'
 import { useCopilot } from '../hooks/use-copilot'
+import { useTranslation } from "react-i18next";
 
 export function AICommandSearch() {
+    const { t } = useTranslation();
   const navigate = useNavigate()
   const { open, setOpen } = useSearch()
   const { pageContext, suggestedQueries, send } = useCopilot()
@@ -32,10 +34,10 @@ export function AICommandSearch() {
   }
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen} title="AI Search" description="Search actions and ask AI">
-      <CommandInput placeholder="Ask AI, navigate, or run an action…" />
+    <CommandDialog open={open} onOpenChange={setOpen} title={t("AI Search")} description={t("Search actions and ask AI")}>
+      <CommandInput placeholder={t("Ask AI, navigate, or run an action…")} />
       <CommandList>
-        <CommandEmpty>No AI results.</CommandEmpty>
+        <CommandEmpty>{t("No AI results.")}</CommandEmpty>
         <CommandGroup heading="AI Suggested Queries">
           {suggestedQueries.map((query) => (
             <CommandItem
@@ -51,16 +53,13 @@ export function AICommandSearch() {
         <CommandSeparator />
         <CommandGroup heading="Quick Navigation">
           <CommandItem onSelect={() => run(() => navigate({ to: '/_authenticated/' }))}>
-            AI Command Center
-            <CommandShortcut>⌘1</CommandShortcut>
+            {t("AI Command Center")}<CommandShortcut>⌘1</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => run(() => navigate({ to: '/ai' }))}>
-            AI Chat Sandbox
-            <CommandShortcut>⌘2</CommandShortcut>
+            {t("AI Chat Sandbox")}<CommandShortcut>⌘2</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => run(() => navigate({ to: contextRoute }))}>
-            Current Context Page
-          </CommandItem>
+            {t("Current Context Page")}</CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>

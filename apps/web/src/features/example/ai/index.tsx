@@ -1,5 +1,6 @@
 import { env } from "@servexa-warranty-ai/env/web";
 import { CopilotKit } from "@copilotkit/react-core";
+import { Header } from "@/components/layout/header";
 import React, { useState } from "react";
 import { z } from "zod";
 import "@copilotkit/react-core/v2/styles.css";
@@ -12,6 +13,7 @@ import {
 } from "@copilotkit/react-core/v2";
 
 import { SERVEXA_COPILOT_AGENT_ID } from "@/features/ai-copilot/constants";
+import { useTranslation } from "react-i18next";
 
 interface AgenticChatProps {
   params: Promise<{
@@ -20,22 +22,27 @@ interface AgenticChatProps {
 }
 
 const AgenticChat: React.FC<AgenticChatProps> = ({ params }) => {
+    const { t } = useTranslation();
   void React.use(params);
 
   const runtimeBase = env.VITE_SERVER_URL.replace(/\/$/, "");
 
   return (
-    <CopilotKit
-      runtimeUrl={`${runtimeBase}/api/copilotkit`}
-      useSingleEndpoint
-      enableInspector
-      agent={SERVEXA_COPILOT_AGENT_ID}
-    >
-      <Chat />
-    </CopilotKit>
+    <>
+      <Header />
+      <CopilotKit
+        runtimeUrl={`${runtimeBase}/api/copilotkit`}
+        useSingleEndpoint
+        enableInspector
+        agent={SERVEXA_COPILOT_AGENT_ID}
+      >
+        <Chat />
+      </CopilotKit>
+    </>
   );
 };
 const Chat = () => {
+    const { t } = useTranslation();
   const [background, setBackground] = useState<string>("--copilot-kit-background-color");
 
   useAgentContext({
@@ -66,7 +73,7 @@ const Chat = () => {
     })  ,
     render: ({ args, result, status }: any) => {
       if (status !== "complete") {
-        return <div data-testid="weather-info-loading">Loading weather...</div>;
+        return <div data-testid="weather-info-loading">{t("Loading weather...")}</div>;
       }
 
       // Some integrations (e.g. LangGraph) deliver tool results as a JSON-encoded
@@ -85,11 +92,11 @@ const Chat = () => {
 
       return (
         <div data-testid="weather-info">
-          <strong>Weather in {parsed.city ?? args.location}</strong>
-          <div>Temperature: {parsed.temperature}°C</div>
-          <div>Humidity: {parsed.humidity}%</div>
-          <div>Wind Speed: {parsed.windSpeed ?? parsed.wind_speed} mph</div>
-          <div>Conditions: {parsed.conditions}</div>
+          <strong>{t("Weather in")}{parsed.city ?? args.location}</strong>
+          <div>{t("Temperature:")}{parsed.temperature}{t("°C")}</div>
+          <div>{t("Humidity:")}{parsed.humidity}%</div>
+          <div>{t("Wind Speed:")}{parsed.windSpeed ?? parsed.wind_speed} {t("mph")}</div>
+          <div>{t("Conditions:")}{parsed.conditions}</div>
         </div>
       );
     },

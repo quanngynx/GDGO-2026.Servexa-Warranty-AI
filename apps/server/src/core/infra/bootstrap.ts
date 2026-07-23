@@ -74,6 +74,16 @@ export class AppBootStrap {
     try {
       await connectBootstrapRedis();
       logger.info(`[${env.BRANDING_NAME}] Redis connected successfully`);
+
+      // Start export worker in-process so it runs in dev & prod single-server mode.
+      // In production scale-out, disable this and run export-worker.bootstrap separately.
+      const { startProductExportWorker } = await import(
+        '@/modules/v1/product-catalog/workers/product-export.worker'
+      );
+      startProductExportWorker().catch((err: unknown) => {
+        logger.error(`[${env.BRANDING_NAME}] Export worker crashed`, { err });
+      });
+      logger.info(`[${env.BRANDING_NAME}] Product export worker started`);
     } catch (error) {
       logger.error(`[${env.BRANDING_NAME}] Redis connection failed`, {
         error: error instanceof Error ? error.message : String(error),

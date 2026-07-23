@@ -6,8 +6,10 @@ import {
 } from "@servexa-warranty-ai/ui/components/tooltip";
 import { MessagesSquare } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 export function NavigationChats() {
+    const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <Tooltip>
@@ -21,7 +23,7 @@ export function NavigationChats() {
           <MessagesSquare className="size-[1.2rem]" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom">Chats</TooltipContent>
+      <TooltipContent side="bottom">{t("Chats")}</TooltipContent>
     </Tooltip>
   );
 }

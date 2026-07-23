@@ -36,6 +36,9 @@ export type ResponsePurchaseLocationDto = {
   createdAt: string
   updatedAt: string
   group?: { id: string; name: string; code: string }
+  _count?: {
+    repairCases: number
+  }
 }
 
 export type ResponsePurchaseLocationListDto = {

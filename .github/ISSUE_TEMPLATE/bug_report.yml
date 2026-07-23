@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible bug or broken workflow
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Servexa Warranty AI. Do not include secrets, real customer data, customer PII, or proprietary warranty manuals in public issues.
+  - type: input
+    id: repository
+    attributes:
+      label: App or package
+      description: Which app, package, or service is affected?
+      placeholder: "apps/web / apps/server / apps/ai-services / packages/..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include commands, configuration, or screenshots when useful. Remove secrets and PII.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Node/pnpm versions, browser version, commit SHA, and relevant logs.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety checklist
+      options:
+        - label: I removed secrets, tokens, API keys (e.g. Gemini/OpenAI), customer data, and proprietary manual details.
+          required: true

@@ -9,6 +9,13 @@ import { seedASCCenters } from './asc-center/asc-centers'
 import { seedRepairCases } from './asc-center/repair-cases'
 import { seedPurchaseChannels } from './purchase-channel'
 
+import { seedProductWarranties } from './asc-center/product-warranties'
+import { seedAccessoryStock } from './asc-center/accessory-stock'
+import { seedAccessoryOperations } from './asc-center/accessory-operations'
+import { seedRepairCaseDetails } from './asc-center/repair-case-details'
+import { seedFinancials } from './asc-center/financials'
+import { seedRecalls } from './asc-center/recalls'
+
 export * from './identity/user'
 export * from './identity/hitl-permissions'
 export * from './identity/api-permissions'
@@ -31,6 +38,12 @@ export const runSeeds = async (options: RunSeedsOptions = {}) => {
   await seedHumanResources()  // seeds customer + employee (needed by repair-cases, depends on ascCenter + admin user)
   await seedPurchaseChannels()
   await seedRepairCases()
+  await seedProductWarranties()
+  await seedAccessoryStock()
+  await seedAccessoryOperations()
+  await seedRepairCaseDetails()
+  await seedFinancials()
+  await seedRecalls()
   return {
     identityUser: result,
   }

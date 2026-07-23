@@ -7,6 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@servexa-warranty-ai/ui/components/collapsible";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type LastDecisionSummaryCardProps = {
   lastDecision: HitlRequest | CopilotRailMetadata["lastDecision"];
@@ -26,6 +27,7 @@ function formatDecision(
 }
 
 export function LastDecisionSummaryCard({ lastDecision, className }: LastDecisionSummaryCardProps) {
+    const { t } = useTranslation();
   if (!lastDecision) return null;
 
   const summary =
@@ -37,8 +39,7 @@ export function LastDecisionSummaryCard({ lastDecision, className }: LastDecisio
     <Collapsible defaultOpen className={cn("border-t border-border px-2 py-2", className)}>
       <CollapsibleTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm font-medium hover:bg-muted">
         <CheckCircle2 className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-        Last decision
-      </CollapsibleTrigger>
+        {t("Last decision")}</CollapsibleTrigger>
       <CollapsibleContent className="px-2 pb-2 text-xs text-muted-foreground">
         <p>{summary}</p>
       </CollapsibleContent>

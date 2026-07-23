@@ -20,6 +20,7 @@ import {
 } from '@servexa-warranty-ai/ui/components/form'
 import { Input } from '@servexa-warranty-ai/ui/components/input'
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 const formSchema = z.object({
   username: z.string().min(1, 'Please enter your username'),
@@ -51,6 +52,7 @@ export function UserAuthForm({
   const navigate = useNavigate()
   const { auth } = useAuthStore()
   const { redirect: redirectHref } = SignInRoute.useSearch()
+  const { t } = useTranslation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

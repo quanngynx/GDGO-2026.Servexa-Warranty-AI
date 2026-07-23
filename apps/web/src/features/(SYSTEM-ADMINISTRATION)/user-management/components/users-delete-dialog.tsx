@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { type User } from '../data/schema'
 import { useDeleteUserMutation } from '../hooks/use-delete-user-mutation'
+import { useTranslation } from "react-i18next";
 
 type UserDeleteDialogProps = {
   open: boolean
@@ -16,6 +17,7 @@ type UserDeleteDialogProps = {
 }
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: UserDeleteDialogProps) {
+    const { t } = useTranslation();
   const [value, setValue] = useState('')
   const { mutate, isPending } = useDeleteUserMutation()
 
@@ -40,34 +42,29 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: UserDelete
       title={
         <span className='text-destructive'>
           <AlertTriangle className='me-1 inline-block stroke-destructive' size={18} />{' '}
-          Delete User
-        </span>
+          {t("Delete User")}</span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            {t("Are you sure you want to delete")}{' '}
             <span className='font-bold'>{currentRow.username}</span>?
             <br />
-            This action will permanently remove the user with the role of{' '}
-            <span className='font-bold'>{currentRow.role.toUpperCase()}</span> from the
-            system. This cannot be undone.
-          </p>
+            {t("This action will permanently remove the user with the role of")}{' '}
+            <span className='font-bold'>{currentRow.role.toUpperCase()}</span> {t("from the\n system. This cannot be undone.")}</p>
 
           <Label className='my-2'>
-            Username:
-            <Input
+            {t("Username:")}<Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter username to confirm deletion.'
+              placeholder={t("Enter username to confirm deletion.")}
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{t("Warning!")}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation can not be rolled back.
-            </AlertDescription>
+              {t("Please be careful, this operation can not be rolled back.")}</AlertDescription>
           </Alert>
         </div>
       }

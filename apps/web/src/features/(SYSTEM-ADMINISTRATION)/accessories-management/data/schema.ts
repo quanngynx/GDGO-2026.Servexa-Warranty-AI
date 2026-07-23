@@ -1,3 +1,11 @@
-import type { ResponseAccessoryDto } from '@/libs/api/product-catalog/accessory/data-transfer-object'
+import type {
+  ResponseAccessoryDto,
+  ResponseAscStockItemDto,
+  ResponseTotalWarehouseStockItemDto,
+} from '@/libs/api/product-catalog/accessory/data-transfer-object'
 
-export type Accessory = ResponseAccessoryDto
+export type AccessoryItem = ResponseAccessoryDto &
+  Partial<ResponseTotalWarehouseStockItemDto> &
+  Partial<ResponseAscStockItemDto>
+
+export type Accessory = AccessoryItem

@@ -55,6 +55,7 @@ export type ResponseListAccessoriesDto = {
     partNumber: string;
     description: string | null;
     image: string | null;
+    imageUrl: string | null;
     partGroupNumber: string | null;
     partGroupName: string | null;
     partDescription: string | null;
@@ -81,6 +82,7 @@ export type ResponseAccessoryDto = {
   partNumber: string;
   description: string | null;
   image: string | null;
+  imageUrl: string | null;
   partGroupNumber: string | null;
   partGroupName: string | null;
   partDescription: string | null;
@@ -103,6 +105,7 @@ export type ResponseCreateAccessoryDto = {
   partNumber: string;
   description: string | null;
   image: string | null;
+  imageUrl: string | null;
   partGroupNumber: string | null;
   partGroupName: string | null;
   partDescription: string | null;
@@ -122,6 +125,7 @@ export type ResponseUpdateAccessoryDto = {
   partNumber: string;
   description: string | null;
   image: string | null;
+  imageUrl: string | null;
   partGroupNumber: string | null;
   partGroupName: string | null;
   partDescription: string | null;
@@ -156,6 +160,28 @@ export type ResponseFindAllFromTotalWarehouseDto = {
     id: string;
     lastUpdated: Date;
     lastRestocked: Date | null;
+    accessory?: {
+      name: string;
+      partNumber: string;
+      description: string | null;
+      image: string | null;
+      imageUrl: string | null;
+      unitPrice: Prisma.Decimal | null;
+      status: AccessoryStatusType;
+      category?: {
+        name: string;
+      } | null;
+      partGroupNumber: string | null;
+      partGroupName: string | null;
+      partDescription: string | null;
+      itemNumber: string | null;
+      englishName: string | null;
+      customerPrice: string | null;
+    } | null;
+    totalWarehouse?: {
+      name: string;
+      address: string;
+    } | null;
   }[]
   pagination: BasePagination
 }
@@ -171,6 +197,16 @@ export type ResponseFindAllFromAscCenterDto = {
     ascCenterId: string;
     id: string;
     lastUpdated: Date;
+    accessory?: {
+      name: string;
+      partNumber: string;
+      itemNumber: string | null;
+      description: string | null;
+      image: string | null;
+      imageUrl: string | null;
+      unitPrice: Prisma.Decimal | null;
+      status: AccessoryStatusType;
+    } | null;
   }[]
   pagination: BasePagination
 }
