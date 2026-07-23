@@ -32,6 +32,35 @@ export class LocalStorageProvider implements IStorageProvider {
     }
   }
 
+  async uploadFile(
+    fileBuffer: Buffer,
+    originalName: string,
+    _contentType: string,
+    subfolder: string = 'exports',
+  ): Promise<StorageUploadResult> {
+    const uploadDir = resolveUploadSubpath(subfolder)
+    await fs.promises.mkdir(uploadDir, { recursive: true })
+
+    const timestamp = Date.now()
+    const unique = Math.round(Math.random() * 1e9)
+    const ext = originalName.split('.').pop() || 'tmp'
+    const filename = `file-${timestamp}-${unique}.${ext}`
+    const filePath = path.join(uploadDir, filename)
+
+    await fs.promises.writeFile(filePath, fileBuffer)
+
+    const cleanSubfolder = subfolder.replace(/^\/+|\/+$/g, '')
+    const relativeKey = `/uploads/${cleanSubfolder}/${filename}`
+
+    const baseUrl = `http://localhost:${env.PORT || 3000}`
+    const fullUrl = `${baseUrl}${relativeKey}`
+
+    return {
+      key: relativeKey,
+      url: fullUrl,
+    }
+  }
+
   async deleteFile(relativeKey: string): Promise<void> {
     try {
       const cleanPath = relativeKey.replace(/^\/uploads\//, '')

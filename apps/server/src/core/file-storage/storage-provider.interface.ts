@@ -9,5 +9,11 @@ export interface IStorageProvider {
     originalName: string,
     subfolder?: string,
   ): Promise<StorageUploadResult>
+  uploadFile(
+    fileBuffer: Buffer,
+    originalName: string,
+    contentType: string,
+    subfolder?: string,
+  ): Promise<StorageUploadResult>
   deleteFile(key: string): Promise<void>
 }

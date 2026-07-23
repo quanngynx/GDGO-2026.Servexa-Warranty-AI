@@ -53,6 +53,37 @@ export class CloudflareR2StorageProvider implements IStorageProvider {
     }
   }
 
+  async uploadFile(
+    fileBuffer: Buffer,
+    originalName: string,
+    contentType: string,
+    subfolder: string = 'exports',
+  ): Promise<StorageUploadResult> {
+    const cleanSubfolder = subfolder.replace(/^\/+|\/+$/g, '')
+    const timestamp = Date.now()
+    const unique = Math.round(Math.random() * 1e9)
+    const ext = originalName.split('.').pop() || 'tmp'
+    const filename = `file-${timestamp}-${unique}.${ext}`
+    const key = `${cleanSubfolder}/${filename}`
+
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+        Body: fileBuffer,
+        ContentType: contentType,
+      }),
+    )
+
+    const cleanDomain = this.publicDomain.replace(/\/+$/, '')
+    const fullUrl = `${cleanDomain}/${key}`
+
+    return {
+      key,
+      url: fullUrl,
+    }
+  }
+
   async deleteFile(key: string): Promise<void> {
     try {
       await this.client.send(
