@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@servexa-warranty-ai/ui/components/dropdown-menu'
 import { type Row } from '@tanstack/react-table'
-import { MoreHorizontal, Package, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Package, Trash2, RefreshCcw } from 'lucide-react'
 import { type Model } from '../data/schema'
 import { useProducts } from './products-provider'
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,9 @@ type DataTableRowActionsProps = {
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const { t } = useTranslation();
   const { setOpen, setCurrentRow } = useProducts()
+  
+  const isDeleted = row.original.status === 'deleted'
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -42,18 +45,38 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             <Package size={16} />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            setCurrentRow(row.original)
-            setOpen('delete')
-          }}
-          className='text-red-500!'
-        >
-          {t("Delete")}<DropdownMenuShortcut>
-            <Trash2 size={16} />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
+        
+        {isDeleted ? (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('restore')
+              }}
+              className='text-green-500!'
+            >
+              {t("Restore")}<DropdownMenuShortcut>
+                <RefreshCcw size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setCurrentRow(row.original)
+                setOpen('delete')
+              }}
+              className='text-red-500!'
+            >
+              {t("Delete")}<DropdownMenuShortcut>
+                <Trash2 size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

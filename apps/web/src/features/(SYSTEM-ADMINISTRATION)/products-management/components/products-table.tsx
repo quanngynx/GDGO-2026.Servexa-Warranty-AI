@@ -42,7 +42,7 @@ export function ProductsTable({
   search,
   navigate,
 }: DataTableProps) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -113,6 +113,7 @@ export function ProductsTable({
             options: [
               { label: 'Active', value: 'active' },
               { label: 'Inactive', value: 'inactive' },
+              { label: 'Deleted', value: 'deleted' },
             ],
           },
         ]}

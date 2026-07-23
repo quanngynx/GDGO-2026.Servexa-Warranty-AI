@@ -1,8 +1,4 @@
-
-
-import { PasswordInput } from "@/components/password-input";
 import { SelectDropdown } from "@/components/select-dropdown";
-import { showSubmittedData } from "@/components/show-submitted-data";
 import { Button } from "@servexa-warranty-ai/ui/components/button";
 import {
   Dialog,
@@ -24,75 +20,25 @@ import { Input } from "@servexa-warranty-ai/ui/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { roles } from "../data/data";
 import { type Model } from '../data/schema'
 import { useTranslation } from "react-i18next";
+import { useCreateModelMutation } from '../hooks/use-create-model-mutation'
+import { useUpdateModelMutation } from '../hooks/use-update-model-mutation'
+import { useModelQuery } from '../hooks/use-model-query'
+import { useCategoriesQuery } from '../../product-categories-management/hooks/use-categories-query'
+import { listPayloadFromApi } from '@/libs/api/bases/extract-metadata'
+import type { ResponseCategoryListDto } from '@/libs/api/product-catalog/category/data-transfer-object'
+import { useEffect } from "react";
+import { Skeleton } from "@servexa-warranty-ai/ui/components/skeleton";
 
-const formSchema = z
-  .object({
-    firstName: z.string().min(1, "First Name is required."),
-    lastName: z.string().min(1, "Last Name is required."),
-    username: z.string().min(1, "Username is required."),
-    phoneNumber: z.string().min(1, "Phone number is required."),
-    email: z.email({
-      error: (iss) => (iss.input === "" ? "Email is required." : undefined),
-    }),
-    password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, "Role is required."),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
-    isEdit: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      if (data.isEdit && !data.password) return true;
-      return data.password.length > 0;
-    },
-    {
-      message: "Password is required.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return password.length >= 8;
-    },
-    {
-      message: "Password must be at least 8 characters long.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return /[a-z]/.test(password);
-    },
-    {
-      message: "Password must contain at least one lowercase letter.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password }) => {
-      if (isEdit && !password) return true;
-      return /\d/.test(password);
-    },
-    {
-      message: "Password must contain at least one number.",
-      path: ["password"],
-    }
-  )
-  .refine(
-    ({ isEdit, password, confirmPassword }) => {
-      if (isEdit && !password) return true;
-      return password === confirmPassword;
-    },
-    {
-      message: "Passwords don't match.",
-      path: ["confirmPassword"],
-    }
-  );
-type UserForm = z.infer<typeof formSchema>;
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required."),
+  modelCode: z.string().min(1, "Model Code is required."),
+  categoryId: z.string().min(1, "Category is required."),
+  status: z.string().optional(),
+})
+
+type ModelForm = z.infer<typeof formSchema>;
 
 type ProductsActionDialogProps = {
   currentRow?: Model
@@ -105,207 +51,195 @@ export function ProductsActionDialog({
   open,
   onOpenChange,
 }: ProductsActionDialogProps) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const isEdit = !!currentRow;
-  const form = useForm<UserForm>({
+  
+  const createMutation = useCreateModelMutation();
+  const updateMutation = useUpdateModelMutation();
+
+  const { data: categoryData } = useCategoriesQuery({ limit: 1000 });
+  const categoryList = listPayloadFromApi<ResponseCategoryListDto>(categoryData);
+  const categories = categoryList?.items ?? [];
+
+  const { data: modelDetailResponse, isLoading: isLoadingModel } = useModelQuery(
+    currentRow?.id ?? '', 
+    { enabled: isEdit && open }
+  );
+
+  const modelDetail = modelDetailResponse?.metadata;
+
+  const form = useForm<ModelForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      role: '',
-      phoneNumber: '',
-      password: '',
-      confirmPassword: '',
-      isEdit,
+      name: '',
+      modelCode: '',
+      categoryId: '',
+      status: 'active',
     },
   });
 
-  const onSubmit = (values: UserForm) => {
-    form.reset();
-    showSubmittedData(values);
-    onOpenChange(false);
+  useEffect(() => {
+    if (modelDetail) {
+      form.reset({
+        name: modelDetail.name,
+        modelCode: modelDetail.modelCode,
+        categoryId: modelDetail.categoryId,
+        status: modelDetail.status,
+      })
+    } else {
+      form.reset({
+        name: '',
+        modelCode: '',
+        categoryId: '',
+        status: 'active',
+      })
+    }
+  }, [modelDetail, form, open]);
+
+  const onSubmit = (values: ModelForm) => {
+    if (isEdit && currentRow) {
+      updateMutation.mutate({ modelId: currentRow.id, data: values }, {
+        onSuccess: () => {
+          onOpenChange(false);
+          form.reset();
+        }
+      });
+    } else {
+      createMutation.mutate(values, {
+        onSuccess: () => {
+          onOpenChange(false);
+          form.reset();
+        }
+      });
+    }
   };
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password;
+  const isLoading = createMutation.isPending || updateMutation.isPending;
 
   return (
     <Dialog
       open={open}
       onOpenChange={(state) => {
-        form.reset();
+        if (!state) {
+          form.reset();
+        }
         onOpenChange(state);
       }}
     >
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="text-start">
-          <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
+          <DialogTitle>{isEdit ? t("Edit Model") : t("Add New Model")}</DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update the user here. " : "Create new user here. "}
-            {t("Click save when you&apos;re done.")}</DialogDescription>
+            {isEdit ? t("Update the model details here.") : t("Create a new model here.")}
+            {" "}
+            {t("Click save when you're done.")}
+          </DialogDescription>
         </DialogHeader>
-        <div className="h-105 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3">
-          <Form {...form}>
-            <form
-              id="user-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 px-0.5"
-            >
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("First Name")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("John")}
+        
+        {isEdit && isLoadingModel ? (
+          <div className="space-y-4 py-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ) : (
+          <div className="h-auto w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3">
+            <Form {...form}>
+              <form
+                id="model-form"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4 px-0.5"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
+                      <FormLabel className="col-span-2 text-end">
+                        {t("Name")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t("e.g. Model X")}
+                          className="col-span-4"
+                          autoComplete="off"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="col-span-4 col-start-3" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="modelCode"
+                  render={({ field }) => (
+                    <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
+                      <FormLabel className="col-span-2 text-end">
+                        {t("Model Code")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t("e.g. MX-100")}
+                          className="col-span-4"
+                          autoComplete="off"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="col-span-4 col-start-3" />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
+                      <FormLabel className="col-span-2 text-end">{t("Category")}</FormLabel>
+                      <SelectDropdown
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder={t("Select a category")}
                         className="col-span-4"
-                        autoComplete="off"
-                        {...field}
+                        items={categories.map((c) => ({
+                          label: c.name,
+                          value: c.id,
+                        }))}
                       />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("Last Name")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("Doe")}
+                      <FormMessage className="col-span-4 col-start-3" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
+                      <FormLabel className="col-span-2 text-end">{t("Status")}</FormLabel>
+                      <SelectDropdown
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder={t("Select status")}
                         className="col-span-4"
-                        autoComplete="off"
-                        {...field}
+                        items={[
+                          { label: 'Active', value: 'active' },
+                          { label: 'Inactive', value: 'inactive' },
+                        ]}
                       />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("Username")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("john_doe")}
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">{t("Email")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("john.doe@gmail.com")}
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("Phone Number")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="+123456789"
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">{t("Role")}</FormLabel>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder={t("Select a role")}
-                      className="col-span-4"
-                      items={roles.map(({ label, value }) => ({
-                        label,
-                        value,
-                      }))}
-                    />
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("Password")}</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder={t("e.g., S3cur3P@ssw0rd")}
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem className="grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1">
-                    <FormLabel className="col-span-2 text-end">
-                      {t("Confirm Password")}</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        disabled={!isPasswordTouched}
-                        placeholder={t("e.g., S3cur3P@ssw0rd")}
-                        className="col-span-4"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="col-span-4 col-start-3" />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </div>
+                      <FormMessage className="col-span-4 col-start-3" />
+                    </FormItem>
+                  )}
+                />
+
+              </form>
+            </Form>
+          </div>
+        )}
+
         <DialogFooter>
-          <Button type="submit" form="user-form">
-            {t("Save changes")}</Button>
+          <Button type="submit" form="model-form" disabled={isLoading || (isEdit && isLoadingModel)}>
+            {isLoading ? t("Saving...") : t("Save changes")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
