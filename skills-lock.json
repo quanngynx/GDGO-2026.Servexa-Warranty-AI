@@ -132,6 +132,12 @@
       "skillPath": "skills/drawio-bpmn/SKILL.md",
       "computedHash": "47389f786e32ea74553522c0a68956ec1ea00f25866cdbbdaecefc327c0b6548"
     },
+    "drawio-databricks": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-databricks/SKILL.md",
+      "computedHash": "72e9450731daf50e4c4269a57c6778d26174e9b090b8854563a4455be3858dd3"
+    },
     "drawio-gcp": {
       "source": "sparklabx/drawio-ai-kit",
       "sourceType": "github",

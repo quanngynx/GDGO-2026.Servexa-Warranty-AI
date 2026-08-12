@@ -23,12 +23,12 @@ It is designed as a collaborative copilot, not a generic chatbot or an autonomou
 
 Warranty teams often work across disconnected policies, manuals, customer records, product histories, and repair cases. Servexa brings those sources into one workflow so users can:
 
-- inspect warranty, customer, product, repair, inventory, and knowledge context;
-- retrieve relevant internal evidence with PostgreSQL and pgvector;
-- use an AI copilot that preserves workflow context;
+- Inspect warranty, customer, product, repair, inventory, and knowledge context;
+- Retrieve relevant internal evidence with PostgreSQL and pgvector;
+- Use an AI copilot that preserves workflow context;
 - receive suggested actions without bypassing business rules;
-- review reasoning, evidence, and approval requests before consequential actions;
-- follow long-running work through durable events and browser streaming.
+- Review reasoning, evidence, and approval requests before consequential actions;
+- Follow long-running work through durable events and browser streaming.
 
 The product follows five principles:
 
