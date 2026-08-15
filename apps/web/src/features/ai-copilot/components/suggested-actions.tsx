@@ -9,6 +9,7 @@ import type { OperationalPageContext } from "../hooks/use-operational-context";
 import { buildHitlCreateInput } from "../lib/build-hitl-request";
 import { isExecutableWorkflowKind } from "../lib/executable-workflow-kinds";
 import type { CreateHitlRequestInput } from "@/libs/api/ai/hitl/api";
+import { useTranslation } from "react-i18next";
 
 function dispatchCopilotActionPrompt(action: string): void {
   const body = action.startsWith("prompt:") ? action.slice("prompt:".length).trim() : action.trim();
@@ -29,11 +30,11 @@ export function SuggestedActionsPanel({
   onCreateWorkflowRequest,
   className,
 }: SuggestedActionsPanelProps) {
+    const { t } = useTranslation();
   if (!actions?.length) {
     return (
       <div className={cn("border-t border-border px-3 py-2 text-xs text-muted-foreground", className)}>
-        Suggested actions will appear when the gateway returns structured recommendations.
-      </div>
+        {t("Suggested actions will appear when the gateway returns structured recommendations.")}</div>
     );
   }
 
@@ -63,20 +64,7 @@ export function SuggestedActionsPanel({
 
     if (wantsWorkflow) {
       if (!operational.repairCaseId) {
-        dispatchCopilotActionPrompt(
-          "prompt:I need to run a workflow action but no repair case is selected. What should I do?",
-        );
-        return;
-      }
-      onCreateWorkflowRequest(buildHitlCreateInput(action, operational));
-      return;
-    }
-    dispatchCopilotActionPrompt(action.action);
-  };
-
-  return (
-    <div className={cn("border-t border-border px-2 py-2", className)}>
-      <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">Suggested actions</p>
+        dispatchCopilotActionPrompt("prompt:I need to run a workflow action but no repair case is selected. What should I do?", ); return; } onCreateWorkflowRequest(buildHitlCreateInput(action, operational)); return; } dispatchCopilotActionPrompt(action.action); }; return ( <div className={cn("border-t border-border px-2 py-2", className)}> <p className="mb-2 px-2 text-xs font-medium text-muted-foreground">{t("Suggested actions")}</p>
       <div className="flex flex-wrap gap-2 px-2 pb-1">
         {visibleActions.map((a) => (
           <Button
@@ -89,7 +77,7 @@ export function SuggestedActionsPanel({
           >
             {a.label}
             {a.kind === "workflow" || a.requiresApproval ? (
-              <span className="ms-1 text-[10px] opacity-80">· approval</span>
+              <span className="ms-1 text-[10px] opacity-80">{t("· approval")}</span>
             ) : null}
           </Button>
         ))}

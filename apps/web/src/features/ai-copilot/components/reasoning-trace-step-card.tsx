@@ -5,6 +5,7 @@ import { formatIsoShort } from "@servexa-warranty-ai/ui/lib/format-time";
 
 import { ReasoningTraceStatusBadge } from "./reasoning-trace-status-badge";
 import { ReasoningTraceStepIcon } from "./reasoning-trace-step-icon";
+import { useTranslation } from "react-i18next";
 
 type ReasoningTraceStepCardProps = {
   step: ReasoningTraceEvent;
@@ -28,6 +29,7 @@ export function ReasoningTraceStepCard({
   step,
   isLatest,
 }: ReasoningTraceStepCardProps) {
+    const { t } = useTranslation();
   const started = formatIsoShort(step.startedAt);
   const ended = formatIsoShort(step.endedAt);
 
@@ -56,8 +58,7 @@ export function ReasoningTraceStepCard({
             <ReasoningTraceStatusBadge status={step.status} />
             {isLatest ? (
               <span className="text-[11px] font-medium text-primary">
-                Latest
-              </span>
+                {t("Latest")}</span>
             ) : null}
             <span className="text-[11px] text-muted-foreground">
               {step.type}
@@ -71,10 +72,10 @@ export function ReasoningTraceStepCard({
           </p>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-            {started ? <span>Started: {started}</span> : null}
-            {ended ? <span>Ended: {ended}</span> : null}
+            {started ? <span>{t("Started:")}{started}</span> : null}
+            {ended ? <span>{t("Ended:")}{ended}</span> : null}
             {step.durationMs !== undefined ? (
-              <span>Duration: {step.durationMs}ms</span>
+              <span>{t("Duration:")}{step.durationMs}{t("ms")}</span>
             ) : null}
           </div>
 

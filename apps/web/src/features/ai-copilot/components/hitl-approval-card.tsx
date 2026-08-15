@@ -7,6 +7,7 @@ import { cn } from "@servexa-warranty-ai/ui/lib/utils";
 import { HitlEditPayloadDialog } from "./hitl-edit-payload-dialog";
 import { HitlRejectDialog } from "./hitl-reject-dialog";
 import { HitlStatusBadge } from "./hitl-status-badge";
+import { useTranslation } from "react-i18next";
 
 type HitlApprovalCardProps = {
   request: HitlRequest;
@@ -29,6 +30,7 @@ function HitlApprovalCardInner({
   onEdit,
   className,
 }: HitlApprovalCardProps) {
+    const { t } = useTranslation();
   const [editOpen, setEditOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const caseLabel =
@@ -49,40 +51,38 @@ function HitlApprovalCardInner({
       >
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs font-medium uppercase tracking-wide text-amber-700 dark:text-amber-400">
-            AI needs approval
-          </p>
+            {t("AI needs approval")}</p>
           <HitlStatusBadge status={request.status} />
         </div>
         <h4 className="mt-1 font-semibold text-foreground">{request.title}</h4>
         <p className="mt-1 text-xs text-muted-foreground">{request.description}</p>
         <dl className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <div>
-            <dt className="inline font-medium">Target: </dt>
+            <dt className="inline font-medium">{t("Target:")}</dt>
             <dd className="inline">{caseLabel}</dd>
           </div>
           {request.riskLevel ? (
             <div>
-              <dt className="inline font-medium">Risk: </dt>
+              <dt className="inline font-medium">{t("Risk:")}</dt>
               <dd className="inline capitalize">{request.riskLevel}</dd>
             </div>
           ) : null}
           {request.confidence != null ? (
             <div>
-              <dt className="inline font-medium">Confidence: </dt>
+              <dt className="inline font-medium">{t("Confidence:")}</dt>
               <dd className="inline">{Math.round(request.confidence * 100)}%</dd>
             </div>
           ) : null}
         </dl>
         {request.evidenceSourceIds && request.evidenceSourceIds.length > 0 ? (
           <p className="mt-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">Evidence: </span>
+            <span className="font-medium text-foreground">{t("Evidence:")}</span>
             {request.evidenceSourceIds.join(", ")}
           </p>
         ) : null}
         {needsTechnician ? (
           <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
-            Select a technician via Edit before approving.
-          </p>
+            {t("Select a technician via Edit before approving.")}</p>
         ) : null}
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
@@ -106,8 +106,7 @@ function HitlApprovalCardInner({
             disabled={isSubmitting}
             onClick={() => setRejectOpen(true)}
           >
-            Reject
-          </Button>
+            {t("Reject")}</Button>
           <Button
             type="button"
             size="sm"
@@ -115,8 +114,7 @@ function HitlApprovalCardInner({
             disabled={isSubmitting}
             onClick={() => setEditOpen(true)}
           >
-            Edit
-          </Button>
+            {t("Edit")}</Button>
         </div>
       </article>
       <HitlEditPayloadDialog

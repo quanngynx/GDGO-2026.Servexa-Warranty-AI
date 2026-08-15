@@ -3,6 +3,7 @@ import {
   type CopilotChatInputProps,
 } from "@copilotkit/react-core/v2";
 import { cn } from "@servexa-warranty-ai/ui/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export type ServexaCopilotChatInputLayout = "rail" | "fullPage";
 
@@ -14,13 +15,13 @@ function ServexaCopilotDisclaimer({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
+    const { t } = useTranslation();
   return (
     <div
       {...props}
       className={cn("servexa-copilot-input-disclaimer", className)}
     >
-      Powered by Servexa Warranty AI. Responses may contain errors.
-    </div>
+      {t("Powered by Servexa Warranty AI. Responses may contain errors.")}</div>
   );
 }
 
@@ -33,6 +34,7 @@ function ServexaCopilotChatInputComponent({
   className,
   ...props
 }: ServexaCopilotChatInputProps) {
+    const { t } = useTranslation();
   const isFullPage = layout === "fullPage";
 
   return (
@@ -124,6 +126,7 @@ export function createServexaCopilotChatInput(
   layout: ServexaCopilotChatInputLayout,
 ): typeof CopilotChatInput {
   function InputWithLayout(props: CopilotChatInputProps) {
+      const { t } = useTranslation();
     return <ServexaCopilotChatInputComponent {...props} layout={layout} />;
   }
   return assignCopilotInputStatics(InputWithLayout);

@@ -1,22 +1,11 @@
 import prisma from '../../../src/core/infra/prisma'
+import { seedCustomers } from './customer'
 
 export async function seedHumanResources() {
   console.log('👥 Starting Human Resources seeding...')
 
   // ── Customer ──────────────────────────────────────────────────────────────
-  // repair-cases looks for phone1 = "0987654321" or customerGroup = "individual"
-  const customer = await prisma.customer.upsert({
-    where: { id: 'seed-customer-001' },
-    update: {},
-    create: {
-      id: 'seed-customer-001',
-      customerGroup: 'individual',
-      fullName: 'Nguyễn Văn An',
-      phone1: '0987654321',
-      email: 'nguyenvanan@example.com',
-      address: '123 Nguyễn Huệ, Quận 1, TP.HCM',
-    },
-  })
+  await seedCustomers()
 
   // ── Employee (technician) ─────────────────────────────────────────────────
   // repair-cases looks for employeeCode = "EMP-2024-000001" or position in technician roles.
@@ -94,7 +83,6 @@ export async function seedHumanResources() {
   })
 
   console.log(`✅ Human Resources seeding completed!
-    - 1 Customer: ${customer.fullName} (${customer.phone1})
     - 1 Employee: ${employee.employeeCode} — ${employee.fullName} (${employee.position})
     - 1 Technician profile: ${technicianProfile.id} (user: ${technicianUser.username})`)
 }

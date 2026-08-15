@@ -25,6 +25,7 @@ import { DataTablePagination, DataTableToolbar } from '@servexa-warranty-ai/ui/c
 import { type TotalWarehouse } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { centralWarehouseColumns as columns } from './central-warehouse-columns'
+import { useTranslation } from "react-i18next";
 
 type DataTableProps = {
   data: TotalWarehouse[]
@@ -41,6 +42,7 @@ export function CentralWarehouseTable({
   search,
   navigate,
 }: DataTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -142,8 +144,7 @@ export function CentralWarehouseTable({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -169,8 +170,7 @@ export function CentralWarehouseTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -18,8 +18,10 @@ import {
 import { Label } from '@servexa-warranty-ai/ui/components/label'
 import type { RepairCaseImageType } from '@/libs/api/asc-center/repair-case/data-transfer-object'
 import { env } from '@servexa-warranty-ai/env/web'
+import { useTranslation } from "react-i18next";
 
-export function RepairCaseImages({ repairCaseId }: { repairCaseId: string }) {
+export function RepairCaseImages({ repairCaseId, hideUpload, hideList }: { repairCaseId: string, hideUpload?: boolean, hideList?: boolean }) {
+    const { t } = useTranslation();
   const { data, isLoading } = useRepairCaseImagesQuery(repairCaseId)
   const images = data?.metadata || []
 
@@ -122,149 +124,158 @@ export function RepairCaseImages({ repairCaseId }: { repairCaseId: string }) {
 
   const getImageUrl = (path: string) => {
     if (path.startsWith('http')) return path
-    return `${env.VITE_SERVER_URL}${path.startsWith('/') ? path : '/' + path}`
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path
+    const fullPath = cleanPath.startsWith('uploads/') ? cleanPath : `uploads/${cleanPath}`
+    return `${env.VITE_SERVER_URL}/${fullPath}`
   }
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardContent className="pt-6">
-          <form onSubmit={handleUpload} className="flex flex-col gap-4">
-            <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50'}`}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Input
-                ref={fileInputRef}
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleFileSelect}
-              />
-              <UploadCloud className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-              <p className="text-sm font-medium">Click or drag images here</p>
-              <p className="text-xs text-muted-foreground mt-1">Supports multiple files</p>
-            </div>
-
-            {selectedFiles.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedFiles.map((file, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md text-sm">
-                    <span className="truncate max-w-[150px]" title={file.name}>{file.name}</span>
-                    <button type="button" onClick={() => removeSelectedFile(i)} className="text-muted-foreground hover:text-destructive">
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-              <div className="grid w-full max-w-xs items-center gap-1.5">
-                <Label>Image Type</Label>
-                <Select value={imageType} onValueChange={(v) => setImageType(v as RepairCaseImageType)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="model_serial">Model / Serial</SelectItem>
-                    <SelectItem value="repair_form">Repair Form</SelectItem>
-                    <SelectItem value="before_repair">Before Repair</SelectItem>
-                    <SelectItem value="after_repair">After Repair</SelectItem>
-                    <SelectItem value="parts_components">Parts / Components</SelectItem>
-                    <SelectItem value="warranty_invoice">Warranty Invoice</SelectItem>
-                    <SelectItem value="shipping_fee_invoice">Shipping Fee Invoice</SelectItem>
-                    <SelectItem value="repair_completion_receipt">Repair Completion Receipt</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="description">Description (optional)</Label>
-                <Input
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="E.g. front view"
-                />
-              </div>
-              <Button
-                type="submit"
-                disabled={selectedFiles.length === 0 || isUploading}
-                className="mt-2 sm:mt-0"
+      {!hideUpload && (
+        <Card>
+          <CardContent className="pt-6">
+            <form onSubmit={handleUpload} className="flex flex-col gap-4">
+              <div
+                className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors flex flex-col items-center justify-center min-h-[250px] sm:min-h-[350px] ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50'}`}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
               >
-                {isUploading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <UploadCloud className="mr-2 h-4 w-4" />
-                )}
-                Upload {selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {isLoading ? (
-        <div className="flex justify-center p-8">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      ) : images.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border rounded-lg border-dashed">
-          <ImageIcon className="h-12 w-12 mb-4 opacity-20" />
-          <p>No images found.</p>
-          <p className="text-sm">Upload an image to see it here.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {displayedImages.map((image) => (
-            <Card key={image.id} className="overflow-hidden group relative py-0 gap-4">
-              <div className="aspect-square relative bg-muted">
-                <img
-                  src={getImageUrl(image.imagePath)}
-                  alt={image.originalFilename}
-                  className="object-cover w-full h-full"
-                  loading="lazy"
+                <Input
+                  ref={fileInputRef}
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileSelect}
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(image.id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <UploadCloud className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                <p className="text-sm font-medium">{t("Click or drag images here")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("Supports multiple files")}</p>
               </div>
-              <CardContent className="p-3">
-                <div className="font-semibold text-sm truncate capitalize" title={image.imageType}>
-                  {image.imageType.replace(/_/g, ' ')}
+
+              {selectedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedFiles.map((file, i) => (
+                    <div key={i} className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-md text-sm">
+                      <span className="truncate max-w-[150px]" title={file.name}>{file.name}</span>
+                      <button type="button" onClick={() => removeSelectedFile(i)} className="text-muted-foreground hover:text-destructive">
+                        {t("&times;")}</button>
+                    </div>
+                  ))}
                 </div>
-                {image.description && (
-                  <div className="text-xs text-muted-foreground truncate" title={image.description}>
-                    {image.description}
+              )}
+
+              <div className="flex justify-between gap-4 sm:flex-row sm:items-end">
+                <div className='flex item-center justtify-center  gap-2'>
+                  <div className="grid w-full max-w-xs items-center gap-1.5">
+                    <Label>{t("Image Type")}</Label>
+                    <Select value={imageType} onValueChange={(v) => setImageType(v as RepairCaseImageType)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("Select type")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="model_serial">{t("Model / Serial")}</SelectItem>
+                        <SelectItem value="repair_form">{t("Repair Form")}</SelectItem>
+                        <SelectItem value="before_repair">{t("Before Repair")}</SelectItem>
+                        <SelectItem value="after_repair">{t("After Repair")}</SelectItem>
+                        <SelectItem value="parts_components">{t("Parts / Components")}</SelectItem>
+                        <SelectItem value="warranty_invoice">{t("Warranty Invoice")}</SelectItem>
+                        <SelectItem value="shipping_fee_invoice">{t("Shipping Fee Invoice")}</SelectItem>
+                        <SelectItem value="repair_completion_receipt">{t("Repair Completion Receipt")}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
-                <div className="text-[10px] text-muted-foreground mt-1">
-                  {new Date(image.uploadedAt).toLocaleString()}
+                  <div className="grid w-full max-w-2xl items-center gap-1.5">
+                    <Label htmlFor="description">{t("Description (optional)")}</Label>
+                    <Input
+                      id="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder={t("E.g. front view")}
+                    />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <Button
+                  type="submit"
+                  disabled={selectedFiles.length === 0 || isUploading}
+                  className="mt-2 sm:mt-0"
+                >
+                  {isUploading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <UploadCloud className="mr-2 h-4 w-4" />
+                  )}
+                  {t("Upload")}{selectedFiles.length > 0 ? `(${selectedFiles.length})` : ''}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       )}
 
-      {/* Intersection observer target for infinite scroll */}
-      {hasMore && (
-        <div ref={observerRef} className="h-10 flex items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        </div>
+      {!hideList && (
+        <>
+          {isLoading ? (
+            <div className="flex justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : images.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border rounded-lg border-dashed">
+              <ImageIcon className="h-12 w-12 mb-4 opacity-20" />
+              <p>{t("No images found.")}</p>
+              <p className="text-sm">{t("Upload an image to see it here.")}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {displayedImages.map((image) => (
+                <Card key={image.id} className="overflow-hidden group relative py-0 gap-4">
+                  <div className="aspect-square relative bg-muted">
+                    <img
+                      src={getImageUrl(image.imagePath)}
+                      alt={image.originalFilename}
+                      className="object-cover w-full h-full"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleDelete(image.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <CardContent className="p-3">
+                    <div className="font-semibold text-sm truncate capitalize" title={image.imageType}>
+                      {image.imageType.replace(/_/g, ' ')}
+                    </div>
+                    {image.description && (
+                      <div className="text-xs text-muted-foreground truncate" title={image.description}>
+                        {image.description}
+                      </div>
+                    )}
+                    <div className="text-[10px] text-muted-foreground mt-1">
+                      {new Date(image.uploadedAt).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Intersection observer target for infinite scroll */}
+          {hasMore && (
+            <div ref={observerRef} className="h-10 flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
+        </>
       )}
     </div>
   )

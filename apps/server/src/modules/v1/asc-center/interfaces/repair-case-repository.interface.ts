@@ -80,5 +80,5 @@ export interface IRepairCaseRepository {
     description: string | undefined,
     userId: string,
   ): Promise<RepairCaseImageDto[]>;
-  deleteImage(repairCaseId: string, imageId: string): Promise<void>;
+  deleteImage(repairCaseId: string, imageId: string): Promise<RepairCaseImageDto>;
 }

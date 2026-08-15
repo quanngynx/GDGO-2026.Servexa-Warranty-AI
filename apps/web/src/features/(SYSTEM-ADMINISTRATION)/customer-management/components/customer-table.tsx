@@ -47,6 +47,7 @@ import { customerGroupOptions } from "../data/data";
 import { type Customer } from "../data/schema";
 import { customersColumns as columns } from "./customer-columns";
 import { DataTableBulkActions } from "./data-table-bulk-actions";
+import { useTranslation } from "react-i18next";
 
 type DataTableProps = {
   data: Customer[];
@@ -63,6 +64,7 @@ export function CustomersTable({
   search,
   navigate,
 }: DataTableProps) {
+    const { t } = useTranslation();
   const [data, setData] = useState(() => initialData);
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -236,7 +238,7 @@ export function CustomersTable({
               onClick={unpinAllRows}
               className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
             >
-              Unpin All ({pinnedRows.size})
+              {t("Unpin All (")}{pinnedRows.size})
             </button>
           )}
         </div>
@@ -278,8 +280,7 @@ export function CustomersTable({
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    Loading...
-                  </TableCell>
+                    {t("Loading...")}</TableCell>
                 </TableRow>
               ) : table.getRowModel().rows?.length ? (
                 <SortableContext
@@ -301,8 +302,7 @@ export function CustomersTable({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
-                  </TableCell>
+                    {t("No results.")}</TableCell>
                 </TableRow>
               )}
             </TableBody>

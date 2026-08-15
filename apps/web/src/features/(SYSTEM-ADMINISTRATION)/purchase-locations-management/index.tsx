@@ -12,12 +12,14 @@ import { PurchaseLocationsPrimaryButtons } from './components/purchase-locations
 import { PurchaseLocationsProvider } from './components/purchase-locations-provider'
 import { PurchaseLocationsTable } from './components/purchase-locations-table'
 import { usePurchaseLocationsQuery } from './hooks/use-purchase-locations-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/purchase-locations-management/',
 )
 
 export function PurchaseLocationsManagement() {
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -42,8 +44,8 @@ export function PurchaseLocationsManagement() {
   return (
     <PurchaseLocationsProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -53,10 +55,9 @@ export function PurchaseLocationsManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Purchase Locations Management</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Purchase Locations Management")}</h2>
             <p className='text-muted-foreground'>
-              Manage purchase channel locations and store codes.
-            </p>
+              {t("Manage purchase channel locations and store codes.")}</p>
           </div>
           <PurchaseLocationsPrimaryButtons />
         </div>

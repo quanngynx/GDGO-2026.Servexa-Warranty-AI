@@ -20,6 +20,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/dropdown-menu";
 import { EvidenceSourcesList } from "./evidence-sources-list";
 import { RETRY_TOOLTIP } from "@/constants";
+import { useTranslation } from "react-i18next";
 
 function stripMarkdown(text: string): string {
   return text
@@ -46,6 +47,7 @@ function readAloud(text: string): void {
 }
 
 function SourceMenuItem({ sources }: { sources: CopilotEvidenceSource[] | undefined }) {
+    const { t } = useTranslation();
   const [previewOpen, setPreviewOpen] = useState(false);
 
   return (
@@ -58,8 +60,7 @@ function SourceMenuItem({ sources }: { sources: CopilotEvidenceSource[] | undefi
       className="relative"
     >
       <BookOpen className="size-3.5 shrink-0" />
-      Source
-      {previewOpen ? (
+      {t("Source")}{previewOpen ? (
         <div
           role="tooltip"
           aria-label="Evidence and sources"
@@ -68,8 +69,7 @@ function SourceMenuItem({ sources }: { sources: CopilotEvidenceSource[] | undefi
           onPointerLeave={() => setPreviewOpen(false)}
         >
           <p className="mb-2 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-            Evidence and sources
-          </p>
+            {t("Evidence and sources")}</p>
           <EvidenceSourcesList sources={sources} />
         </div>
       ) : null}
@@ -84,6 +84,7 @@ function ServexaAssistantOtherActions({
   messageText: string;
   sources: CopilotEvidenceSource[] | undefined;
 }) {
+    const { t } = useTranslation();
   useEffect(() => {
     const onRead = (event: Event) => {
       const detail = (event as CustomEvent<{ text?: string }>).detail;
@@ -98,7 +99,7 @@ function ServexaAssistantOtherActions({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <CopilotChatAssistantMessage.ToolbarButton title="Other actions">
+        <CopilotChatAssistantMessage.ToolbarButton title={t("Other actions")}>
           <Ellipsis className="cpk:size-[18px]" />
         </CopilotChatAssistantMessage.ToolbarButton>
       </DropdownMenuTrigger>
@@ -113,8 +114,7 @@ function ServexaAssistantOtherActions({
           }}
         >
           <Volume2 />
-          Read
-        </DropdownMenuItem>
+          {t("Read")}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -123,6 +123,7 @@ function ServexaAssistantOtherActions({
 function ServexaRetryRegenerateButton({
   onClick,
 }: Pick<ComponentProps<typeof CopilotChatAssistantMessage.RegenerateButton>, "onClick">) {
+    const { t } = useTranslation();
   return (
     <CopilotChatAssistantMessage.ToolbarButton
       data-testid="copilot-regenerate-button"
@@ -140,10 +141,11 @@ function ServexaThumbsUpButton({
 }: Pick<ComponentProps<typeof CopilotChatAssistantMessage.ThumbsUpButton>, "onClick"> & {
   active?: boolean;
 }) {
+    const { t } = useTranslation();
   return (
     <CopilotChatAssistantMessage.ToolbarButton
       data-testid="copilot-thumbs-up-button"
-      title="Good response"
+      title={t("Good response")}
       onClick={onClick}
       aria-pressed={active}
     >
@@ -158,10 +160,11 @@ function ServexaThumbsDownButton({
 }: Pick<ComponentProps<typeof CopilotChatAssistantMessage.ThumbsDownButton>, "onClick"> & {
   active?: boolean;
 }) {
+    const { t } = useTranslation();
   return (
     <CopilotChatAssistantMessage.ToolbarButton
       data-testid="copilot-thumbs-down-button"
-      title="Bad response"
+      title={t("Bad response")}
       onClick={onClick}
       aria-pressed={active}
     >
@@ -192,6 +195,7 @@ function ServexaCopilotAssistantMessageInner({
   sources,
   ...props
 }: ServexaCopilotAssistantMessageProps) {
+    const { t } = useTranslation();
   const isLatestAssistant =
     message.role === "assistant" &&
     messages?.[messages.length - 1]?.id === message.id;
@@ -253,6 +257,7 @@ export function createServexaCopilotAssistantMessage(
   options: ServexaCopilotAssistantMessageOptions = {},
 ): typeof CopilotChatAssistantMessage {
   function ServexaCopilotAssistantMessage(props: CopilotChatAssistantMessageProps) {
+      const { t } = useTranslation();
     return <ServexaCopilotAssistantMessageInner {...props} {...options} />;
   }
 

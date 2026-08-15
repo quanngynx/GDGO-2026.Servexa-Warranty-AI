@@ -24,7 +24,7 @@ catalog:
   react: ^19.2.3
   react-dom: ^19.2.3
   sonner: ^2.0.5
-  tailwindcss: ^4.1.18
+  tailwindcss: ^4.2.4
   zod: ^4.1.13
 
 ignoredBuiltDependencies:

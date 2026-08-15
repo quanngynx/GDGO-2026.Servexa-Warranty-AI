@@ -15,8 +15,10 @@ import { ServexaCopilotChat } from "./components/servexa-copilot-chat";
 import { ServexaCopilotSidebar } from "./components/servexa-copilot-side-panels";
 import { SERVEXA_COPILOT_AGENT_ID } from "./constants";
 import { useServexaCopilotPanel } from "./hooks/use-servexa-copilot-panel";
+import { useTranslation } from "react-i18next";
 
 export function AICopilotFullPage() {
+    const { t } = useTranslation();
   const panel = useServexaCopilotPanel(SERVEXA_COPILOT_AGENT_ID);
   const { handleRetryLast, setChatErrorMessage, railMeta } = panel;
 
@@ -27,16 +29,13 @@ export function AICopilotFullPage() {
           <Button variant="ghost" size="sm" asChild className="shrink-0 gap-1.5">
             <Link to="/">
               <ArrowLeft className="size-4" aria-hidden />
-              Back to App
-            </Link>
+              {t("Back to App")}</Link>
           </Button>
           <div className="min-w-0 border-s border-border ps-3">
             <h1 className="truncate text-balance text-sm font-semibold tracking-tight sm:text-base">
-              Operations Intelligence
-            </h1>
+              {t("Operations Intelligence")}</h1>
             <p className="truncate text-xs text-muted-foreground">
-              Full-screen copilot · evidence &amp; approvals in the context panel
-            </p>
+              {t("Full-screen copilot · evidence &amp; approvals in the context panel")}</p>
           </div>
         </div>
         <div className="ms-auto flex shrink-0 items-center space-x-4">

@@ -12,12 +12,14 @@ import { CategoriesPrimaryButtons } from './components/product-categories-primar
 import { CategoriesProvider } from './components/product-categories-provider'
 import { CategoriesTable } from './components/product-categories-table'
 import { useCategoriesQuery } from './hooks/use-categories-query'
+import { useTranslation } from "react-i18next";
 
 const route = getRouteApi(
   '/_authenticated/(SYSTEM-ADMINISTRATION)/product-categories-management/',
 )
 
 export function ProductCategoriesManagement() {
+  const { t } = useTranslation();
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -35,8 +37,8 @@ export function ProductCategoriesManagement() {
   return (
     <CategoriesProvider>
       <Header fixed>
-        <Search />
         <div className='ms-auto flex items-center space-x-4'>
+          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
@@ -46,8 +48,8 @@ export function ProductCategoriesManagement() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Product Categories</h2>
-            <p className='text-muted-foreground'>Manage product categories and their status.</p>
+            <h2 className='text-2xl font-bold tracking-tight'>{t("Product Categories")}</h2>
+            <p className='text-muted-foreground'>{t("Manage product categories and their status.")}</p>
           </div>
           <CategoriesPrimaryButtons />
         </div>

@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from '@servexa-warranty-ai/ui/components/data-t
 import { LongText } from '@/components/long-text'
 import { type Permission } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const permissionsColumns: ColumnDef<Permission>[] = [
   {
@@ -36,7 +37,7 @@ export const permissionsColumns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('name')}</LongText>
     ),
@@ -50,7 +51,7 @@ export const permissionsColumns: ColumnDef<Permission>[] = [
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Description' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Description")} />,
     cell: ({ row }) => (
       <LongText className='max-w-64'>{row.getValue('description') ?? '—'}</LongText>
     ),

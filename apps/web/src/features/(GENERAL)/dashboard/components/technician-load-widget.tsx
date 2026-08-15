@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@servexa-warranty-ai/u
 import { Progress } from '@servexa-warranty-ai/ui/components/progress';
 import { Users } from 'lucide-react';
 import { mockTechnicianLoads, type TechnicianLoad } from '../data/mock-data';
+import { useTranslation } from "react-i18next";
 
 const statusStyles: Record<TechnicianLoad['status'], { color: string; label: string }> = {
   available: { color: 'bg-alert-success', label: 'Available' },
@@ -16,6 +17,7 @@ function getInitials(name: string): string {
 }
 
 export function TechnicianLoadWidget() {
+    const { t } = useTranslation();
   const overloadedCount = mockTechnicianLoads.filter(t => t.status === 'overloaded').length;
   const avgUtilization = Math.round(
     mockTechnicianLoads.reduce((sum, t) => sum + (t.activeCases / t.capacity) * 100, 0) / mockTechnicianLoads.length
@@ -29,14 +31,13 @@ export function TechnicianLoadWidget() {
             <Users className="w-4 h-4 text-operations-teal" />
           </div>
           <div>
-            <CardTitle className="text-base">Technician Load</CardTitle>
-            <p className="text-xs text-muted-foreground">{avgUtilization}% avg utilization</p>
+            <CardTitle className="text-base">{t("Technician Load")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{avgUtilization}{t("% avg utilization")}</p>
           </div>
         </div>
         {overloadedCount > 0 && (
           <Badge variant="destructive" className="text-xs">
-            {overloadedCount} overloaded
-          </Badge>
+            {overloadedCount} {t("overloaded")}</Badge>
         )}
       </CardHeader>
       <CardContent className="space-y-3">

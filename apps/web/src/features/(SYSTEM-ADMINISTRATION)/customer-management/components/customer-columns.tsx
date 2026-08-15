@@ -6,6 +6,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { customerGroupOptions } from "../data/data";
 import { type Customer } from "../data/schema";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { t } from "i18next";
 
 export const customersColumns: ColumnDef<Customer>[] = [
   {
@@ -50,7 +51,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "fullName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Full Name" />
+      <DataTableColumnHeader column={column} title={t("Full Name")} />
     ),
     cell: ({ row }) => (
       <LongText className="max-w-36 ps-3">{row.getValue("fullName")}</LongText>
@@ -66,7 +67,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title={t("Email")} />
     ),
     cell: ({ row }) => (
       <LongText className="max-w-36 ps-3">{row.getValue("email")}</LongText>
@@ -82,7 +83,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "phone1",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number 1" />
+      <DataTableColumnHeader column={column} title={t("Phone Number 1")} />
     ),
     cell: ({ row }) => (
       <div className="w-fit ps-2 text-nowrap">{row.getValue("phone1")}</div>
@@ -98,7 +99,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "phone2",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number 2" />
+      <DataTableColumnHeader column={column} title={t("Phone Number 2")} />
     ),
     cell: ({ row }) => (
       <div className="w-fit ps-2 text-nowrap">{row.getValue("phone2")}</div>
@@ -114,7 +115,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "provinceId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Province" />
+      <DataTableColumnHeader column={column} title={t("Province")} />
     ),
     enableSorting: false,
     cell: ({ row }) => <div>{row.getValue("provinceId") ?? "—"}</div>,
@@ -122,7 +123,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "wardId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ward" />
+      <DataTableColumnHeader column={column} title={t("Ward")} />
     ),
     cell: ({ row }) => <div>{row.getValue("wardId") ?? "—"}</div>,
     enableSorting: false,
@@ -130,7 +131,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "address",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Address" />
+      <DataTableColumnHeader column={column} title={t("Address")} />
     ),
     cell: ({ row }) => <div>{row.getValue("address")}</div>,
     enableSorting: false,
@@ -138,7 +139,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "taxCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tax Code" />
+      <DataTableColumnHeader column={column} title={t("Tax Code")} />
     ),
     cell: ({ row }) => <div>{row.getValue("taxCode")}</div>,
     enableSorting: false,
@@ -146,7 +147,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "bankName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Bank Name" />
+      <DataTableColumnHeader column={column} title={t("Bank Name")} />
     ),
     cell: ({ row }) => <div>{row.getValue("bankName")}</div>,
     enableSorting: false,
@@ -154,7 +155,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "accountNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account Number" />
+      <DataTableColumnHeader column={column} title={t("Account Number")} />
     ),
     cell: ({ row }) => <div>{row.getValue("accountNumber")}</div>,
     enableSorting: false,
@@ -162,7 +163,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "contactPerson",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Contact Person" />
+      <DataTableColumnHeader column={column} title={t("Contact Person")} />
     ),
     cell: ({ row }) => <div>{row.getValue("contactPerson")}</div>,
     enableSorting: false,
@@ -170,7 +171,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "ascCenterId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ASC Center" />
+      <DataTableColumnHeader column={column} title={t("ASC Center")} />
     ),
     cell: ({ row }) => <div>{row.getValue("ascCenterId") ?? "—"}</div>,
     enableSorting: false,
@@ -178,7 +179,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     accessorKey: "customerGroup",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer Group" />
+      <DataTableColumnHeader column={column} title={t("Customer Group")} />
     ),
     cell: ({ row }) => {
       const { customerGroup } = row.original;
@@ -214,7 +215,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
     id: "createdAt",
     accessorFn: (row) => new Date(row.createdAt).toLocaleDateString(),
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title={t("Created At")} />
     ),
     cell: ({ row }) => <div>{row.getValue("createdAt")}</div>,
     enableSorting: false,
@@ -224,7 +225,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
     id: "updatedAt",
     accessorFn: (row) => new Date(row.updatedAt).toLocaleDateString(),
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Updated At" />
+      <DataTableColumnHeader column={column} title={t("Updated At")} />
     ),
     cell: ({ row }) => <div>{row.getValue("updatedAt")}</div>,
     enableSorting: false,
@@ -233,7 +234,7 @@ export const customersColumns: ColumnDef<Customer>[] = [
   {
     id: "actions",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Actions" />
+      <DataTableColumnHeader column={column} title={t("Actions")} />
     ),
     cell: DataTableRowActions,
     meta: {

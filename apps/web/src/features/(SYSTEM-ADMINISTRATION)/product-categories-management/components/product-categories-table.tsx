@@ -26,6 +26,7 @@ import { categoryStatusOptions } from '../data/data'
 import { type Category } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { categoriesColumns as columns } from './product-categories-columns'
+import { useTranslation } from "react-i18next";
 
 type DataTableProps = {
   data: Category[]
@@ -42,6 +43,7 @@ export function CategoriesTable({
   search,
   navigate,
 }: DataTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -140,8 +142,7 @@ export function CategoriesTable({
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -167,8 +168,7 @@ export function CategoriesTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

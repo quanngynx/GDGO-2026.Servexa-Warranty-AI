@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@servexa-warranty-ai/ui/components/form";
 import { Input } from "@servexa-warranty-ai/ui/components/input";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   email: z.email({
@@ -27,6 +28,7 @@ export function ForgotPasswordForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+    const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,17 +66,16 @@ export function ForgotPasswordForm({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("Email")}</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input placeholder={t("name@example.com")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button className="mt-2" disabled={isLoading}>
-          Continue
-          {isLoading ? <Loader2 className="animate-spin" /> : <ArrowRight />}
+          {t("Continue")}{isLoading ? <Loader2 className="animate-spin" /> : <ArrowRight />}
         </Button>
       </form>
     </Form>

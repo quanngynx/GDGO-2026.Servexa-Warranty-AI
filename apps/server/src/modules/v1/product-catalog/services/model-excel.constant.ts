@@ -1,6 +1,6 @@
 import type { ImportHeader } from "./model-excel.type";
 
-export const REQUIRED_HEADERS: readonly ImportHeader[] = [
+export const ALL_HEADERS: readonly ImportHeader[] = [
   'modelCode',
   'name',
   'categoryId',
@@ -11,4 +11,10 @@ export const REQUIRED_HEADERS: readonly ImportHeader[] = [
   'image',
   'createdAt',
   'updatedAt',
-]
+];
+
+export const REQUIRED_HEADERS: readonly ImportHeader[] = [
+  'modelCode',
+  'name',
+  'categoryId',
+];

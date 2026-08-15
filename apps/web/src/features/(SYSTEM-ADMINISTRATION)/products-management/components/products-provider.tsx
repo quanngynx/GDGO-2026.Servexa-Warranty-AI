@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
 import { type Model } from '../data/schema'
-
-type ProductsDialogType = 'invite' | 'add' | 'edit' | 'delete'
+type ProductsDialogType = 'invite' | 'add' | 'edit' | 'delete' | 'import' | 'restore'
 
 type ProductsContextType = {
   open: ProductsDialogType | null

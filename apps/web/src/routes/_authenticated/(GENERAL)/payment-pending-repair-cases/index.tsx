@@ -4,5 +4,6 @@ import { PaymentPendingRepairCases } from "@/features/(GENERAL)/payment-pending-
 export const Route = createFileRoute(
   "/_authenticated/(GENERAL)/payment-pending-repair-cases/"
 )({
+  beforeLoad: () => ({ title: 'Payment Pending Repair Cases' }),
   component: PaymentPendingRepairCases,
 });

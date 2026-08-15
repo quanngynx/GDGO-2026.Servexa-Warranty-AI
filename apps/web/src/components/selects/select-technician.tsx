@@ -11,6 +11,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/combobox";
 import { Loader2 } from "lucide-react";
 import { useDebouncedCallback } from "@servexa-warranty-ai/ui/hooks/use-debounced-callback";
+import { useTranslation } from "react-i18next";
 
 export function SelectTechnician({
   value,
@@ -21,6 +22,7 @@ export function SelectTechnician({
   onValueChange?: (value: string) => void;
   className?: string;
 }) {
+    const { t } = useTranslation();
   const [inputValue, setInputValue] = React.useState("");
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
 
@@ -98,7 +100,7 @@ export function SelectTechnician({
         />
         <ComboboxContent>
           {technicians.length === 0 && !isLoading && !isFetchingNextPage ? (
-            <ComboboxEmpty>No technicians found.</ComboboxEmpty>
+            <ComboboxEmpty>{t("No technicians found.")}</ComboboxEmpty>
           ) : (
             <ComboboxList>
               {technicians.map((technician) => (

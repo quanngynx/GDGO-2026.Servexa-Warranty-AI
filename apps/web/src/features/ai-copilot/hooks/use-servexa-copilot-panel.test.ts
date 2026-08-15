@@ -68,8 +68,7 @@ describe("useServexaCopilotPanel", () => {
     vi.clearAllMocks();
   });
 
-  it("merges rail and API pending approvals without duplicates", () => {
-    const { result } = renderHook(() => useServexaCopilotPanel("operations_intelligence"));
+  it("merges rail and API pending approvals without duplicates", () => { const { result } = renderHook(() => useServexaCopilotPanel("operations_intelligence"));
 
     expect(result.current.pendingApprovals).toHaveLength(2);
     expect(result.current.pendingApprovals.map((p) => p.id)).toEqual(
@@ -77,10 +76,7 @@ describe("useServexaCopilotPanel", () => {
     );
   });
 
-  it("exposes handlers for chat and HITL flows", () => {
-    const { result } = renderHook(() => useServexaCopilotPanel());
-
-    expect(typeof result.current.handleRetryLast).toBe("function");
+  it("exposes handlers for chat and HITL flows", () => { const { result } = renderHook(() => useServexaCopilotPanel()); expect(typeof result.current.handleRetryLast).toBe("function");
     expect(typeof result.current.handleApprove).toBe("function");
     expect(typeof result.current.handleCreateWorkflowRequest).toBe("function");
   });

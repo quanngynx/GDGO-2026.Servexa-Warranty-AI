@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import useDialogState from '@servexa-warranty-ai/ui/hooks/use-dialog-state'
 import { type PurchaseLocation } from '../data/schema'
 
-type PurchaseLocationsDialogType = 'invite' | 'add' | 'edit' | 'delete'
+type PurchaseLocationsDialogType = 'invite' | 'add-location' | 'add-group' | 'edit' | 'delete'
 
 type PurchaseLocationsContextType = {
   open: PurchaseLocationsDialogType | null

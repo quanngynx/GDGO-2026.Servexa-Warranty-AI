@@ -11,12 +11,14 @@ import { type Row } from '@tanstack/react-table'
 import { Building2, MoreHorizontal, Trash2 } from 'lucide-react'
 import { type AscCenter } from '../data/schema'
 import { useAscCenters } from './asc-centers-provider'
+import { useTranslation } from "react-i18next";
 
 type DataTableRowActionsProps = {
   row: Row<AscCenter>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+    const { t } = useTranslation();
   const { setOpen, setCurrentRow } = useAscCenters()
   return (
     <DropdownMenu modal={false}>
@@ -26,7 +28,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           className='flex h-8 w-8 p-0 data-[state=open]:bg-muted'
         >
           <MoreHorizontal className='h-4 w-4' />
-          <span className='sr-only'>Open menu</span>
+          <span className='sr-only'>{t("Open menu")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
@@ -36,8 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             setOpen('edit')
           }}
         >
-          Edit
-          <DropdownMenuShortcut>
+          {t("Edit")}<DropdownMenuShortcut>
             <Building2 size={16} />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
@@ -49,8 +50,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           }}
           className='text-red-500!'
         >
-          Delete
-          <DropdownMenuShortcut>
+          {t("Delete")}<DropdownMenuShortcut>
             <Trash2 size={16} />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
