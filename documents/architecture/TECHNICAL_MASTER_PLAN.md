@@ -1,13 +1,13 @@
 # Servexa Warranty AI — Technical Architecture Handbook
 
 > **Document:** `TECHNICAL_MASTER_PLAN.md`<br>
-> **Version:** 1.1<br>
+> **Version:** 1.2<br>
 > **Approval Status:** Approved Target Architecture<br>
 > **Owner:** Architecture Working Group<br>
 > **Review Frequency:** Quarterly<br>
-> **Last Updated:** 2026-07-19<br>
+> **Last Updated:** 2026-08-12<br>
 > **Implementation Snapshot:** 2026-07-19; status is not a production-readiness certification<br>
-> **Related Documents:** [`ROADMAP_MASTER.md`](../roadmap/ROADMAP_MASTER.md), [`openwiki/quickstart.md`](../../openwiki/quickstart.md), [`Architecture Decisions`](../adr/)
+> **Related Documents:** [`Production Completion Roadmap`](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md), [`ROADMAP_MASTER.md`](../roadmap/ROADMAP_MASTER.md), [`openwiki/quickstart.md`](../../openwiki/quickstart.md), [`Architecture Decisions`](../adr/)
 
 ## Handbook Navigation
 
@@ -19,6 +19,7 @@
 | Understand events and streaming | [Event & Streaming Architecture](./EVENT_ARCHITECTURE.md) |
 | Operate or deploy the platform | [DevOps & Operations](../platform/DEVOPS_MASTER_PLAN.md) |
 | Review future technologies | [Roadmap & Future Evolution](./AI_RUNTIME.md#future-evolution) |
+| Review enterprise production gates | [Production Completion Roadmap](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md) |
 | Resolve canonical terminology | [Glossary](../glossary/GLOSSARY.md) |
 
 ## Architecture Status Model
@@ -40,6 +41,7 @@ The handbook uses [Express](../glossary/GLOSSARY.md#glossary-express), [FastAPI 
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 1.2 | 2026-08-12 | Linked the production P0-P9 hard-gate roadmap without changing the implementation snapshot |
 | 1.1 | 2026-07-19 | Added handbook governance, two-axis status, system constraints, ownership and flow matrices, runtime consolidation, NFR/governance controls, and roadmap alignment |
 | 1.0 | 2026-07 | Consolidated technical master plan |
 

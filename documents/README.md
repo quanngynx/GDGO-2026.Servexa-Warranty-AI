@@ -1,12 +1,15 @@
 # Servexa Warranty AI Engineering Handbook
 
-This directory is the canonical maintained engineering knowledge base. The original source documents remain preserved under [`documents/`](../documents/README.md), while [OpenWiki](../openwiki/quickstart.md) remains the generated, code-derived companion.
+This directory is the canonical maintained engineering knowledge base. Legacy
+source material remains preserved where a handbook links to it, while
+[OpenWiki](../openwiki/quickstart.md) remains the generated, code-derived companion.
 
 ## Documentation Map
 
 | Area                     | Entry point                                                      | Purpose                                                                      |
 | ------------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Product and delivery     | [Roadmap Master](./roadmap/ROADMAP_MASTER.md)                    | Vision, phases, demos, and future roadmap                                    |
+| Production readiness     | [Production Readiness](./production-readiness/README.md)         | P0-P9 hard gates, enterprise evidence, and sign-off state                    |
 | Application architecture | [Technical Master Plan](./architecture/TECHNICAL_MASTER_PLAN.md) | Runtime boundaries, contracts, data, AI, security, and observability         |
 | Platform engineering     | [DevOps Master Plan](./platform/DEVOPS_MASTER_PLAN.md)           | Development, delivery, deployment, infrastructure, recovery, and performance |
 | Decisions                | [ADRs](./adr/)                                                   | Proposed and approved architecture decisions                                 |
@@ -16,12 +19,13 @@ This directory is the canonical maintained engineering knowledge base. The origi
 ## Reading Order
 
 1. [Roadmap Master](./roadmap/ROADMAP_MASTER.md)
-2. [Technical Master Plan](./architecture/TECHNICAL_MASTER_PLAN.md)
-3. [DevOps Master Plan](./platform/DEVOPS_MASTER_PLAN.md)
-4. Architecture handbooks
-5. Platform handbooks
-6. ADRs
-7. Runbooks
+2. [Production Readiness](./production-readiness/README.md)
+3. [Technical Master Plan](./architecture/TECHNICAL_MASTER_PLAN.md)
+4. [DevOps Master Plan](./platform/DEVOPS_MASTER_PLAN.md)
+5. Architecture handbooks
+6. Platform handbooks
+7. ADRs
+8. Runbooks
 
 ## Intended Audience
 
@@ -36,8 +40,9 @@ This directory is the canonical maintained engineering knowledge base. The origi
 
 ## Source-of-Truth Rules
 
-- `docs/` is canonical for maintained engineering guidance.
-- `documents/` is preserved legacy/source material and is not edited as part of handbook maintenance.
+- `documents/` is canonical for maintained engineering guidance.
+- Legacy/source files explicitly linked by a handbook remain preserved unless a
+  dedicated migration or cleanup is approved.
 - `openwiki/` is generated from repository code; do not hand-edit generated pages.
 - The Fumadocs application is a separate documentation product and is not the canonical source for these handbooks.
 - Source code, schemas, and runtime configuration override stale prose when implementation evidence differs.

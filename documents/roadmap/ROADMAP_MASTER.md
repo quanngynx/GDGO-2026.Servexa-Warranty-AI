@@ -2,7 +2,7 @@
 
 > **ROADMAP_MASTER.md**
 >
-> Version: 1.1
+> Version: 1.2
 >
 > Approval Status: Approved Target Architecture
 >
@@ -10,11 +10,11 @@
 >
 > Review Frequency: Quarterly
 >
-> Last Updated: 2026-07-19
+> Last Updated: 2026-08-12
 >
 > Implementation Snapshot: 2026-07-19; status is not a production-readiness certification
 >
-> Related Documents: [`TECHNICAL_MASTER_PLAN.md`](../architecture/TECHNICAL_MASTER_PLAN.md), [`openwiki/quickstart.md`](../../openwiki/quickstart.md), [`Architecture Decisions`](../adr/)
+> Related Documents: [`Production Completion Roadmap`](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md), [`TECHNICAL_MASTER_PLAN.md`](../architecture/TECHNICAL_MASTER_PLAN.md), [`openwiki/quickstart.md`](../../openwiki/quickstart.md), [`Architecture Decisions`](../adr/)
 
 ---
 
@@ -24,6 +24,7 @@
 | --- | --- |
 | Understand status semantics | [Architecture and Implementation Status](#architecture-and-implementation-status) |
 | Review phase order and maturity | [Phase Status Summary](./DEVELOPMENT_PHASES.md#phase-status-summary) |
+| Review production release gates | [Production Completion Roadmap](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md) |
 | Review delivery gates | [Development Strategy](./DEVELOPMENT_PHASES.md#development-strategy) |
 | Prepare a demonstration | [Demo Strategy](./DEMO_STRATEGY.md#demo-strategy) |
 | Review long-term options | [Future Roadmap](./FUTURE_ROADMAP.md#future-roadmap) |
@@ -43,6 +44,7 @@ Canonical terms link to the technical glossary: [Express](../glossary/GLOSSARY.m
 
 | Version | Date | Change |
 | --- | --- | --- |
+| 1.2 | 2026-08-12 | Added the P0-P9 production hard-gate roadmap and separated capability status from production certification |
 | 1.1 | 2026-07-19 | Added status model, phase maturity and gates, architecture links, run-mode alignment, and enterprise classification |
 | 1.0 | 2026-07 | Consolidated roadmap |
 
@@ -55,6 +57,7 @@ Canonical terms link to the technical glossary: [Express](../glossary/GLOSSARY.m
 | --- | --- |
 | Product vision | [PRODUCT_VISION.md](./PRODUCT_VISION.md) |
 | Development phases | [DEVELOPMENT_PHASES.md](./DEVELOPMENT_PHASES.md) |
+| Production completion gates | [PRODUCTION_COMPLETION_ROADMAP.md](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md) |
 | Demo strategy | [DEMO_STRATEGY.md](./DEMO_STRATEGY.md) |
 | Future roadmap | [FUTURE_ROADMAP.md](./FUTURE_ROADMAP.md) |
 | Roadmap reference material | [APPENDIX.md](./APPENDIX.md) |
@@ -64,6 +67,10 @@ Canonical terms link to the technical glossary: [Express](../glossary/GLOSSARY.m
 ## Phase Overview
 
 Detailed scope, risks, dependencies, and acceptance criteria are canonical in [Development Phases](./DEVELOPMENT_PHASES.md).
+
+Capability phases describe feature evolution and repository evidence. They do
+not certify production readiness. Production progression is governed separately
+by the sequential [P0-P9 Production Completion Roadmap](../production-readiness/PRODUCTION_COMPLETION_ROADMAP.md).
 
 
 # Executive Summary
