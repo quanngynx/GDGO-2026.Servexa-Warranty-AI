@@ -58,7 +58,7 @@ python -m src.worker_ai_jobs
 ## Run tests
 
 ```bash
-pytest
+python -m pytest
 ```
 
 ## Docker
@@ -66,11 +66,13 @@ pytest
 ### Setup Secrets
 
 1. Create a `secrets/` directory:
+
 ```bash
 mkdir -p secrets
 ```
 
 2. Create secret files with your credentials:
+
 ```bash
 echo "langchain" > secrets/postgres_user.txt
 echo "your_secure_password" > secrets/postgres_password.txt
@@ -78,11 +80,13 @@ chmod 600 secrets/*.txt
 ```
 
 3. Run services:
+
 ```bash
 docker compose up --build
 ```
 
 This will start:
+
 - PostgreSQL with pgvector (port 6024)
 - Redis (port 6379)
 - API service (port 8081)

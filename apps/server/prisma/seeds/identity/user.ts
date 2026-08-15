@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-import prisma from '../..'
+import prisma from '../../../src/core/infra/prisma'
 
 export type SeedRoleMode = 'use-existing-role' | 'create-role-if-missing'
 

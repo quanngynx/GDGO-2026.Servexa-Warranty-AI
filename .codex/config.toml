@@ -1,13 +1,22 @@
-model = "gpt-5.5"
-approval_policy = "on-request"
-model_catalog_json = "/Users/me/.codex/model-catalogs/default.json"
+[mcp_servers.better-t-stack]
+command = "pnpm"
+args = [
+    "dlx",
+    "create-better-t-stack@latest",
+    "mcp",
+]
 
-[profiles.deep-review]
-model = "gpt-5-pro"
-model_reasoning_effort = "high"
-approval_policy = "never"
-model_catalog_json = "/Users/me/.codex/model-catalogs/deep-review.json"
+[mcp_servers.context7]
+command = "npx"
+args = [
+    "-y",
+    "@upstash/context7-mcp",
+]
 
-[profiles.lightweight]
-model = "gpt-4.1"
-approval_policy = "untrusted"
+[mcp_servers.shadcn]
+command = "npx"
+args = [
+    "-y",
+    "shadcn@latest",
+    "mcp",
+]

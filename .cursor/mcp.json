@@ -25,6 +25,9 @@
         "-y",
         "chrome-devtools-mcp@latest"
       ]
+    },
+    "typeui": {
+      "serverUrl": "https://mcp.typeui.sh"
     }
   }
 }

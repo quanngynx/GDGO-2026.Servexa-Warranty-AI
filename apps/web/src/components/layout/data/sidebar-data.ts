@@ -3,27 +3,20 @@ import {
   Book,
   Bot,
   Box,
-  Bug,
   CalendarArrowUp,
   CircleDollarSign,
-  Construction,
   CreditCard,
-  FileX,
   HelpCircle,
   LayoutDashboard,
   ListOrdered,
   ListTodo,
-  Lock,
   MapPin,
   Monitor,
   Palette,
-  ServerOff,
   Settings,
   Shield,
   ShieldAlert,
-  ShieldCheck,
   UserCog,
-  UserX,
   Users,
   Wrench,
 } from "lucide-react";
@@ -74,56 +67,56 @@ export const sidebarData: SidebarData = {
           icon: ListTodo,
           url: "/history-of-repair-cases-status-changes",
         },
-        {
-          title: "Quality & Errors", // 1, 4, 5
-          icon: ShieldAlert,
-          items: [
-            {
-              title: "Model Error Report",
-              url: "/model-error-report",
-            },
-            {
-              title: "Category Error Report",
-              url: "/category-error-report",
-            },
-            {
-              title: "Purchase Location Error Report",
-              url: "/purchase-location-error-report",
-            },
-          ],
-        },
-        {
-          title: "Cost & Finance", // 2, 3, 7, 8
-          icon: CircleDollarSign,
-          items: [
-            {
-              title: "PSC Cost Report",
-              url: "/psc-cost-report",
-            },
-            {
-              title: "Cost Report",
-              url: "/cost-report",
-            },
-            {
-              title: "Payment Report",
-              url: "/payment-report",
-            },
-            {
-              title: "Weekly Report",
-              url: "/weekly-report",
-            },
-          ],
-        },
-        {
-          title: "Out of Warranty & Service", // 6
-          icon: CalendarArrowUp,
-          items: [
-            {
-              title: "Out of Warranty Report",
-              url: "/out-of-warranty-report",
-            },
-          ],
-        },
+        // {
+        //   title: "Quality & Errors", // 1, 4, 5
+        //   icon: ShieldAlert,
+        //   items: [
+        //     {
+        //       title: "Model Error Report",
+        //       url: "/model-error-report",
+        //     },
+        //     {
+        //       title: "Category Error Report",
+        //       url: "/category-error-report",
+        //     },
+        //     {
+        //       title: "Purchase Location Error Report",
+        //       url: "/purchase-location-error-report",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Cost & Finance", // 2, 3, 7, 8
+        //   icon: CircleDollarSign,
+        //   items: [
+        //     {
+        //       title: "PSC Cost Report",
+        //       url: "/psc-cost-report",
+        //     },
+        //     {
+        //       title: "Cost Report",
+        //       url: "/cost-report",
+        //     },
+        //     {
+        //       title: "Payment Report",
+        //       url: "/payment-report",
+        //     },
+        //     {
+        //       title: "Weekly Report",
+        //       url: "/weekly-report",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Out of Warranty & Service", // 6
+        //   icon: CalendarArrowUp,
+        //   items: [
+        //     {
+        //       title: "Out of Warranty Report",
+        //       url: "/out-of-warranty-report",
+        //     },
+        //   ],
+        // },
       ],
     },
     {
@@ -211,60 +204,60 @@ export const sidebarData: SidebarData = {
         },
       ],
     },
-    {
-      title: "Pages",
-      items: [
-        {
-          title: "Auth",
-          icon: ShieldCheck,
-          items: [
-            {
-              title: "Sign In",
-              url: "/sign-in",
-            },
-            {
-              title: "Sign Up",
-              url: "/sign-up",
-            },
-            {
-              title: "Forgot Password",
-              url: "/forgot-password",
-            },
-          ],
-        },
-        {
-          title: "Errors",
-          icon: Bug,
-          items: [
-            {
-              title: "Unauthorized",
-              url: "/errors/unauthorized",
-              icon: Lock,
-            },
-            {
-              title: "Forbidden",
-              url: "/errors/forbidden",
-              icon: UserX,
-            },
-            {
-              title: "Not Found",
-              url: "/errors/not-found",
-              icon: FileX,
-            },
-            {
-              title: "Internal Server Error",
-              url: "/errors/internal-server-error",
-              icon: ServerOff,
-            },
-            {
-              title: "Maintenance Error",
-              url: "/errors/maintenance-error",
-              icon: Construction,
-            },
-          ],
-        },
-      ],
-    },
+    // {
+    //   title: "Pages",
+    //   items: [
+    //     {
+    //       title: "Auth",
+    //       icon: ShieldCheck,
+    //       items: [
+    //         {
+    //           title: "Sign In",
+    //           url: "/sign-in",
+    //         },
+    //         {
+    //           title: "Sign Up",
+    //           url: "/sign-up",
+    //         },
+    //         {
+    //           title: "Forgot Password",
+    //           url: "/forgot-password",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       title: "Errors",
+    //       icon: Bug,
+    //       items: [
+    //         {
+    //           title: "Unauthorized",
+    //           url: "/errors/unauthorized",
+    //           icon: Lock,
+    //         },
+    //         {
+    //           title: "Forbidden",
+    //           url: "/errors/forbidden",
+    //           icon: UserX,
+    //         },
+    //         {
+    //           title: "Not Found",
+    //           url: "/errors/not-found",
+    //           icon: FileX,
+    //         },
+    //         {
+    //           title: "Internal Server Error",
+    //           url: "/errors/internal-server-error",
+    //           icon: ServerOff,
+    //         },
+    //         {
+    //           title: "Maintenance Error",
+    //           url: "/errors/maintenance-error",
+    //           icon: Construction,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
     {
       title: "Other",
       items: [

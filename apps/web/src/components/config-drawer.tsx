@@ -26,8 +26,10 @@ import {
 } from "@servexa-warranty-ai/ui/components/sheet";
 import { useSidebar } from "@servexa-warranty-ai/ui/components/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@servexa-warranty-ai/ui/components/tooltip";
+import { useTranslation } from "react-i18next";
 
 export function ConfigDrawer() {
+    const { t } = useTranslation();
   const { setOpen } = useSidebar();
   const { resetDir } = useDirection();
   const { resetTheme } = useTheme();
@@ -55,14 +57,13 @@ export function ConfigDrawer() {
             </Button>
           </SheetTrigger>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Open theme settings</TooltipContent>
+        <TooltipContent side="bottom">{t("Open theme settings")}</TooltipContent>
       </Tooltip>
       <SheetContent className="flex flex-col">
         <SheetHeader className="pb-0 text-start">
-          <SheetTitle>Theme Settings</SheetTitle>
+          <SheetTitle>{t("Theme Settings")}</SheetTitle>
           <SheetDescription id="config-drawer-description">
-            Adjust the appearance and layout to suit your preferences.
-          </SheetDescription>
+            {t("Adjust the appearance and layout to suit your preferences.")}</SheetDescription>
         </SheetHeader>
         <div className="space-y-6 overflow-y-auto px-4">
           <ThemeConfig />
@@ -76,8 +77,7 @@ export function ConfigDrawer() {
             onClick={handleReset}
             aria-label="Reset all settings to default values"
           >
-            Reset
-          </Button>
+            {t("Reset")}</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -95,6 +95,7 @@ function SectionTitle({
   onReset?: () => void;
   className?: string;
 }) {
+    const { t } = useTranslation();
   return (
     <div
       className={cn(
@@ -128,6 +129,7 @@ function RadioGroupItem({
   };
   isTheme?: boolean;
 }) {
+    const { t } = useTranslation();
   return (
     <Item
       value={item.value}
@@ -173,11 +175,12 @@ function RadioGroupItem({
 }
 
 function ThemeConfig() {
+    const { t } = useTranslation();
   const { defaultTheme, theme, setTheme } = useTheme();
   return (
     <div>
       <SectionTitle
-        title="Theme"
+        title={t("Theme")}
         showReset={theme !== defaultTheme}
         onReset={() => setTheme(defaultTheme)}
       />
@@ -209,18 +212,18 @@ function ThemeConfig() {
         ))}
       </Radio>
       <div id="theme-description" className="sr-only">
-        Choose between system preference, light mode, or dark mode
-      </div>
+        {t("Choose between system preference, light mode, or dark mode")}</div>
     </div>
   );
 }
 
 function SidebarConfig() {
+    const { t } = useTranslation();
   const { defaultVariant, variant, setVariant } = useLayout();
   return (
     <div className="max-md:hidden">
       <SectionTitle
-        title="Sidebar"
+        title={t("Sidebar")}
         showReset={defaultVariant !== variant}
         onReset={() => setVariant(defaultVariant)}
       />
@@ -252,13 +255,13 @@ function SidebarConfig() {
         ))}
       </Radio>
       <div id="sidebar-description" className="sr-only">
-        Choose between inset, floating, or standard sidebar layout
-      </div>
+        {t("Choose between inset, floating, or standard sidebar layout")}</div>
     </div>
   );
 }
 
 function LayoutConfig() {
+    const { t } = useTranslation();
   const { open, setOpen } = useSidebar();
   const { defaultCollapsible, collapsible, setCollapsible } = useLayout();
 
@@ -267,7 +270,7 @@ function LayoutConfig() {
   return (
     <div className="max-md:hidden">
       <SectionTitle
-        title="Layout"
+        title={t("Layout")}
         showReset={radioState !== "default"}
         onReset={() => {
           setOpen(true);
@@ -309,18 +312,18 @@ function LayoutConfig() {
         ))}
       </Radio>
       <div id="layout-description" className="sr-only">
-        Choose between default expanded, compact icon-only, or full layout mode
-      </div>
+        {t("Choose between default expanded, compact icon-only, or full layout mode")}</div>
     </div>
   );
 }
 
 function DirConfig() {
+    const { t } = useTranslation();
   const { defaultDir, dir, setDir } = useDirection();
   return (
     <div>
       <SectionTitle
-        title="Direction"
+        title={t("Direction")}
         showReset={defaultDir !== dir}
         onReset={() => setDir(defaultDir)}
       />
@@ -351,8 +354,7 @@ function DirConfig() {
         ))}
       </Radio>
       <div id="direction-description" className="sr-only">
-        Choose between left-to-right or right-to-left site direction
-      </div>
+        {t("Choose between left-to-right or right-to-left site direction")}</div>
     </div>
   );
 }

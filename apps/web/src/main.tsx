@@ -22,6 +22,7 @@ import { routeTree } from "./routeTree.gen";
 import "./index.css";
 import { env } from "@servexa-warranty-ai/env/web";
 import { useAuthStore } from "./stores/auth-store";
+import "./i18n/config";
 
 const queryClient = new QueryClient({
   defaultOptions: {

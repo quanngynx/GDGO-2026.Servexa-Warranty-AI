@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { activeStatusTypes } from '../data/data'
 import { type PurchaseLocation } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { t } from "i18next";
 
 export const purchaseLocationsColumns: ColumnDef<PurchaseLocation>[] = [
   {
@@ -38,7 +39,7 @@ export const purchaseLocationsColumns: ColumnDef<PurchaseLocation>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Name' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Name")} />,
     cell: ({ row }) => (
       <LongText className='max-w-48 ps-3'>{row.getValue('name')}</LongText>
     ),
@@ -52,12 +53,12 @@ export const purchaseLocationsColumns: ColumnDef<PurchaseLocation>[] = [
   },
   {
     accessorKey: 'code',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Code' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Code")} />,
     cell: ({ row }) => <div className='font-mono text-sm'>{row.getValue('code')}</div>,
   },
   {
     accessorKey: 'isActive',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Active' />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("Active")} />,
     cell: ({ row }) => {
       const isActive = row.getValue('isActive') as boolean
       const badgeColor = activeStatusTypes.get(isActive) ?? ''

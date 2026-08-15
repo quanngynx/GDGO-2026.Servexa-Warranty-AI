@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@servexa-warranty-ai/u
 import { Progress } from '@servexa-warranty-ai/ui/components/progress';
 import { Bot, Play, CheckCircle, Clock } from 'lucide-react';
 import { mockActiveAgents, type ActiveAgent } from '../data/mock-data';
+import { useTranslation } from "react-i18next";
 
 const statusConfig: Record<ActiveAgent['status'], { icon: React.ReactNode; color: string; label: string }> = {
   running: { 
@@ -31,6 +32,7 @@ function formatTimeAgo(date: Date): string {
 }
 
 export function ActiveAgentsWidget() {
+    const { t } = useTranslation();
   const runningCount = mockActiveAgents.filter(a => a.status === 'running').length;
   
   return (
@@ -41,13 +43,12 @@ export function ActiveAgentsWidget() {
             <Bot className="w-4 h-4 text-ai-glow" />
           </div>
           <div>
-            <CardTitle className="text-base">AI Agents</CardTitle>
-            <p className="text-xs text-muted-foreground">Background intelligence</p>
+            <CardTitle className="text-base">{t("AI Agents")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("Background intelligence")}</p>
           </div>
         </div>
         <Badge className="text-xs bg-ai-primary/20 text-ai-primary">
-          {runningCount} active
-        </Badge>
+          {runningCount} {t("active")}</Badge>
       </CardHeader>
       <CardContent className="space-y-3">
         {mockActiveAgents.map((agent) => {
@@ -78,7 +79,7 @@ export function ActiveAgentsWidget() {
               {agent.progress !== undefined && agent.status === 'running' && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-[10px]">
-                    <span className="text-muted-foreground">Progress</span>
+                    <span className="text-muted-foreground">{t("Progress")}</span>
                     <span className="text-ai-primary">{agent.progress}%</span>
                   </div>
                   <Progress value={agent.progress} className="h-1" />

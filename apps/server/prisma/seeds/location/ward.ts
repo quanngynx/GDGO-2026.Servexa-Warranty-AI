@@ -1,4 +1,4 @@
-import basePrisma from "../..";
+import basePrisma from '../../../src/core/infra/prisma';
 
 // Ward.code is required + unique. The seed data predates that constraint,
 // so we use a local extended client that auto-generates a code when one is

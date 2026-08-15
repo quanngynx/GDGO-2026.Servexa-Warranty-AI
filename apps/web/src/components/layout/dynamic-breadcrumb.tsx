@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@servexa-warranty-ai/ui/components/breadcrumb";
+import { useTranslation } from "react-i18next";
 
 type BreadcrumbContext = {
   getTitle?: () => string;
@@ -14,6 +15,7 @@ type BreadcrumbContext = {
 };
 
 export function DynamicBreadcrumb() {
+  const { t } = useTranslation();
   const matches = useRouterState({
     select: (state) => state.matches,
   });
@@ -32,6 +34,11 @@ export function DynamicBreadcrumb() {
         pathname: match.pathname,
         routeId: match.routeId,
       };
+    })
+    .filter((breadcrumb, index, self) => {
+      // Remove consecutive duplicates that occur due to layout routes inheriting context
+      if (index === 0) return true;
+      return breadcrumb.title !== self[index - 1].title;
     });
 
   // Don't render if there are no breadcrumbs or only one (home)
@@ -50,10 +57,10 @@ export function DynamicBreadcrumb() {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{breadcrumb.title}</BreadcrumbPage>
+                  <BreadcrumbPage>{t(breadcrumb.title)}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link to={breadcrumb.pathname}>{breadcrumb.title}</Link>
+                    <Link to={breadcrumb.pathname}>{t(breadcrumb.title)}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>

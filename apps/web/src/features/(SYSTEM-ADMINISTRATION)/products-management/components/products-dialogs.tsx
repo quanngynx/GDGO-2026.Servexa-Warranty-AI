@@ -1,6 +1,8 @@
 import { ProductsActionDialog } from './products-action-dialog'
 import { ProductsDeleteDialog } from './products-delete-dialog'
 import { ProductsInviteDialog } from './products-invite-dialog'
+import { ProductsImportDialog } from './products-import-dialog'
+import { ProductsRestoreDialog } from './products-restore-dialog'
 import { useProducts } from './products-provider'
 
 export function ProductsDialogs() {
@@ -11,6 +13,12 @@ export function ProductsDialogs() {
         key='model-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
+      />
+
+      <ProductsImportDialog
+        key='model-import'
+        open={open === 'import'}
+        onOpenChange={() => setOpen('import')}
       />
 
       <ProductsInviteDialog
@@ -38,6 +46,18 @@ export function ProductsDialogs() {
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')
+              setTimeout(() => {
+                setCurrentRow(null)
+              }, 500)
+            }}
+            currentRow={currentRow}
+          />
+          
+          <ProductsRestoreDialog
+            key={`model-restore-${currentRow.id}`}
+            open={open === 'restore'}
+            onOpenChange={() => {
+              setOpen('restore')
               setTimeout(() => {
                 setCurrentRow(null)
               }, 500)

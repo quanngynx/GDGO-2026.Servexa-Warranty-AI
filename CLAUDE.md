@@ -66,7 +66,7 @@ Env validation is in `packages/env/src/server.ts` and `packages/env/src/web.ts`.
 ## Architecture
 
 ### AI runtime policy
-See [documents/ai-runtime-policy.md](documents/ai-runtime-policy.md) for runtime ownership (Node vs Python), sync/async job rules, memory stance, and canonical RAG corpus (Prisma `ai_knowledge_*`).
+See [docs/architecture/AI_RUNTIME.md](docs/architecture/AI_RUNTIME.md#ai-runtime-policy) for runtime ownership (Node vs Python), sync/async job rules, memory stance, and canonical RAG corpus (Prisma `ai_knowledge_*`).
 
 ### Data Flow
 Web (`useChat` via `@ai-sdk/react`) → POST `{SERVER_URL}/ai` → Express server → Google Gemini (`gemini-2.5-flash`) → streaming response back to browser.
@@ -84,3 +84,13 @@ Prisma schema is in `packages/db/prisma/schema/schema.prisma`. The generated cli
 
 ### Infrastructure
 `packages/infra/alchemy.run.ts` deploys `apps/web` as a Cloudflare Worker (Vite asset serving). The Alchemy config reads `.env` from the infra package and `../../apps/web/.env`.
+
+<!-- OPENWIKI:START -->
+
+## OpenWiki
+
+This repository uses OpenWiki for recurring code documentation. Start with `openwiki/quickstart.md`, then follow its links to architecture, workflows, domain concepts, operations, integrations, testing guidance, and source maps.
+
+The scheduled OpenWiki GitHub Actions workflow refreshes the repository wiki. Do not hand-edit generated OpenWiki pages unless explicitly asked; prefer updating source code/docs and letting OpenWiki regenerate.
+
+<!-- OPENWIKI:END -->

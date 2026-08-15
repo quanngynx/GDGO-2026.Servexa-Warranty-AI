@@ -27,6 +27,7 @@ import { customerGroupOptions } from '../data/data'
 import { type Customer } from '../data/schema'
 import { useCreateCustomerMutation } from '../hooks/use-create-customer-mutation'
 import { useUpdateCustomerMutation } from '../hooks/use-update-customer-mutation'
+import { useTranslation } from "react-i18next";
 
 const customerGroupSchema = z.enum([
   'individual',
@@ -63,6 +64,7 @@ export function CustomersActionDialog({
   open,
   onOpenChange,
 }: CustomerActionDialogProps) {
+    const { t } = useTranslation();
   const isEdit = !!currentRow
   const createMutation = useCreateCustomerMutation()
   const updateMutation = useUpdateCustomerMutation()
@@ -176,11 +178,11 @@ export function CustomersActionDialog({
               name='customerGroup'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Customer group</FormLabel>
+                  <FormLabel>{t("Customer group")}</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='Select group'
+                    placeholder={t("Select group")}
                     items={customerGroupOptions.map(({ label, value }) => ({
                       label,
                       value,
@@ -195,9 +197,9 @@ export function CustomersActionDialog({
               name='fullName'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>{t("Full name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder='Full name' {...field} />
+                    <Input placeholder={t("Full name")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -208,7 +210,7 @@ export function CustomersActionDialog({
               name='phone1'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone 1</FormLabel>
+                  <FormLabel>{t("Phone 1")}</FormLabel>
                   <FormControl>
                     <Input placeholder='+84...' {...field} />
                   </FormControl>
@@ -221,9 +223,9 @@ export function CustomersActionDialog({
               name='phone2'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone 2</FormLabel>
+                  <FormLabel>{t("Phone 2")}</FormLabel>
                   <FormControl>
-                    <Input placeholder='Optional' {...field} />
+                    <Input placeholder={t("Optional")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -234,9 +236,9 @@ export function CustomersActionDialog({
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("Email")}</FormLabel>
                   <FormControl>
-                    <Input type='email' placeholder='email@example.com' {...field} />
+                    <Input type='email' placeholder={t("email@example.com")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -247,9 +249,9 @@ export function CustomersActionDialog({
               name='address'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>{t("Address")}</FormLabel>
                   <FormControl>
-                    <Input placeholder='Address' {...field} />
+                    <Input placeholder={t("Address")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

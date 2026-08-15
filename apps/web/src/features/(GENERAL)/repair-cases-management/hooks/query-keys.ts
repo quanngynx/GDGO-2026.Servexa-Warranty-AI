@@ -4,4 +4,5 @@ export const repairCaseQueryKeys = {
   all: ['repair-cases'] as const,
   lists: () => [...repairCaseQueryKeys.all, 'list'] as const,
   list: (params?: RequestListRepairCasesDto) => [...repairCaseQueryKeys.lists(), params] as const,
+  detail: (id: string) => [...repairCaseQueryKeys.all, 'detail', id] as const,
 }

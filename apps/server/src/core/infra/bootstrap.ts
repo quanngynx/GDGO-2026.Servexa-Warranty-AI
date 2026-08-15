@@ -11,6 +11,7 @@ import { env } from "@servexa-warranty-ai/env/server";
 import { ErrorHandler } from "../helpers/error-handling.helper";
 import { errorHandler } from "@/middlewares/error-middleware";
 import mainRouter from "@/routes";
+import path from "path";
 
 import prisma from "@/core/infra/prisma";
 import {
@@ -73,6 +74,16 @@ export class AppBootStrap {
     try {
       await connectBootstrapRedis();
       logger.info(`[${env.BRANDING_NAME}] Redis connected successfully`);
+
+      // Start export worker in-process so it runs in dev & prod single-server mode.
+      // In production scale-out, disable this and run export-worker.bootstrap separately.
+      const { startProductExportWorker } = await import(
+        '@/modules/v1/product-catalog/workers/product-export.worker'
+      );
+      startProductExportWorker().catch((err: unknown) => {
+        logger.error(`[${env.BRANDING_NAME}] Export worker crashed`, { err });
+      });
+      logger.info(`[${env.BRANDING_NAME}] Product export worker started`);
     } catch (error) {
       logger.error(`[${env.BRANDING_NAME}] Redis connection failed`, {
         error: error instanceof Error ? error.message : String(error),
@@ -125,6 +136,8 @@ export class AppBootStrap {
         res.status(200).send("OK");
       },
     );
+
+    this.app.use("/uploads", express.static(path.join(process.cwd(), "uploads"), { maxAge: "30d" }));
 
     this.app.use(mainRouter);
     this.app.use("/api/copilotkit", createCopilotKitRouter());

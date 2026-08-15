@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "phase": "P0",
+  "status": "BLOCKED",
+  "updatedAt": "2026-08-12",
+  "nextPhaseAllowed": false,
+  "prerequisites": [
+    {
+      "id": "target-enterprise",
+      "label": "Target enterprise and business sponsor",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "external-system",
+      "label": "First external warranty system and sandbox",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "production-connector",
+      "label": "Production connector and accountable owner",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "deployment-target",
+      "label": "Vietnam-hosted deployment target",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "identity-provider",
+      "label": "Enterprise IdP with OIDC or SAML, MFA, and SCIM",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "ai-provider",
+      "label": "AI and embedding provider with approved DPA and zero-retention/no-training terms",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "production-topology-proof",
+      "label": "Private networking, HA, backup, DR, secrets, and object-storage proof",
+      "status": "OPEN",
+      "evidence": []
+    },
+    {
+      "id": "capacity-baseline",
+      "label": "Full-network workload and connector quota baseline",
+      "status": "OPEN",
+      "evidence": []
+    }
+  ],
+  "signoffs": [
+    {
+      "role": "Business",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    },
+    {
+      "role": "Security",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    },
+    {
+      "role": "Engineering",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    },
+    {
+      "role": "Operations",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    }
+  ],
+  "artifacts": [
+    "documents/production-readiness/README.md",
+    "documents/production-readiness/PRODUCTION_COMPLETION_ROADMAP.md",
+    "documents/production-readiness/P0_ENTERPRISE_READINESS.md",
+    "documents/production-readiness/P0_SOURCE_OF_TRUTH_AND_INTEGRATION.md",
+    "documents/production-readiness/P0_SECURITY_DATA_AND_RACI.md",
+    "documents/production-readiness/P0_INFRASTRUCTURE_ASSESSMENT.md",
+    "documents/adr/ADR-012-production-readiness-hard-gates.md",
+    "scripts/validate-p0-gate.mjs",
+    ".github/workflows/production-readiness.yml"
+  ]
+}

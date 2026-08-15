@@ -15,6 +15,9 @@
     "shadcn": {
       "command": "npx",
       "args": ["-y", "shadcn@latest", "mcp"]
+    },
+    "typeui": {
+      "serverUrl": "https://mcp.typeui.sh"
     }
   }
 }

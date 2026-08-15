@@ -22,6 +22,7 @@ import {
 import { useState } from 'react';
 import { cn } from '@servexa-warranty-ai/ui/lib/utils';
 import type { AIAction, AISource, AISourceType } from '@/features/ai/types';
+import { useTranslation } from "react-i18next";
 
 export interface AIInsightCardProps {
   /** The main insight message */
@@ -107,6 +108,7 @@ export function AIInsightCard({
   onAction,
   className,
 }: AIInsightCardProps) {
+    const { t } = useTranslation();
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const styles = severityStyles[severity];
   const confidenceInfo = getConfidenceLabel(confidence);
@@ -130,8 +132,7 @@ export function AIInsightCard({
             </Badge>
             {sources.length > 0 && (
               <span className="text-[10px] text-muted-foreground">
-                {sources.length} sources
-              </span>
+                {sources.length} {t("sources")}</span>
             )}
           </div>
         </div>
@@ -172,7 +173,7 @@ export function AIInsightCard({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Info className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Confidence:</span>
+              <span className="text-xs text-muted-foreground">{t("Confidence:")}</span>
               <span className={cn('text-xs font-medium', confidenceInfo.color)}>
                 {Math.round(confidence * 100)}% ({confidenceInfo.label})
               </span>
@@ -184,7 +185,7 @@ export function AIInsightCard({
         {sources.length > 0 && (
           <Collapsible open={sourcesOpen} onOpenChange={setSourcesOpen}>
             <CollapsibleTrigger className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
-              <span>{sources.length} evidence sources</span>
+              <span>{sources.length} {t("evidence sources")}</span>
               <ChevronDown className={cn(
                 'w-3.5 h-3.5 transition-transform',
                 sourcesOpen && 'rotate-180'
@@ -266,6 +267,7 @@ export function AIInsightBadge({
   confidence: number; 
   sourceCount?: number;
 }) {
+    const { t } = useTranslation();
   const confidenceInfo = getConfidenceLabel(confidence);
   
   return (
@@ -276,8 +278,7 @@ export function AIInsightBadge({
       </Badge>
       {sourceCount !== undefined && sourceCount > 0 && (
         <span className="text-[10px] text-muted-foreground">
-          {sourceCount} sources
-        </span>
+          {sourceCount} {t("sources")}</span>
       )}
     </div>
   );

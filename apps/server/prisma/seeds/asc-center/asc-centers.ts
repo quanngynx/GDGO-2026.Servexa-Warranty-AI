@@ -1,5 +1,5 @@
-import prisma from "../..";
-import { AscCenterStatus } from "../../../prisma/generated/enums";
+import prisma from '../../../src/core/infra/prisma';
+import { AscCenterStatus } from "../../../src/core/infra/prisma/generated/enums";
 
 export async function seedASCCenters() {
   console.log("🏢 Starting ASC Centers seeding...");

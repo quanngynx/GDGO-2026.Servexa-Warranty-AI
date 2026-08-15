@@ -11,6 +11,7 @@ import {
 } from "./servexa-copilot-chat-input";
 import { createServexaCopilotUserMessage } from "./servexa-copilot-user-message";
 import { OperationalQuickPromptSuggestions } from "./operational-quick-prompt-suggestions";
+import { useTranslation } from "react-i18next";
 
 type ServexaCopilotChatLayout = "rail" | "fullPage";
 
@@ -31,6 +32,7 @@ export function ServexaCopilotChat({
   onChatError,
   onRetryLast,
 }: ServexaCopilotChatProps) {
+    const { t } = useTranslation();
   useConfigureSuggestions(null);
 
   const { getMessageFeedback, setMessageFeedback } = useCopilotMessageFeedback();
@@ -74,15 +76,11 @@ export function ServexaCopilotChat({
                 className="text-xs font-medium uppercase tracking-wider text-muted-foreground"
                 translate="no"
               >
-                Servexa Warranty AI
-              </p>
+                {t("Servexa Warranty AI")}</p>
               <h2 className="text-balance text-2xl font-semibold tracking-tight sm:text-3xl">
-                How can I help with operations today?
-              </h2>
+                {t("How can I help with operations today?")}</h2>
               <p className="text-pretty text-sm text-muted-foreground sm:text-base">
-                Ask about repair cases, SLA risk, inventory, and approvals. Evidence and
-                suggested actions appear in the context panel on the right.
-              </p>
+                {t("Ask about repair cases, SLA risk, inventory, and approvals. Evidence and\n suggested actions appear in the context panel on the right.")}</p>
             </div>
             <div className="w-full max-w-xl space-y-4">{input}</div>
             <OperationalQuickPromptSuggestions className="w-full max-w-xl" />
@@ -93,8 +91,7 @@ export function ServexaCopilotChat({
       return (
         <div className="flex h-full flex-col items-center justify-center gap-4 px-3">
           <h2 className="text-balance text-center text-xl font-bold">
-            Welcome to the Servexa Warranty AI
-          </h2>
+            {t("Welcome to the Servexa Warranty AI")}</h2>
           {input}
           <OperationalQuickPromptSuggestions />
         </div>

@@ -11,6 +11,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/dialog";
 import { Label } from "@servexa-warranty-ai/ui/components/label";
 import { Textarea } from "@servexa-warranty-ai/ui/components/textarea";
+import { useTranslation } from "react-i18next";
 
 type HitlRejectDialogProps = {
   request: HitlRequest;
@@ -27,6 +28,7 @@ export function HitlRejectDialog({
   onSubmit,
   isSubmitting,
 }: HitlRejectDialogProps) {
+    const { t } = useTranslation();
   const [reason, setReason] = useState("");
 
   const handleSubmit = () => {
@@ -46,31 +48,29 @@ export function HitlRejectDialog({
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Reject approval</DialogTitle>
+          <DialogTitle>{t("Reject approval")}</DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground">{request.title}</p>
         <div className="space-y-2 py-2">
-          <Label htmlFor="hitl-reject-reason">Reason (required)</Label>
+          <Label htmlFor="hitl-reject-reason">{t("Reason (required)")}</Label>
           <Textarea
             id="hitl-reject-reason"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="Explain why this action should not proceed…"
+            placeholder={t("Explain why this action should not proceed…")}
             rows={3}
           />
         </div>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+            {t("Cancel")}</Button>
           <Button
             type="button"
             variant="destructive"
             disabled={isSubmitting || !reason.trim()}
             onClick={handleSubmit}
           >
-            Reject
-          </Button>
+            {t("Reject")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: ai-api-service
+  name: servexa-ai-services
 spec:
   template:
     metadata:
@@ -9,9 +9,9 @@ spec:
         autoscaling.knative.dev/minScale: '1'
     spec:
       containerConcurrency: 10
-      serviceAccountName: ai-api-sa
+      serviceAccountName: ${SERVICE_ACCOUNT_NAME}
       containers:
-        - image: gcr.io/PROJECT_ID/ai-api-service:latest
+        - image: gcr.io/PROJECT_ID/servexa-ai-services:latest
           ports:
             - containerPort: 8081
           env:

@@ -16,6 +16,7 @@ import { ServexaCopilotChat } from "./components/servexa-copilot-chat";
 import { SERVEXA_COPILOT_AGENT_ID } from "./constants";
 import type { ServexaCopilotPanel } from "./hooks/use-servexa-copilot-panel";
 import { useServexaCopilotPanel } from "./hooks/use-servexa-copilot-panel";
+import { useTranslation } from "react-i18next";
 
 type AICopilotChatRailProps = {
   panel: ServexaCopilotPanel;
@@ -32,6 +33,7 @@ function AICopilotChatRail({
   onCollapsedChange,
   onContextOpenChange,
 }: AICopilotChatRailProps) {
+    const { t } = useTranslation();
   const navigate = useNavigate();
   const {
     operational,
@@ -53,9 +55,9 @@ function AICopilotChatRail({
     >
       <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-2 py-2">
         {!collapsed ? (
-          <span className="truncate ps-1 text-sm font-semibold tracking-tight">Assistant AI</span>
+          <span className="truncate ps-1 text-sm font-semibold tracking-tight">{t("Assistant AI")}</span>
         ) : (
-          <span className="sr-only">Copilot collapsed</span>
+          <span className="sr-only">{t("Copilot collapsed")}</span>
         )}
         <div className="flex items-center gap-2">
           {!collapsed && !contextOpen ? (
@@ -145,12 +147,24 @@ function AICopilotChatRail({
 }
 
 export function AICopilotRail() {
-  const [collapsed, setCollapsed] = useState(false);
+    const { t } = useTranslation();
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("servexa-copilot-collapsed");
+      if (stored !== null) {
+        return stored === "true";
+      }
+    }
+    return true;
+  });
   const [contextOpen, setContextOpen] = useState(false);
   const panel = useServexaCopilotPanel(SERVEXA_COPILOT_AGENT_ID);
 
   const handleCollapsedChange = (next: boolean) => {
     setCollapsed(next);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("servexa-copilot-collapsed", String(next));
+    }
     if (next) setContextOpen(false);
   };
 

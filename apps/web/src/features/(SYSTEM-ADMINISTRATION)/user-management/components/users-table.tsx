@@ -25,6 +25,7 @@ import { DataTablePagination, DataTableToolbar } from '@servexa-warranty-ai/ui/c
 import { type User } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { usersColumns as columns } from './users-columns'
+import { useTranslation } from "react-i18next";
 
 type DataTableProps = {
   data: User[]
@@ -35,6 +36,7 @@ type DataTableProps = {
 }
 
 export function UsersTable({ data, isLoading = false, totalPages, search, navigate }: DataTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -137,8 +139,7 @@ export function UsersTable({ data, isLoading = false, totalPages, search, naviga
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -164,8 +165,7 @@ export function UsersTable({ data, isLoading = false, totalPages, search, naviga
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

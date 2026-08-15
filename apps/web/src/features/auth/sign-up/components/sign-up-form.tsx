@@ -15,6 +15,7 @@ import {
 } from "@servexa-warranty-ai/ui/components/form";
 import { Input } from "@servexa-warranty-ai/ui/components/input";
 import { PasswordInput } from "@/components/password-input";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z
   .object({
@@ -37,6 +38,7 @@ export function SignUpForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+    const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,9 +72,9 @@ export function SignUpForm({
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("Email")}</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input placeholder={t("name@example.com")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,7 +85,7 @@ export function SignUpForm({
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("Password")}</FormLabel>
               <FormControl>
                 <PasswordInput placeholder="********" {...field} />
               </FormControl>
@@ -96,7 +98,7 @@ export function SignUpForm({
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>{t("Confirm Password")}</FormLabel>
               <FormControl>
                 <PasswordInput placeholder="********" {...field} />
               </FormControl>
@@ -105,8 +107,7 @@ export function SignUpForm({
           )}
         />
         <Button className="mt-2" disabled={isLoading}>
-          Create Account
-        </Button>
+          {t("Create Account")}</Button>
 
         <div className="relative my-2">
           <div className="absolute inset-0 flex items-center">
@@ -114,8 +115,7 @@ export function SignUpForm({
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
+              {t("Or continue with")}</span>
           </div>
         </div>
 
@@ -126,16 +126,14 @@ export function SignUpForm({
             type="button"
             disabled={isLoading}
           >
-            <IconGithub className="h-4 w-4" /> GitHub
-          </Button>
+            <IconGithub className="h-4 w-4" /> {t("GitHub")}</Button>
           <Button
             variant="outline"
             className="w-full"
             type="button"
             disabled={isLoading}
           >
-            <IconFacebook className="h-4 w-4" /> Facebook
-          </Button>
+            <IconFacebook className="h-4 w-4" /> {t("Facebook")}</Button>
         </div>
       </form>
     </Form>

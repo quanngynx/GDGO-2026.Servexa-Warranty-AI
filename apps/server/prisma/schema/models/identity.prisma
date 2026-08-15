@@ -195,4 +195,6 @@ model User {
 
   // TODO: Update Hierarchical RBAC later: roles, permissions, role closures
   userRoles UserRole[]
+
+  productExportJobs ProductExportJob[]
 }

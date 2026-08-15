@@ -7,6 +7,7 @@ import { LongText } from "@/components/long-text";
 import { DataTableRowActions } from "./data-table-row-actions";
 import type { RepairCaseDto } from "@/libs/api/asc-center/repair-case/data-transfer-object";
 import { CalendarIcon, MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
+import { t } from "i18next";
 
 export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
@@ -39,7 +40,7 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     accessorKey: "caseNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Case #" />
+      <DataTableColumnHeader column={column} title={t("Case #")} />
     ),
     cell: ({ row }) => {
       const caseNumber = row.getValue<string>("caseNumber");
@@ -66,7 +67,7 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     id: "customerName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer" />
+      <DataTableColumnHeader column={column} title={t("Customer")} />
     ),
     cell: ({ row }) => {
       const { customer } = row.original;
@@ -101,7 +102,7 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     id: "modelName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Model" />
+      <DataTableColumnHeader column={column} title={t("Model")} />
     ),
     cell: ({ row }) => {
       const { model } = row.original;
@@ -112,7 +113,7 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title={t("Status")} />
     ),
     cell: ({ row }) => {
       return (
@@ -125,7 +126,7 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     accessorKey: "priority",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
+      <DataTableColumnHeader column={column} title={t("Priority")} />
     ),
     cell: ({ row }) => {
       return (
@@ -138,12 +139,18 @@ export const repairCasesColumns: ColumnDef<RepairCaseDto>[] = [
   {
     accessorKey: "receivedDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Received Date" />
+      <DataTableColumnHeader column={column} title={t("Received Date")} />
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue("receivedDate"));
       return <div className="w-[100px]">{date.toLocaleDateString()}</div>;
     },
+  },
+  {
+    accessorKey: "ascCenterId",
+    header: "ASC Center",
+    enableSorting: false,
+    enableHiding: true,
   },
   {
     id: "actions",

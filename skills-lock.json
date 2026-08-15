@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "agents-sdk": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/agents-sdk/SKILL.md",
+      "computedHash": "01515ef239bee4ab1464d0eb735a857de3832a304fccd9315bf439837c053e62"
+    },
     "ai-sdk": {
       "source": "vercel/ai",
       "sourceType": "github",
@@ -20,6 +26,30 @@
       "source": "PatternsDev/skills",
       "sourceType": "github",
       "computedHash": "815001c011be8cf77e95383282c6922a3f0702af4d2377a8bbc0d729b915e08d"
+    },
+    "cloudflare": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare/SKILL.md",
+      "computedHash": "8581f52e9f307d6ae298e016f93720bae2739d13a2169fa96d47df516c38f63c"
+    },
+    "cloudflare-email-service": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare-email-service/SKILL.md",
+      "computedHash": "72992561f31a3e70cdaf7353610b8d2739fda6a6d519163539f658632f9c00d1"
+    },
+    "cloudflare-one": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare-one/SKILL.md",
+      "computedHash": "be7a9490568452e0ea8b9575dc8ae4129f2f7e115403c3778544a79e35de6ce1"
+    },
+    "cloudflare-one-migrations": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/cloudflare-one-migrations/SKILL.md",
+      "computedHash": "bc6c9fc5dbfcd512dbceb7c6940e351b617897ee2429561a183fef358b4fbef5"
     },
     "command-pattern": {
       "source": "PatternsDev/skills",
@@ -89,6 +119,36 @@
       "sourceType": "github",
       "skillPath": "skills/copilotkit-upgrade/SKILL.md",
       "computedHash": "eca1e04d7b16b8cc292cb862d0cd60afbbb45205a95e30a752170c2a507cb8f3"
+    },
+    "drawio-aws": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-aws/SKILL.md",
+      "computedHash": "d97a338cb304f4b54dc46ccf106cc36bc7403d6a3823439e35bd6e26670316de"
+    },
+    "drawio-bpmn": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-bpmn/SKILL.md",
+      "computedHash": "47389f786e32ea74553522c0a68956ec1ea00f25866cdbbdaecefc327c0b6548"
+    },
+    "drawio-databricks": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-databricks/SKILL.md",
+      "computedHash": "72e9450731daf50e4c4269a57c6778d26174e9b090b8854563a4455be3858dd3"
+    },
+    "drawio-gcp": {
+      "source": "sparklabx/drawio-ai-kit",
+      "sourceType": "github",
+      "skillPath": "skills/drawio-gcp/SKILL.md",
+      "computedHash": "d9b1c3316058ba444b6e4cdc3225af30a0d17d6ffafd151142ec0fdc0bef1868"
+    },
+    "durable-objects": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/durable-objects/SKILL.md",
+      "computedHash": "afa5e9dfcbbe3b70107d9f263a1c183ef89afbb5eb97f42be01cad7bd942958f"
     },
     "dynamic-import": {
       "source": "PatternsDev/skills",
@@ -265,6 +325,12 @@
       "sourceType": "github",
       "computedHash": "b48be2d47bb2e47ed9a4de723b7dd17b2363543b844673419273f3040badcf2e"
     },
+    "sandbox-sdk": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/sandbox-sdk/SKILL.md",
+      "computedHash": "684861194888ff4ff36d32273c2ad73b5148c4ff1e45c216c9ed38d0e72db1da"
+    },
     "server-side-rendering": {
       "source": "PatternsDev/skills",
       "sourceType": "github",
@@ -310,6 +376,12 @@
       "sourceType": "github",
       "computedHash": "55a1ac73218ab0277316016eeeabe4a30396184a7f980834a86469c74c4515e6"
     },
+    "turnstile-spin": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/turnstile-spin/SKILL.md",
+      "computedHash": "7871fed73c10d9665d5a74093d267d520c9fd11f98b45777be82aeb2dcae696e"
+    },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
@@ -339,6 +411,24 @@
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "computedHash": "d8e7d3afe37dcc8a97b99ffb5afdb4d0919ae0092ea8b68f44eb201f035e33ac"
+    },
+    "web-perf": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-perf/SKILL.md",
+      "computedHash": "a411d7a1d052e39069ad7c898d6b7e22100945a3f104794e0b76e3af480d3f44"
+    },
+    "workers-best-practices": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/workers-best-practices/SKILL.md",
+      "computedHash": "c919a93c9db826a0ee2818f6f7977c40c1a43bb87abc848b22181fdbabe2ef80"
+    },
+    "wrangler": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "skillPath": "skills/wrangler/SKILL.md",
+      "computedHash": "d2094f7a5a76414fc0cd365fd8ddba3258c2135a1d468b78213c0fa02c309b9b"
     }
   }
 }

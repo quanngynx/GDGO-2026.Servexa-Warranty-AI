@@ -1,0 +1,49 @@
+name: Security hardening
+description: Suggest a non-sensitive defensive or privacy improvement
+title: "[Hardening]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only for non-sensitive hardening work. Do not publish prompt injection exploits or active vulnerabilities here. For vulnerabilities, follow SECURITY.md.
+  - type: input
+    id: repository
+    attributes:
+      label: App or package
+      placeholder: "apps/web / apps/server / apps/ai-services / packages/..."
+    validations:
+      required: true
+  - type: textarea
+    id: finding
+    attributes:
+      label: Hardening opportunity
+      description: What should be improved?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Authentication or authorization
+        - Prompt injection defenses
+        - Input validation
+        - Secrets handling
+        - Data privacy or PII masking
+        - Hallucination mitigation
+        - AI Tool Access safety
+        - Cloud or infrastructure posture
+        - Documentation
+        - Other
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommended change
+      description: Include safe, non-sensitive implementation guidance.
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure safety
+      options:
+        - label: This issue does not include exploit details, secrets, production customer data, or unauthorized test results.
+          required: true

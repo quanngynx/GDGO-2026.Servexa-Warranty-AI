@@ -1,0 +1,36 @@
+name: Production Readiness Governance
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/production-readiness.yml"
+      - "documents/adr/ADR-012-production-readiness-hard-gates.md"
+      - "documents/production-readiness/**"
+      - "scripts/validate-p0-gate.mjs"
+      - "package.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/production-readiness.yml"
+      - "documents/adr/ADR-012-production-readiness-hard-gates.md"
+      - "documents/production-readiness/**"
+      - "scripts/validate-p0-gate.mjs"
+      - "package.json"
+
+jobs:
+  p0-manifest:
+    name: Validate P0 evidence manifest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate P0 structure and gate consistency
+        run: node scripts/validate-p0-gate.mjs
+

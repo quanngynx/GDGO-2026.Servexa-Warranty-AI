@@ -7,6 +7,9 @@ export const Route = createFileRoute(
   "/_authenticated/(GENERAL)/repair-cases-management/",
 )({
   validateSearch: repairCasesListSearchSchema,
+  beforeLoad: () => ({
+    title: "Repair Cases",
+  }),
   component: RepairCasesManagementRoute,
 });
 

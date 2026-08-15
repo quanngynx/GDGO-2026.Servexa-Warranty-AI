@@ -1,18 +1,43 @@
 {
   "name": "servexa-warranty-ai",
   "private": true,
+  "packageManager": "pnpm@10.28.1",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "type": "module",
+  "author": "Nguyễn Minh Quân <nguyenminhquan042004@gmail.com> (https://github.com/quanngynx)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quanngynx/servexa-warranty-ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/quanngynx/servexa-warranty-ai/issues"
+  },
+  "homepage": "https://github.com/quanngynx/servexa-warranty-ai#readme",
+  "keywords": [
+    "ci-cd",
+    "github-actions",
+    "docker",
+    "google-cloud-platform",
+    "nodejs",
+    "typescript",
+    "reactjs",
+    "langgraph",
+    "rag",
+    "express",
+    "devops"
+  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
+    "p0:check": "node scripts/validate-p0-gate.mjs",
+    "p0:gate": "node scripts/validate-p0-gate.mjs --require-closed",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
-    "dev:docker-compose":"docker compose -f docker-compose.yml up -d --force-recreate postgres redis",
+    "dev:docker-compose": "docker compose -f docker-compose.yml up -d --force-recreate postgres redis",
     "pull:server:docker": "docker compose --env-file .env.production -f docker-compose.prod.yml pull server",
     "dev:server:docker": "docker compose -f docker-compose.prod.yml up -d --force-recreate postgres server",
     "db:push": "turbo -F @servexa-warranty-ai/db db:push",
@@ -42,6 +67,5 @@
     "@types/node": "catalog:",
     "turbo": "^2.9.14",
     "typescript": "^5"
-  },
-  "packageManager": "pnpm@10.28.1"
+  }
 }

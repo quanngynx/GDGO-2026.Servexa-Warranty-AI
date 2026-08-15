@@ -1,5 +1,11 @@
 {
   "enabledPlugins": {
     "diagram-design@diagram-design": true
-  }
+  },
+  "enabledMcpjsonServers": [
+    "better-t-stack",
+    "context7",
+    "cloudflare-docs",
+    "shadcn"
+  ]
 }

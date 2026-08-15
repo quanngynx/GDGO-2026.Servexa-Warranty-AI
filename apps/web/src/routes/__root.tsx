@@ -7,6 +7,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TooltipProvider } from "@servexa-warranty-ai/ui/components/tooltip";
 
 import Loader from "@/components/loader";
 import { NavigationProgress } from "@/components/navigation-progress";
@@ -48,9 +49,10 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
   }),
 });
 
+
 function RootComponent() {
   return (
-    <>
+    <TooltipProvider>
       <NavigationProgress />
       <HeadContent />
       <Outlet />
@@ -61,6 +63,6 @@ function RootComponent() {
           <TanStackRouterDevtools position="bottom-right" />
         </>
       )}
-    </>
+    </TooltipProvider>
   );
 }

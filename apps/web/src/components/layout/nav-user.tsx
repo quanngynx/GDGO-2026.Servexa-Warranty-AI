@@ -16,8 +16,17 @@ export function NavUser({ user }: NavUserProps) {
       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
     >
       <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarImage src={user.avatar} alt={user.name} />
-        <AvatarFallback className="rounded-lg">SN</AvatarFallback>
+        {user.avatar ? (
+          <AvatarImage src={user.avatar} alt={user.name} />
+        ) : null}
+        <AvatarFallback className="rounded-lg">
+          {user.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase()}
+        </AvatarFallback>
       </Avatar>
       <div className="grid flex-1 text-start text-sm leading-tight">
         <span className="truncate font-semibold">{user.name}</span>

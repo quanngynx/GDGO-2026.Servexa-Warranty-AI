@@ -12,6 +12,8 @@ import {
 import { DataTableBulkActions } from "./data-table-bulk-actions";
 import { cn } from '@servexa-warranty-ai/ui/lib/utils'
 import { useOperationalContextPatch } from '@/features/ai-copilot/context/operational-context-provider'
+import { DatePickerWithRange } from "@servexa-warranty-ai/ui/components/date-picker";
+import { useTranslation } from "react-i18next";
 
 type FilterOption = { label: string; value: string }
 
@@ -36,10 +38,39 @@ export function RepairCasesTable({
   navigate,
   ascCenterFilterOptions = [],
 }: RepairCasesTableProps) {
+    const { t } = useTranslation();
   const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    ascCenterId: false,
+  });
   const [sorting, setSorting] = useState<SortingState>([]);
   const { setOperationalContext, clearOperationalContext } = useOperationalContextPatch();
+
+  const dateFromStr = search.dateFrom as string | undefined;
+  const dateToStr = search.dateTo as string | undefined;
+  const dateRange = {
+    from: dateFromStr ? new Date(dateFromStr) : undefined,
+    to: dateToStr ? new Date(dateToStr) : undefined,
+  };
+
+  const handleDateRangeChange = (value: { from?: Date; to?: Date } | undefined) => {
+    navigate({
+      search: (prev) => {
+        const next = { ...prev } as Record<string, unknown>;
+        if (value?.from) {
+          next.dateFrom = value.from.toISOString();
+        } else {
+          delete next.dateFrom;
+        }
+        if (value?.to) {
+          next.dateTo = value.to.toISOString();
+        } else {
+          delete next.dateTo;
+        }
+        return next;
+      },
+    });
+  };
 
   const {
     columnFilters,
@@ -154,7 +185,13 @@ export function RepairCasesTable({
               ]
             : []),
         ]}
-      />
+      >
+        <DatePickerWithRange 
+          value={dateRange} 
+          onChange={handleDateRangeChange}
+          placeholder={t("Filter by created date")} 
+        />
+      </DataTableToolbar>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -188,8 +225,7 @@ export function RepairCasesTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Loading...
-                </TableCell>
+                  {t("Loading...")}</TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -221,8 +257,7 @@ export function RepairCasesTable({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
-                </TableCell>
+                  {t("No results.")}</TableCell>
               </TableRow>
             )}
           </TableBody>

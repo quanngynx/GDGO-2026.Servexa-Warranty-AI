@@ -71,6 +71,13 @@ export type EnvServer = Readonly<{
 
   /** Vercel AI SDK / @ai-sdk/google (Node fallback when gRPC is unavailable). */
   GOOGLE_GENERATIVE_AI_API_KEY?: string | undefined;
+
+  STORAGE_PROVIDER?: "local" | "r2" | undefined;
+  R2_ACCOUNT_ID?: string | undefined;
+  R2_ACCESS_KEY_ID?: string | undefined;
+  R2_SECRET_ACCESS_KEY?: string | undefined;
+  R2_BUCKET_NAME?: string | undefined;
+  R2_PUBLIC_DOMAIN?: string | undefined;
 }>;
 
 export const env = createEnv({
@@ -133,6 +140,13 @@ export const env = createEnv({
     HITL_PENDING_TTL_HOURS: z.coerce.number().int().nonnegative().default(72),
 
     GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1).optional(),
+
+    STORAGE_PROVIDER: z.enum(['local', 'r2']).optional(),
+    R2_ACCOUNT_ID: z.string().optional(),
+    R2_ACCESS_KEY_ID: z.string().optional(),
+    R2_SECRET_ACCESS_KEY: z.string().optional(),
+    R2_BUCKET_NAME: z.string().optional(),
+    R2_PUBLIC_DOMAIN: z.string().optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

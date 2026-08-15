@@ -10,27 +10,27 @@ export const useRepairCaseImagesQuery = (repairCaseId: string | undefined) =>
     enabled: !!repairCaseId,
   })
 
-type UploadRepairCaseImagePayload = {
+type UploadRepairCaseImagesPayload = {
   repairCaseId: string
-  image: File
+  images: File[]
   imageType: RepairCaseImageType
   description?: string
 }
 
-export const useUploadRepairCaseImageMutation = () => {
+export const useUploadRepairCaseImagesMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: UploadRepairCaseImagePayload) =>
-      repairCaseAPI.uploadImage(
+    mutationFn: (payload: UploadRepairCaseImagesPayload) =>
+      repairCaseAPI.uploadImages(
         payload.repairCaseId,
-        payload.image,
+        payload.images,
         payload.imageType,
         payload.description
       ),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['repair-case-images', variables.repairCaseId] })
-      toast.success('Image uploaded successfully')
+      toast.success('Images uploaded successfully')
     },
   })
 }

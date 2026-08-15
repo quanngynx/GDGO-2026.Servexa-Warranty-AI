@@ -41,11 +41,14 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
   } = props;
   return (
     <AlertDialog {...actions}>
-      <AlertDialogContent className={cn(className && className)}>
+      <AlertDialogContent className={cn(
+        "sm:rounded-[calc(var(--radius)+12px)] ring-1 ring-border/10 shadow-2xl overflow-hidden",
+        className
+      )}>
         <AlertDialogHeader className="text-start">
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle className="text-lg font-semibold tracking-tight">{title}</AlertDialogTitle>
           <AlertDialogDescription asChild>
-            <div>{desc}</div>
+            <div className="text-[14px] font-medium text-muted-foreground leading-relaxed mt-1.5">{desc}</div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         {children}
