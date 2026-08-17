@@ -166,13 +166,17 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.3@sha256:6a7217a100bd3e5de4063a27a538ef999a3c5a88c4b4ec0ffc0a642aee7b2597
-    command: ["start-dev", "--import-realm", "--health-enabled=true"]
+    entrypoint: ["/bin/bash", "-ec"]
+    command:
+      - |
+        mkdir -p /opt/keycloak/data/import
+        cp /run/secrets/p0a_keycloak_realm /opt/keycloak/data/import/realm-servexa-p0a.json
+        exec /opt/keycloak/bin/kc.sh start-dev --import-realm --health-enabled=true --verbose
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: p0a-admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${P0A_KEYCLOAK_ADMIN_PASSWORD}
-    volumes:
-      - ./.p0a/keycloak-realm.json:/opt/keycloak/data/import/realm-servexa-p0a.json:ro
-      - p0a_keycloak_data:/opt/keycloak/data
+    secrets: [p0a_keycloak_realm]
+    volumes: [p0a_keycloak_data:/opt/keycloak/data]
     ports: ["127.0.0.1:18080:8080"]
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nhost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep '200 OK' <&3"]
@@ -342,3 +346,7 @@ volumes:
   p0a_minio_certs:
   p0a_keycloak_data:
   p0a_restore_data:
+
+secrets:
+  p0a_keycloak_realm:
+    file: ./.p0a/keycloak-realm.json
