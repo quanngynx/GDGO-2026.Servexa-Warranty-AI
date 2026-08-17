@@ -61,3 +61,4 @@ temp
 .docker-deploy-test*
 .docker-ghcr-smoke.env
 .env.production
+/documents/production-readiness/trust

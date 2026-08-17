@@ -38,6 +38,7 @@ COPY packages/ai-contracts/package.json packages/ai-contracts/
 COPY packages/config/package.json packages/config/
 COPY packages/db/package.json packages/db/
 COPY packages/env/package.json packages/env/
+COPY packages/enterprise-contracts/package.json packages/enterprise-contracts/
 COPY packages/event-contracts/package.json packages/event-contracts/
 COPY packages/infra/package.json packages/infra/
 COPY packages/proto/package.json packages/proto/
@@ -59,6 +60,7 @@ COPY apps/server apps/server
 COPY packages/ai-contracts packages/ai-contracts
 COPY packages/config packages/config
 COPY packages/env packages/env
+COPY packages/enterprise-contracts packages/enterprise-contracts
 COPY packages/event-contracts packages/event-contracts
 COPY packages/proto packages/proto
 RUN mkdir -p node_modules/@servexa-warranty-ai \
