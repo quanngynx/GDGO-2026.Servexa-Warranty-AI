@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -18,11 +19,13 @@ test("P1R ownership scope resolves before runtime exists", async () => {
 });
 
 test("P1R preflight reports current blockers without starting runtime", () => {
+  const gate = JSON.parse(readFileSync(path.join(repoRoot, "documents", "production-readiness", "p1r-gate.json"), "utf8"));
   const result = run("preflight");
   assert.equal(result.status, 0);
   assert.match(result.stdout, /P1R gate: BLOCKED/);
-  assert.match(result.stdout, /P0A=IN_PROGRESS/);
-  assert.match(result.stdout, /P1D=IN_PROGRESS/);
+  for (const prerequisite of gate.prerequisites) {
+    assert.match(result.stdout, new RegExp(`${prerequisite.gate}=${prerequisite.currentStatus} \\(requires ${prerequisite.requiredStatus}\\)`));
+  }
 });
 
 for (const action of ["up", "proof", "gate"]) {
