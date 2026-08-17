@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getP0aCapacityRun } from "../infra/p0a/k6/profile.js";
@@ -87,6 +87,11 @@ async function ensureRuntime() {
     realm = realm.replaceAll(placeholder, value);
   }
   await writeFile(runtimeRealmFile, realm, { mode: 0o600 });
+  // Compose file-backed secrets are bind mounts outside Swarm and preserve the
+  // host mode. Keycloak runs as a different non-root UID on Linux runners, so
+  // grant read access only for the container bootstrap window. `up` restores
+  // the host fixture to 0600 after the realm has been copied into its volume.
+  await chmod(runtimeRealmFile, 0o644);
 }
 
 async function waitFor(url, timeoutMs = 180_000) {
@@ -127,9 +132,9 @@ function execNode(service, source) {
 
 async function up() {
   await ensureRuntime();
-  dockerCompose(["up", "-d", "--build", "--remove-orphans"]);
   const timeoutMs = getStartupTimeoutMs();
   try {
+    dockerCompose(["up", "-d", "--build", "--remove-orphans"]);
     await Promise.all([
       waitFor("http://127.0.0.1:18000/_health", timeoutMs),
       waitFor("http://127.0.0.1:18080/realms/servexa-p0a/.well-known/openid-configuration", timeoutMs),
@@ -139,6 +144,8 @@ async function up() {
   } catch (error) {
     await preserveStartupDiagnostics(error);
     throw error;
+  } finally {
+    await chmod(runtimeRealmFile, 0o600);
   }
 }
 
