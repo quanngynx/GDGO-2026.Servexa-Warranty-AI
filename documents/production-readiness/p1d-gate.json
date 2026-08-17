@@ -2,25 +2,59 @@
   "schemaVersion": 1,
   "phase": "P1D",
   "kind": "IDENTITY_AUTHORIZATION_DESIGN_READINESS",
-  "status": "IN_PROGRESS",
+  "status": "READY_FOR_SIGN_OFF",
   "updatedAt": "2026-08-17",
   "runtimeImplementationAllowed": false,
   "productionPhaseAllowed": false,
   "nextDesignPhaseAllowed": false,
   "evidenceRegistry": ".p1d/evidence/registry.json",
   "designGroups": [
-    { "id": "architecture", "artifact": "documents/adr/ADR-014-p1-identity-tracks-and-trust-boundary.md" },
-    { "id": "identity-authorization", "artifact": "documents/production-readiness/P1_IDENTITY_AUTHORIZATION_DESIGN.md" },
-    { "id": "permission-sod", "artifact": "documents/production-readiness/P1_PERMISSION_SOD_MATRIX.md" },
-    { "id": "route-inventory", "artifact": "documents/production-readiness/P1_ROUTE_SECURITY_INVENTORY.md" },
-    { "id": "migration-cutover", "artifact": "documents/production-readiness/P1_MIGRATION_CUTOVER.md" },
-    { "id": "threat-privacy", "artifact": "documents/production-readiness/P1_THREAT_MODEL_PRIVACY.md" },
-    { "id": "test-evidence", "artifact": "documents/production-readiness/P1_TEST_AND_EVIDENCE_PLAN.md" },
-    { "id": "implementation-backlog", "artifact": "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md" }
+    {
+      "id": "architecture",
+      "artifact": "documents/adr/ADR-014-p1-identity-tracks-and-trust-boundary.md"
+    },
+    {
+      "id": "identity-authorization",
+      "artifact": "documents/production-readiness/P1_IDENTITY_AUTHORIZATION_DESIGN.md"
+    },
+    {
+      "id": "permission-sod",
+      "artifact": "documents/production-readiness/P1_PERMISSION_SOD_MATRIX.md"
+    },
+    {
+      "id": "route-inventory",
+      "artifact": "documents/production-readiness/P1_ROUTE_SECURITY_INVENTORY.md"
+    },
+    {
+      "id": "migration-cutover",
+      "artifact": "documents/production-readiness/P1_MIGRATION_CUTOVER.md"
+    },
+    {
+      "id": "threat-privacy",
+      "artifact": "documents/production-readiness/P1_THREAT_MODEL_PRIVACY.md"
+    },
+    {
+      "id": "test-evidence",
+      "artifact": "documents/production-readiness/P1_TEST_AND_EVIDENCE_PLAN.md"
+    },
+    {
+      "id": "implementation-backlog",
+      "artifact": "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md"
+    }
   ],
   "signoffs": [
-    { "role": "Engineering", "status": "PENDING", "approver": "Nguyễn Minh Quân", "evidence": "documents/production-readiness/signoffs/p1/p1d/engineering-nguyen-minh-quan.attestation.json" },
-    { "role": "Security", "status": "PENDING", "approver": "Huynh Hong Hanh", "evidence": "documents/production-readiness/signoffs/p1/p1d/security-huynh-hong-hanh.attestation.json" }
+    {
+      "role": "Engineering",
+      "status": "PENDING",
+      "approver": "Nguyễn Minh Quân",
+      "evidence": "documents/production-readiness/signoffs/p1/p1d/engineering-nguyen-minh-quan.attestation.json"
+    },
+    {
+      "role": "Security",
+      "status": "PENDING",
+      "approver": "Huynh Hong Hanh",
+      "evidence": "documents/production-readiness/signoffs/p1/p1d/security-huynh-hong-hanh.attestation.json"
+    }
   ],
   "artifacts": [
     "documents/production-readiness/p1-evidence.schema.json",

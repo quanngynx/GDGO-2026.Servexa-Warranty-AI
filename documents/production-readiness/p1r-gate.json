@@ -11,8 +11,16 @@
   "evidenceRegistry": ".p1r/evidence/registry.json",
   "orchestrator": "scripts/p1r.mjs",
   "prerequisites": [
-    { "gate": "P0A", "requiredStatus": "CLOSED", "currentStatus": "IN_PROGRESS" },
-    { "gate": "P1D", "requiredStatus": "CLOSED", "currentStatus": "IN_PROGRESS" }
+    {
+      "gate": "P0A",
+      "requiredStatus": "CLOSED",
+      "currentStatus": "IN_PROGRESS"
+    },
+    {
+      "gate": "P1D",
+      "requiredStatus": "CLOSED",
+      "currentStatus": "READY_FOR_SIGN_OFF"
+    }
   ],
   "proofGroups": [
     "identity-contracts",
@@ -27,8 +35,18 @@
     "capacity-fault"
   ],
   "signoffs": [
-    { "role": "Engineering", "status": "PENDING", "approver": null, "evidence": null },
-    { "role": "Security", "status": "PENDING", "approver": null, "evidence": null }
+    {
+      "role": "Engineering",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    },
+    {
+      "role": "Security",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    }
   ],
   "artifacts": [
     "documents/production-readiness/p1-evidence.schema.json",

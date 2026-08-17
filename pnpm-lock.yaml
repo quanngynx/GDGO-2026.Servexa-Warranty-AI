@@ -459,7 +459,7 @@ importers:
         version: 5.9.3
       vite-tsconfig-paths:
         specifier: ^5.0.0
-        version: 5.1.4(typescript@5.9.3)(vite@6.4.2(@types/node@22.19.17)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.8.3))
+        version: 5.1.4(typescript@5.9.3)(vite@8.1.4(@types/node@22.19.17)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.8.3))
       vitest:
         specifier: ^3.2.6
         version: 3.2.7(@types/debug@4.1.13)(@types/node@22.19.17)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.14.2(@types/node@22.19.17)(typescript@5.9.3))(tsx@4.22.4)(yaml@2.8.3)
@@ -718,6 +718,16 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  packages/enterprise-contracts:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      vitest:
+        specifier: ^3.2.6
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@25.6.0)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.14.2(@types/node@25.6.0)(typescript@6.0.3))(tsx@4.22.4)(yaml@2.8.3)
+
   packages/env:
     dependencies:
       '@t3-oss/env-core':
@@ -742,16 +752,6 @@ importers:
       typescript:
         specifier: ^5
         version: 5.9.3
-
-  packages/enterprise-contracts:
-    dependencies:
-      zod:
-        specifier: 'catalog:'
-        version: 4.4.3
-    devDependencies:
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@25.6.0)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.14.2(@types/node@25.6.0)(typescript@6.0.3))
 
   packages/event-contracts:
     dependencies:
@@ -24342,13 +24342,13 @@ snapshots:
       - tsx
       - yaml
 
-  vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@6.4.2(@types/node@22.19.17)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.8.3)):
+  vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@8.1.4(@types/node@22.19.17)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.8.3)):
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
     optionalDependencies:
-      vite: 6.4.2(@types/node@22.19.17)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.8.3)
+      vite: 8.1.4(@types/node@22.19.17)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -24384,6 +24384,22 @@ snapshots:
       lightningcss: 1.32.0
       tsx: 4.22.4
       yaml: 2.8.3
+
+  vite@8.1.4(@types/node@22.19.17)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.8.3):
+    dependencies:
+      lightningcss: 1.32.0
+      picomatch: 4.0.5
+      postcss: 8.5.19
+      rolldown: 1.1.5
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 22.19.17
+      esbuild: 0.28.0
+      fsevents: 2.3.3
+      jiti: 2.6.1
+      tsx: 4.22.4
+      yaml: 2.8.3
+    optional: true
 
   vite@8.1.4(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(tsx@4.22.4)(yaml@2.8.3):
     dependencies:
