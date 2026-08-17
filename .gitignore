@@ -61,5 +61,13 @@ temp
 .docker-deploy-test*
 .docker-ghcr-smoke.env
 .env.production
-/documents/production-readiness/trust/*
-!/documents/production-readiness/trust/*.pub
+/.p0a/evidence/*.json
+/.p0a/keycloak*.json
+/.p0a/keycloak*.env
+/.p0a/keycloak*.pem
+/.p0a/*.pem
+/.p0a/*.env
+/.p1d/*.pem
+/documents/production-readiness/trust/*.pem
+/.p1d/evidence/*.json
+/.p1d/evidence/*/*.json
