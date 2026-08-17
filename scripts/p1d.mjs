@@ -105,7 +105,7 @@ async function proof() {
   assertEvidenceScopeMatchesGitSubject(repoRoot, sourceScope, subjectCommit);
   const privateKey = await ensureKey();
   const publicKey = createPublicKey(privateKey).export({ type: "spki", format: "pem" });
-  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p1d-evidence-ed25519-public.pem"), "utf8");
+  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p1d-evidence-ed25519.pub"), "utf8");
   if (publicKey !== trustedPublicKey) throw new Error("P1D evidence private key does not match the pinned trust key");
   const evidence = [];
   for (const group of groups) evidence.push(await proveGroup(group));

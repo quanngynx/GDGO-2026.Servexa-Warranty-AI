@@ -125,7 +125,7 @@ async function main() {
     } catch (error) {
       errors.push(error instanceof Error ? error.message : "evidence source is not bound to Git subject");
     }
-    const trustedEvidenceKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519-public.pem"), "utf8");
+    const trustedEvidenceKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519.pub"), "utf8");
     if (signature?.publicKey !== trustedEvidenceKey) errors.push("evidence signer does not match the pinned P0A trust key");
     const recordList = Array.isArray(registry.records) ? registry.records : [];
     const records = new Map(recordList.map((record) => [record.proofId, record]));

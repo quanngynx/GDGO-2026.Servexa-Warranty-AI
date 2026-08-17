@@ -353,7 +353,7 @@ async function writeRegistry(results) {
     .sort(([left], [right]) => left.localeCompare(right)));
   const privateKey = await readFile(evidencePrivateKeyFile, "utf8");
   const publicKey = createPublicKey(privateKey).export({ type: "spki", format: "pem" });
-  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519-public.pem"), "utf8");
+  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519.pub"), "utf8");
   if (publicKey !== trustedPublicKey) throw new Error("P0A evidence private key does not match the pinned trust key");
   const sourceScope = await getP0aEvidenceScope(repoRoot);
   const subjectCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();

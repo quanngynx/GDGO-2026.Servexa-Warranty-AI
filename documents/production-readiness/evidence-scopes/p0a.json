@@ -28,7 +28,7 @@
     "documents/production-readiness/p0a-evidence-registry.template.json",
     "documents/production-readiness/p0a-evidence.schema.json",
     "documents/production-readiness/p0a-gate.json",
-    "documents/production-readiness/trust/p0a-evidence-ed25519-public.pem",
+    "documents/production-readiness/trust/p0a-evidence-ed25519.pub",
     "infra/p0a/**",
     "packages/db/docker/postgres/init-vector.sql",
     "packages/enterprise-contracts/package.json",

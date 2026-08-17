@@ -18,7 +18,7 @@
     "documents/production-readiness/p1-evidence.schema.json",
     "documents/production-readiness/p1d-evidence-registry.template.json",
     "documents/production-readiness/p1d-gate.json",
-    "documents/production-readiness/trust/p1d-evidence-ed25519-public.pem",
+    "documents/production-readiness/trust/p1d-evidence-ed25519.pub",
     "scripts/evidence-attestation.mjs",
     "scripts/evidence-scope.mjs",
     "scripts/p1-source-digest.mjs",

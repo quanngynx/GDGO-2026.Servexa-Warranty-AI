@@ -87,7 +87,7 @@ async function validateP1dEvidence(gate, errors) {
         errors.push("P1D evidence signature is invalid");
       }
     }
-    const trustedEvidenceKey = await readFile(path.join(readinessRoot, "trust", "p1d-evidence-ed25519-public.pem"), "utf8");
+    const trustedEvidenceKey = await readFile(path.join(readinessRoot, "trust", "p1d-evidence-ed25519.pub"), "utf8");
     if (signature?.publicKey !== trustedEvidenceKey) errors.push("P1D evidence signer does not match the pinned trust key");
 
     const records = new Map((registry.evidence ?? []).map((item) => [item.type, item]));
