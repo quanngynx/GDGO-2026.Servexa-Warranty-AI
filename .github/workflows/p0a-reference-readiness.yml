@@ -61,6 +61,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Run all P0A proof groups
+        env:
+          # GitHub-hosted runners may need several minutes for the first
+          # Keycloak realm import; local runs retain the 180-second default.
+          P0A_STARTUP_TIMEOUT_MS: "420000"
         run: pnpm p0a:proof
       - name: Validate ready-for-sign-off conclusion
         run: pnpm p0a:gate
