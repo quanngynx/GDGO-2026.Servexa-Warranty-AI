@@ -14,6 +14,17 @@ const envFile = path.join(runtimeDir, "runtime.env");
 const runtimeRealmFile = path.join(runtimeDir, "keycloak-realm.json");
 const composeBase = ["compose", "--project-name", "servexa-p0a", "--env-file", envFile, "-f", "docker-compose.p0a.yml"];
 const action = process.argv[2] ?? "check";
+const defaultStartupTimeoutMs = 180_000;
+
+function getStartupTimeoutMs() {
+  const configured = process.env.P0A_STARTUP_TIMEOUT_MS;
+  if (!configured) return defaultStartupTimeoutMs;
+  const timeoutMs = Number(configured);
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 30_000 || timeoutMs > 900_000) {
+    throw new Error("P0A_STARTUP_TIMEOUT_MS must be an integer between 30000 and 900000 milliseconds");
+  }
+  return timeoutMs;
+}
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -94,6 +105,22 @@ async function waitFor(url, timeoutMs = 180_000) {
   throw new Error(`Timed out waiting for ${url}: ${lastError instanceof Error ? lastError.message : lastError}`);
 }
 
+async function preserveStartupDiagnostics(error) {
+  const sections = [`startupError: ${error instanceof Error ? error.stack ?? error.message : String(error)}`];
+  for (const [label, args] of [
+    ["compose ps", ["ps", "--all"]],
+    ["keycloak logs", ["logs", "--no-color", "--tail", "200", "keycloak"]],
+  ]) {
+    try {
+      sections.push(`${label}:\n${dockerCompose(args, { capture: true })}`);
+    } catch (diagnosticError) {
+      sections.push(`${label} unavailable: ${diagnosticError instanceof Error ? diagnosticError.message : String(diagnosticError)}`);
+    }
+  }
+  await mkdir(evidenceDir, { recursive: true });
+  await writeFile(path.join(evidenceDir, "startup-diagnostics.txt"), `${sections.join("\n\n")}\n`, { mode: 0o600 });
+}
+
 function execNode(service, source) {
   return dockerCompose(["exec", "-T", service, "node", "--input-type=module", "-e", source], { capture: true });
 }
@@ -101,12 +128,18 @@ function execNode(service, source) {
 async function up() {
   await ensureRuntime();
   dockerCompose(["up", "-d", "--build", "--remove-orphans"]);
-  await Promise.all([
-    waitFor("http://127.0.0.1:18000/_health"),
-    waitFor("http://127.0.0.1:18080/realms/servexa-p0a/.well-known/openid-configuration"),
-    waitFor("http://127.0.0.1:16686/"),
-    waitFor("http://127.0.0.1:19090/-/ready"),
-  ]);
+  const timeoutMs = getStartupTimeoutMs();
+  try {
+    await Promise.all([
+      waitFor("http://127.0.0.1:18000/_health", timeoutMs),
+      waitFor("http://127.0.0.1:18080/realms/servexa-p0a/.well-known/openid-configuration", timeoutMs),
+      waitFor("http://127.0.0.1:16686/", timeoutMs),
+      waitFor("http://127.0.0.1:19090/-/ready", timeoutMs),
+    ]);
+  } catch (error) {
+    await preserveStartupDiagnostics(error);
+    throw error;
+  }
 }
 
 async function proofContracts() {

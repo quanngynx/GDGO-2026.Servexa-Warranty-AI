@@ -178,7 +178,7 @@ services:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nhost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep '200 OK' <&3"]
       interval: 10s
       timeout: 5s
-      retries: 18
+      retries: 36
       start_period: 20s
     networks: [edge, app]
 
