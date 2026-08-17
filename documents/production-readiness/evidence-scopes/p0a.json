@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "scopeId": "P0A_SYNTHETIC_TECHNICAL_READINESS",
+  "scopeVersion": "1.0.0",
+  "includes": [
+    ".docker/web/docker-entrypoint.sh",
+    ".docker/web/nginx.conf",
+    ".docker/web/nginx.conf.template",
+    ".dockerignore",
+    ".gitignore",
+    ".github/workflows/p0a-reference-readiness.yml",
+    ".github/workflows/p1-readiness-closure.yml",
+    "apps/ai-services/Dockerfile.api",
+    "apps/ai-services/Dockerfile.worker",
+    "apps/ai-services/src/configs/base.py",
+    "apps/ai-services/src/core/middlewares/logging.py",
+    "apps/ai-services/src/modules/v1/health/routers.py",
+    "apps/ai-services/src/p0a_worker.py",
+    "apps/p0a-reference-services/**",
+    "apps/server/Dockerfile",
+    "apps/server/src/core/infra/bootstrap.ts",
+    "apps/server/src/middlewares/request-context.middleware.ts",
+    "apps/server/src/types/express.d.ts",
+    "apps/web/Dockerfile",
+    "docker-compose.p0a.yml",
+    "documents/adr/ADR-013-p0a-synthetic-readiness-boundary.md",
+    "documents/production-readiness/P0A_REFERENCE_READINESS.md",
+    "documents/production-readiness/EXTERNAL_TRUST_SIGNOFF.md",
+    "documents/production-readiness/approver-identities.json",
+    "documents/production-readiness/attestation.schema.json",
+    "documents/production-readiness/p0a-evidence-registry.template.json",
+    "documents/production-readiness/p0a-evidence.schema.json",
+    "documents/production-readiness/p0a-gate.json",
+    "infra/p0a/**",
+    "package.json",
+    "packages/db/docker/postgres/init-vector.sql",
+    "packages/enterprise-contracts/package.json",
+    "packages/enterprise-contracts/src/index.test.ts",
+    "packages/enterprise-contracts/src/index.ts",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "scripts/evidence-scope.mjs",
+    "scripts/evidence-attestation.mjs",
+    "scripts/evidence-bundle.mjs",
+    "scripts/github-evidence-attestation.mjs",
+    "scripts/p0a-capacity-profile.test.mjs",
+    "scripts/p0a-source-digest.mjs",
+    "scripts/p0a.mjs",
+    "scripts/validate-p0a-gate.mjs",
+    "scripts/validate-p0a-gate.test.mjs"
+  ],
+  "requiredOwnedPaths": [
+    "docker-compose.p0a.yml",
+    "scripts/p0a.mjs",
+    "scripts/validate-p0a-gate.mjs",
+    "documents/production-readiness/p0a-gate.json"
+  ],
+  "dependencyEdges": [
+    {
+      "from": "docker-compose.p0a.yml",
+      "to": "packages/db/docker/postgres/init-vector.sql",
+      "reference": "./packages/db/docker/postgres/init-vector.sql"
+    },
+    {
+      "from": "scripts/p0a.mjs",
+      "to": "infra/p0a/k6/profile.js",
+      "reference": "../infra/p0a/k6/profile.js"
+    },
+    {
+      "from": "scripts/p0a.mjs",
+      "to": "scripts/p0a-source-digest.mjs",
+      "reference": "./p0a-source-digest.mjs"
+    }
+  ],
+  "dependencyDiscovery": {
+    "sources": [
+      "scripts/p0a.mjs",
+      "scripts/p0a-source-digest.mjs",
+      "scripts/validate-p0a-gate.mjs",
+      "docker-compose.p0a.yml"
+    ]
+  },
+  "jsonNormalization": [
+    {
+      "path": "documents/production-readiness/p0a-gate.json",
+      "replaceTopLevel": {
+        "status": "__STATUS_METADATA__",
+        "updatedAt": "__UPDATED_AT_METADATA__",
+        "nextReferencePhaseAllowed": "__NEXT_PHASE_METADATA__",
+        "signoffs": "__SIGNOFF_METADATA__"
+      }
+    }
+  ]
+}

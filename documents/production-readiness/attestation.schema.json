@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://servexa.invalid/schemas/production-readiness-attestation-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "gate", "role", "approver", "principal", "decision", "reviewedAt", "evidence", "findings", "statement"],
+  "properties": {
+    "schemaVersion": { "const": "2.0" },
+    "gate": { "enum": ["P0A", "P1D", "P1R", "P1P"] },
+    "role": { "enum": ["Engineering", "Security", "Operations", "Product/Business"] },
+    "approver": { "type": "string", "minLength": 1 },
+    "principal": { "type": "string", "minLength": 1 },
+    "decision": { "const": "APPROVED" },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "githubAttestation", "registry", "registrySha256", "bundleSha256", "sourceDigest", "subjectCommit", "subjectTree", "workflowRunId", "workflowRunAttempt"],
+      "properties": {
+        "repository": { "const": "quanngynx/servexa-warranty-ai" },
+        "githubAttestation": { "type": "string", "minLength": 1 },
+        "registry": { "type": "string", "minLength": 1 },
+        "registrySha256": { "pattern": "^[0-9a-f]{64}$" },
+        "bundleSha256": { "pattern": "^[0-9a-f]{64}$" },
+        "sourceDigest": { "pattern": "^sha256:[0-9a-f]{64}$" },
+        "subjectCommit": { "pattern": "^[0-9a-f]{40}$" },
+        "subjectTree": { "pattern": "^[0-9a-f]{40}$" },
+        "workflowRunId": { "type": "string", "minLength": 1 },
+        "workflowRunAttempt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "mediumAccepted", "safetyInvariantViolations"],
+      "properties": {
+        "critical": { "const": 0 },
+        "high": { "const": 0 },
+        "mediumAccepted": { "type": "array" },
+        "safetyInvariantViolations": { "const": 0 }
+      }
+    },
+    "statement": { "type": "string", "minLength": 20 }
+  }
+}

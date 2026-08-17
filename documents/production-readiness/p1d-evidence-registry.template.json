@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0",
+  "gate": "P1D",
+  "state": "READY_FOR_SIGN_OFF",
+  "source": {
+    "commit": "<git-sha>",
+    "tree": "<git-tree>",
+    "digest": "sha256:<source-digest>",
+    "scope": {
+      "id": "P1D_IDENTITY_AUTHORIZATION_DESIGN",
+      "version": "1.0.0",
+      "manifest": "documents/production-readiness/evidence-scopes/p1d.json",
+      "fileCount": 1
+    }
+  },
+  "generatedAt": "<ISO-8601>",
+  "scenarios": { "designConformance": "1.0.0" },
+  "evidence": [
+    { "type": "ARCHITECTURE", "result": "PASS", "artifact": "architecture/results.json", "sha256": "<sha256>", "reason": null }
+  ],
+  "environment": { "toolchainDigest": "sha256:<sha256>", "tools": { "node": "<version>" } },
+  "workflow": { "runId": null, "attempt": null },
+  "provenance": {
+    "mode": "LOCAL_UNATTESTED",
+    "repository": "quanngynx/servexa-warranty-ai",
+    "workflow": null
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "phase": "P1R",
+  "kind": "SYNTHETIC_IDENTITY_AUTHORIZATION_REFERENCE",
+  "status": "BLOCKED",
+  "updatedAt": "2026-08-16",
+  "runtimeImplementationAllowed": false,
+  "productionPhaseAllowed": false,
+  "nextReferencePhaseAllowed": false,
+  "evidenceScope": "documents/production-readiness/evidence-scopes/p1r.json",
+  "evidenceRegistry": ".p1r/evidence/registry.json",
+  "orchestrator": "scripts/p1r.mjs",
+  "prerequisites": [
+    {
+      "gate": "P0A",
+      "requiredStatus": "CLOSED",
+      "currentStatus": "READY_FOR_SIGN_OFF"
+    },
+    {
+      "gate": "P1D",
+      "requiredStatus": "CLOSED",
+      "currentStatus": "READY_FOR_SIGN_OFF"
+    }
+  ],
+  "proofGroups": [
+    "identity-contracts",
+    "oidc-session-security",
+    "scim-revocation",
+    "authorization-negative",
+    "asc-route-isolation",
+    "maker-checker",
+    "break-glass",
+    "crypto-audit-privacy",
+    "migration-rehearsal",
+    "capacity-fault"
+  ],
+  "signoffs": [
+    {
+      "role": "Engineering",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    },
+    {
+      "role": "Security",
+      "status": "PENDING",
+      "approver": null,
+      "evidence": null
+    }
+  ],
+  "artifacts": [
+    "documents/production-readiness/p1-evidence.schema.json",
+    "documents/production-readiness/evidence-scopes/p1r.json",
+    "scripts/p1r-source-digest.mjs",
+    "scripts/p1r.mjs",
+    "scripts/p1r-prerequisites.test.mjs"
+  ]
+}

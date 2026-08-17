@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "phase": "P0A",
+  "kind": "SYNTHETIC_TECHNICAL_READINESS",
+  "status": "READY_FOR_SIGN_OFF",
+  "updatedAt": "2026-08-17",
+  "nextReferencePhaseAllowed": false,
+  "productionPhaseAllowed": false,
+  "evidenceRegistry": ".p0a/evidence/registry.json",
+  "proofGroups": [
+    {
+      "id": "contracts",
+      "label": "Enterprise contracts and conformance"
+    },
+    {
+      "id": "identity",
+      "label": "OIDC, SAML, MFA fixture and SCIM lifecycle"
+    },
+    {
+      "id": "ai-data-handling",
+      "label": "AI redaction and zero-retention reference behavior"
+    },
+    {
+      "id": "topology-network",
+      "label": "Production-like topology and network boundaries"
+    },
+    {
+      "id": "telemetry",
+      "label": "Trace and metrics pipeline"
+    },
+    {
+      "id": "backup-restore",
+      "label": "pgBackRest backup and isolated restore"
+    },
+    {
+      "id": "capacity-harness",
+      "label": "Fixed synthetic baseline and peak x2 harness"
+    }
+  ],
+  "signoffs": [
+    {
+      "role": "Engineering",
+      "status": "PENDING",
+      "approver": "Nguyễn Minh Quân",
+      "evidence": "documents/production-readiness/signoffs/p0a/engineering-nguyen-minh-quan.attestation.json"
+    },
+    {
+      "role": "Security",
+      "status": "PENDING",
+      "approver": "Huynh Hong Hanh",
+      "evidence": "documents/production-readiness/signoffs/p0a/security-huynh-hong-hanh.attestation.json"
+    }
+  ],
+  "artifacts": [
+    "documents/production-readiness/P0A_REFERENCE_READINESS.md",
+    "documents/production-readiness/p0a-evidence.schema.json",
+    "documents/production-readiness/p0a-evidence-registry.template.json",
+    "documents/production-readiness/evidence-scopes/p0a.json",
+    "documents/adr/ADR-013-p0a-synthetic-readiness-boundary.md",
+    "docker-compose.p0a.yml",
+    "scripts/evidence-scope.mjs",
+    "scripts/p0a.mjs",
+    "scripts/validate-p0a-gate.mjs"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "rules": [
+    { "id": "public-runtime", "path": "^(?:/|/health|/ready|/health/deep|/api/p0a/trace-proof|/ai)$", "classification": "PUBLIC" },
+    { "id": "legacy-login", "path": "^/api/v1/identity/auth/(?:login|refresh)$", "classification": "PUBLIC", "disposition": "UNMOUNT_IN_P1R_CUTOVER" },
+    { "id": "authenticated-auth", "path": "^/api/v1/identity/auth/", "excludePath": "^/api/v1/identity/auth/(?:login|refresh)$", "classification": "AUTHENTICATED_NON_ASC" },
+    { "id": "identity-read", "path": "^/api/v1/identity/", "excludePath": "^/api/v1/identity/auth/", "methods": ["GET"], "classification": "SECURITY_PRIVILEGED", "permission": "identity.read", "requireFreshAuth": true },
+    { "id": "identity-manage", "path": "^/api/v1/identity/", "excludePath": "^/api/v1/identity/auth/", "methods": ["POST", "PUT", "PATCH", "DELETE"], "classification": "SECURITY_PRIVILEGED", "permission": "identity.manage", "requireFreshAuth": true, "requireMakerChecker": true, "requireTransactionalRecheck": true },
+    { "id": "asc-read", "path": "^/api/v1/asc-center/", "methods": ["GET"], "classification": "ASC_SCOPED", "permission": "asc_resource.read", "resourceType": "ASC_RESOURCE", "resolver": "asc-bound-resource", "allowedScopes": ["OWN", "ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "asc-decide", "path": "^/api/v1/asc-center/.*/(?:approve|reject)$", "methods": ["POST"], "classification": "ASC_SCOPED", "permission": "asc_resource.decide", "resourceType": "ASC_RESOURCE", "resolver": "asc-bound-resource", "allowedScopes": ["ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "asc-write", "path": "^/api/v1/asc-center/", "methods": ["POST", "PUT", "PATCH", "DELETE"], "excludePath": "/(?:approve|reject)$", "classification": "ASC_SCOPED", "permission": "asc_resource.write", "resourceType": "ASC_RESOURCE", "resolver": "asc-bound-resource", "allowedScopes": ["OWN", "ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "catalog-asc-read", "path": "^/api/v1/product-catalog/accessories/asc-center/", "methods": ["GET"], "classification": "ASC_SCOPED", "permission": "asc_resource.read", "resourceType": "ASC_ACCESSORY", "resolver": "asc-path-parameter", "allowedScopes": ["ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "catalog-asc-write", "path": "^/api/v1/product-catalog/accessories/asc-center/", "methods": ["POST", "PUT", "PATCH", "DELETE"], "classification": "ASC_SCOPED", "permission": "asc_resource.write", "resourceType": "ASC_ACCESSORY", "resolver": "asc-path-parameter", "allowedScopes": ["ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "hitl-read", "path": "^/api/v1/ai/hitl/requests(?:/:id)?$", "methods": ["GET"], "classification": "ASC_SCOPED", "permission": "hitl.read", "resourceType": "HITL_REQUEST", "resolver": "hitl-request-asc", "allowedScopes": ["OWN", "ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "hitl-create", "path": "^/api/v1/ai/hitl/requests$", "methods": ["POST"], "classification": "ASC_SCOPED", "permission": "hitl.create", "resourceType": "HITL_REQUEST", "resolver": "hitl-request-input-asc", "allowedScopes": ["OWN", "ASSIGNED_ASC"] },
+    { "id": "hitl-decide", "path": "^/api/v1/ai/hitl/requests/:id/decision$", "methods": ["POST"], "classification": "ASC_SCOPED", "permission": "hitl.decide", "resourceType": "HITL_REQUEST", "resolver": "hitl-request-asc", "allowedScopes": ["ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "hitl-resume", "path": "^/api/v1/ai/hitl/requests/:id/resume$", "methods": ["POST"], "classification": "ASC_SCOPED", "permission": "hitl.resume", "resourceType": "HITL_REQUEST", "resolver": "hitl-request-asc", "allowedScopes": ["ASSIGNED_ASC", "DESCENDANT_ASC", "REGION", "COMPANY"] },
+    { "id": "authenticated-v1", "path": "^/api/v1/(?:human-resources|product-catalog|purchase-channels|ai|document)/", "excludePath": "^(?:/api/v1/product-catalog/accessories/asc-center/|/api/v1/ai/hitl/)", "classification": "AUTHENTICATED_NON_ASC" },
+    { "id": "authenticated-copilot", "path": "^/api/copilotkit$", "classification": "AUTHENTICATED_NON_ASC" }
+  ]
+}

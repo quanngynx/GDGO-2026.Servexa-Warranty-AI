@@ -70,6 +70,7 @@ COPY packages/ai-contracts/package.json packages/ai-contracts/
 COPY packages/config/package.json packages/config/
 COPY packages/db/package.json packages/db/
 COPY packages/env/package.json packages/env/
+COPY packages/enterprise-contracts/package.json packages/enterprise-contracts/
 COPY packages/event-contracts/package.json packages/event-contracts/
 COPY packages/infra/package.json packages/infra/
 COPY packages/proto/package.json packages/proto/
@@ -99,6 +100,7 @@ COPY apps/web apps/web
 COPY packages/ai-contracts packages/ai-contracts
 COPY packages/config packages/config
 COPY packages/env packages/env
+COPY packages/enterprise-contracts packages/enterprise-contracts
 COPY packages/ui packages/ui
 
 # Re-create symlinks (COPY overwrites the node_modules directory structure)
@@ -128,7 +130,8 @@ RUN rm -f /etc/nginx/conf.d/default.conf
 COPY .docker/web/nginx.conf.template /etc/nginx/nginx.conf.template
 COPY .docker/web/nginx.conf          /etc/nginx/nginx.conf
 COPY .docker/web/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN sed -i 's/\r$//' /docker-entrypoint.sh \
+  && chmod +x /docker-entrypoint.sh
 
 # For read_only + tmpfs mode (production compose), the entrypoint copies
 # configs from this read-only source directory to /etc/nginx at startup.

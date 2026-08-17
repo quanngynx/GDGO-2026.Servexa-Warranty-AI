@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "phase": "P1P",
+  "kind": "ENTERPRISE_IDENTITY_AUTHORIZATION_PRODUCTION",
+  "status": "BLOCKED",
+  "updatedAt": "2026-08-16",
+  "runtimeImplementationAllowed": false,
+  "productionPhaseAllowed": false,
+  "nextProductionPhaseAllowed": false,
+  "prerequisites": [
+    { "gate": "P0B", "requiredStatus": "CLOSED", "currentStatus": "BLOCKED" },
+    { "gate": "P1D", "requiredStatus": "CLOSED", "currentStatus": "READY_FOR_SIGN_OFF" },
+    { "gate": "P1R", "requiredStatus": "CLOSED", "currentStatus": "BLOCKED" }
+  ],
+  "requiredEnterpriseEvidence": [
+    "approved-enterprise-idp-or-broker",
+    "production-scim-contract",
+    "production-kms",
+    "production-asc-hierarchy-connector",
+    "enterprise-retention-matrix",
+    "production-migration-rehearsal"
+  ],
+  "signoffs": [
+    { "role": "Engineering", "status": "PENDING", "approver": null, "evidence": null },
+    { "role": "Security", "status": "PENDING", "approver": null, "evidence": null },
+    { "role": "Operations", "status": "PENDING", "approver": null, "evidence": null },
+    { "role": "Product/Business", "status": "PENDING", "approver": null, "evidence": null }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "realm": "servexa-p0a",
+  "enabled": true,
+  "displayName": "Servexa P0A Synthetic Realm",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA256",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "roles": {
+    "realm": [
+      { "name": "asc_operator" },
+      { "name": "warranty_manager" },
+      { "name": "security_auditor" }
+    ]
+  },
+  "groups": [
+    { "name": "ASC-HCM-01", "attributes": { "asc_id": ["ASC-HCM-01"] } },
+    { "name": "ASC-HN-01", "attributes": { "asc_id": ["ASC-HN-01"] } }
+  ],
+  "clients": [
+    {
+      "clientId": "servexa-p0a-web",
+      "name": "Servexa P0A OIDC PKCE",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://127.0.0.1:8080/*"],
+      "webOrigins": ["http://127.0.0.1:8080"],
+      "attributes": { "pkce.code.challenge.method": "S256" }
+      ,"protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": { "full.path": "false", "id.token.claim": "true", "access.token.claim": "true", "claim.name": "groups", "userinfo.token.claim": "true" }
+        },
+        {
+          "name": "asc_ids",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": { "user.attribute": "asc_ids", "multivalued": "true", "id.token.claim": "true", "access.token.claim": "true", "claim.name": "asc_ids", "jsonType.label": "String", "userinfo.token.claim": "true" }
+        }
+      ]
+    },
+    {
+      "clientId": "servexa-p0a-saml",
+      "name": "Servexa P0A SAML Conformance",
+      "protocol": "saml",
+      "enabled": true,
+      "redirectUris": ["http://127.0.0.1:8080/saml/*"],
+      "attributes": {
+        "saml.assertion.signature": "true",
+        "saml.server.signature": "true",
+        "saml.client.signature": "false",
+        "saml.force.post.binding": "true"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "operator.p0a",
+      "email": "operator@example.invalid",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Synthetic",
+      "lastName": "Operator",
+      "groups": ["/ASC-HCM-01"],
+      "realmRoles": ["asc_operator"],
+      "attributes": { "asc_ids": ["ASC-HCM-01"] },
+      "credentials": [{ "type": "password", "value": "__P0A_OPERATOR_PASSWORD__", "temporary": false }]
+    },
+    {
+      "username": "manager.p0a",
+      "email": "manager@example.invalid",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Synthetic",
+      "lastName": "Manager",
+      "groups": ["/ASC-HCM-01"],
+      "realmRoles": ["warranty_manager"],
+      "attributes": { "asc_ids": ["ASC-HCM-01"] },
+      "requiredActions": ["CONFIGURE_TOTP"],
+      "credentials": [{ "type": "password", "value": "__P0A_MANAGER_PASSWORD__", "temporary": false }]
+    },
+    {
+      "username": "security.p0a",
+      "email": "security@example.invalid",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Synthetic",
+      "lastName": "Security",
+      "realmRoles": ["security_auditor"],
+      "credentials": [{ "type": "password", "value": "__P0A_SECURITY_PASSWORD__", "temporary": false }]
+    }
+  ]
+}

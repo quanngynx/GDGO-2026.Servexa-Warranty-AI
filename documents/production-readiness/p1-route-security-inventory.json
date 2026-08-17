@@ -1,0 +1,4877 @@
+{
+  "schemaVersion": "1.0",
+  "generatedFrom": "TYPESCRIPT_AST_WITH_EXPLICIT_FACTORY_CONTRACTS",
+  "routeCount": 203,
+  "coverage": {
+    "classified": 203,
+    "percent": 100
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 200,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/ai",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 214,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/copilotkit",
+      "source": "apps/server/src/modules/copilotkit/copilot-runtime.router.ts",
+      "line": 56,
+      "sourceKind": "EXPLICIT_FACTORY_ROUTE",
+      "owningModule": "copilotkit",
+      "policy": {
+        "policyId": "authenticated-copilot",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/p0a/trace-proof",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 152,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/agents/coordinate",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 41,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/hitl/requests",
+      "source": "apps/server/src/modules/v1/ai/router/hitl.route.ts",
+      "line": 21,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "hitl-read",
+        "classification": "ASC_SCOPED",
+        "permission": "hitl.read",
+        "resourceType": "HITL_REQUEST",
+        "resolver": "hitl-request-asc",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/hitl/requests",
+      "source": "apps/server/src/modules/v1/ai/router/hitl.route.ts",
+      "line": 16,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "hitl-create",
+        "classification": "ASC_SCOPED",
+        "permission": "hitl.create",
+        "resourceType": "HITL_REQUEST",
+        "resolver": "hitl-request-input-asc",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/hitl/requests/:id",
+      "source": "apps/server/src/modules/v1/ai/router/hitl.route.ts",
+      "line": 26,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "hitl-read",
+        "classification": "ASC_SCOPED",
+        "permission": "hitl.read",
+        "resourceType": "HITL_REQUEST",
+        "resolver": "hitl-request-asc",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/hitl/requests/:id/decision",
+      "source": "apps/server/src/modules/v1/ai/router/hitl.route.ts",
+      "line": 31,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "hitl-decide",
+        "classification": "ASC_SCOPED",
+        "permission": "hitl.decide",
+        "resourceType": "HITL_REQUEST",
+        "resolver": "hitl-request-asc",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/hitl/requests/:id/resume",
+      "source": "apps/server/src/modules/v1/ai/router/hitl.route.ts",
+      "line": 36,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "hitl-resume",
+        "classification": "ASC_SCOPED",
+        "permission": "hitl.resume",
+        "resourceType": "HITL_REQUEST",
+        "resolver": "hitl-request-asc",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/jobs",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 17,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/jobs/:jobId",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 18,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/jobs/replay",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 19,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/knowledge/ingest-document",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 26,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/knowledge/ingest-text",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 21,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/knowledge/internal-ingest",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 14,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/knowledge/reindex",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 31,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/knowledge/search",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 36,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/ops/summary",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 43,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/query",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 16,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/reasoning-traces",
+      "source": "apps/server/src/modules/v1/ai/router/reasoning-trace.route.ts",
+      "line": 14,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/reasoning-traces/:traceId",
+      "source": "apps/server/src/modules/v1/ai/router/reasoning-trace.route.ts",
+      "line": 13,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/reasoning-traces/:traceId/events",
+      "source": "apps/server/src/modules/v1/ai/router/reasoning-trace.route.ts",
+      "line": 12,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ai/tools",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 39,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/tools/invoke",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 40,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ai/workflows/step",
+      "source": "apps/server/src/modules/v1/ai/router/route.ts",
+      "line": 38,
+      "owningModule": "ai",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/accessory-requests",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 19,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 21,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/asc-center/accessory-requests/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 29,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/accessory-requests/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 20,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/asc-center/accessory-requests/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 27,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests/:id/approve",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 24,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-decide",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.decide",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests/:id/items",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 22,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/asc-center/accessory-requests/:id/items/:itemId",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 30,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/asc-center/accessory-requests/:id/items/:itemId",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 28,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests/:id/recall",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 26,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests/:id/reject",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 25,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-decide",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.decide",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/accessory-requests/:id/submit",
+      "source": "apps/server/src/modules/v1/asc-center/router/accessory-request.route.ts",
+      "line": 23,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-centers",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 25,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/asc-centers",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 27,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/asc-center/asc-centers/:ascCenterId",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 30,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-centers/:ascCenterId",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 26,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/asc-center/asc-centers/:ascCenterId",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 29,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/asc-center/asc-centers/:ascCenterId",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-center.route.ts",
+      "line": 28,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/asc-stocktakes",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-stocktake.route.ts",
+      "line": 23,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-stocktakes/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-stocktake.route.ts",
+      "line": 22,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-stocktake.route.ts",
+      "line": 21,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/accessories",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-stocktake.route.ts",
+      "line": 19,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/asc-stocktakes/asc-centers/:ascCenterId/stock-levels",
+      "source": "apps/server/src/modules/v1/asc-center/router/asc-stocktake.route.ts",
+      "line": 20,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/payments",
+      "source": "apps/server/src/modules/v1/asc-center/router/payment.route.ts",
+      "line": 34,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/payments/:id/mark-paid/:paymentPeriodId",
+      "source": "apps/server/src/modules/v1/asc-center/router/payment.route.ts",
+      "line": 41,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/payments/payment-periods",
+      "source": "apps/server/src/modules/v1/asc-center/router/payment.route.ts",
+      "line": 27,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 67,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/repair-cases",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 75,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 84,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/asc-center/repair-cases/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 156,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/asc-center/repair-cases/:id",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 148,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/repair-cases/:id/accessories",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 128,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/asc-center/repair-cases/:id/accessories/:accessoryRowId",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 164,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id/accessory-requests",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 106,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id/field-history",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 99,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id/images",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 113,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/asc-center/repair-cases/:id/images",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 135,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/asc-center/repair-cases/:id/images/:imageId",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 176,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id/images/:imageId/download",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 120,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/:id/status-history",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 92,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/exports/exchange-in-progress",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 43,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/exports/fixing",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 29,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/exports/repeated-huyphieu",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 54,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/exports/waiting-parts",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 36,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/asc-center/repair-cases/waiting-accessories",
+      "source": "apps/server/src/modules/v1/asc-center/router/repair-case.route.ts",
+      "line": 60,
+      "owningModule": "asc-center",
+      "policy": {
+        "policyId": "asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_RESOURCE",
+        "resolver": "asc-bound-resource",
+        "allowedScopes": [
+          "OWN",
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/document/documents",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 27,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/document/documents",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 30,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/document/documents/:documentId",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 33,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/document/documents/:documentId",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 29,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/document/documents/:documentId",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 32,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/document/documents/:documentId",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 31,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/document/documents/:documentId/versions",
+      "source": "apps/server/src/modules/v1/document/router/document.route.ts",
+      "line": 28,
+      "owningModule": "document",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/customers",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 24,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/human-resources/customers",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 38,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/human-resources/customers/:customerId",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 59,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/customers/:customerId",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 31,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/human-resources/customers/:customerId",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 52,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/human-resources/customers/:customerId",
+      "source": "apps/server/src/modules/v1/human-resources/router/customer.route.ts",
+      "line": 45,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/employees",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 24,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/human-resources/employees",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 38,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/human-resources/employees/:employeeId",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 66,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/employees/:employeeId",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 31,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/human-resources/employees/:employeeId",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 52,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/human-resources/employees/:employeeId",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 45,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/human-resources/employees/:employeeId/link-user",
+      "source": "apps/server/src/modules/v1/human-resources/router/employee.route.ts",
+      "line": 59,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/technicians",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 24,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/human-resources/technicians",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 38,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/human-resources/technicians/:technicianProfileId",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 59,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/human-resources/technicians/:technicianProfileId",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 31,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/human-resources/technicians/:technicianProfileId",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 52,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/human-resources/technicians/:technicianProfileId",
+      "source": "apps/server/src/modules/v1/human-resources/router/technician.route.ts",
+      "line": 45,
+      "owningModule": "human-resources",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/auth/login",
+      "source": "apps/server/src/modules/v1/identity/router/auth.route.ts",
+      "line": 17,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "legacy-login",
+        "classification": "PUBLIC",
+        "disposition": "UNMOUNT_IN_P1R_CUTOVER"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "UNMOUNT_IN_P1R_CUTOVER",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/auth/logout",
+      "source": "apps/server/src/modules/v1/identity/router/auth.route.ts",
+      "line": 24,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "authenticated-auth",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/auth/me",
+      "source": "apps/server/src/modules/v1/identity/router/auth.route.ts",
+      "line": 31,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "authenticated-auth",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/auth/refresh",
+      "source": "apps/server/src/modules/v1/identity/router/auth.route.ts",
+      "line": 38,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "legacy-login",
+        "classification": "PUBLIC",
+        "disposition": "UNMOUNT_IN_P1R_CUTOVER"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "UNMOUNT_IN_P1R_CUTOVER",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/permissions",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 23,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/permissions",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 33,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/identity/permissions/:permissionId",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 43,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/permissions/:permissionId",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 28,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/identity/permissions/:permissionId",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 38,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/permissions/check",
+      "source": "apps/server/src/modules/v1/identity/router/perrmission.route.ts",
+      "line": 18,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/roles",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 17,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/roles",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 42,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/roles/:roleId",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 27,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/identity/roles/:roleId/parent/:parentRoleId",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 52,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/roles/:roleId/parent/:parentRoleId",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 47,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/roles/children/:roleId",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 37,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/roles/parent/:roleId",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 32,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/roles/tree",
+      "source": "apps/server/src/modules/v1/identity/router/role.route.ts",
+      "line": 22,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/users",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 17,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/identity/users",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 23,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/identity/users/:userId",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 33,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/identity/users/:userId",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 18,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-read",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.read",
+        "requireFreshAuth": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/identity/users/:userId",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 28,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/identity/users/:userId/restore",
+      "source": "apps/server/src/modules/v1/identity/router/user.route.ts",
+      "line": 38,
+      "owningModule": "identity",
+      "policy": {
+        "policyId": "identity-manage",
+        "classification": "SECURITY_PRIVILEGED",
+        "permission": "identity.manage",
+        "requireFreshAuth": true,
+        "requireMakerChecker": true,
+        "requireTransactionalRecheck": true
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 41,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 83,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 146,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 62,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 125,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 104,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/accessories/asc-center/:ascCenterId/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 55,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "catalog-asc-read",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.read",
+        "resourceType": "ASC_ACCESSORY",
+        "resolver": "asc-path-parameter",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/accessories/asc-center/:ascCenterId/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 76,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "catalog-asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_ACCESSORY",
+        "resolver": "asc-path-parameter",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/accessories/asc-center/:ascCenterId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 139,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "catalog-asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_ACCESSORY",
+        "resolver": "asc-path-parameter",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/accessories/asc-center/:ascCenterId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 118,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "catalog-asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_ACCESSORY",
+        "resolver": "asc-path-parameter",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/accessories/asc-center/:ascCenterId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 97,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "catalog-asc-write",
+        "classification": "ASC_SCOPED",
+        "permission": "asc_resource.write",
+        "resourceType": "ASC_ACCESSORY",
+        "resolver": "asc-path-parameter",
+        "allowedScopes": [
+          "ASSIGNED_ASC",
+          "DESCENDANT_ASC",
+          "REGION",
+          "COMPANY"
+        ]
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": true,
+        "failurePolicy": "DENY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/accessories/total-warehouse/:totalWarehouseId/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 48,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/accessories/total-warehouse/:totalWarehouseId/accessories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 69,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/accessories/total-warehouse/:totalWarehouseId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 132,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/accessories/total-warehouse/:totalWarehouseId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 111,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/accessories/total-warehouse/:totalWarehouseId/accessories/:accessoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/accessory.route.ts",
+      "line": 90,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/categories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 24,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/categories",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 38,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/categories/:categoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 59,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/categories/:categoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 31,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/categories/:categoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 52,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/categories/:categoryId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/category.route.ts",
+      "line": 45,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/error-phenomena",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 39,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/error-phenomena",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 56,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/error-phenomena/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 67,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/error-phenomena/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 40,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/error-phenomena/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 62,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/error-phenomena/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 57,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/error-phenomena/export",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 34,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/error-phenomena/import-link",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 51,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/error-phenomena/import",
+      "source": "apps/server/src/modules/v1/product-catalog/router/error-phenomenon.route.ts",
+      "line": 45,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 39,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/models",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 108,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/models/:modelId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 140,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models/:modelId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 116,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/models/:modelId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 132,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/models/:modelId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 124,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/models/:modelId/restore",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 147,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models/export",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 47,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models/exports",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 73,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/models/exports",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 66,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models/exports/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 80,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/models/exports/:id/cancel",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 87,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/models/import-template",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 55,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/models/import",
+      "source": "apps/server/src/modules/v1/product-catalog/router/model.route.ts",
+      "line": 95,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/solutions",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 43,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/solutions",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 80,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/solutions/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 101,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/solutions/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 50,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/solutions/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 94,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/solutions/:id",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 87,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/solutions/export",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 36,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/solutions/import-link",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 69,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/solutions/import",
+      "source": "apps/server/src/modules/v1/product-catalog/router/solution.route.ts",
+      "line": 57,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/total-warehouses",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 28,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/total-warehouses",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 46,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/total-warehouses/:totalWarehouseId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 75,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/total-warehouses/:totalWarehouseId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 35,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/total-warehouses/:totalWarehouseId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 64,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/total-warehouses/:totalWarehouseId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/total-warehouse.route.ts",
+      "line": 53,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/warranty-policies",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 34,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/product-catalog/warranty-policies",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 63,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/product-catalog/warranty-policies/:warrantyPolicyId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 92,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/warranty-policies/:warrantyPolicyId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 52,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/product-catalog/warranty-policies/:warrantyPolicyId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 81,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/product-catalog/warranty-policies/:warrantyPolicyId",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 70,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/product-catalog/warranty-policies/resolve",
+      "source": "apps/server/src/modules/v1/product-catalog/router/warranty-policy.route.ts",
+      "line": 41,
+      "owningModule": "product-catalog",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/purchase-channels/purchase-location-groups",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 23,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/purchase-channels/purchase-location-groups",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 37,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/purchase-channels/purchase-location-groups/:groupId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 58,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/purchase-channels/purchase-location-groups/:groupId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 30,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/purchase-channels/purchase-location-groups/:groupId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 51,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/purchase-channels/purchase-location-groups/:groupId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location-group.route.ts",
+      "line": 44,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/purchase-channels/purchase-locations",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 25,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/purchase-channels/purchase-locations",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 39,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/purchase-channels/purchase-locations/:locationId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 60,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/purchase-channels/purchase-locations/:locationId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 32,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/purchase-channels/purchase-locations/:locationId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 53,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/purchase-channels/purchase-locations/:locationId",
+      "source": "apps/server/src/modules/v1/purchase-channels/router/purchase-location.route.ts",
+      "line": 46,
+      "owningModule": "purchase-channels",
+      "policy": {
+        "policyId": "authenticated-v1",
+        "classification": "AUTHENTICATED_NON_ASC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "P1R_PENDING",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 124,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/health/deep",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 173,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ready",
+      "source": "apps/server/src/core/infra/bootstrap.ts",
+      "line": 128,
+      "owningModule": "core-infrastructure",
+      "policy": {
+        "policyId": "public-runtime",
+        "classification": "PUBLIC"
+      },
+      "audit": {
+        "denialEvent": "authorization.denied",
+        "decisionDigestRequired": false,
+        "failurePolicy": "DEGRADED_BY_POLICY"
+      },
+      "migration": {
+        "owner": "Engineering",
+        "status": "EXPLICIT_ALLOWLIST",
+        "negativeTestReference": "P1R_NEGATIVE_AUTHORIZATION_SUITE"
+      }
+    }
+  ]
+}

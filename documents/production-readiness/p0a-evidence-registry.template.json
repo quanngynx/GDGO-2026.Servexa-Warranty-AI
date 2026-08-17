@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "subjectCommit": "0000000000000000000000000000000000000000",
+  "subjectTree": "0000000000000000000000000000000000000000",
+  "sourceDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "sourceScope": {
+    "id": "P0A_SYNTHETIC_TECHNICAL_READINESS",
+    "version": "1.0.0",
+    "manifest": "documents/production-readiness/evidence-scopes/p0a.json",
+    "fileCount": 1
+  },
+  "workflowRunId": null,
+  "workflowRunAttempt": null,
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "scenarioVersion": "p0a-v2",
+  "provenance": {
+    "mode": "LOCAL_UNATTESTED",
+    "repository": "quanngynx/servexa-warranty-ai",
+    "workflow": null
+  },
+  "records": []
+}

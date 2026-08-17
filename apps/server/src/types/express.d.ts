@@ -20,6 +20,7 @@ declare global {
 
         // For logger
         requestId: string
+        traceparent?: string
         startTime: number
 
         // For api key

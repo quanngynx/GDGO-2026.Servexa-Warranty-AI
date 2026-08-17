@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://servexa.invalid/schemas/p1-evidence-v1.json",
+  "title": "Servexa P1 track evidence registry",
+  "type": "object",
+  "required": ["schemaVersion", "gate", "state", "source", "generatedAt", "scenarios", "evidence", "environment", "workflow", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "gate": { "enum": ["P1D", "P1R", "P1P"] },
+    "state": { "enum": ["IN_PROGRESS", "READY_FOR_SIGN_OFF", "CLOSED"] },
+    "source": {
+      "type": "object",
+      "required": ["commit", "tree", "digest", "scope"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "tree": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "scope": {
+          "type": "object",
+          "required": ["id", "version", "manifest", "fileCount"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 },
+            "manifest": { "type": "string", "minLength": 1 },
+            "fileCount": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "scenarios": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "result", "artifact", "sha256"],
+        "properties": {
+          "type": { "type": "string", "minLength": 1 },
+          "result": { "enum": ["PASS", "FAIL"] },
+          "reason": { "type": ["string", "null"] },
+          "artifact": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["toolchainDigest", "tools"],
+      "properties": {
+        "toolchainDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "tools": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["runId", "attempt"],
+      "properties": {
+        "runId": { "type": ["string", "null"] },
+        "attempt": { "type": ["string", "null"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["mode", "repository", "workflow"],
+      "properties": {
+        "mode": { "enum": ["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"] },
+        "repository": { "const": "quanngynx/servexa-warranty-ai" },
+        "workflow": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -15,7 +15,7 @@ SRC_DIR="/etc/nginx-src"
 
 # Copy base Nginx files if the source directory exists (read_only + tmpfs mode)
 # Use cp -r (not -a) since we run as nginx user and can't preserve root ownership
-if [ -d "$SRC_DIR" ]; then
+if [ -d "$SRC_DIR" ] && [ ! -f /etc/nginx/nginx.conf.template ]; then
   cp -r "$SRC_DIR"/. /etc/nginx/
 fi
 

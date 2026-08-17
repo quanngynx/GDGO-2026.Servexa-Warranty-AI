@@ -67,6 +67,10 @@ class Settings(BaseSettings):
     otel_enabled: bool = Field(default=False)
     otel_service_name: str = Field(default='ai-agent-code')
     trace_sample_ratio: float = Field(default=1.0)
+    p0a_dependency_urls: str = Field(default='')
+    p0a_enabled: bool = Field(default=False)
+    p0a_ai_reference_url: str = Field(default='')
+    otel_exporter_otlp_endpoint: str = Field(default='')
 
     @property
     def database_url(self) -> str:

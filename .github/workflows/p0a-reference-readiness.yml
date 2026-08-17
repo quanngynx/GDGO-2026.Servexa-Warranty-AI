@@ -1,0 +1,85 @@
+name: P0A Reference Readiness
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+on:
+  pull_request:
+    paths:
+      - "apps/p0a-reference-services/**"
+      - "packages/enterprise-contracts/**"
+      - "infra/p0a/**"
+      - "docker-compose.p0a.yml"
+      - "scripts/p0a*.mjs"
+      - "scripts/evidence-*.mjs"
+      - "scripts/validate-p0a-gate.mjs"
+      - "documents/production-readiness/p0a-*"
+      - "documents/production-readiness/approver-identities.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  push:
+    branches: [dev]
+  schedule:
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  lightweight:
+    name: Contracts, reference services and governance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm --filter @servexa-warranty-ai/enterprise-contracts test
+      - run: pnpm --filter p0a-reference-services test
+      - run: pnpm p0a:test
+      - run: pnpm p0a:check
+      - run: docker compose --project-name servexa-p0a --env-file .p0a/runtime.env -f docker-compose.p0a.yml config --quiet
+
+  full-proof:
+    name: Full synthetic proof
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Run all P0A proof groups
+        run: pnpm p0a:proof
+      - name: Validate ready-for-sign-off conclusion
+        run: pnpm p0a:gate
+      - name: Build deterministic evidence bundle
+        run: pnpm p0a:bundle
+      - name: Attest evidence bundle with GitHub OIDC
+        uses: actions/attest@v4
+        with:
+          subject-path: .p0a/evidence/bundle.json
+      - name: Preserve raw proof evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0a-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: .p0a/evidence/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Tear down isolated P0A topology
+        if: always()
+        env:
+          P0A_REMOVE_VOLUMES: "true"
+        run: pnpm p0a:down

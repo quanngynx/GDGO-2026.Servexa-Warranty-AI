@@ -18,6 +18,16 @@
 apps/fumadocs
 !apps/fumadocs/package.json
 apps/ai-services
+# P0A builds the FastAPI image from the repository root. Re-include its runtime
+# sources while the server/web Dockerfiles still copy only their explicit paths.
+!apps/ai-services/
+!apps/ai-services/**
+apps/ai-services/.venv
+apps/ai-services/.pytest_cache
+apps/ai-services/**/__pycache__
+apps/ai-services/tests
+apps/ai-services/logs
+apps/ai-services/.env
 
 # Docs, tests, and local tooling
 documents
