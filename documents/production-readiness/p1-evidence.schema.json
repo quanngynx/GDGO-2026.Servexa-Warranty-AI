@@ -3,7 +3,7 @@
   "$id": "https://servexa.invalid/schemas/p1-evidence-v1.json",
   "title": "Servexa P1 track evidence registry",
   "type": "object",
-  "required": ["schemaVersion", "gate", "state", "source", "generatedAt", "scenarios", "evidence", "environment", "workflow", "manifestSignature"],
+  "required": ["schemaVersion", "gate", "state", "source", "generatedAt", "scenarios", "evidence", "environment", "workflow", "provenance"],
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "gate": { "enum": ["P1D", "P1R", "P1P"] },
@@ -63,14 +63,15 @@
         "attempt": { "type": ["string", "null"] }
       }
     },
-    "manifestSignature": {
+    "provenance": {
       "type": "object",
-      "required": ["algorithm", "publicKey", "value"],
+      "required": ["mode", "repository", "workflow"],
       "properties": {
-        "algorithm": { "const": "Ed25519" },
-        "publicKey": { "type": "string", "minLength": 1 },
-        "value": { "type": "string", "minLength": 1 }
-      }
+        "mode": { "enum": ["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"] },
+        "repository": { "const": "quanngynx/servexa-warranty-ai" },
+        "workflow": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
     }
   }
 }

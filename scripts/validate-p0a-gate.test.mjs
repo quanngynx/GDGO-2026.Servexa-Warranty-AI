@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createHash, generateKeyPairSync, sign } from "node:crypto";
+import { createHash } from "node:crypto";
 import { copyFile, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -26,6 +26,8 @@ async function fixture({ evidence = true } = {}) {
   await copyFile(path.join(sourceRoot, "scripts", "validate-p0a-gate.mjs"), path.join(root, "scripts", "validate-p0a-gate.mjs"));
   await copyFile(path.join(sourceRoot, "scripts", "p0a-source-digest.mjs"), path.join(root, "scripts", "p0a-source-digest.mjs"));
   await copyFile(path.join(sourceRoot, "scripts", "evidence-scope.mjs"), path.join(root, "scripts", "evidence-scope.mjs"));
+  await copyFile(path.join(sourceRoot, "scripts", "evidence-attestation.mjs"), path.join(root, "scripts", "evidence-attestation.mjs"));
+  await copyFile(path.join(sourceRoot, "scripts", "github-evidence-attestation.mjs"), path.join(root, "scripts", "github-evidence-attestation.mjs"));
   await writeFile(path.join(root, ".gitignore"), ".p0a/\n", "utf8");
   await writeFile(path.join(root, "proof-definition.txt"), "proof-v1\n", "utf8");
   const gate = {
@@ -75,7 +77,6 @@ async function fixture({ evidence = true } = {}) {
       await writeFile(artifactPath, `${proofId}: passed\n`, "utf8");
       records.push({ proofId, status: "PASSED", reason: null, toolVersions: { node: process.version }, imageVersions: { synthetic: "sha256:fixture" }, artifacts: [{ path: `.p0a/evidence/${proofId}.log`, sha256: createHash("sha256").update(await readFile(artifactPath)).digest("hex") }] });
     }
-    const { privateKey, publicKey } = generateKeyPairSync("ed25519");
     const sourceScope = await getP0aEvidenceScope(root);
     const registry = {
       schemaVersion: 1, subjectCommit: git(root, "rev-parse", "HEAD"), subjectTree: git(root, "rev-parse", "HEAD^{tree}"),
@@ -83,10 +84,7 @@ async function fixture({ evidence = true } = {}) {
       sourceScope: { id: sourceScope.scopeId, version: sourceScope.scopeVersion, manifest: sourceScope.manifest, fileCount: sourceScope.files.length },
       workflowRunId: null, workflowRunAttempt: null,
       generatedAt: new Date().toISOString(), scenarioVersion: "p0a-v2", records,
-    };
-    registry.manifestSignature = {
-      algorithm: "Ed25519", publicKey: publicKey.export({ type: "spki", format: "pem" }),
-      value: sign(null, Buffer.from(JSON.stringify(registry)), privateKey).toString("base64"),
+      provenance: { mode: "LOCAL_UNATTESTED", repository: "quanngynx/servexa-warranty-ai", workflow: null },
     };
     await writeJson(path.join(evidenceDir, "registry.json"), registry);
   }
@@ -99,7 +97,8 @@ function validate(root, requireReady = true) {
 
 test("accepts later-phase commits outside ownership and rejects owned-source drift", async () => {
   const { root } = await fixture();
-  assert.equal(validate(root).status, 0);
+  const initial = validate(root);
+  assert.equal(initial.status, 0, initial.stderr);
   await mkdir(path.join(root, "later-phase"), { recursive: true });
   await writeFile(path.join(root, "later-phase", "runtime.ts"), "export const later = true;\n", "utf8");
   git(root, "add", ".");
@@ -121,18 +120,18 @@ test("rejects an explicit dependency edge whose target is outside ownership", as
   await assert.rejects(() => computeP0aSourceDigest(root), /dependency edge is outside evidence scope/);
 });
 
-test("rejects artifact tampering and an invalid manifest signature", async () => {
+test("rejects artifact tampering and invalid provenance", async () => {
   const { root } = await fixture();
   await writeFile(path.join(root, ".p0a", "evidence", "contracts.log"), "tampered\n", "utf8");
   assert.match(validate(root).stderr, /artifact checksum mismatch/);
   const registryPath = path.join(root, ".p0a", "evidence", "registry.json");
   const registry = JSON.parse(await readFile(registryPath, "utf8"));
-  registry.generatedAt = "2026-08-16T00:00:00.000Z";
+  registry.provenance.repository = "attacker/example";
   await writeJson(registryPath, registry);
-  assert.match(validate(root).stderr, /manifest signature is invalid/);
+  assert.match(validate(root).stderr, /provenance repository is invalid/);
 });
 
-test("allows only gate metadata and sign-off documents to change after proof", async () => {
+test("local evidence can never close the gate", async () => {
   const { root, gate } = await fixture();
   const signoffRoot = path.join(root, "documents", "production-readiness", "signoffs", "p0a");
   await mkdir(signoffRoot, { recursive: true });
@@ -146,7 +145,9 @@ test("allows only gate metadata and sign-off documents to change after proof", a
     { role: "Security", status: "APPROVED", approver: "Security Approver", evidence: "documents/production-readiness/signoffs/p0a/security.md" },
   ];
   await writeJson(path.join(root, "documents", "production-readiness", "p0a-gate.json"), gate);
-  assert.equal(validate(root).status, 0);
+  const result = validate(root);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /requires GitHub OIDC verified evidence provenance|attestation must be valid JSON/);
 });
 
 test("lightweight validation permits READY metadata when raw evidence is an external CI artifact", async () => {

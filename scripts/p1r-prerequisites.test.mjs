@@ -21,8 +21,8 @@ test("P1R preflight reports current blockers without starting runtime", () => {
   const result = run("preflight");
   assert.equal(result.status, 0);
   assert.match(result.stdout, /P1R gate: BLOCKED/);
-  assert.match(result.stdout, /P0A=READY_FOR_SIGN_OFF/);
-  assert.match(result.stdout, /P1D=READY_FOR_SIGN_OFF/);
+  assert.match(result.stdout, /P0A=IN_PROGRESS/);
+  assert.match(result.stdout, /P1D=IN_PROGRESS/);
 });
 
 for (const action of ["up", "proof", "gate"]) {

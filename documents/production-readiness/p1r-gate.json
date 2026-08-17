@@ -11,8 +11,8 @@
   "evidenceRegistry": ".p1r/evidence/registry.json",
   "orchestrator": "scripts/p1r.mjs",
   "prerequisites": [
-    { "gate": "P0A", "requiredStatus": "CLOSED", "currentStatus": "READY_FOR_SIGN_OFF" },
-    { "gate": "P1D", "requiredStatus": "CLOSED", "currentStatus": "READY_FOR_SIGN_OFF" }
+    { "gate": "P0A", "requiredStatus": "CLOSED", "currentStatus": "IN_PROGRESS" },
+    { "gate": "P1D", "requiredStatus": "CLOSED", "currentStatus": "IN_PROGRESS" }
   ],
   "proofGroups": [
     "identity-contracts",

@@ -1,5 +1,10 @@
 name: P0A Reference Readiness
 
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
 on:
   pull_request:
     paths:
@@ -8,12 +13,14 @@ on:
       - "infra/p0a/**"
       - "docker-compose.p0a.yml"
       - "scripts/p0a*.mjs"
+      - "scripts/evidence-*.mjs"
       - "scripts/validate-p0a-gate.mjs"
       - "documents/production-readiness/p0a-*"
+      - "documents/production-readiness/approver-identities.json"
       - "package.json"
       - "pnpm-lock.yaml"
   push:
-    branches: [main]
+    branches: [dev]
   schedule:
     - cron: "30 18 * * *"
   workflow_dispatch:
@@ -57,6 +64,12 @@ jobs:
         run: pnpm p0a:proof
       - name: Validate ready-for-sign-off conclusion
         run: pnpm p0a:gate
+      - name: Build deterministic evidence bundle
+        run: pnpm p0a:bundle
+      - name: Attest evidence bundle with GitHub OIDC
+        uses: actions/attest@v4
+        with:
+          subject-path: .p0a/evidence/bundle.json
       - name: Preserve raw proof evidence
         if: always()
         uses: actions/upload-artifact@v4

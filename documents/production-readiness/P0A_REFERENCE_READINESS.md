@@ -14,7 +14,7 @@ P0A may end at `READY_FOR_SIGN_OFF`. `CLOSED` additionally requires named Engine
 - `pnpm p0a:smoke` runs identity, reference-service, network and telemetry checks.
 - `pnpm p0a:load` runs the fixed 10-VU baseline and 20-VU peak profile.
 - `pnpm p0a:proof` runs all seven proof groups and writes a checksummed, Ed25519-signed `.p0a/evidence/registry.json` with tool and image versions.
-- `pnpm p0a:test` runs gate/evidence validator regression tests, including stale source, artifact tampering, signature and approval-boundary cases.
+- `pnpm p0a:test` runs gate/evidence validator regression tests, including stale source, artifact tampering, GitHub provenance and approval-boundary cases.
 - `pnpm p0a:check` validates static governance and keeps P0B blocked.
 - `pnpm p0a:gate` validates current checksummed evidence and the requested P0A state.
 - `pnpm p0a:down` stops only the fixed `servexa-p0a` Compose project and removes only the named volumes declared by `docker-compose.p0a.yml`. Development and production projects/data are not addressed.

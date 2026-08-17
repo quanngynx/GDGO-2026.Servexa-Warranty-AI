@@ -72,7 +72,7 @@ Each track gate is a compact index/attestation. Raw results stay in its evidence
 `-- backlog/results.json
 ```
 
-P1R later adds OIDC, SCIM, audit tamper, migration rehearsal and performance artifacts. Each registry binds the historical subject commit/tree, an ownership-scope digest, scope identity/version/manifest/file count, scenario/schema versions, tool/environment versions, workflow run/attempt, artifact SHA-256 and an Ed25519 signature. Changes to owned files, the scope manifest or declared dependencies invalidate evidence. Later-track files outside the scope do not invalidate a closed predecessor. Gate status/timestamp/sign-off fields remain the only normalized metadata.
+P1R later adds OIDC, SCIM, audit tamper, migration rehearsal and performance artifacts. Each registry binds the historical subject commit/tree, an ownership-scope digest, scope identity/version/manifest/file count, scenario/schema versions, tool/environment versions, workflow run/attempt and artifact SHA-256. CI packages these records into a deterministic bundle and GitHub OIDC attests the bundle. Local proof is `LOCAL_UNATTESTED` and cannot close a gate. Human approval uses detached OpenSSH Ed25519 signatures whose allowed-signers trust roots are supplied only by the protected GitHub Environment. Changes to owned files, the scope manifest or declared dependencies invalidate evidence. Later-track files outside the scope do not invalidate a closed predecessor. Gate status/timestamp/sign-off fields remain the only normalized metadata.
 
 ## Sign-off and progression
 

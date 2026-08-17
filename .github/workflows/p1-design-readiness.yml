@@ -1,5 +1,10 @@
 name: P1 Design Readiness
 
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
 on:
   pull_request:
     paths:
@@ -7,10 +12,11 @@ on:
       - "documents/production-readiness/P1_*"
       - "documents/production-readiness/p1*"
       - "scripts/p1*.mjs"
+      - "scripts/evidence-*.mjs"
       - "scripts/validate-p1-gates*"
       - "package.json"
   push:
-    branches: [main]
+    branches: [dev]
   workflow_dispatch:
 
 jobs:
@@ -22,12 +28,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Generate signed P1D evidence bundle
+      - name: Generate P1D evidence registry
         run: node scripts/p1d.mjs proof
       - name: Validate P1D readiness and blocked runtime tracks
         run: node scripts/p1d.mjs gate
       - name: Run gate regression tests
         run: node --test scripts/validate-p1-gates.test.mjs
+      - name: Build deterministic evidence bundle
+        run: node scripts/evidence-bundle.mjs p1d
+      - name: Attest evidence bundle with GitHub OIDC
+        uses: actions/attest@v4
+        with:
+          subject-path: .p1d/evidence/bundle.json
       - name: Preserve P1D evidence
         if: always()
         uses: actions/upload-artifact@v4

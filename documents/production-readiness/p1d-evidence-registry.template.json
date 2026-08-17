@@ -20,5 +20,9 @@
   ],
   "environment": { "toolchainDigest": "sha256:<sha256>", "tools": { "node": "<version>" } },
   "workflow": { "runId": null, "attempt": null },
-  "manifestSignature": { "algorithm": "Ed25519", "publicKey": "<pem>", "value": "<base64>" }
+  "provenance": {
+    "mode": "LOCAL_UNATTESTED",
+    "repository": "quanngynx/servexa-warranty-ai",
+    "workflow": null
+  }
 }

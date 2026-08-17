@@ -1,4 +1,4 @@
-import { createHash, createPublicKey, generateKeyPairSync, randomBytes, sign } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -11,7 +11,6 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const runtimeDir = path.join(repoRoot, ".p0a");
 const evidenceDir = path.join(runtimeDir, "evidence");
 const envFile = path.join(runtimeDir, "runtime.env");
-const evidencePrivateKeyFile = path.join(runtimeDir, "evidence-signing-private.pem");
 const runtimeRealmFile = path.join(runtimeDir, "keycloak-realm.json");
 const composeBase = ["compose", "--project-name", "servexa-p0a", "--env-file", envFile, "-f", "docker-compose.p0a.yml"];
 const action = process.argv[2] ?? "check";
@@ -64,12 +63,6 @@ async function ensureRuntime() {
   if (missingSecrets.length) {
     environmentText = `${environmentText.trimEnd()}\n${missingSecrets.join("\n")}\n`;
     await writeFile(envFile, environmentText, { mode: 0o600 });
-  }
-  try {
-    await readFile(evidencePrivateKeyFile, "utf8");
-  } catch {
-    const { privateKey } = generateKeyPairSync("ed25519");
-    await writeFile(evidencePrivateKeyFile, privateKey.export({ type: "pkcs8", format: "pem" }), { mode: 0o600 });
   }
   const runtimeEnvironment = Object.fromEntries(environmentText.trim().split(/\r?\n/).map((line) => line.split(/=(.*)/s).slice(0, 2)));
   let realm = await readFile(path.join(repoRoot, "infra", "p0a", "keycloak", "realm-servexa-p0a.json"), "utf8");
@@ -351,10 +344,6 @@ async function writeRegistry(results) {
   const imageVersions = Object.fromEntries(composeImages
     .map((item) => [item.Repository, item.ID])
     .sort(([left], [right]) => left.localeCompare(right)));
-  const privateKey = await readFile(evidencePrivateKeyFile, "utf8");
-  const publicKey = createPublicKey(privateKey).export({ type: "spki", format: "pem" });
-  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519.pub"), "utf8");
-  if (publicKey !== trustedPublicKey) throw new Error("P0A evidence private key does not match the pinned trust key");
   const sourceScope = await getP0aEvidenceScope(repoRoot);
   const subjectCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();
   assertEvidenceScopeMatchesGitSubject(repoRoot, sourceScope, subjectCommit);
@@ -373,6 +362,11 @@ async function writeRegistry(results) {
     workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
     generatedAt: new Date().toISOString(),
     scenarioVersion: "p0a-v2",
+    provenance: {
+      mode: process.env.GITHUB_ACTIONS === "true" ? "GITHUB_ATTESTATION_PENDING" : "LOCAL_UNATTESTED",
+      repository: process.env.GITHUB_REPOSITORY ?? "quanngynx/servexa-warranty-ai",
+      workflow: process.env.GITHUB_WORKFLOW_REF ?? null,
+    },
     records: files.map((result) => ({
       proofId: result.proofId,
       status: result.status,
@@ -381,11 +375,6 @@ async function writeRegistry(results) {
       imageVersions,
       artifacts: [result.artifact],
     })),
-  };
-  registry.manifestSignature = {
-    algorithm: "Ed25519",
-    publicKey,
-    value: sign(null, Buffer.from(JSON.stringify(registry)), privateKey).toString("base64"),
   };
   await writeFile(path.join(evidenceDir, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`, "utf8");
 }
@@ -410,7 +399,22 @@ async function runProofs(selected) {
       console.error(`[P0A] ${proofId}: FAILED\n${reason}`);
     }
   }
-  if (!selected) await writeRegistry(results);
+  if (!selected) {
+    await writeRegistry(results);
+    if (results.every((result) => result.status === "PASSED")) {
+      const gatePath = path.join(repoRoot, "documents/production-readiness/p0a-gate.json");
+      const gate = JSON.parse(await readFile(gatePath, "utf8"));
+      gate.status = "READY_FOR_SIGN_OFF";
+      gate.nextReferencePhaseAllowed = false;
+      gate.updatedAt = new Date().toISOString().slice(0, 10);
+      await writeFile(gatePath, `${JSON.stringify(gate, null, 2)}\n`, "utf8");
+      const p1rPath = path.join(repoRoot, "documents/production-readiness/p1r-gate.json");
+      const p1r = JSON.parse(await readFile(p1rPath, "utf8"));
+      const prerequisite = p1r.prerequisites?.find((item) => item.gate === "P0A");
+      if (prerequisite) prerequisite.currentStatus = gate.status;
+      await writeFile(p1rPath, `${JSON.stringify(p1r, null, 2)}\n`, "utf8");
+    }
+  }
   if (results.some((result) => result.status === "FAILED")) process.exitCode = 1;
 }
 

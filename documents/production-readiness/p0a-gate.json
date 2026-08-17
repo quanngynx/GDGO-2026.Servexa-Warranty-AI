@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "phase": "P0A",
   "kind": "SYNTHETIC_TECHNICAL_READINESS",
-  "status": "READY_FOR_SIGN_OFF",
-  "updatedAt": "2026-08-16",
+  "status": "IN_PROGRESS",
+  "updatedAt": "2026-08-17",
   "nextReferencePhaseAllowed": false,
   "productionPhaseAllowed": false,
   "evidenceRegistry": ".p0a/evidence/registry.json",
@@ -17,8 +17,8 @@
     { "id": "capacity-harness", "label": "Fixed synthetic baseline and peak x2 harness" }
   ],
   "signoffs": [
-    { "role": "Engineering", "status": "PENDING", "approver": "Nguyễn Minh Quân", "evidence": "documents/production-readiness/signoffs/p0a/engineering-nguyen-minh-quan.md" },
-    { "role": "Security", "status": "PENDING", "approver": "Huynh Hong Hanh", "evidence": "documents/production-readiness/signoffs/p0a/security-huynh-hong-hanh.md" }
+    { "role": "Engineering", "status": "PENDING", "approver": "Nguyễn Minh Quân", "evidence": "documents/production-readiness/signoffs/p0a/engineering-nguyen-minh-quan.attestation.json" },
+    { "role": "Security", "status": "PENDING", "approver": "Huynh Hong Hanh", "evidence": "documents/production-readiness/signoffs/p0a/security-huynh-hong-hanh.attestation.json" }
   ],
   "artifacts": [
     "documents/production-readiness/P0A_REFERENCE_READINESS.md",

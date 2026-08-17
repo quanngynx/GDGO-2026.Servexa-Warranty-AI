@@ -1,10 +1,12 @@
-import { createHash, verify } from "node:crypto";
+import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getP1dEvidenceScope } from "./p1-source-digest.mjs";
 import { assertEvidenceScopeMatchesGitSubject, validateHistoricalGitSubject } from "./evidence-scope.mjs";
-import { validateApprovedAttestation } from "./evidence-attestation.mjs";
+import { allowedSignerKeyMaterial, validateApprovedAttestation } from "./evidence-attestation.mjs";
+import { verifyGithubEvidenceAttestation } from "./github-evidence-attestation.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readinessRoot = path.join(repoRoot, "documents", "production-readiness");
@@ -76,19 +78,8 @@ async function validateP1dEvidence(gate, errors) {
     if (registry.workflow?.runId !== null && typeof registry.workflow?.runId !== "string") errors.push("P1D workflow runId must be string or null");
     if (registry.workflow?.attempt !== null && typeof registry.workflow?.attempt !== "string") errors.push("P1D workflow attempt must be string or null");
 
-    const signature = registry.manifestSignature;
-    if (signature?.algorithm !== "Ed25519" || typeof signature.publicKey !== "string" || typeof signature.value !== "string") errors.push("P1D evidence requires Ed25519 signature");
-    else {
-      const unsigned = { ...registry };
-      delete unsigned.manifestSignature;
-      try {
-        if (!verify(null, Buffer.from(JSON.stringify(unsigned)), signature.publicKey, Buffer.from(signature.value, "base64"))) errors.push("P1D evidence signature is invalid");
-      } catch {
-        errors.push("P1D evidence signature is invalid");
-      }
-    }
-    const trustedEvidenceKey = await readFile(path.join(readinessRoot, "trust", "p1d-evidence-ed25519.pub"), "utf8");
-    if (signature?.publicKey !== trustedEvidenceKey) errors.push("P1D evidence signer does not match the pinned trust key");
+    if (!["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"].includes(registry.provenance?.mode)) errors.push("P1D evidence provenance mode is invalid");
+    if (registry.provenance?.repository !== "quanngynx/servexa-warranty-ai") errors.push("P1D evidence provenance repository is invalid");
 
     const records = new Map((registry.evidence ?? []).map((item) => [item.type, item]));
     if (records.size !== (registry.evidence ?? []).length) errors.push("P1D evidence types must be unique");
@@ -118,6 +109,8 @@ function evidenceRoot(root) {
 
 async function main() {
   const errors = [];
+  const routeInventory = spawnSync(process.execPath, ["scripts/generate-p1-route-inventory.mjs", "--check"], { cwd: repoRoot, encoding: "utf8" });
+  if (routeInventory.status !== 0) errors.push(`P1D route inventory validation failed: ${`${routeInventory.stdout ?? ""}${routeInventory.stderr ?? ""}`.trim()}`);
   const [p0a, p0b, p1d, p1r, p1p] = await Promise.all([json("p0a-gate.json"), json("p0-gate.json"), json("p1d-gate.json"), json("p1r-gate.json"), json("p1p-gate.json")]);
 
   if (p1d.schemaVersion !== 1 || p1d.phase !== "P1D" || p1d.kind !== "IDENTITY_AUTHORIZATION_DESIGN_READINESS") errors.push("invalid P1D gate identity");
@@ -137,6 +130,13 @@ async function main() {
   const p1dEvidence = await validateP1dEvidence(p1d, errors);
   const designComplete = p1dEvidence.complete;
   const p1dApproved = await approvedSignoffs(p1d, ["Engineering", "Security"], errors, "p1d", p1dEvidence.registry);
+  if (p1dApproved && allowedSignerKeyMaterial(process.env.ENGINEERING_ALLOWED_SIGNERS) === allowedSignerKeyMaterial(process.env.SECURITY_ALLOWED_SIGNERS)) {
+    errors.push("P1D Engineering and Security must use different OpenSSH signers");
+  }
+  if (p1d.status === "CLOSED") {
+    const result = verifyGithubEvidenceAttestation(path.join(repoRoot, ".p1d", "evidence", "bundle.json"), "quanngynx/servexa-warranty-ai/.github/workflows/p1-design-readiness.yml");
+    if (!result.verified) errors.push(`CLOSED P1D requires GitHub OIDC verified evidence provenance: ${result.reason}`);
+  }
   if (designComplete || requireReady) {
     const expected = designComplete ? (p1dApproved ? "CLOSED" : "READY_FOR_SIGN_OFF") : "IN_PROGRESS";
     if (p1d.status !== expected) errors.push(`P1D status must be ${expected}`);

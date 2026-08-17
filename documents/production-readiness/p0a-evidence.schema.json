@@ -3,7 +3,7 @@
   "$id": "https://servexa.invalid/schemas/p0a-evidence-v1.json",
   "title": "Servexa P0A evidence registry",
   "type": "object",
-  "required": ["schemaVersion", "subjectCommit", "subjectTree", "sourceDigest", "sourceScope", "generatedAt", "scenarioVersion", "records", "manifestSignature"],
+  "required": ["schemaVersion", "subjectCommit", "subjectTree", "sourceDigest", "sourceScope", "generatedAt", "scenarioVersion", "records", "provenance"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "subjectCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
@@ -24,14 +24,15 @@
     "workflowRunAttempt": { "type": ["string", "null"] },
     "generatedAt": { "type": "string", "format": "date-time" },
     "scenarioVersion": { "type": "string", "minLength": 1 },
-    "manifestSignature": {
+    "provenance": {
       "type": "object",
-      "required": ["algorithm", "publicKey", "value"],
+      "required": ["mode", "repository", "workflow"],
       "properties": {
-        "algorithm": { "const": "Ed25519" },
-        "publicKey": { "type": "string", "minLength": 1 },
-        "value": { "type": "string", "minLength": 1 }
-      }
+        "mode": { "enum": ["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"] },
+        "repository": { "const": "quanngynx/servexa-warranty-ai" },
+        "workflow": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
     },
     "records": {
       "type": "array",

@@ -13,10 +13,10 @@
   "workflowRunAttempt": null,
   "generatedAt": "1970-01-01T00:00:00.000Z",
   "scenarioVersion": "p0a-v2",
-  "records": [],
-  "manifestSignature": {
-    "algorithm": "Ed25519",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nsynthetic-placeholder\n-----END PUBLIC KEY-----\n",
-    "value": "synthetic-placeholder"
-  }
+  "provenance": {
+    "mode": "LOCAL_UNATTESTED",
+    "repository": "quanngynx/servexa-warranty-ai",
+    "workflow": null
+  },
+  "records": []
 }

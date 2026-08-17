@@ -3,12 +3,15 @@
   "scopeId": "P1R_SYNTHETIC_IDENTITY_AUTHORIZATION_REFERENCE",
   "scopeVersion": "1.0.0",
   "includes": [
-    "documents/production-readiness/approver-keys.json",
+    ".gitignore",
+    "documents/production-readiness/approver-identities.json",
     "documents/production-readiness/attestation.schema.json",
     "documents/production-readiness/p1-evidence.schema.json",
     "documents/production-readiness/p1r-gate.json",
     "scripts/evidence-attestation.mjs",
+    "scripts/evidence-bundle.mjs",
     "scripts/evidence-scope.mjs",
+    "scripts/github-evidence-attestation.mjs",
     "scripts/p1r-prerequisites.test.mjs",
     "scripts/p1r-source-digest.mjs",
     "scripts/p1r.mjs"

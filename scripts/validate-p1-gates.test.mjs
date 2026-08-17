@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createHash, verify } from "node:crypto";
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
@@ -12,7 +12,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".."
 const readinessRoot = path.join(repoRoot, "documents", "production-readiness");
 const readJson = async (file) => JSON.parse(await readFile(path.join(readinessRoot, file), "utf8"));
 
-test("P1D registry is signed, source-bound and checksummed", async () => {
+test("P1D registry is source-bound, checksummed and locally untrusted", async () => {
   const registry = JSON.parse(await readFile(path.join(repoRoot, ".p1d", "evidence", "registry.json"), "utf8"));
   assert.equal(registry.gate, "P1D");
   assert.equal(registry.state, "READY_FOR_SIGN_OFF");
@@ -24,16 +24,12 @@ test("P1D registry is signed, source-bound and checksummed", async () => {
     manifest: sourceScope.manifest,
     fileCount: sourceScope.files.length,
   });
-  const unsigned = { ...registry };
-  delete unsigned.manifestSignature;
-  assert.equal(verify(null, Buffer.from(JSON.stringify(unsigned)), registry.manifestSignature.publicKey, Buffer.from(registry.manifestSignature.value, "base64")), true);
+  assert.ok(["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"].includes(registry.provenance.mode));
+  assert.equal(registry.provenance.repository, "quanngynx/servexa-warranty-ai");
   for (const record of registry.evidence) {
     const artifact = await readFile(path.join(repoRoot, ".p1d", "evidence", record.artifact));
     assert.equal(createHash("sha256").update(artifact).digest("hex"), record.sha256);
   }
-  const tampered = structuredClone(unsigned);
-  tampered.evidence[0].result = "FAIL";
-  assert.equal(verify(null, Buffer.from(JSON.stringify(tampered)), registry.manifestSignature.publicKey, Buffer.from(registry.manifestSignature.value, "base64")), false);
 });
 
 test("P1D and P1R ownership scopes are separated", async () => {
@@ -59,7 +55,7 @@ test("P1R and P1P remain blocked by machine-readable prerequisites", async () =>
   }
 });
 
-test("strict P1 gate validator accepts the current signed design evidence", () => {
+test("strict P1 gate validator accepts current source-bound design evidence", () => {
   const output = execFileSync(process.execPath, ["scripts/validate-p1-gates.mjs", "--require-p1d-ready"], { cwd: repoRoot, encoding: "utf8" });
   assert.match(output, /P1D gate valid: READY_FOR_SIGN_OFF/);
   assert.match(output, /P1R gate: BLOCKED; P1P gate: BLOCKED/);

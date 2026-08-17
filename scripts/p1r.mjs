@@ -1,4 +1,5 @@
 import { readFile, stat } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getP1rEvidenceScope } from "./p1r-source-digest.mjs";
@@ -20,6 +21,15 @@ async function prerequisiteState() {
   const blockers = [];
   if (p0a.status !== "CLOSED") blockers.push(`P0A=${p0a.status} (requires CLOSED)`);
   if (p1d.status !== "CLOSED") blockers.push(`P1D=${p1d.status} (requires CLOSED)`);
+  if (p0a.status === "CLOSED" && p1d.status === "CLOSED") {
+    for (const [label, args] of [
+      ["P0A", ["scripts/validate-p0a-gate.mjs", "--require-ready"]],
+      ["P1D", ["scripts/validate-p1-gates.mjs", "--require-p1d-ready"]],
+    ]) {
+      const verification = spawnSync(process.execPath, args, { cwd: repoRoot, encoding: "utf8" });
+      if (verification.status !== 0) blockers.push(`${label} closure cryptographic verification failed`);
+    }
+  }
   if (p1r.runtimeImplementationAllowed !== true) blockers.push("P1R runtimeImplementationAllowed=false");
   return { p0a, p1d, p1r, blockers };
 }

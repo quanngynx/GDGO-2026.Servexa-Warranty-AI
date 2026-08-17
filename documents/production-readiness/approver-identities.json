@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "trustSource": "GITHUB_ENVIRONMENT_ALLOWED_SIGNERS",
+  "environment": "p1-readiness-signoff",
+  "approvers": [
+    {
+      "name": "Nguyễn Minh Quân",
+      "role": "Engineering",
+      "principal": "nguyen-minh-quan",
+      "allowedSignersVariable": "ENGINEERING_ALLOWED_SIGNERS"
+    },
+    {
+      "name": "Huynh Hong Hanh",
+      "role": "Security",
+      "principal": "huynh-hong-hanh",
+      "allowedSignersVariable": "SECURITY_ALLOWED_SIGNERS"
+    }
+  ]
+}

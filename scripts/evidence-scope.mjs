@@ -64,6 +64,7 @@ function hashScopedFiles(files, manifest, readContent) {
   const hash = createHash("sha256");
   for (const file of files) {
     let content = readContent(file);
+    if (!content.includes(0)) content = Buffer.from(content.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
     const replacements = normalizers.get(file);
     if (replacements) {
       const parsed = JSON.parse(content.toString("utf8"));

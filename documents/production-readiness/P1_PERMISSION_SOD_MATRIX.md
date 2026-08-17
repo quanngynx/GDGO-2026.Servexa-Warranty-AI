@@ -19,6 +19,8 @@ Initial registry:
 | Audit | `audit.read` |
 | Audit export | `audit_export.request`, `audit_export.approve`, `audit_export.generate`, `audit_export.download` |
 | Break-glass | `break_glass.request`, `break_glass.activate`, `break_glass.review` |
+| Existing ASC resources | `asc_resource.read`, `asc_resource.write`, `asc_resource.decide` |
+| Existing HITL | `hitl.read`, `hitl.create`, `hitl.decide`, `hitl.resume` |
 
 P1 implements the registry, authorization evaluation and negative enforcement. Capability names for P2-P4 do not authorize implementing their business handlers early.
 

@@ -1,0 +1,54 @@
+name: P1 Readiness Gate Closure
+
+on:
+  workflow_dispatch:
+    inputs:
+      p0a_artifact:
+        description: Exact P0A evidence artifact name
+        required: true
+      p0a_run_id:
+        description: Workflow run ID that produced P0A evidence
+        required: true
+      p1d_artifact:
+        description: Exact P1D evidence artifact name
+        required: true
+      p1d_run_id:
+        description: Workflow run ID that produced P1D evidence
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-closure:
+    runs-on: ubuntu-latest
+    environment: p1-readiness-signoff
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ENGINEERING_ALLOWED_SIGNERS: ${{ vars.ENGINEERING_ALLOWED_SIGNERS }}
+      SECURITY_ALLOWED_SIGNERS: ${{ vars.SECURITY_ALLOWED_SIGNERS }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact P0A evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.p0a_artifact }}
+          path: .p0a/evidence
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.p0a_run_id }}
+      - name: Download exact P1D evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.p1d_artifact }}
+          path: .p1d/evidence
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.p1d_run_id }}
+      - name: Verify GitHub artifact attestations
+        run: |
+          gh attestation verify .p0a/evidence/bundle.json --repo quanngynx/servexa-warranty-ai --signer-workflow quanngynx/servexa-warranty-ai/.github/workflows/p0a-reference-readiness.yml
+          gh attestation verify .p1d/evidence/bundle.json --repo quanngynx/servexa-warranty-ai --signer-workflow quanngynx/servexa-warranty-ai/.github/workflows/p1-design-readiness.yml
+      - name: Verify closure gates and independent OpenSSH attestations
+        run: |
+          node scripts/validate-p0a-gate.mjs --require-ready
+          node scripts/validate-p1-gates.mjs --require-p1d-ready

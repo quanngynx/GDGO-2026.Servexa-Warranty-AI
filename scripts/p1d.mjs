@@ -1,4 +1,4 @@
-import { createHash, createPublicKey, generateKeyPairSync, sign } from "node:crypto";
+import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -8,7 +8,6 @@ import { assertEvidenceScopeMatchesGitSubject } from "./evidence-scope.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const evidenceRoot = path.join(repoRoot, ".p1d", "evidence");
-const privateKeyPath = path.join(repoRoot, ".p1d", "evidence-signing-private.pem");
 const action = process.argv[2] ?? "check";
 
 const groups = [
@@ -33,7 +32,7 @@ const groups = [
   {
     id: "route-inventory",
     type: "ROUTE_SECURITY_INVENTORY",
-    files: ["documents/production-readiness/P1_ROUTE_SECURITY_INVENTORY.md"],
+    files: ["documents/production-readiness/P1_ROUTE_SECURITY_INVENTORY.md", "documents/production-readiness/p1-route-security-inventory.json"],
     fragments: ["Every route classified", "Unknown route policy", "Client ASC parameter grants access"],
   },
   {
@@ -70,24 +69,16 @@ function run(command, args, capture = false) {
   return output;
 }
 
-async function ensureKey() {
-  await mkdir(evidenceRoot, { recursive: true });
-  try {
-    return await readFile(privateKeyPath, "utf8");
-  } catch {
-    const { privateKey } = generateKeyPairSync("ed25519");
-    const pem = privateKey.export({ type: "pkcs8", format: "pem" });
-    await writeFile(privateKeyPath, pem, { mode: 0o600 });
-    return pem;
-  }
-}
-
 async function proveGroup(group) {
   const checks = [];
   for (const file of group.files) {
     const content = await readFile(path.join(repoRoot, file), "utf8");
     checks.push({ check: `file:${file}`, passed: content.trim().length > 0 });
-    for (const fragment of group.fragments) checks.push({ check: `contains:${fragment}`, passed: content.includes(fragment) });
+    if (file.endsWith(".md")) for (const fragment of group.fragments) checks.push({ check: `contains:${fragment}`, passed: content.includes(fragment) });
+    if (file.endsWith("p1-route-security-inventory.json")) {
+      const inventory = JSON.parse(content);
+      checks.push({ check: "route-inventory:coverage", passed: inventory.routeCount > 0 && inventory.coverage?.percent === 100 && inventory.coverage?.classified === inventory.routeCount });
+    }
   }
   const passed = checks.every((check) => check.passed);
   const result = { schemaVersion: "1.0", group: group.id, result: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), files: group.files, checks };
@@ -100,13 +91,11 @@ async function proveGroup(group) {
 }
 
 async function proof() {
+  run(process.execPath, ["scripts/generate-p1-route-inventory.mjs"]);
   const sourceScope = await getP1dEvidenceScope(repoRoot);
   const subjectCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim();
   assertEvidenceScopeMatchesGitSubject(repoRoot, sourceScope, subjectCommit);
-  const privateKey = await ensureKey();
-  const publicKey = createPublicKey(privateKey).export({ type: "spki", format: "pem" });
-  const trustedPublicKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p1d-evidence-ed25519.pub"), "utf8");
-  if (publicKey !== trustedPublicKey) throw new Error("P1D evidence private key does not match the pinned trust key");
+  await mkdir(evidenceRoot, { recursive: true });
   const evidence = [];
   for (const group of groups) evidence.push(await proveGroup(group));
   const tools = { node: process.version };
@@ -130,13 +119,24 @@ async function proof() {
     evidence,
     environment: { toolchainDigest: `sha256:${createHash("sha256").update(JSON.stringify(tools)).digest("hex")}`, tools },
     workflow: { runId: process.env.GITHUB_RUN_ID ?? null, attempt: process.env.GITHUB_RUN_ATTEMPT ?? null },
-  };
-  registry.manifestSignature = {
-    algorithm: "Ed25519",
-    publicKey,
-    value: sign(null, Buffer.from(JSON.stringify(registry)), privateKey).toString("base64"),
+    provenance: {
+      mode: process.env.GITHUB_ACTIONS === "true" ? "GITHUB_ATTESTATION_PENDING" : "LOCAL_UNATTESTED",
+      repository: process.env.GITHUB_REPOSITORY ?? "quanngynx/servexa-warranty-ai",
+      workflow: process.env.GITHUB_WORKFLOW_REF ?? null,
+    },
   };
   await writeFile(path.join(evidenceRoot, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`, "utf8");
+  const gatePath = path.join(repoRoot, "documents/production-readiness/p1d-gate.json");
+  const gate = JSON.parse(await readFile(gatePath, "utf8"));
+  gate.status = "READY_FOR_SIGN_OFF";
+  gate.nextDesignPhaseAllowed = false;
+  gate.updatedAt = new Date().toISOString().slice(0, 10);
+  await writeFile(gatePath, `${JSON.stringify(gate, null, 2)}\n`, "utf8");
+  const p1rPath = path.join(repoRoot, "documents/production-readiness/p1r-gate.json");
+  const p1r = JSON.parse(await readFile(p1rPath, "utf8"));
+  const prerequisite = p1r.prerequisites?.find((item) => item.gate === "P1D");
+  if (prerequisite) prerequisite.currentStatus = gate.status;
+  await writeFile(p1rPath, `${JSON.stringify(p1r, null, 2)}\n`, "utf8");
   console.log(`P1D design proof passed: ${evidence.length}/${groups.length} groups`);
 }
 

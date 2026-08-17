@@ -1,10 +1,11 @@
-import { createHash, verify } from "node:crypto";
+import { createHash } from "node:crypto";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getP0aEvidenceScope } from "./p0a-source-digest.mjs";
 import { assertEvidenceScopeMatchesGitSubject, validateHistoricalGitSubject } from "./evidence-scope.mjs";
-import { validateApprovedAttestation } from "./evidence-attestation.mjs";
+import { allowedSignerKeyMaterial, validateApprovedAttestation } from "./evidence-attestation.mjs";
+import { verifyGithubEvidenceAttestation } from "./github-evidence-attestation.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const gatePath = path.join(repoRoot, "documents", "production-readiness", "p0a-gate.json");
@@ -98,20 +99,8 @@ async function main() {
     if (!registry.generatedAt || Number.isNaN(Date.parse(registry.generatedAt))) errors.push("evidence generatedAt must be an ISO date-time");
     if (registry.workflowRunId !== null && typeof registry.workflowRunId !== "string") errors.push("workflowRunId must be a string or null");
     if (registry.workflowRunAttempt !== null && typeof registry.workflowRunAttempt !== "string") errors.push("workflowRunAttempt must be a string or null");
-    const signature = registry.manifestSignature;
-    if (signature?.algorithm !== "Ed25519" || typeof signature.publicKey !== "string" || typeof signature.value !== "string") {
-      errors.push("evidence manifest requires an Ed25519 signature");
-    } else {
-      const unsigned = { ...registry };
-      delete unsigned.manifestSignature;
-      try {
-        if (!verify(null, Buffer.from(JSON.stringify(unsigned)), signature.publicKey, Buffer.from(signature.value, "base64"))) {
-          errors.push("evidence manifest signature is invalid");
-        }
-      } catch {
-        errors.push("evidence manifest signature is invalid");
-      }
-    }
+    if (!["LOCAL_UNATTESTED", "GITHUB_ATTESTATION_PENDING"].includes(registry.provenance?.mode)) errors.push("evidence provenance mode is invalid");
+    if (registry.provenance?.repository !== "quanngynx/servexa-warranty-ai") errors.push("evidence provenance repository is invalid");
     if (!validateHistoricalGitSubject(repoRoot, registry.subjectCommit, registry.subjectTree)) {
       errors.push("evidence Git subject commit/tree is unavailable or inconsistent");
     }
@@ -125,8 +114,6 @@ async function main() {
     } catch (error) {
       errors.push(error instanceof Error ? error.message : "evidence source is not bound to Git subject");
     }
-    const trustedEvidenceKey = await readFile(path.join(repoRoot, "documents", "production-readiness", "trust", "p0a-evidence-ed25519.pub"), "utf8");
-    if (signature?.publicKey !== trustedEvidenceKey) errors.push("evidence signer does not match the pinned P0A trust key");
     const recordList = Array.isArray(registry.records) ? registry.records : [];
     const records = new Map(recordList.map((record) => [record.proofId, record]));
     if (records.size !== recordList.length) errors.push("evidence proofId values must be unique");
@@ -183,6 +170,13 @@ async function main() {
     const signoff = signoffs.get(role);
     return signoff?.status === "APPROVED" && signoff.approver && signoff.evidence;
   });
+  if (approvalsComplete && allowedSignerKeyMaterial(process.env.ENGINEERING_ALLOWED_SIGNERS) === allowedSignerKeyMaterial(process.env.SECURITY_ALLOWED_SIGNERS)) {
+    errors.push("Engineering and Security must use different OpenSSH signers");
+  }
+  if (gate.status === "CLOSED") {
+    const result = verifyGithubEvidenceAttestation(path.join(repoRoot, ".p0a", "evidence", "bundle.json"), "quanngynx/servexa-warranty-ai/.github/workflows/p0a-reference-readiness.yml");
+    if (!result.verified) errors.push(`CLOSED P0A requires GitHub OIDC verified evidence provenance: ${result.reason}`);
+  }
   if (registryAvailable || requireReady) {
     const expectedStatus = allPassed ? (approvalsComplete ? "CLOSED" : "READY_FOR_SIGN_OFF") : "IN_PROGRESS";
     if (gate.status !== expectedStatus) errors.push(`manifest status must be ${expectedStatus} for current evidence/sign-offs`);

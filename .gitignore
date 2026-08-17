@@ -68,6 +68,6 @@ temp
 /.p0a/*.pem
 /.p0a/*.env
 /.p1d/*.pem
-/documents/production-readiness/trust/*.pem
+/documents/production-readiness/trust/
 /.p1d/evidence/*.json
 /.p1d/evidence/*/*.json

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-P1R must inventory every Express route before runtime cutover. This P1D artifact defines the schema, discovery process and hard completeness rules; it does not claim the current routes are already compliant.
+P1D inventories every currently mounted Express endpoint in `p1-route-security-inventory.json`. The inventory is generated from the TypeScript AST and reconciled against the committed policy-rule registry. It is a migration contract, not a claim that P1R runtime enforcement already exists.
 
 ## Required inventory fields
 
@@ -38,7 +38,9 @@ Authorization failure                       = audited
 
 ## Route discovery and reconciliation
 
-The P1R implementation must generate the route inventory from the mounted Express routers and compare it with the committed policy registry. Tests fail for a route present in only one side. Dynamic paths are normalized before comparison. Public routes require explicit allowlisting and cannot inherit public status from a parent router accidentally.
+`node scripts/generate-p1-route-inventory.mjs` generates the inventory from mounted Express routers and compares every endpoint with exactly one committed policy rule. Missing policies, duplicate matches, unresolved paths or duplicate resolved routes fail generation. Dynamic paths are normalized before comparison. Public routes require explicit allowlisting and cannot inherit public status from a parent router accidentally.
+
+The current generated inventory contains 203 classified routes. Runtime enforcement and route-by-route resolver migration remain P1R work and cannot be inferred from this design inventory.
 
 ASC-bound repositories receive only an `AuthorizedResourceScope` created by the server policy resolver. Raw `ascCenterId`, `scope=all`, user-supplied filters and token claims cannot construct it. List queries intersect client filters with the authorized set. Single-resource mutations resolve the authoritative resource ASC before enforcement and repeat relevant checks at the transaction boundary.
 
