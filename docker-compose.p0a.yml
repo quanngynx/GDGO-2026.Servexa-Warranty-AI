@@ -1,0 +1,344 @@
+name: servexa-p0a
+
+x-reference-service: &reference-service
+  build:
+    context: .
+    dockerfile: apps/p0a-reference-services/Dockerfile
+  restart: unless-stopped
+  environment:
+    PORT: "4100"
+    P0A_CONTROL_TOKEN: ${P0A_CONTROL_TOKEN}
+    P0A_WEBHOOK_SECRET: ${P0A_WEBHOOK_SECRET}
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  read_only: true
+  tmpfs: ["/tmp"]
+  networks: [app, proof-control]
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: infra/p0a/postgres/Dockerfile
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: servexa_p0a
+      POSTGRES_USER: servexa_p0a
+      POSTGRES_PASSWORD: ${P0A_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/docker
+      PGBACKREST_REPO1_S3_KEY: ${P0A_MINIO_ACCESS_KEY}
+      PGBACKREST_REPO1_S3_KEY_SECRET: ${P0A_MINIO_SECRET_KEY}
+    command:
+      - postgres
+      - -c
+      - archive_mode=on
+      - -c
+      - archive_command=pgbackrest --stanza=p0a archive-push %p
+      - -c
+      - max_wal_senders=5
+    volumes:
+      - p0a_postgres_data:/var/lib/postgresql
+      - ./packages/db/docker/postgres/init-vector.sql:/docker-entrypoint-initdb.d/init-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U servexa_p0a -d servexa_p0a"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    networks: [data]
+
+  postgres-restore-proof:
+    build:
+      context: .
+      dockerfile: infra/p0a/postgres/Dockerfile
+    profiles: ["proof"]
+    user: postgres
+    entrypoint: ["/bin/bash", "-ec"]
+    command:
+      - >-
+        mkdir -p /var/lib/postgresql/18/docker &&
+        find /var/lib/postgresql/18/docker -mindepth 1 -maxdepth 1 -exec rm -rf {} + &&
+        pgbackrest --stanza=p0a --delta restore &&
+        pg_ctl -D /var/lib/postgresql/18/docker -o '-p 5433 -c archive_mode=off' -w start &&
+        psql -p 5433 -U servexa_p0a -d servexa_p0a -Atc "select marker from p0a_recovery_marker where id=1" | grep p0a-restored &&
+        pg_ctl -D /var/lib/postgresql/18/docker -m fast -w stop
+    environment:
+      PGBACKREST_REPO1_S3_KEY: ${P0A_MINIO_ACCESS_KEY}
+      PGBACKREST_REPO1_S3_KEY_SECRET: ${P0A_MINIO_SECRET_KEY}
+    volumes:
+      - p0a_restore_data:/var/lib/postgresql
+    networks: [data]
+
+  redis:
+    image: redis:8.2.2-alpine3.22@sha256:59b6e694653476de2c992937ebe1c64182af4728e54bb49e9b7a6c26614d8933
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${P0A_REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes: ["p0a_redis_data:/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${P0A_REDIS_PASSWORD} ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    security_opt: ["no-new-privileges:true"]
+    networks: [data]
+
+  minio:
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z@sha256:d249d1fb6966de4d8ad26c04754b545205ff15a62e4fd19ebd0f26fa5baacbc0
+    command: server /data --console-address :9001 --certs-dir /certs
+    environment:
+      MINIO_ROOT_USER: ${P0A_MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${P0A_MINIO_SECRET_KEY}
+    volumes:
+      - p0a_object_data:/data
+      - p0a_minio_certs:/certs:ro
+    ports: ["127.0.0.1:19001:9001"]
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://127.0.0.1:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    depends_on:
+      minio-cert-init:
+        condition: service_completed_successfully
+    networks: [data, proof-control]
+
+  minio-cert-init:
+    build:
+      context: .
+      dockerfile: infra/p0a/postgres/Dockerfile
+    entrypoint: ["/bin/bash", "-ec"]
+    command:
+      - >-
+        openssl req -x509 -nodes -newkey rsa:2048 -days 2
+        -subj '/CN=minio'
+        -addext 'subjectAltName=DNS:minio,IP:127.0.0.1'
+        -keyout /certs/private.key -out /certs/public.crt &&
+        chmod 600 /certs/private.key && chmod 644 /certs/public.crt
+    volumes: ["p0a_minio_certs:/certs"]
+    networks: [proof-control]
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-07-21T05-28-08Z@sha256:fb8f773eac8ef9d6da0486d5dec2f42f219358bcb8de579d1623d518c9ebd4cc
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      P0A_MINIO_ACCESS_KEY: ${P0A_MINIO_ACCESS_KEY}
+      P0A_MINIO_SECRET_KEY: ${P0A_MINIO_SECRET_KEY}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        mc --insecure alias set p0a https://minio:9000 "$${P0A_MINIO_ACCESS_KEY}" "$${P0A_MINIO_SECRET_KEY}" &&
+        (mc --insecure stat p0a/servexa-p0a-backups >/dev/null 2>&1 || mc --insecure mb --with-lock p0a/servexa-p0a-backups) &&
+        mc --insecure version enable p0a/servexa-p0a-backups &&
+        mc --insecure retention set --default GOVERNANCE 1d p0a/servexa-p0a-backups
+    networks: [proof-control, data]
+
+  scim-reference:
+    <<: *reference-service
+    environment:
+      PORT: "4100"
+      P0A_SERVICE_MODE: scim
+      P0A_CONTROL_TOKEN: ${P0A_CONTROL_TOKEN}
+      P0A_WEBHOOK_SECRET: ${P0A_WEBHOOK_SECRET}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+
+  warranty-reference:
+    <<: *reference-service
+    environment:
+      PORT: "4100"
+      P0A_SERVICE_MODE: warranty
+      P0A_CONTROL_TOKEN: ${P0A_CONTROL_TOKEN}
+      P0A_WEBHOOK_SECRET: ${P0A_WEBHOOK_SECRET}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+
+  ai-reference:
+    <<: *reference-service
+    environment:
+      PORT: "4100"
+      P0A_SERVICE_MODE: ai
+      P0A_CONTROL_TOKEN: ${P0A_CONTROL_TOKEN}
+      P0A_WEBHOOK_SECRET: ${P0A_WEBHOOK_SECRET}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.3@sha256:6a7217a100bd3e5de4063a27a538ef999a3c5a88c4b4ec0ffc0a642aee7b2597
+    command: ["start-dev", "--import-realm", "--health-enabled=true"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: p0a-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${P0A_KEYCLOAK_ADMIN_PASSWORD}
+    volumes:
+      - ./.p0a/keycloak-realm.json:/opt/keycloak/data/import/realm-servexa-p0a.json:ro
+      - p0a_keycloak_data:/opt/keycloak/data
+    ports: ["127.0.0.1:18080:8080"]
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nhost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 20s
+    networks: [edge, app]
+
+  ai-api:
+    build:
+      context: .
+      dockerfile: apps/ai-services/Dockerfile.api
+    entrypoint: []
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8081"]
+    environment:
+      ENVIRONMENT: p0a
+      APP_PORT: "8081"
+      GRPC_HOST: 0.0.0.0
+      GRPC_PORT: "50051"
+      REDIS_URL: redis://:${P0A_REDIS_PASSWORD}@redis:6379/0
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: servexa_p0a
+      POSTGRES_PASSWORD: ${P0A_POSTGRES_PASSWORD}
+      POSTGRES_DB: servexa_p0a
+      P0A_DEPENDENCY_URLS: http://ai-reference:4100/ready
+      P0A_ENABLED: "true"
+      P0A_AI_REFERENCE_URL: http://ai-reference:4100
+      ERP_BASE_URL: ""
+      OTEL_ENABLED: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_SERVICE_NAME: servexa-ai-p0a
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      ai-reference: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/v1/health/ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [app, data]
+
+  ai-worker:
+    build:
+      context: apps/ai-services
+      dockerfile: Dockerfile.worker
+    command: ["python", "-m", "src.p0a_worker"]
+    environment:
+      ENVIRONMENT: p0a
+      REDIS_URL: redis://:${P0A_REDIS_PASSWORD}@redis:6379/0
+      GEMINI_API_KEY: synthetic-disabled
+      ERP_BASE_URL: ""
+      P0A_ENABLED: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+    depends_on:
+      redis: { condition: service_healthy }
+      ai-api: { condition: service_healthy }
+    networks: [app, data]
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    entrypoint: ["dumb-init", "--"]
+    command: ["node", "dist/index.mjs"]
+    environment:
+      NODE_ENV: test
+      PORT: "3000"
+      DATABASE_URL: postgresql://servexa_p0a:${P0A_POSTGRES_PASSWORD}@postgres:5432/servexa_p0a?schema=public
+      CORS_ORIGIN: http://127.0.0.1:8080
+      CORS_ORIGIN_WEB: http://127.0.0.1:8080
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${P0A_REDIS_PASSWORD}
+      REDIS_DB: "1"
+      REDIS_TLS: "false"
+      AI_GRPC_HOST: ai-api
+      AI_GRPC_PORT: "50051"
+      TEMP_REFRESH_TOKEN_SECRET: ${P0A_TEMP_REFRESH_SECRET}
+      PUBLIC_ROUTES_API_KEY: ${P0A_PUBLIC_ROUTES_API_KEY}
+      BRANDING_NAME: Servexa P0A
+      OTEL_ENABLED: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_SERVICE_NAME: servexa-server-p0a
+      P0A_DEPENDENCY_URLS: http://warranty-reference:4100/ready,http://ai-reference:4100/ready
+      P0A_ENABLED: "true"
+      P0A_AI_API_URL: http://ai-api:8081
+      P0A_WARRANTY_SYSTEM_URL: http://warranty-reference:4100
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      ai-api: { condition: service_healthy }
+      warranty-reference: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+    networks: [app, data]
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_SERVER_URL: http://127.0.0.1:18000
+    environment:
+      CSP_CONNECT_SRC: http://127.0.0.1:18000
+    ports: ["127.0.0.1:18000:8080"]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    tmpfs:
+      - /var/cache/nginx:uid=101,gid=101
+      - /var/run:uid=101,gid=101
+      - /var/log/nginx:uid=101,gid=101
+      - /tmp:uid=101,gid=101
+      - /etc/nginx:uid=101,gid=101
+    depends_on:
+      server: { condition: service_healthy }
+    networks: [edge, app]
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.130.1@sha256:9c247564e65ca19f97d891cca19a1a8d291ce631b890885b44e3503c5fdb3895
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes: ["./infra/p0a/observability/otel-collector.yaml:/etc/otelcol/config.yaml:ro"]
+    depends_on: [jaeger]
+    networks: [app, proof-control]
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.71.0@sha256:beb31282a9c5d0d10cb78dd168945dab9887acebb42fcc0bd738b08c36b68bc0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports: ["127.0.0.1:16686:16686"]
+    networks: [app, edge]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0@sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes: ["./infra/p0a/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["127.0.0.1:19090:9090"]
+    depends_on: [otel-collector]
+    networks: [app, edge]
+
+  k6:
+    image: grafana/k6:1.2.3@sha256:4f82892217f3110cb233e2b2622bcc97fabc70f14bd241fbfbfe7305105c68aa
+    profiles: ["proof"]
+    environment:
+      P0A_WARRANTY_URL: http://warranty-reference:4100
+    volumes: ["./infra/p0a/k6:/scripts:ro"]
+    networks: [app]
+
+networks:
+  edge:
+  app:
+    internal: true
+  data:
+    internal: true
+  proof-control:
+    internal: true
+
+volumes:
+  p0a_postgres_data:
+  p0a_redis_data:
+  p0a_object_data:
+  p0a_minio_certs:
+  p0a_keycloak_data:
+  p0a_restore_data:

@@ -1,0 +1,20 @@
+{
+  "name": "@servexa-warranty-ai/enterprise-contracts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "check-types": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 src/index.ts"
+  }
+}

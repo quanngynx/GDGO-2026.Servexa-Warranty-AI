@@ -43,12 +43,17 @@ lerna-debug.log*
 # Testing
 coverage
 .nyc_output
+.pytest_cache/
+__pycache__/
+*.py[cod]
 
 # Misc
 *.tgz
 .cache
 tmp
 temp
+.p0a/
+.p1d/
 
 /secrets
 /.docker-deploy-test
