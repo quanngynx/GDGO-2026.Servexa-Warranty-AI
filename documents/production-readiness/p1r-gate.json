@@ -14,7 +14,7 @@
     {
       "gate": "P0A",
       "requiredStatus": "CLOSED",
-      "currentStatus": "IN_PROGRESS"
+      "currentStatus": "READY_FOR_SIGN_OFF"
     },
     {
       "gate": "P1D",
