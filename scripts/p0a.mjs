@@ -110,7 +110,7 @@ async function up() {
 }
 
 async function proofContracts() {
-  const first = run(process.execPath, [path.join(repoRoot, "node_modules", "vitest", "vitest.mjs"), "run", "src/index.test.ts"], {
+  const first = run(process.execPath, [path.join(repoRoot, "packages", "enterprise-contracts", "node_modules", "vitest", "vitest.mjs"), "run", "src/index.test.ts"], {
     capture: true,
     cwd: path.join(repoRoot, "packages", "enterprise-contracts"),
   });
