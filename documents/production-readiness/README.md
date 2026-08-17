@@ -65,3 +65,23 @@ pnpm p0:gate
 
 The gate manifest is authoritative for current progression state. Narrative
 documents explain evidence; they do not override the manifest.
+
+## P1 track control plane
+
+P1 is separated into design, synthetic reference and production tracks so that
+architecture work cannot be mistaken for a production identity rollout:
+
+| Track | Current authority | Runtime allowed |
+| --- | --- | --- |
+| P1D | Design artifacts and signed design evidence | No |
+| P1R | Requires P0A and P1D CLOSED | No while prerequisites are open |
+| P1P | Requires P0B, P1D and P1R CLOSED | No while prerequisites are open |
+
+The P1D artifacts are indexed by [`p1d-gate.json`](./p1d-gate.json). The
+blocked runtime and production tracks are recorded in
+[`p1r-gate.json`](./p1r-gate.json) and [`p1p-gate.json`](./p1p-gate.json).
+Use `pnpm p1:check` for hierarchy validation, `pnpm p1d:proof` to generate a
+signed design evidence bundle and `pnpm p1d:gate` for strict readiness checks.
+Use `pnpm p1r:preflight` to inspect runtime blockers. `pnpm p1r:up`,
+`pnpm p1r:proof` and `pnpm p1r:gate` fail closed until both P0A and P1D are
+machine-validated as `CLOSED`; documentation cannot override this guardrail.

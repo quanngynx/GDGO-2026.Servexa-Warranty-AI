@@ -32,6 +32,30 @@ import { publicRoutesRateLimiter } from "@/configs/rate-limit";
 import { describeLangfuseConfig, initServerTelemetry } from "@/core/observability/telemetry";
 import { uploadDir } from "@/configs/upload-dir";
 import { publicRoutesApiKeyMiddleware } from "@/middlewares/api-key.middleware";
+import { randomBytes } from "node:crypto";
+
+function p0aTraceId(traceparent: string): string {
+  return traceparent.split("-")[1] ?? randomBytes(16).toString("hex");
+}
+
+async function emitP0aSpan(traceparent: string, correlationId: string, name: string): Promise<void> {
+  const endpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
+  if (process.env.P0A_ENABLED !== "true" || !endpoint) return;
+  const start = BigInt(Date.now()) * 1_000_000n;
+  const response = await fetch(`${endpoint.replace(/\/$/, "")}/v1/traces`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ resourceSpans: [{
+      resource: { attributes: [{ key: "service.name", value: { stringValue: "servexa-server-p0a" } }] },
+      scopeSpans: [{ scope: { name: "p0a-proof" }, spans: [{
+        traceId: p0aTraceId(traceparent), spanId: randomBytes(8).toString("hex"), name, kind: 2,
+        startTimeUnixNano: String(start), endTimeUnixNano: String(start + 1_000_000n), status: { code: 1 },
+        attributes: [{ key: "correlation.id", value: { stringValue: correlationId } }],
+      }] }],
+    }] }),
+  });
+  if (!response.ok) throw new Error(`P0A OTLP export failed: ${response.status}`);
+}
 
 export class AppBootStrap {
   public app: express.Express = express();
@@ -100,6 +124,51 @@ export class AppBootStrap {
     this.app.get("/health", publicRateLimit, (_req, res) => {
       res.status(200).json({ status: "ok" });
     });
+
+    this.app.get("/ready", publicRateLimit, async (_req, res) => {
+      const configuredDependencies = (process.env.P0A_DEPENDENCY_URLS ?? "")
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
+      const dependencies = await Promise.all(
+        configuredDependencies.map(async (url) => {
+          try {
+            const response = await fetch(url, { signal: AbortSignal.timeout(2_000) });
+            return { url, ready: response.ok };
+          } catch {
+            return { url, ready: false };
+          }
+        }),
+      );
+      const ready = dependencies.every((dependency) => dependency.ready);
+      res.status(ready ? 200 : 503).json({
+        status: ready ? "ready" : "degraded",
+        dependencies,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    if (process.env.P0A_ENABLED === "true") {
+      this.app.post("/api/p0a/trace-proof", async (req, res, next) => {
+        try {
+          const traceparent = req.traceparent;
+          if (!traceparent) return res.status(400).json({ error: "traceparent required" });
+          const correlationId = req.requestId;
+          await emitP0aSpan(traceparent, correlationId, "express-p0a-proof");
+          const aiResponse = await fetch(`${process.env.P0A_AI_API_URL}/v1/health/p0a-trace-proof`, {
+            method: "POST",
+            headers: { traceparent, "x-correlation-id": correlationId },
+          });
+          if (!aiResponse.ok) throw new Error(`FastAPI P0A trace failed: ${aiResponse.status}`);
+          const redis = getBootstrapRedis();
+          if (!redis) throw new Error("Redis is unavailable for P0A trace proof");
+          await redis.getClient().xadd("p0a:trace", "*", "traceparent", traceparent, "correlationId", correlationId);
+          res.status(202).json({ traceparent, correlationId, fastApi: await aiResponse.json() });
+        } catch (error) {
+          next(error);
+        }
+      });
+    }
 
     this.app.get(
       "/health/deep",

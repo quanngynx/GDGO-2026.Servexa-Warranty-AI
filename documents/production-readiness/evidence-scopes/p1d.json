@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "scopeId": "P1D_IDENTITY_AUTHORIZATION_DESIGN",
+  "scopeVersion": "1.0.0",
+  "includes": [
+    ".github/workflows/p1-design-readiness.yml",
+    "documents/adr/ADR-014-p1-identity-tracks-and-trust-boundary.md",
+    "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md",
+    "documents/production-readiness/P1_IDENTITY_AUTHORIZATION_DESIGN.md",
+    "documents/production-readiness/P1_IMPLEMENTATION_BACKLOG.md",
+    "documents/production-readiness/P1_MIGRATION_CUTOVER.md",
+    "documents/production-readiness/P1_PERMISSION_SOD_MATRIX.md",
+    "documents/production-readiness/P1_ROUTE_SECURITY_INVENTORY.md",
+    "documents/production-readiness/P1_TEST_AND_EVIDENCE_PLAN.md",
+    "documents/production-readiness/P1_THREAT_MODEL_PRIVACY.md",
+    "documents/production-readiness/approver-keys.json",
+    "documents/production-readiness/attestation.schema.json",
+    "documents/production-readiness/p1-evidence.schema.json",
+    "documents/production-readiness/p1d-evidence-registry.template.json",
+    "documents/production-readiness/p1d-gate.json",
+    "documents/production-readiness/trust/p1d-evidence-ed25519-public.pem",
+    "scripts/evidence-attestation.mjs",
+    "scripts/evidence-scope.mjs",
+    "scripts/p1-source-digest.mjs",
+    "scripts/p1d.mjs",
+    "scripts/validate-p1-gates.mjs",
+    "scripts/validate-p1-gates.test.mjs"
+  ],
+  "requiredOwnedPaths": [
+    "documents/production-readiness/p1d-gate.json",
+    "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md",
+    "scripts/p1d.mjs",
+    "scripts/validate-p1-gates.mjs"
+  ],
+  "dependencyEdges": [
+    {
+      "from": "scripts/p1d.mjs",
+      "to": "scripts/p1-source-digest.mjs",
+      "reference": "./p1-source-digest.mjs"
+    },
+    {
+      "from": "scripts/p1d.mjs",
+      "to": "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md",
+      "reference": "documents/production-readiness/P1_CODE_IMPLEMENTATION_PLAN.md"
+    }
+  ],
+  "dependencyDiscovery": {
+    "sources": [
+      "scripts/p1d.mjs",
+      "scripts/p1-source-digest.mjs",
+      "scripts/validate-p1-gates.mjs"
+    ]
+  },
+  "jsonNormalization": [
+    {
+      "path": "documents/production-readiness/p1d-gate.json",
+      "replaceTopLevel": {
+        "status": "__STATUS_METADATA__",
+        "updatedAt": "__UPDATED_AT_METADATA__",
+        "runtimeImplementationAllowed": "__RUNTIME_METADATA__",
+        "productionPhaseAllowed": "__PRODUCTION_METADATA__",
+        "nextDesignPhaseAllowed": "__NEXT_PHASE_METADATA__",
+        "signoffs": "__SIGNOFF_METADATA__"
+      }
+    }
+  ]
+}

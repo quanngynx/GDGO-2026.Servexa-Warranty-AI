@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "scopeId": "P1R_SYNTHETIC_IDENTITY_AUTHORIZATION_REFERENCE",
+  "scopeVersion": "1.0.0",
+  "includes": [
+    "documents/production-readiness/approver-keys.json",
+    "documents/production-readiness/attestation.schema.json",
+    "documents/production-readiness/p1-evidence.schema.json",
+    "documents/production-readiness/p1r-gate.json",
+    "scripts/evidence-attestation.mjs",
+    "scripts/evidence-scope.mjs",
+    "scripts/p1r-prerequisites.test.mjs",
+    "scripts/p1r-source-digest.mjs",
+    "scripts/p1r.mjs"
+  ],
+  "requiredOwnedPaths": [
+    "documents/production-readiness/p1r-gate.json",
+    "scripts/p1r.mjs"
+  ],
+  "dependencyEdges": [
+    {
+      "from": "scripts/p1r.mjs",
+      "to": "scripts/p1r-source-digest.mjs",
+      "reference": "./p1r-source-digest.mjs"
+    }
+  ],
+  "jsonNormalization": [
+    {
+      "path": "documents/production-readiness/p1r-gate.json",
+      "replaceTopLevel": {
+        "status": "__STATUS_METADATA__",
+        "updatedAt": "__UPDATED_AT_METADATA__",
+        "runtimeImplementationAllowed": "__RUNTIME_METADATA__",
+        "productionPhaseAllowed": "__PRODUCTION_METADATA__",
+        "nextReferencePhaseAllowed": "__NEXT_PHASE_METADATA__",
+        "prerequisites": "__PREREQUISITE_METADATA__",
+        "signoffs": "__SIGNOFF_METADATA__"
+      }
+    }
+  ]
+}

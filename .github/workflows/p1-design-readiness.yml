@@ -1,0 +1,39 @@
+name: P1 Design Readiness
+
+on:
+  pull_request:
+    paths:
+      - "documents/adr/ADR-014-*"
+      - "documents/production-readiness/P1_*"
+      - "documents/production-readiness/p1*"
+      - "scripts/p1*.mjs"
+      - "scripts/validate-p1-gates*"
+      - "package.json"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  design-evidence:
+    name: P1D design conformance and gate hierarchy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate signed P1D evidence bundle
+        run: node scripts/p1d.mjs proof
+      - name: Validate P1D readiness and blocked runtime tracks
+        run: node scripts/p1d.mjs gate
+      - name: Run gate regression tests
+        run: node --test scripts/validate-p1-gates.test.mjs
+      - name: Preserve P1D evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1d-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: .p1d/evidence/
+          if-no-files-found: error
+          retention-days: 30
+

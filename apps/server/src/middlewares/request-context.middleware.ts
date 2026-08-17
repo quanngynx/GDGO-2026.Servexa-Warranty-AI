@@ -10,12 +10,18 @@ export const requestContextMiddleware = (req: Request, res: Response, next: Next
   req.requestId = req.headers['x-request-id'] as string ||
                           req.headers['x-correlation-id'] as string ||
                           uuidv4()
+  const incomingTraceparent = req.headers.traceparent
+  if (typeof incomingTraceparent === 'string' && /^00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]$/i.test(incomingTraceparent)) {
+    req.traceparent = incomingTraceparent
+  }
 
   // Set start time for performance tracking
   req.startTime = Date.now()
 
   // Set response headers
   res.setHeader('X-Request-ID', req.requestId)
+  res.setHeader('X-Correlation-ID', req.requestId)
+  if (req.traceparent) res.setHeader('traceparent', req.traceparent)
   res.setHeader('X-Response-Time', '0ms')
 
   const skipTimingHeader =

@@ -7,6 +7,9 @@ on:
       - "documents/adr/ADR-012-production-readiness-hard-gates.md"
       - "documents/production-readiness/**"
       - "scripts/validate-p0-gate.mjs"
+      - "scripts/validate-p0a-gate.mjs"
+      - "documents/adr/ADR-013-p0a-synthetic-readiness-boundary.md"
+      - "docker-compose.p0a.yml"
       - "package.json"
   push:
     branches:
@@ -16,6 +19,9 @@ on:
       - "documents/adr/ADR-012-production-readiness-hard-gates.md"
       - "documents/production-readiness/**"
       - "scripts/validate-p0-gate.mjs"
+      - "scripts/validate-p0a-gate.mjs"
+      - "documents/adr/ADR-013-p0a-synthetic-readiness-boundary.md"
+      - "docker-compose.p0a.yml"
       - "package.json"
 
 jobs:
@@ -34,3 +40,5 @@ jobs:
       - name: Validate P0 structure and gate consistency
         run: node scripts/validate-p0-gate.mjs
 
+      - name: Validate P0A structure and preserve P0B block
+        run: node scripts/validate-p0a-gate.mjs

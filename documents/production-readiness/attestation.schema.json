@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://servexa.invalid/schemas/production-readiness-attestation-v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "gate", "role", "approver", "decision", "reviewedAt", "evidence", "findings", "statement", "signature"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "gate": { "enum": ["P0A", "P1D", "P1R", "P1P"] },
+    "role": { "enum": ["Engineering", "Security", "Operations", "Product/Business"] },
+    "approver": { "type": "string", "minLength": 1 },
+    "decision": { "const": "APPROVED" },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry", "registrySha256", "sourceDigest", "subjectCommit", "subjectTree"],
+      "properties": {
+        "registry": { "type": "string", "minLength": 1 },
+        "registrySha256": { "pattern": "^[0-9a-f]{64}$" },
+        "sourceDigest": { "pattern": "^sha256:[0-9a-f]{64}$" },
+        "subjectCommit": { "pattern": "^[0-9a-f]{40}$" },
+        "subjectTree": { "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "mediumAccepted", "safetyInvariantViolations"],
+      "properties": {
+        "critical": { "const": 0 },
+        "high": { "const": 0 },
+        "mediumAccepted": { "type": "array" },
+        "safetyInvariantViolations": { "const": 0 }
+      }
+    },
+    "statement": { "type": "string", "minLength": 20 },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "value": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

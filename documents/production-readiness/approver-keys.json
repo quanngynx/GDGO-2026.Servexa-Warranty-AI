@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "approvers": [
+    {
+      "name": "Nguyễn Minh Quân",
+      "role": "Engineering",
+      "status": "PENDING_ENROLLMENT",
+      "algorithm": "Ed25519",
+      "publicKey": null
+    },
+    {
+      "name": "Huynh Hong Hanh",
+      "role": "Security",
+      "status": "PENDING_ENROLLMENT",
+      "algorithm": "Ed25519",
+      "publicKey": null
+    }
+  ]
+}
