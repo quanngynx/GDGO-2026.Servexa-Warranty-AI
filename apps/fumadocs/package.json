@@ -44,7 +44,7 @@
     "lucide-react": "^1.7.0",
     "mermaid": "^11.15.0",
     "motion": "^12.38.0",
-    "next": "16.2.1",
+    "next": "16.2.11",
     "next-themes": "catalog:",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
